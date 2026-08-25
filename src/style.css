@@ -1,0 +1,61 @@
+/* Tailwind CSS v4 + DaisyUI */
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: nord, business;
+}
+
+/* ============================================================
+   漲跌色 Token（台股慣例：漲紅跌綠）
+   低飽和設計，避免過於刺眼
+   ============================================================ */
+:root {
+  --color-rise: #c0392b;      /* 漲：磚紅，低飽和 */
+  --color-fall: #27ae60;      /* 跌：苔綠，低飽和 */
+  --color-flat: oklch(0.55 0 0);    /* 平盤：中性灰 */
+
+  /* 字型 */
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* ============================================================
+   全域基礎（Mobile-first）
+   ============================================================ */
+html {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-tap-highlight-color: transparent; /* 手機點擊無閃爍 */
+}
+
+body {
+  min-height: 100dvh; /* dvh 適配手機底部導覽列 */
+}
+
+/* ============================================================
+   漲跌色 Utility Classes
+   ============================================================ */
+.text-rise { color: var(--color-rise); }
+.text-fall { color: var(--color-fall); }
+.text-flat { color: var(--color-flat); }
+
+.bg-rise-subtle { background-color: oklch(from var(--color-rise) l c h / 0.08); }
+.bg-fall-subtle { background-color: oklch(from var(--color-fall) l c h / 0.08); }
+
+/* ============================================================
+   數字顯示（等寬字型，對齊小數點）
+   ============================================================ */
+.font-numeric {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   處置股標籤
+   ============================================================ */
+.badge-disposed {
+  background-color: oklch(0.75 0.18 50);
+  color: oklch(0.2 0.05 50);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.25rem;
+}
