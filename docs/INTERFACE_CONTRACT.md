@@ -218,12 +218,14 @@ emits: {
 
 #### `StockCard.vue`
 
-> 手機版個股卡片（`StockTable` 內部使用）
+> 自適應個股卡片（`StockTable` 內部使用，手機 5 層垂直展開 / 電腦 3 欄式寬扁卡片）
 
 **Props：**
 ```typescript
 props: {
-  stock: Stock
+  stock: Stock,
+  ceilingProfit?: { ceilingType: string; ceilingPrice: number; netProfitPct: number; passed: boolean } | null,
+  filterEvaluation?: { isMatch: boolean; reasonText: string } | null,
 }
 ```
 
@@ -231,36 +233,16 @@ props: {
 ```typescript
 emits: {
   'select': (stock: Stock) => void
+  'openRiskModal': (stock: Stock) => void
 }
 ```
 
 **視覺規格：**
-- 圓角卡片，`bg-base-200`
-- 第一行：代號（mono font）+ 名稱 + 漲跌幅（右對齊，紅/綠）
-- 第二行：現價（大字）+ 類別標籤（小 badge）
-- 第三行：4 格數據格：5MA乖離、月線乖離、KD狀態、成交量
-- 第四行：Sparkline（160×36px）
-- 整張卡片可點擊，點擊觸發 `select` event
-
----
-
-#### `StockRow.vue`
-
-> 桌機版個股表格列（`StockTable` 內部使用）
-
-**Props：**
-```typescript
-props: {
-  stock: Stock
-}
-```
-
-**Events：**
-```typescript
-emits: {
-  'select': (stock: Stock) => void
-}
-```
+- 圓角卡片 `bg-base-200`，邊框 `border-base-300`，字體符合 18px 標準
+- 手機版 (< 1024px)：5 層自然垂直展開（代號名稱現價 → 標籤純文字 → 關卡純利槽位 → Sparkline與KD → 左右3排均線/量能網格 → 篩選結果槽位 → 複製/外部快捷連結）
+- 電腦版 (>= 1024px)：3 欄式寬扁卡片（左欄報價操作、中欄走勢KD、右欄均線量能比對、通欄篩選結果底列）
+- Highlight 數據以加粗（`font-bold`）呈現，無彩色 Badge 噪音
+- 點擊「複製」具備單色微互動提示
 
 ---
 

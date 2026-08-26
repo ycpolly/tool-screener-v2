@@ -373,13 +373,14 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] GitHub Actions：爬蟲機器人 + 前端部署 — 完成 2026-08-26
 - [ ] GCP 即時行情接入（更新 useRealtimeQuotes）
 
-### Phase 2（UI + 核心 UX）— 由 Gemini 接手
-- [ ] MarketBanner.vue（大盤風控橫幅）
-- [ ] ScreenerPanel.vue（篩選參數面板，多模式）
-- [ ] StockTable.vue / StockCard.vue / StockRow.vue
-- [ ] Sparkline.vue（10日走勢圖）
-- [ ] ThemeToggle.vue（Light/Dark）
-- [ ] App.vue 接入上述所有元件
+### Phase 2（UI + 核心 UX）— 由 Gemini 完成（2026-08-26）
+- [x] MarketBanner.vue（大盤風控橫幅，支援 SAFE/CAUTION/DANGER 色彩適配與加權/櫃買數據）
+- [x] ScreenerPanel.vue（篩選參數面板，支援多模式切換、數字鍵盤 inputmode、手機折疊展開）
+- [x] StockCard.vue（自適應個股卡片：手機 5 層自然展開 + 電腦 3 欄式寬扁卡片、左右 3 排對稱均線/量能網格、加粗 Highlight、無彩色干擾、複製按鈕微互動、關卡與篩選結果槽位預留）
+- [x] StockTable.vue（選股結果列表容器，支援多欄位排序、筆數與時間標記、Skeleton 載入骨架與空狀態）
+- [x] Sparkline.vue（10日收盤走勢 SVG 折線圖，依漲跌 Token 自適應上色與終點圓點）
+- [x] ThemeToggle.vue（Light/Dark 切換：DaisyUI nord 與 business 主題切換）
+- [x] App.vue 接入上述所有元件並完成響應式組裝
 
 ### Phase 3（完整功能）
 - [ ] `screener.js` 完整篩選演算法（所有條件）
