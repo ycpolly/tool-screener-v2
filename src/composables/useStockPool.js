@@ -19,7 +19,7 @@ export function useStockPool() {
     _error.value   = null
 
     try {
-      const res = await fetch('/data/stock-pool.json')
+      const res = await fetch(`${import.meta.env.BASE_URL}data/stock-pool.json`)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
       const data = await res.json()
