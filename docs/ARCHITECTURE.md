@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> 最後更新：2026-08-25
+> **最後更新：2026-08-26**（移除未確認 UI 元件；建立 AGENTS.md 教條；開始 Python 後端重寫）
 
 ---
 
@@ -355,25 +355,34 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 
 ## 七、建構階段規劃（Phase）
 
-### Phase 1（核心基礎，沒有就沒有意義）
-- [ ] v2 專案骨架建立（Vite + Vue 3 + DaisyUI）
-- [ ] GitHub repo 設定 + GitHub Actions（爬蟲 + 部署）
-- [ ] Python 腳本模組化重寫（collect / enrich / write）
-- [ ] `stock-pool.json` 資料格式驗證（與 v1 輸出比對確認正確）
-- [ ] `calibrate_with_twse_mis()` 重寫與驗證
-- [ ] 前端載入 JSON 並顯示基礎表格（代號、名稱、即時價、均線）
-- [ ] GCP 即時行情接入
+> **分工原則**：Claude 負責 Python 後端、邏輯層（engine/composables）；Gemini 負責 UI 元件（src/components/）。
+> 詳細 Props/Events 規格見 `docs/INTERFACE_CONTRACT.md`。
 
-### Phase 2（核心 UX）
-- [ ] `screener.js` 純演算法引擎
-- [ ] ScreenerPanel 篩選參數面板（多模式支援）
-- [ ] Sparkline 10日走勢圖
-- [ ] MarketBanner 大盤風控橫幅
-- [ ] Light / Dark 切換
+### Phase 1（核心基礎）
+- [x] v2 專案骨架建立（Vite + Vue 3 + DaisyUI）— 完成 2026-08-25
+- [x] 資料轉換腳本（v1 JS → v2 JSON）— 完成 2026-08-25
+- [x] `src/engine/screener.js` 骨架 — 完成 2026-08-25
+- [x] `src/composables/` 三層架構骨架 — 完成 2026-08-25
+- [x] `src/constants/screener-modes.js`、`ui-strings.js` — 完成 2026-08-25
+- [x] `docs/INTERFACE_CONTRACT.md`（Claude/Gemini 分工契約）— 完成 2026-08-26
+- [ ] Python 腳本模組化重寫（scripts/ 全部）← **進行中**
+- [ ] `calibrate_with_twse_mis()` 重寫與驗證
+- [ ] `stock-pool.json` 與 v1 輸出比對確認正確
+- [ ] GitHub Actions：爬蟲機器人 + 前端部署
+- [ ] GCP 即時行情接入（更新 useRealtimeQuotes）
+
+### Phase 2（UI + 核心 UX）— 由 Gemini 接手
+- [ ] MarketBanner.vue（大盤風控橫幅）
+- [ ] ScreenerPanel.vue（篩選參數面板，多模式）
+- [ ] StockTable.vue / StockCard.vue / StockRow.vue
+- [ ] Sparkline.vue（10日走勢圖）
+- [ ] ThemeToggle.vue（Light/Dark）
+- [ ] App.vue 接入上述所有元件
 
 ### Phase 3（完整功能）
-- [ ] RiskModal 空間與風控全貌（天花板/支撐/風報比）
-- [ ] AvoidModal 避雷區（法人賣超）
+- [ ] `screener.js` 完整篩選演算法（所有條件）
+- [ ] RiskModal（空間與風控全貌）
+- [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 - [ ] 手機端細節優化
 

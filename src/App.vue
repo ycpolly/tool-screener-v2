@@ -1,50 +1,22 @@
 <template>
+  <!--
+    App.vue — 最小骨架
+    UI 元件由 Gemini 根據 docs/INTERFACE_CONTRACT.md 實作後接入
+  -->
   <div :data-theme="isDark ? 'business' : 'nord'" class="min-h-dvh bg-base-100">
 
-    <!-- ── 頂部 Navbar ──────────────────────────────────────── -->
-    <header class="sticky top-0 z-40 bg-base-100/90 backdrop-blur border-b border-base-300">
-      <div class="container mx-auto px-3 max-w-screen-xl">
-        <div class="flex items-center justify-between h-12">
-
-          <!-- Logo / 標題 -->
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-base-content text-sm tracking-tight">
-              {{ UI.APP.title }}
-            </span>
-            <!-- 大盤燈號 badge（小版本，header 用）-->
-            <span
-              v-if="market?.regime"
-              class="text-[10px] px-1.5 py-0.5 rounded font-medium"
-              :class="regimeBadgeClass"
-            >
-              {{ market.regime.badge }}
-            </span>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <!-- 即時更新按鈕 -->
-            <button
-              class="btn btn-primary btn-xs"
-              :disabled="quotesLoading"
-              @click="handleFetchQuotes"
-            >
-              {{ quotesLoading ? UI.SCREENER.updatingBtn : UI.SCREENER.updateBtn }}
-            </button>
-
-            <!-- Light/Dark 切換 -->
-            <button class="btn btn-ghost btn-xs px-2" @click="isDark = !isDark">
-              <span v-if="isDark" class="text-base">☀</span>
-              <span v-else class="text-base">☾</span>
-            </button>
-          </div>
-        </div>
-      </div>
+    <!-- Navbar 佔位 —— Gemini 接手後替換 -->
+    <header class="sticky top-0 z-40 bg-base-100/80 backdrop-blur border-b border-base-300 h-12 flex items-center px-4">
+      <span class="font-bold text-sm text-base-content">台股波段選股 v2</span>
+      <button class="btn btn-ghost btn-xs ml-auto" @click="isDark = !isDark">
+        {{ isDark ? '☀' : '☾' }}
+      </button>
     </header>
 
-    <!-- ── 主體 ─────────────────────────────────────────────── -->
-    <main class="container mx-auto px-3 py-4 max-w-screen-xl">
+    <!-- 主體 -->
+    <main class="container mx-auto px-4 py-6 max-w-screen-xl">
 
-      <!-- 載入中 -->
+      <!-- 資料載入中 -->
       <div v-if="poolLoading" class="flex justify-center py-20">
         <span class="loading loading-spinner loading-md text-primary"></span>
       </div>
@@ -54,55 +26,22 @@
         資料載入失敗：{{ poolError }}
       </div>
 
-      <!-- 主內容 -->
-      <template v-else>
-        <!-- 最後更新時間（手機版） -->
-        <p v-if="meta" class="text-xs text-base-content/40 mb-3 sm:hidden">
-          {{ UI.SCREENER.lastUpdated(meta.updatedAt?.slice(0, 16).replace('T', ' ')) }}
-        </p>
+      <!-- 骨架內容：等 Gemini 元件接入 -->
+      <div v-else class="text-center py-20 text-base-content/40 text-sm space-y-2">
+        <p>資料載入完成 — {{ meta?.totalStocks }} 檔個股</p>
+        <p class="text-xs">等待 Gemini UI 元件接入...</p>
+      </div>
 
-        <!-- 選股結果表格 -->
-        <StockTable
-          :results="results"
-          :meta="meta"
-        />
-      </template>
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { UI_STRINGS as UI } from './constants/ui-strings.js'
+import { ref, onMounted } from 'vue'
 import { useStockPool } from './composables/useStockPool.js'
-import { useScreener } from './composables/useScreener.js'
-import { useRealtimeQuotes } from './composables/useRealtimeQuotes.js'
-import StockTable from './components/StockTable.vue'
 
-// ── Theme ──────────────────────────────────────────────────
 const isDark = ref(false)
+const { meta, loading: poolLoading, error: poolError, loadPool } = useStockPool()
 
-// ── 資料層 ──────────────────────────────────────────────────
-const { stocks, market, meta, loading: poolLoading, error: poolError, loadPool } = useStockPool()
-const { results } = useScreener(stocks)
-const { loading: quotesLoading, fetchQuotes } = useRealtimeQuotes()
-
-// ── 大盤燈號樣式 ────────────────────────────────────────────
-const regimeBadgeClass = computed(() => {
-  const code = market.value?.regime?.code
-  if (code === 'DANGER')  return 'bg-error/20 text-error'
-  if (code === 'CAUTION') return 'bg-warning/20 text-warning'
-  return 'bg-success/15 text-success'
-})
-
-// ── 即時行情更新 ────────────────────────────────────────────
-async function handleFetchQuotes() {
-  const codes = stocks.value.map(s => s.code)
-  await fetchQuotes(codes)
-}
-
-// ── 初始化 ─────────────────────────────────────────────────
-onMounted(async () => {
-  await loadPool()
-})
+onMounted(() => loadPool())
 </script>
