@@ -1,0 +1,40 @@
+name: Update Stock Pool
+
+on:
+  schedule:
+    # 平日盤後三個時間點（UTC+8 = UTC-8h）
+    - cron: '30 7 * * 1-5'   # 15:30 台灣時間（盤後立即）
+    - cron: '30 10 * * 1-5'  # 18:30 台灣時間（盤後資料穩定）
+    - cron: '0 15 * * 1-5'   # 23:00 台灣時間（最終確認）
+  workflow_dispatch:          # 允許手動觸發
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write         # 需要寫入 public/data/stock-pool.json
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run stock pool update
+        run: python -m scripts.main
+
+      - name: Commit updated stock-pool.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/stock-pool.json
+          git diff --cached --quiet || git commit -m "data: update stock-pool.json [$(date +'%Y-%m-%d %H:%M') CST]"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main

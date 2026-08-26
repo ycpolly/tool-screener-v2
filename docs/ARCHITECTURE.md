@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-08-26**（移除未確認 UI 元件；建立 AGENTS.md 教條；開始 Python 後端重寫）
+> **最後更新：2026-08-26**（Python 後端全部完成 + GitHub Actions workflows + 定時排程）
 
 ---
 
@@ -365,10 +365,10 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] `src/composables/` 三層架構骨架 — 完成 2026-08-25
 - [x] `src/constants/screener-modes.js`、`ui-strings.js` — 完成 2026-08-25
 - [x] `docs/INTERFACE_CONTRACT.md`（Claude/Gemini 分工契約）— 完成 2026-08-26
-- [ ] Python 腳本模組化重寫（scripts/ 全部）← **進行中**
-- [ ] `calibrate_with_twse_mis()` 重寫與驗證
+- [x] Python 腳本模組化重寫（scripts/ 全部）— 完成 2026-08-26
+- [x] `calibrate_with_twse_mis()` 重寫與驗證 — 完成 2026-08-26
 - [ ] `stock-pool.json` 與 v1 輸出比對確認正確
-- [ ] GitHub Actions：爬蟲機器人 + 前端部署
+- [x] GitHub Actions：爬蟲機器人 + 前端部署 — 完成 2026-08-26
 - [ ] GCP 即時行情接入（更新 useRealtimeQuotes）
 
 ### Phase 2（UI + 核心 UX）— 由 Gemini 接手
