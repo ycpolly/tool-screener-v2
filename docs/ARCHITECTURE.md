@@ -367,7 +367,9 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] `docs/INTERFACE_CONTRACT.md`（Claude/Gemini 分工契約）— 完成 2026-08-26
 - [x] Python 腳本模組化重寫（scripts/ 全部）— 完成 2026-08-26
 - [x] `calibrate_with_twse_mis()` 重寫與驗證 — 完成 2026-08-26
-- [ ] `stock-pool.json` 與 v1 輸出比對確認正確
+- [x] `stock-pool.json` 與 v1 輸出比對確認正確 — 完成 2026-08-26
+  - 323 檔個股，685.5 KB，全部格式驗證通過（sparkline ≥ 5，history10d = 10）
+  - market 欄位全部為 tse/otc，舊中文格式 0 筆
 - [x] GitHub Actions：爬蟲機器人 + 前端部署 — 完成 2026-08-26
 - [ ] GCP 即時行情接入（更新 useRealtimeQuotes）
 
