@@ -1,6 +1,6 @@
 <template>
   <div class="stock-table-container space-y-3">
-    <!-- 頂部工具列：筆數統計、最後更新時間與排序切換 -->
+    <!-- 頂部工具列：筆數統計與最後更新時間 -->
     <div class="flex flex-wrap items-center justify-between gap-2 px-1 text-xs text-base-content/70">
       <div class="flex items-center gap-3">
         <span class="font-bold text-sm text-base-content">
@@ -11,7 +11,7 @@
         </span>
       </div>
 
-      <!-- 快速排序切換 -->
+      <!-- 排序功能暫時註解：待後續討論後再優化
       <div class="flex items-center gap-1 font-medium">
         <span class="text-base-content/50 mr-1">排序:</span>
         <button
@@ -28,6 +28,7 @@
           </span>
         </button>
       </div>
+      -->
     </div>
 
     <!-- 載入中骨架動畫 (Skeleton Loading) -->

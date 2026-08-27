@@ -6,15 +6,12 @@
         <h1 class="font-bold text-base md:text-lg tracking-tight text-base-content">
           {{ UI_STRINGS.APP.title }}
         </h1>
-        <span class="text-xs text-base-content/50 hidden sm:inline-block font-medium">
-          {{ UI_STRINGS.APP.tagline }}
-        </span>
       </div>
 
       <div class="ml-auto flex items-center gap-2">
-        <!-- 取得最新價格按鈕 -->
+        <!-- 取得最新價格按鈕 (DaisyUI btn-neutral，高對比易讀) -->
         <button
-          class="btn btn-sm btn-primary gap-1.5 font-medium"
+          class="btn btn-sm btn-neutral gap-1.5 font-medium"
           :disabled="poolLoading || quotesLoading"
           @click="handleFetchRealtime"
         >
@@ -33,19 +30,19 @@
           </span>
         </button>
 
-        <!-- 行情 API 設定按鈕 -->
+        <!-- 行情 API 設定按鈕 (鑰匙 SVG 圖示，與主題切換一致的 btn-square 形狀) -->
         <button
-          class="btn btn-sm btn-ghost btn-square"
+          class="btn btn-sm btn-ghost btn-square text-base-content/70 hover:text-base-content transition-colors"
           :title="UI_STRINGS.API_SETTINGS.modalTitle"
+          :aria-label="UI_STRINGS.API_SETTINGS.modalTitle"
           @click="openApiModal"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
           </svg>
         </button>
 
-        <!-- 主題切換 -->
+        <!-- 主題切換 (與設定按鈕相同 btn-square 形狀) -->
         <ThemeToggle :is-dark="isDark" @toggle="toggleTheme" />
       </div>
     </header>
@@ -66,9 +63,9 @@
         <span>{{ quotesError }}</span>
       </div>
 
-      <!-- 核心工作區 -->
+      <!-- 核心工作區：先聚焦打磨 StockCard -->
       <template v-if="!poolError">
-        <!-- 1. 大盤多空風控橫幅 -->
+        <!-- 暫時註解：待後續階段細緻優化時開啟
         <MarketBanner
           :taiex="activeMarket?.taiex"
           :otc="activeMarket?.otc"
@@ -76,7 +73,6 @@
           :loading="poolLoading"
         />
 
-        <!-- 2. 選股條件控制面板 -->
         <ScreenerPanel
           :modes="modes"
           :active-mode="activeMode"
@@ -85,8 +81,9 @@
           @update:params="params = $event"
           @reset="handleResetParams"
         />
+        -->
 
-        <!-- 3. 選股結果列表 (卡片 / 自適應佈局) -->
+        <!-- 選股結果列表 (專注展示 StockCard) -->
         <StockTable
           :stocks="results"
           :loading="poolLoading"

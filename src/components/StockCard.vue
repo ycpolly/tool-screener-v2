@@ -47,8 +47,8 @@
 
       <!-- 第 3 層：Sparkline 10日折線圖 + KD 動能指標 -->
       <div class="space-y-1.5 py-1">
-        <div class="w-full h-12">
-          <Sparkline :data="stock.sparkline" :height="48" />
+        <div class="w-full flex items-center justify-center">
+          <Sparkline :data="stock.sparkline" />
         </div>
         <div class="flex items-center justify-between text-xs text-base-content/70 font-numeric px-1">
           <span>{{ UI_STRINGS.METRICS.kd }} <strong class="text-base-content font-bold">{{ stock.kd?.k }} / {{ stock.kd?.d }}</strong></span>
@@ -142,11 +142,22 @@
     </div>
 
     <!-- ============================================================
-         電腦端佈局 (>= 1024px)：水平 3 欄式寬扁卡片，高密度橫向瀏覽
+         電腦端佈局 (>= 1024px)：水平 3 欄式寬扁卡片 (左: 走勢KD | 中: 報價操作 | 右: 均線量能)
          ============================================================ -->
     <div class="hidden lg:grid lg:grid-cols-12 lg:gap-5 lg:items-center">
-      <!-- 左欄 (4/12)：代號、名稱、報價、標籤與快捷操作 -->
-      <div class="lg:col-span-4 space-y-2">
+      <!-- 左欄 (4/12)：走勢圖 + KD 指標 (移至最左側，避免斜視) -->
+      <div class="lg:col-span-4 space-y-1.5 pr-2">
+        <div class="w-full flex items-center justify-center">
+          <Sparkline :data="stock.sparkline" />
+        </div>
+        <div class="flex items-center justify-between text-xs text-base-content/70 font-numeric px-1">
+          <span>{{ UI_STRINGS.METRICS.kd }} <strong class="text-base-content font-bold">{{ stock.kd?.k }} / {{ stock.kd?.d }}</strong></span>
+          <span class="font-semibold text-base-content/80">{{ kdStatusText }}</span>
+        </div>
+      </div>
+
+      <!-- 中欄 (4/12)：代號、名稱、報價、標籤與快捷操作 -->
+      <div class="lg:col-span-4 space-y-2 px-3 border-l border-r border-base-300/60">
         <div class="flex items-baseline justify-between gap-2">
           <div class="flex items-baseline gap-2">
             <span class="font-numeric font-bold text-lg text-base-content">{{ stock.code }}</span>
@@ -202,19 +213,8 @@
         </div>
       </div>
 
-      <!-- 中欄 (4/12)：走勢圖 + KD 指標 -->
-      <div class="lg:col-span-4 space-y-1.5 px-2 border-l border-r border-base-300/60">
-        <div class="w-full h-14">
-          <Sparkline :data="stock.sparkline" :height="56" />
-        </div>
-        <div class="flex items-center justify-between text-xs text-base-content/70 font-numeric px-1">
-          <span>{{ UI_STRINGS.METRICS.kd }} <strong class="text-base-content font-bold">{{ stock.kd?.k }} / {{ stock.kd?.d }}</strong></span>
-          <span class="font-semibold text-base-content/80">{{ kdStatusText }}</span>
-        </div>
-      </div>
-
       <!-- 右欄 (4/12)：均線與量能量化比對 -->
-      <div class="lg:col-span-4 grid grid-cols-2 gap-3 font-numeric text-xs">
+      <div class="lg:col-span-4 grid grid-cols-2 gap-3 font-numeric text-xs pl-2">
         <!-- 均線組 -->
         <div class="space-y-1.5">
           <div class="flex items-center justify-between">
