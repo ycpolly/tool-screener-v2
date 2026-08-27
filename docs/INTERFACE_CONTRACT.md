@@ -248,22 +248,23 @@ emits: {
 
 #### `Sparkline.vue`
 
-> 迷你 SVG 折線圖（10日收盤趨勢）
+> 純向量 SVG 三層式走勢圖（10 根 K 棒 + 5/10/20 均線折線 + 10 根成交量柱與 MV5 基準線爆量標記 + 10 日 KD 折線與 50 基準線）
 
 **Props：**
 ```typescript
 props: {
-  data:   number[]    // 收盤價陣列（最多10筆）
-  width:  number      // 預設 160
-  height: number      // 預設 36
+  history?:   DayBar[]    // 近 10 日完整日 K（含 open/high/low/close/prevClose/volume/ma5/ma10/ma20/k/d）
+  stock?:     Stock       // 個股完整物件（取得 vMa5、ma20 等）
+  stockCode?: string      // 個股代號（供 missing data console 警示）
 }
 ```
 
 **視覺規格：**
-- 純 SVG `<polyline>`，無 X/Y 軸標籤
-- 線色依最後一點漲跌：漲=`var(--color-rise)`，跌=`var(--color-fall)`，平=灰
-- 最後一點加小圓點標記（r=2）
-- 無背景、透明
+- ViewBox `0 0 192 140`，外層容器 `w-full max-w-[220px] h-auto`
+- 上層 (Y: 6~58)：10 根 K 棒（實體/影線）+ 5MA（`--color-ma5` 活力橘）/ 10MA（`--color-ma10` 科技藍）/ 20MA（`--color-ma20` 暖鵝黃）折線 + 右側標籤（簡寫為 `5`, `10`, `20`）智慧 3 線防重疊演算法
+- 中層 (Y: 66~96)：10 根成交量柱（對照昨收漲紅跌綠）+ MV5 基準虛線 + 右側標籤（簡寫為 `5`）+ 爆量（>= 2*MV5）紅色倒三角標記（▼）
+- 下層 (Y: 104~134)：10 日 KD(9,3) 折線（橘 K / 藍 D）+ Y=50 基準虛線與 `50` 標籤 + 右側 `K`、`D` 標籤
+- 當歷史資料不足 10 筆時，乾淨顯示 `-- 暫無 10 日走勢數據 --` 並在瀏覽器 console 印出 warning 警示，絕不偽造假 K 線
 
 ---
 

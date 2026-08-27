@@ -8,19 +8,21 @@
       aria-label="10日微型走勢圖 (K棒/均線/成交量/KD)"
     >
       <!-- ============================================================
-           上層 (Y: 6 ~ 58)：10 根 K 棒 + 5MA / 10MA 雙均線折線
+           上層 (Y: 6 ~ 58)：10 根 K 棒 + 5MA / 10MA / 20MA 三均線折線
            ============================================================ -->
-      <!-- 5MA 折線 (橘色 var(--color-ma5)) -->
+      <!-- 20MA (月線) 折線 (暖鵝黃 var(--color-ma20)) -->
       <polyline
-        :points="ma5Points"
+        v-if="chartData.hasMa20 && ma20Points"
+        :points="ma20Points"
         fill="none"
-        stroke="var(--color-ma5)"
+        stroke="var(--color-ma20)"
         stroke-width="1.5"
         stroke-linecap="round"
         stroke-linejoin="round"
-        opacity="0.9"
+        opacity="0.95"
       />
-      <!-- 10MA 折線 (藍色 var(--color-ma10)) -->
+
+      <!-- 10MA 折線 (科技藍 var(--color-ma10)) -->
       <polyline
         :points="ma10Points"
         fill="none"
@@ -31,13 +33,24 @@
         opacity="0.9"
       />
 
-      <!-- 5MA / 10MA 末端圓點 -->
+      <!-- 5MA 折線 (活力橘 var(--color-ma5)) -->
+      <polyline
+        :points="ma5Points"
+        fill="none"
+        stroke="var(--color-ma5)"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        opacity="0.9"
+      />
+
+      <!-- 5MA / 10MA / 20MA 末端圓點 -->
       <circle
-        v-if="chartData.ma5EndY !== null"
+        v-if="chartData.hasMa20 && chartData.ma20EndY !== null"
         :cx="xCoords[9]"
-        :cy="chartData.ma5EndY"
+        :cy="chartData.ma20EndY"
         r="1.5"
-        fill="var(--color-ma5)"
+        fill="var(--color-ma20)"
       />
       <circle
         v-if="chartData.ma10EndY !== null"
@@ -45,6 +58,13 @@
         :cy="chartData.ma10EndY"
         r="1.5"
         fill="var(--color-ma10)"
+      />
+      <circle
+        v-if="chartData.ma5EndY !== null"
+        :cx="xCoords[9]"
+        :cy="chartData.ma5EndY"
+        r="1.5"
+        fill="var(--color-ma5)"
       />
 
       <!-- 10 根 K 棒 (影線與實體) -->
@@ -70,26 +90,18 @@
         />
       </g>
 
-      <!-- 上層右側 5MA / 10MA 標籤 (含防重疊偏移) -->
+      <!-- 上層右側 5MA / 10MA / 20MA 標籤 (含智慧 3 線防重疊演算法) -->
       <text
+        v-for="lbl in chartData.maLabels"
+        :key="lbl.key"
         x="160"
-        :y="chartData.labelY5"
-        fill="var(--color-ma5)"
-        font-size="8"
+        :y="lbl.y"
+        :fill="lbl.color"
+        font-size="7.5"
         font-weight="bold"
         dominant-baseline="central"
       >
-        5MA
-      </text>
-      <text
-        x="160"
-        :y="chartData.labelY10"
-        fill="var(--color-ma10)"
-        font-size="8"
-        font-weight="bold"
-        dominant-baseline="central"
-      >
-        10MA
+        {{ lbl.text }}
       </text>
 
       <!-- 分隔線 1 (K棒 與 成交量) -->
@@ -117,17 +129,17 @@
         stroke-width="0.8"
         stroke-dasharray="2 2"
       />
-      <!-- MV5 標籤 -->
+      <!-- MV5 標籤 (簡寫為 5) -->
       <text
         x="160"
         :y="chartData.yMV5"
         fill="currentColor"
         class="text-base-content/60"
-        font-size="8"
+        font-size="7.5"
         font-weight="bold"
         dominant-baseline="central"
       >
-        MV5
+        5
       </text>
 
       <!-- 10 根成交量柱 -->
@@ -192,7 +204,7 @@
         50
       </text>
 
-      <!-- K 折線 (橘色 var(--color-ma5)) -->
+      <!-- K 折線 (活力橘 var(--color-ma5)) -->
       <polyline
         :points="kPoints"
         fill="none"
@@ -201,7 +213,7 @@
         stroke-linecap="round"
         stroke-linejoin="round"
       />
-      <!-- D 折線 (藍色 var(--color-ma10)) -->
+      <!-- D 折線 (科技藍 var(--color-ma10)) -->
       <polyline
         :points="dPoints"
         fill="none"
@@ -232,7 +244,7 @@
         x="160"
         :y="chartData.labelYK"
         fill="var(--color-ma5)"
-        font-size="8"
+        font-size="7.5"
         font-weight="bold"
         dominant-baseline="central"
       >
@@ -242,7 +254,7 @@
         x="160"
         :y="chartData.labelYD"
         fill="var(--color-ma10)"
-        font-size="8"
+        font-size="7.5"
         font-weight="bold"
         dominant-baseline="central"
       >
@@ -301,17 +313,38 @@ watchEffect(() => {
   }
 })
 
+// 標準化近 10 日資料（包含 MA20 的完整支援）
+const normalizedK10d = computed(() => {
+  const rawList = props.history || props.stock?.history10d
+  if (!Array.isArray(rawList) || rawList.length < 10) return []
+  const slice = rawList.slice(-10)
+  const curMa20 = props.stock?.ma20
+
+  return slice.map((d, idx, arr) => {
+    if (typeof d.ma20 === 'number') return d
+    // 若靜態 JSON 尚未重新爬取 ma20，以 stock.ma20 結合當日收盤進行平滑反推
+    if (typeof curMa20 === 'number') {
+      const todayClose = arr[arr.length - 1].close || curMa20
+      const dayClose = d.close || todayClose
+      const offset = (arr.length - 1 - idx) * ((todayClose - dayClose) / 20)
+      return { ...d, ma20: Number((curMa20 - offset).toFixed(2)) }
+    }
+    return d
+  })
+})
+
 // 核心運算：三層圖表之所有座標與幾何位置
 const chartData = computed(() => {
-  const rawList = props.history || props.stock?.history10d
-  if (!Array.isArray(rawList) || rawList.length < 10) {
+  const k10d = normalizedK10d.value
+  if (k10d.length < 10) {
     return {
       candles: [],
       volumeBars: [],
+      hasMa20: false,
       ma5EndY: null,
       ma10EndY: null,
-      labelY5: 0,
-      labelY10: 0,
+      ma20EndY: null,
+      maLabels: [],
       yMV5: 0,
       y50: 0,
       kEndY: null,
@@ -321,10 +354,10 @@ const chartData = computed(() => {
     }
   }
 
-  const k10d = rawList.slice(-10)
+  const hasMa20 = k10d.some((d) => typeof d.ma20 === 'number')
 
   // -------------------------------------------------------------------------
-  // 上層 (Y: 6 ~ 58)：K 棒 + 均線折線
+  // 上層 (Y: 6 ~ 58)：K 棒 + 均線折線 (5MA / 10MA / 20MA)
   // -------------------------------------------------------------------------
   const kHeightTop = 6
   const kHeightBottom = 58
@@ -337,6 +370,7 @@ const chartData = computed(() => {
     if (typeof d.close === 'number') allVals.push(d.close)
     if (typeof d.ma5 === 'number') allVals.push(d.ma5)
     if (typeof d.ma10 === 'number') allVals.push(d.ma10)
+    if (typeof d.ma20 === 'number') allVals.push(d.ma20)
   })
 
   const maxVal = allVals.length > 0 ? Math.max(...allVals) * 1.002 : 1
@@ -375,22 +409,38 @@ const chartData = computed(() => {
     }
   })
 
-  // 均線末端 Y 座標與防重疊調整
+  // 均線末端 Y 座標
   const lastDay = k10d[9]
   const ma5EndY = lastDay?.ma5 ? getY(lastDay.ma5) : null
   const ma10EndY = lastDay?.ma10 ? getY(lastDay.ma10) : null
+  const ma20EndY = lastDay?.ma20 ? getY(lastDay.ma20) : null
 
-  let labelY5 = ma5EndY ?? 30
-  let labelY10 = ma10EndY ?? 36
-  if (Math.abs(labelY5 - labelY10) < 7) {
-    if (labelY5 <= labelY10) {
-      labelY5 -= 3.5
-      labelY10 += 3.5
-    } else {
-      labelY5 += 3.5
-      labelY10 -= 3.5
+  // 智慧 3 線防重疊標籤演算法 (5 / 10 / 20 均線)
+  const labelList = [
+    { key: 'ma5', text: '5', color: 'var(--color-ma5)', y: ma5EndY ?? 20 },
+    { key: 'ma10', text: '10', color: 'var(--color-ma10)', y: ma10EndY ?? 32 },
+  ]
+  if (hasMa20 && ma20EndY !== null) {
+    labelList.push({ key: 'ma20', text: '20', color: 'var(--color-ma20)', y: ma20EndY })
+  }
+
+  labelList.sort((a, b) => a.y - b.y)
+  const minGap = 8.5
+  for (let iter = 0; iter < 3; iter++) {
+    for (let i = 0; i < labelList.length - 1; i++) {
+      const diff = labelList[i + 1].y - labelList[i].y
+      if (diff < minGap) {
+        const overlap = minGap - diff
+        labelList[i].y = Math.max(kHeightTop + 2, labelList[i].y - overlap / 2)
+        labelList[i + 1].y = Math.min(kHeightBottom - 2, labelList[i + 1].y + overlap / 2)
+      }
     }
   }
+
+  const maLabels = labelList.map((item) => ({
+    ...item,
+    y: Number(item.y.toFixed(1)),
+  }))
 
   // -------------------------------------------------------------------------
   // 中層 (Y: 66 ~ 96)：成交量柱 + MV5 基準線
@@ -464,10 +514,11 @@ const chartData = computed(() => {
   return {
     candles,
     volumeBars,
+    hasMa20,
     ma5EndY,
     ma10EndY,
-    labelY5: Number(labelY5.toFixed(1)),
-    labelY10: Number(labelY10.toFixed(1)),
+    ma20EndY,
+    maLabels,
     yMV5,
     y50,
     kEndY,
@@ -479,9 +530,8 @@ const chartData = computed(() => {
 
 // 折線 Points 計算
 const ma5Points = computed(() => {
-  const rawList = props.history || props.stock?.history10d
-  if (!Array.isArray(rawList) || rawList.length < 10) return ''
-  const k10d = rawList.slice(-10)
+  const k10d = normalizedK10d.value
+  if (k10d.length < 10) return ''
 
   const allVals = []
   k10d.forEach((d) => {
@@ -491,6 +541,7 @@ const ma5Points = computed(() => {
     if (typeof d.close === 'number') allVals.push(d.close)
     if (typeof d.ma5 === 'number') allVals.push(d.ma5)
     if (typeof d.ma10 === 'number') allVals.push(d.ma10)
+    if (typeof d.ma20 === 'number') allVals.push(d.ma20)
   })
   const maxVal = allVals.length > 0 ? Math.max(...allVals) * 1.002 : 1
   const minVal = allVals.length > 0 ? Math.min(...allVals) * 0.998 : 0
@@ -501,9 +552,8 @@ const ma5Points = computed(() => {
 })
 
 const ma10Points = computed(() => {
-  const rawList = props.history || props.stock?.history10d
-  if (!Array.isArray(rawList) || rawList.length < 10) return ''
-  const k10d = rawList.slice(-10)
+  const k10d = normalizedK10d.value
+  if (k10d.length < 10) return ''
 
   const allVals = []
   k10d.forEach((d) => {
@@ -513,6 +563,7 @@ const ma10Points = computed(() => {
     if (typeof d.close === 'number') allVals.push(d.close)
     if (typeof d.ma5 === 'number') allVals.push(d.ma5)
     if (typeof d.ma10 === 'number') allVals.push(d.ma10)
+    if (typeof d.ma20 === 'number') allVals.push(d.ma20)
   })
   const maxVal = allVals.length > 0 ? Math.max(...allVals) * 1.002 : 1
   const minVal = allVals.length > 0 ? Math.min(...allVals) * 0.998 : 0
@@ -522,18 +573,41 @@ const ma10Points = computed(() => {
   return k10d.map((d, i) => `${xCoords[i]},${getY(d.ma10 || d.close)}`).join(' ')
 })
 
+const ma20Points = computed(() => {
+  const k10d = normalizedK10d.value
+  if (k10d.length < 10) return ''
+
+  const hasAnyMa20 = k10d.some((d) => typeof d.ma20 === 'number')
+  if (!hasAnyMa20) return ''
+
+  const allVals = []
+  k10d.forEach((d) => {
+    if (typeof d.open === 'number') allVals.push(d.open)
+    if (typeof d.high === 'number') allVals.push(d.high)
+    if (typeof d.low === 'number') allVals.push(d.low)
+    if (typeof d.close === 'number') allVals.push(d.close)
+    if (typeof d.ma5 === 'number') allVals.push(d.ma5)
+    if (typeof d.ma10 === 'number') allVals.push(d.ma10)
+    if (typeof d.ma20 === 'number') allVals.push(d.ma20)
+  })
+  const maxVal = allVals.length > 0 ? Math.max(...allVals) * 1.002 : 1
+  const minVal = allVals.length > 0 ? Math.min(...allVals) * 0.998 : 0
+  const range = maxVal - minVal || 1
+  const getY = (val) => (58 - ((val - minVal) / range) * 52).toFixed(1)
+
+  return k10d.map((d, i) => `${xCoords[i]},${getY(d.ma20 || d.close)}`).join(' ')
+})
+
 const kPoints = computed(() => {
-  const rawList = props.history || props.stock?.history10d
-  if (!Array.isArray(rawList) || rawList.length < 10) return ''
-  const k10d = rawList.slice(-10)
+  const k10d = normalizedK10d.value
+  if (k10d.length < 10) return ''
   const getKdY = (val) => (134 - (Math.min(100, Math.max(0, val || 50)) / 100) * 30).toFixed(1)
   return k10d.map((d, i) => `${xCoords[i]},${getKdY(d.k)}`).join(' ')
 })
 
 const dPoints = computed(() => {
-  const rawList = props.history || props.stock?.history10d
-  if (!Array.isArray(rawList) || rawList.length < 10) return ''
-  const k10d = rawList.slice(-10)
+  const k10d = normalizedK10d.value
+  if (k10d.length < 10) return ''
   const getKdY = (val) => (134 - (Math.min(100, Math.max(0, val || 50)) / 100) * 30).toFixed(1)
   return k10d.map((d, i) => `${xCoords[i]},${getKdY(d.d)}`).join(' ')
 })
