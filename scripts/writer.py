@@ -129,6 +129,26 @@ def build_stock_pool(
             if _is_valid_stock_code(s.get('code', '')):
                 all_codes.add(s['code'])
 
+    # ── 建立全市場名稱字典（優先順序：ETF holdings > 富邦排行榜）──
+    # 原因：yahoo.py 只抓 OHLCV，不含名稱；必須從爬蟲資料補齊
+    name_dict: Dict[str, str] = {}
+
+    # 第一層：富邦各排行榜（最廣，幾乎涵蓋全池）
+    for rank_data in rankings.values():
+        for s in rank_data.get('stocks', []):
+            c = s.get('code', '')
+            n = s.get('name', '').strip()
+            if c and n and n != c:   # name 有意義才覆蓋
+                name_dict[c] = n
+
+    # 第二層：ETF holdings（名稱更正確，覆蓋排行榜）
+    for holdings in etf_holdings.values():
+        for s in holdings.get('stocks', []):
+            c = s.get('code', '')
+            n = s.get('name', '').strip()
+            if c and n and n != c:
+                name_dict[c] = n
+
     # 建立個股物件
     stocks = []
     for code in sorted(all_codes):
@@ -136,13 +156,8 @@ def build_stock_pool(
         if not data:
             continue  # Yahoo 抓失敗，不納入（不補假資料）
 
-        # 從 ETF holdings 取得名稱（較準確）
-        name = data.get('name', code)
-        for holdings in etf_holdings.values():
-            for s in holdings.get('stocks', []):
-                if s['code'] == code and s.get('name'):
-                    name = s['name']
-                    break
+        # 從名稱字典查找，找不到才 fallback 到代號
+        name = name_dict.get(code, code)
 
         cats = _build_categories(code, rankings, etf_holdings, data.get('categories', []))
         if not cats:

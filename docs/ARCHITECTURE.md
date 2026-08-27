@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-08-26**（Python 後端全部完成 + GitHub Actions workflows + 定時排程）
+> **最後更新：2026-08-27**（修復 writer.py 名稱對照，Gemini UI 開始開發）
 
 ---
 
@@ -388,6 +388,11 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 - [ ] 手機端細節優化
+
+### 待辦與後端修正清單（Claude 負責）
+- [ ] **修復個股中文名稱缺漏（175 檔個股 `name == code`）**：
+  - **問題根因**：`scripts/writer.py` 目前只從 `etf_holdings` (0050/0051) 解析名稱。若個股來自富邦排行榜（投信買超、外資買超、週轉率、Top100 等）且不在 0050/0051 中（例如 `4991 環宇-KY`、`3081 聯亞`、`1709`、`1815` 等），名稱會 fallback 為代碼。
+  - **待修方案**：在 `scripts/writer.py` 中，將 `rankings` 各排行解析出的 `name` 納入名稱查找，或建立全市場 TWSE/TPEx 股票名稱對照字典。
 
 ---
 
