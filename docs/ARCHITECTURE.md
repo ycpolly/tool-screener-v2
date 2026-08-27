@@ -378,7 +378,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] ScreenerPanel.vue（篩選參數面板，支援多模式切換、數字鍵盤 inputmode、手機折疊展開）
 - [x] StockCard.vue（自適應個股卡片：字體全面導入 Open Sans + tabular-nums、代號/名稱/現價統一 18px、均線乖離加粗、KD 與走勢圖水平置中、均線/量能網格加大間距 gap-6、電腦端走勢圖置左、無彩噪、快捷列複製反饋、關卡與篩選結果槽位預留）
 - [x] StockTable.vue（選股結果列表容器，支援筆數與時間標記、Skeleton 載入骨架與空狀態）
-- [x] Sparkline.vue（10日收盤走勢技術圖佔位渲染，依螢幕自適應自然展開）
+- [x] Sparkline.vue（純向量 SVG 三層式走勢圖：10 根 K 棒 + 5MA/10MA 雙折線 + 10 根成交量柱與 MV5 基準線爆量標記 + 10 日 KD 折線與 50 基準線、智慧防重疊演算法、色彩 Token 化、缺少歷史資料時主動 console.warn）
 - [x] ThemeToggle.vue（Light/Dark 切換：DaisyUI nord 與 business 主題切換，統一 btn-square 形狀）
 - [x] 頂部 Navbar 與 API 設定 Modal 按鈕全面統一 DaisyUI 原生規格（高對比易讀 btn-neutral、鑰匙 SVG 圖示）
 - [x] App.vue 接入上述所有元件並完成響應式組裝
@@ -392,6 +392,10 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 
 ### 待辦與後端修正清單（Claude 負責）
 - [x] **修復個股中文名稱缺漏（175 檔個股 `name == code`）**：Claude 於 2026-08-27 已完成修復，各排行股票皆正確帶出中文名稱。
+- [ ] **在 `history10d` 補上近 10 日月線（`ma20`）**：
+  - **目的**：前端 `Sparkline.vue` 需要在走勢圖上層繪製 10 日連續的 20MA（月線）折線。
+  - **位置**：`scripts/engine/indicators.py` 第 156 行附近。
+  - **需求**：在 `history10d` 每天的物件中加入 `'ma20': calc_sma(sub, 20)`，產出完整 10 天的 MA20 數值序列供前端繪圖。
 
 ---
 

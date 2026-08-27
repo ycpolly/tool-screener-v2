@@ -47,7 +47,11 @@
       <!-- 第 3 層：Sparkline 技術走勢圖 + KD 動能指標 (水平置中於走勢圖下方) -->
       <div class="space-y-1.5 py-1">
         <div class="w-full flex items-center justify-center">
-          <Sparkline :data="stock.sparkline" />
+          <Sparkline
+            :history="stock.history10d"
+            :stock="stock"
+            :stock-code="stock.code"
+          />
         </div>
         <div class="flex items-center justify-center gap-2 text-xs font-normal text-base-content/75 font-numeric leading-normal">
           <span>{{ UI_STRINGS.METRICS.kd }} <strong class="text-base-content font-bold">{{ stock.kd?.k }} / {{ stock.kd?.d }}</strong></span>
@@ -147,7 +151,11 @@
       <!-- 左欄 (4/12)：走勢圖 + KD 指標 (水平置中於走勢圖下方) -->
       <div class="lg:col-span-4 space-y-1.5 pr-2">
         <div class="w-full flex items-center justify-center">
-          <Sparkline :data="stock.sparkline" />
+          <Sparkline
+            :history="stock.history10d"
+            :stock="stock"
+            :stock-code="stock.code"
+          />
         </div>
         <div class="flex items-center justify-center gap-2 text-xs font-normal text-base-content/75 font-numeric leading-normal">
           <span>{{ UI_STRINGS.METRICS.kd }} <strong class="text-base-content font-bold">{{ stock.kd?.k }} / {{ stock.kd?.d }}</strong></span>
