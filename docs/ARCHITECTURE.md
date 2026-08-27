@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-08-27**（修復 writer.py 名稱對照，Gemini UI 開始開發）
+> **最後更新：2026-08-27**（完成 Phase 1 GCP 即時行情接入、雙軌 URL 管理、資料合體與嚴格正確性檢查）
 
 ---
 
@@ -371,7 +371,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
   - 323 檔個股，685.5 KB，全部格式驗證通過（sparkline ≥ 5，history10d = 10）
   - market 欄位全部為 tse/otc，舊中文格式 0 筆
 - [x] GitHub Actions：爬蟲機器人 + 前端部署 — 完成 2026-08-26
-- [ ] GCP 即時行情接入（更新 useRealtimeQuotes）
+- [x] GCP 即時行情接入（更新 useRealtimeQuotes、合體重算、雙軌 URL 管理與嚴格資料完整性檢查）— 完成 2026-08-27
 
 ### Phase 2（UI + 核心 UX）— 由 Gemini 完成（2026-08-26）
 - [x] MarketBanner.vue（大盤風控橫幅，支援 SAFE/CAUTION/DANGER 色彩適配與加權/櫃買數據）

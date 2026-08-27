@@ -333,13 +333,20 @@ const {
 
 ```typescript
 const {
-  quotes:      Readonly<Ref<Record<string, QuoteData>>>,
-  loading:     Readonly<Ref<boolean>>,
-  lastUpdated: Readonly<Ref<string | null>>,
-  fetchQuotes: (codes: string[]) => Promise<void>,
-  getQuote:    (code: string) => QuoteData | null,
+  gcpUrl:       Readonly<Ref<string>>,
+  quotes:       Readonly<Ref<Record<string, QuoteData>>>,
+  loading:      Readonly<Ref<boolean>>,
+  lastUpdated:  Readonly<Ref<string | null>>,
+  error:        Readonly<Ref<string | null>>,
+  missingCodes: Readonly<Ref<string[]>>,
+  isConfigured: Readonly<ComputedRef<boolean>>,
+  saveGcpUrl:   (url: string) => void,
+  clearGcpUrl:  () => void,
+  fetchQuotes:  (codes: string[]) => Promise<Record<string, QuoteData> | null>,
+  getQuote:     (code: string) => QuoteData | null,
 } = useRealtimeQuotes()
 ```
+
 
 ---
 

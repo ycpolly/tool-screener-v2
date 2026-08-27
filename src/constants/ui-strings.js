@@ -107,4 +107,27 @@ export const UI_STRINGS = {
     requireRedCandle: '要求實體紅 K',
     to: '至',
   },
+
+  API_SETTINGS: {
+    modalTitle: '行情 API 設定',
+    modalDesc: '請輸入 GCP Cloud Function 即時行情代理微服務網址。',
+    urlLabel: 'GCP Function 網址',
+    urlPlaceholder: 'https://asia-east1-PROJECT.cloudfunctions.net/market-data-proxy',
+    saveBtn: '儲存設定',
+    clearBtn: '清除設定',
+    closeBtn: '關閉',
+    savedToast: '已儲存行情 API 網址',
+    clearedToast: '已清除行情 API 網址',
+    emptyNotice: '尚未設定行情 API 網址，請先點擊設定',
+  },
+
+  REALTIME: {
+    fetchBtn: '取得最新價格',
+    fetchingBtn: '更新中…',
+    fetchSuccess: (count) => `已更新 ${count} 筆即時行情`,
+    missingWarning: (missingCount) => `即時行情有 ${missingCount} 筆資料未回傳，嚴禁使用舊資料補齊，請重新整理或稍候再試`,
+    fetchFailed: '連線行情 API 失敗，請檢查網址、CORS 或網路狀態',
+    lastUpdated: (t) => `即時更新於 ${t}`,
+  },
 }
+

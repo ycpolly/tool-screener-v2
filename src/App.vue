@@ -12,25 +12,67 @@
       </div>
 
       <div class="ml-auto flex items-center gap-2">
+        <!-- 取得最新價格按鈕 -->
+        <button
+          class="btn btn-sm btn-primary gap-1.5 font-medium"
+          :disabled="poolLoading || quotesLoading"
+          @click="handleFetchRealtime"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            :class="{ 'animate-spin': quotesLoading }"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span class="text-xs md:text-sm">
+            {{ quotesLoading ? UI_STRINGS.REALTIME.fetchingBtn : UI_STRINGS.REALTIME.fetchBtn }}
+          </span>
+        </button>
+
+        <!-- 行情 API 設定按鈕 -->
+        <button
+          class="btn btn-sm btn-ghost btn-square"
+          :title="UI_STRINGS.API_SETTINGS.modalTitle"
+          @click="openApiModal"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+
+        <!-- 主題切換 -->
         <ThemeToggle :is-dark="isDark" @toggle="toggleTheme" />
       </div>
     </header>
 
     <!-- 主體內容容器 (Mobile-first, max-w-screen-xl) -->
     <main class="container mx-auto px-3 sm:px-4 py-4 md:py-6 max-w-screen-xl space-y-4 flex-1">
-      <!-- 錯誤狀態 -->
+      <!-- 基礎資料池錯誤 -->
       <div v-if="poolError" class="alert alert-error text-xs md:text-sm">
-        <span>資料載入失敗：{{ poolError }}</span>
+        <span>{{ poolError }}</span>
         <button class="btn btn-xs btn-outline" @click="loadPool">重試</button>
       </div>
 
+      <!-- 即時行情警告 / 錯誤 (資料完整性警示) -->
+      <div v-if="quotesError" class="alert alert-warning text-xs md:text-sm shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <span>{{ quotesError }}</span>
+      </div>
+
       <!-- 核心工作區 -->
-      <template v-else>
+      <template v-if="!poolError">
         <!-- 1. 大盤多空風控橫幅 -->
         <MarketBanner
-          :taiex="market?.taiex"
-          :otc="market?.otc"
-          :regime="market?.regime"
+          :taiex="activeMarket?.taiex"
+          :otc="activeMarket?.otc"
+          :regime="activeMarket?.regime"
           :loading="poolLoading"
         />
 
@@ -48,20 +90,72 @@
         <StockTable
           :stocks="results"
           :loading="poolLoading"
-          :meta="meta"
+          :meta="activeMeta"
           @select="handleSelectStock"
           @open-risk-modal="handleOpenRiskModal"
         />
       </template>
     </main>
+
+    <!-- API 設定 Modal -->
+    <dialog class="modal" :class="{ 'modal-open': showApiModal }">
+      <div class="modal-box bg-base-200 border border-base-300 max-w-md">
+        <h3 class="font-bold text-base md:text-lg mb-2">
+          {{ UI_STRINGS.API_SETTINGS.modalTitle }}
+        </h3>
+        <p class="text-xs text-base-content/70 mb-4">
+          {{ UI_STRINGS.API_SETTINGS.modalDesc }}
+        </p>
+
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text text-xs font-medium">{{ UI_STRINGS.API_SETTINGS.urlLabel }}</span>
+          </label>
+          <input
+            v-model="inputUrl"
+            type="text"
+            class="input input-bordered input-sm w-full font-mono text-xs"
+            :placeholder="UI_STRINGS.API_SETTINGS.urlPlaceholder"
+          />
+        </div>
+
+        <div class="modal-action flex justify-between items-center">
+          <button
+            class="btn btn-sm btn-ghost text-error"
+            @click="handleClearApi"
+          >
+            {{ UI_STRINGS.API_SETTINGS.clearBtn }}
+          </button>
+          <div class="flex gap-2">
+            <button
+              class="btn btn-sm btn-outline"
+              @click="closeApiModal"
+            >
+              {{ UI_STRINGS.API_SETTINGS.closeBtn }}
+            </button>
+            <button
+              class="btn btn-sm btn-primary"
+              @click="handleSaveApi"
+            >
+              {{ UI_STRINGS.API_SETTINGS.saveBtn }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <form method="dialog" class="modal-backdrop" @click="closeApiModal">
+        <button>close</button>
+      </form>
+    </dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { UI_STRINGS } from './constants/ui-strings.js'
 import { useStockPool } from './composables/useStockPool.js'
 import { useScreener } from './composables/useScreener.js'
+import { useRealtimeQuotes } from './composables/useRealtimeQuotes.js'
+import { mergeAllRealtimeQuotes } from './engine/screener.js'
 
 import ThemeToggle from './components/ThemeToggle.vue'
 import MarketBanner from './components/MarketBanner.vue'
@@ -76,9 +170,39 @@ function toggleTheme() {
   document.documentElement.setAttribute('data-theme', isDark.value ? 'business' : 'nord')
 }
 
-// 載入資料池與篩選狀態
-const { stocks, market, meta, loading: poolLoading, error: poolError, loadPool } = useStockPool()
-const { activeMode, params, results, modes, setMode } = useScreener(stocks)
+// 1. 載入盤後基礎資料池
+const { stocks: baseStocks, market: baseMarket, meta, loading: poolLoading, error: poolError, loadPool } = useStockPool()
+
+// 2. 即時行情微服務
+const {
+  gcpUrl,
+  quotes,
+  loading: quotesLoading,
+  lastUpdated: quotesLastUpdated,
+  error: quotesError,
+  isConfigured,
+  saveGcpUrl,
+  clearGcpUrl,
+  fetchQuotes,
+} = useRealtimeQuotes()
+
+// 3. 資料即時合體（歷史基底 + GCP 盤中報價）
+const mergedData = computed(() =>
+  mergeAllRealtimeQuotes(baseStocks.value, baseMarket.value, quotes.value)
+)
+
+const activeStocks = computed(() => mergedData.value.stocks)
+const activeMarket = computed(() => mergedData.value.market)
+const activeMeta   = computed(() => {
+  if (!meta.value) return null
+  return {
+    ...meta.value,
+    lastRealtimeUpdate: quotesLastUpdated.value,
+  }
+})
+
+// 4. 篩選邏輯層
+const { activeMode, params, results, modes, setMode } = useScreener(activeStocks)
 
 function handleResetParams() {
   setMode(activeMode.value)
@@ -90,6 +214,43 @@ function handleSelectStock(stock) {
 
 function handleOpenRiskModal(stock) {
   console.log('[Open Risk Modal]', stock.code, stock.name)
+}
+
+// 5. 即時更新與 API 設定 Modal
+const showApiModal = ref(false)
+const inputUrl     = ref('')
+
+function openApiModal() {
+  inputUrl.value = gcpUrl.value || ''
+  showApiModal.value = true
+}
+
+function closeApiModal() {
+  showApiModal.value = false
+}
+
+function handleSaveApi() {
+  saveGcpUrl(inputUrl.value)
+  showApiModal.value = false
+  if (isConfigured.value) {
+    handleFetchRealtime()
+  }
+}
+
+function handleClearApi() {
+  clearGcpUrl()
+  inputUrl.value = ''
+  showApiModal.value = false
+}
+
+function handleFetchRealtime() {
+  if (!isConfigured.value) {
+    openApiModal()
+    return
+  }
+  if (!baseStocks.value || baseStocks.value.length === 0) return
+  const codes = baseStocks.value.map(s => s.code)
+  fetchQuotes(codes)
 }
 
 onMounted(() => {
