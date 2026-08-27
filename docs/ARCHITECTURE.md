@@ -392,10 +392,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 
 ### 待辦與後端修正清單（Claude 負責）
 - [x] **修復個股中文名稱缺漏（175 檔個股 `name == code`）**：Claude 於 2026-08-27 已完成修復，各排行股票皆正確帶出中文名稱。
-- [ ] **在 `history10d` 補上近 10 日月線（`ma20`）**：
-  - **目的**：前端 `Sparkline.vue` 需要在走勢圖上層繪製 10 日連續的 20MA（月線）折線。
-  - **位置**：`scripts/engine/indicators.py` 第 156 行附近。
-  - **需求**：在 `history10d` 每天的物件中加入 `'ma20': calc_sma(sub, 20)`，產出完整 10 天的 MA20 數值序列供前端繪圖。
+- [x] **在 `history10d` 補上近 10 日月線（`ma20`）**：已於 2026-08-27 完成，在 `scripts/engine/indicators.py` 加入 `'ma20': calc_sma(sub, 20)`，為前端 Sparkline 提供完整 10 日 MA20 序列。
 
 ---
 

@@ -153,6 +153,7 @@ def calc_stock_indicators(ohlcv: List[Dict]) -> Dict[str, Any]:
                 'volume':    round(d['volume'] / 1000),
                 'ma5':       calc_sma(sub, 5),
                 'ma10':      calc_sma(sub, 10),
+                'ma20':      calc_sma(sub, 20),
                 'k':         kdi['k'],
                 'd':         kdi['d'],
             })
