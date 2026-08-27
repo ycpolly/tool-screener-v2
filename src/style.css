@@ -12,16 +12,13 @@
   --color-rise: #c0392b;      /* 漲：磚紅，低飽和 */
   --color-fall: #27ae60;      /* 跌：苔綠，低飽和 */
   --color-flat: oklch(0.55 0 0);    /* 平盤：中性灰 */
-
-  /* 字型 */
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 }
 
 /* ============================================================
    全域基礎（Mobile-first）
    ============================================================ */
 html {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Open Sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-tap-highlight-color: transparent; /* 手機點擊無閃爍 */
 }
 
@@ -40,10 +37,9 @@ body {
 .bg-fall-subtle { background-color: oklch(from var(--color-fall) l c h / 0.08); }
 
 /* ============================================================
-   數字顯示（等寬字型，對齊小數點）
+   數字顯示（等寬數字特性，對齊小數點，使用 Open Sans 無襯線字型）
    ============================================================ */
 .font-numeric {
-  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 

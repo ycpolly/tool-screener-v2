@@ -118,20 +118,20 @@
 
         <div class="modal-action flex justify-between items-center">
           <button
-            class="btn btn-sm btn-ghost text-error"
+            class="btn btn-sm btn-ghost text-error hover:bg-error/10 font-normal"
             @click="handleClearApi"
           >
             {{ UI_STRINGS.API_SETTINGS.clearBtn }}
           </button>
           <div class="flex gap-2">
             <button
-              class="btn btn-sm btn-outline"
+              class="btn btn-sm btn-ghost font-normal"
               @click="closeApiModal"
             >
               {{ UI_STRINGS.API_SETTINGS.closeBtn }}
             </button>
             <button
-              class="btn btn-sm btn-primary"
+              class="btn btn-sm btn-neutral font-medium"
               @click="handleSaveApi"
             >
               {{ UI_STRINGS.API_SETTINGS.saveBtn }}

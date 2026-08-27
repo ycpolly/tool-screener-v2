@@ -373,13 +373,14 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] GitHub Actions：爬蟲機器人 + 前端部署 — 完成 2026-08-26
 - [x] GCP 即時行情接入（更新 useRealtimeQuotes、合體重算、雙軌 URL 管理與嚴格資料完整性檢查）— 完成 2026-08-27
 
-### Phase 2（UI + 核心 UX）— 由 Gemini 完成（2026-08-26）
+### Phase 2（UI + 核心 UX）— 由 Gemini 完成（2026-08-27 優化）
 - [x] MarketBanner.vue（大盤風控橫幅，支援 SAFE/CAUTION/DANGER 色彩適配與加權/櫃買數據）
 - [x] ScreenerPanel.vue（篩選參數面板，支援多模式切換、數字鍵盤 inputmode、手機折疊展開）
-- [x] StockCard.vue（自適應個股卡片：手機 5 層自然展開 + 電腦 3 欄式寬扁卡片、左右 3 排對稱均線/量能網格、加粗 Highlight、無彩色干擾、複製按鈕微互動、關卡與篩選結果槽位預留）
-- [x] StockTable.vue（選股結果列表容器，支援多欄位排序、筆數與時間標記、Skeleton 載入骨架與空狀態）
-- [x] Sparkline.vue（10日收盤走勢 SVG 折線圖，依漲跌 Token 自適應上色與終點圓點）
-- [x] ThemeToggle.vue（Light/Dark 切換：DaisyUI nord 與 business 主題切換）
+- [x] StockCard.vue（自適應個股卡片：字體全面導入 Open Sans + tabular-nums、代號/名稱/現價統一 18px、均線乖離加粗、KD 與走勢圖水平置中、均線/量能網格加大間距 gap-6、電腦端走勢圖置左、無彩噪、快捷列複製反饋、關卡與篩選結果槽位預留）
+- [x] StockTable.vue（選股結果列表容器，支援筆數與時間標記、Skeleton 載入骨架與空狀態）
+- [x] Sparkline.vue（10日收盤走勢技術圖佔位渲染，依螢幕自適應自然展開）
+- [x] ThemeToggle.vue（Light/Dark 切換：DaisyUI nord 與 business 主題切換，統一 btn-square 形狀）
+- [x] 頂部 Navbar 與 API 設定 Modal 按鈕全面統一 DaisyUI 原生規格（高對比易讀 btn-neutral、鑰匙 SVG 圖示）
 - [x] App.vue 接入上述所有元件並完成響應式組裝
 
 ### Phase 3（完整功能）
@@ -390,9 +391,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [ ] 手機端細節優化
 
 ### 待辦與後端修正清單（Claude 負責）
-- [ ] **修復個股中文名稱缺漏（175 檔個股 `name == code`）**：
-  - **問題根因**：`scripts/writer.py` 目前只從 `etf_holdings` (0050/0051) 解析名稱。若個股來自富邦排行榜（投信買超、外資買超、週轉率、Top100 等）且不在 0050/0051 中（例如 `4991 環宇-KY`、`3081 聯亞`、`1709`、`1815` 等），名稱會 fallback 為代碼。
-  - **待修方案**：在 `scripts/writer.py` 中，將 `rankings` 各排行解析出的 `name` 納入名稱查找，或建立全市場 TWSE/TPEx 股票名稱對照字典。
+- [x] **修復個股中文名稱缺漏（175 檔個股 `name == code`）**：Claude 於 2026-08-27 已完成修復，各排行股票皆正確帶出中文名稱。
 
 ---
 
