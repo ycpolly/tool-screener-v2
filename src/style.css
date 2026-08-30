@@ -1,7 +1,7 @@
 /* Tailwind CSS v4 + DaisyUI */
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: nord, business;
+  themes: cupcake, dracula;
 }
 
 /* ============================================================
@@ -54,9 +54,9 @@ body {
 .badge-disposed {
   background-color: oklch(0.75 0.18 50);
   color: oklch(0.2 0.05 50);
-  font-size: 0.65rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  padding: 0.1rem 0.35rem;
+  padding: 0.15rem 0.4rem;
   border-radius: 0.25rem;
 }

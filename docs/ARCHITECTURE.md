@@ -387,7 +387,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] StockCard.vue（自適應個股卡片：字體全面導入 Open Sans + tabular-nums、代號/名稱/現價統一 18px、均線乖離加粗、KD 與走勢圖水平置中、均線/量能網格加大間距 gap-6、電腦端走勢圖置左、無彩噪、快捷列複製反饋、關卡與篩選結果槽位預留）
 - [x] StockTable.vue（選股結果列表容器，支援筆數與時間標記、Skeleton 載入骨架與空狀態）
 - [x] Sparkline.vue（純向量 SVG 三層式走勢圖：10 根 K 棒 + 5MA/10MA 雙折線 + 10 根成交量柱與 MV5 基準線爆量標記 + 10 日 KD 折線與 50 基準線、智慧防重疊演算法、色彩 Token 化、缺少歷史資料時主動 console.warn）
-- [x] ThemeToggle.vue（Light/Dark 切換：DaisyUI nord 與 business 主題切換，統一 btn-square 形狀）
+- [x] ThemeToggle.vue（Light/Dark 切換：DaisyUI cupcake 暖白與 dracula 吸血鬼暗紫主題切換，全站最小字體全面升級至 text-sm 14px，提升文字對比度至 80%）
 - [x] 頂部 Navbar 與 API 設定 Modal 按鈕全面統一 DaisyUI 原生規格（高對比易讀 btn-neutral、鑰匙 SVG 圖示）
 - [x] Navbar 標題小字版號（純文字無底色/無 Badge，點擊觸發頁面強制重載避免快取，命名規範 `vMMDD.NN`）
 - [x] UI 字串對照（`src/constants/ui-strings.js`：補齊 `ForeignBuy`、`MajorBuy`、`SitcaBuy` 等所有分類標籤繁體中文對照）

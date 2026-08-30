@@ -1,18 +1,18 @@
 <template>
-  <div class="screener-panel bg-base-200 border border-base-300 rounded-2xl p-3.5 md:p-4 space-y-3 shadow-sm select-none">
+  <div class="screener-panel bg-base-200 border border-base-300 rounded-2xl p-3.5 md:p-4 space-y-3.5 shadow-sm select-none">
     <!-- ============================================================
          1. 頂部常駐 4 大模式分段切換器 (全部 + 3 大策略，內建即時檔數)
          ============================================================ -->
-    <div class="grid grid-cols-4 gap-1 md:gap-1.5 p-1 bg-base-300/40 rounded-xl">
+    <div class="grid grid-cols-4 gap-1.5 p-1 bg-base-300/40 rounded-xl">
       <!-- Tab 0: 全部股票 -->
       <button
         type="button"
-        class="py-2 px-1 text-center rounded-lg text-xs md:text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap"
-        :class="activeMode === 'ALL' ? 'bg-base-100 text-base-content shadow-sm' : 'text-base-content/60 hover:text-base-content'"
+        class="py-2 px-1 text-center rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap"
+        :class="activeMode === 'ALL' ? 'bg-base-100 text-base-content shadow-sm' : 'text-base-content/80 hover:text-base-content'"
         @click="$emit('update:activeMode', 'ALL')"
       >
         <span>{{ UI_STRINGS.PANEL.allTab }}</span>
-        <span class="text-[10px] md:text-xs font-numeric font-medium opacity-70">
+        <span class="text-xs md:text-sm font-numeric font-medium opacity-80">
           ({{ modeCounts?.ALL ?? totalCount ?? 0 }})
         </span>
       </button>
@@ -22,13 +22,13 @@
         v-for="mode in Object.values(modes)"
         :key="mode.id"
         type="button"
-        class="py-2 px-1 text-center rounded-lg text-xs md:text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap"
-        :class="activeMode === mode.id ? 'bg-base-100 text-base-content shadow-sm' : 'text-base-content/60 hover:text-base-content'"
+        class="py-2 px-1 text-center rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap"
+        :class="activeMode === mode.id ? 'bg-base-100 text-base-content shadow-sm' : 'text-base-content/80 hover:text-base-content'"
         @click="$emit('update:activeMode', mode.id)"
       >
         <span class="hidden sm:inline">{{ mode.label }}</span>
         <span class="sm:hidden">{{ getShortModeLabel(mode.id) }}</span>
-        <span class="text-[10px] md:text-xs font-numeric font-medium opacity-70">
+        <span class="text-xs md:text-sm font-numeric font-medium opacity-80">
           ({{ modeCounts?.[mode.id] ?? 0 }})
         </span>
       </button>
@@ -37,29 +37,29 @@
     <!-- ============================================================
          2. 戰略提示與微調控制條 (提示文字 + 自訂標籤 + 重設 + 展開按鈕)
          ============================================================ -->
-    <div class="flex items-center justify-between min-h-[30px] pt-0.5 px-0.5 gap-2 flex-wrap">
+    <div class="flex items-center justify-between min-h-[32px] pt-0.5 px-0.5 gap-2 flex-wrap">
       <!-- 左側：戰略提示說明 -->
-      <div class="text-xs text-base-content/75 leading-normal flex items-center gap-1.5 flex-1 min-w-[200px]">
-        <span class="inline-block w-1.5 h-1.5 rounded-full bg-primary/70 shrink-0"></span>
+      <div class="text-sm text-base-content/80 leading-normal flex items-center gap-1.5 flex-1 min-w-[200px]">
+        <span class="inline-block w-1.5 h-1.5 rounded-full bg-primary/80 shrink-0"></span>
         <span v-if="activeMode === 'ALL'">{{ UI_STRINGS.PANEL.allDescription }}</span>
         <span v-else>{{ currentMode?.description }}</span>
 
-        <!-- 已自訂微調 Neutral 標籤 -->
+        <!-- 已自訂微調 Neutral 標籤 (text-sm) -->
         <span
           v-if="activeMode !== 'ALL' && isCustomized"
-          class="text-[10px] md:text-[11px] font-medium text-base-content/80 bg-base-300 px-1.5 py-0.5 rounded leading-none ml-1 shrink-0"
+          class="text-sm font-medium text-base-content/80 bg-base-300 px-2 py-0.5 rounded leading-none ml-1 shrink-0"
         >
           {{ UI_STRINGS.PANEL.customized }}
         </span>
       </div>
 
       <!-- 右側動作：重設 + 展開/收合 (僅策略模式顯示微調按鈕) -->
-      <div class="flex items-center gap-1.5 shrink-0">
+      <div class="flex items-center gap-2 shrink-0">
         <template v-if="activeMode !== 'ALL'">
           <button
             v-if="isCustomized"
             type="button"
-            class="btn btn-xs btn-ghost text-base-content/70 hover:text-base-content font-normal"
+            class="btn btn-sm btn-ghost text-sm text-base-content/80 hover:text-base-content font-normal h-8 min-h-0"
             :title="UI_STRINGS.PANEL.resetBtn"
             @click="$emit('reset')"
           >
@@ -68,13 +68,13 @@
 
           <button
             type="button"
-            class="btn btn-xs btn-neutral gap-1 font-medium"
+            class="btn btn-sm btn-neutral gap-1.5 text-sm font-medium h-8 min-h-0"
             @click="isCollapsed = !isCollapsed"
           >
             <span>{{ isCollapsed ? UI_STRINGS.PANEL.adjustParams : UI_STRINGS.PANEL.collapseParams }}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-3.5 w-3.5 transition-transform duration-200"
+              class="h-4 w-4 transition-transform duration-200"
               :class="{ 'rotate-180': !isCollapsed }"
               fill="none"
               viewBox="0 0 24 24"
@@ -99,26 +99,26 @@
            模組 A：【均線與位階過濾】
            ============================================================ -->
       <div class="bg-base-100/60 rounded-xl p-3 md:p-3.5 space-y-1.5 border border-base-300/50">
-        <div class="text-xs font-bold text-base-content tracking-wide pb-1 border-b border-base-300/40 flex items-center justify-between">
+        <div class="text-sm font-bold text-base-content tracking-wide pb-1 border-b border-base-300/40 flex items-center justify-between">
           <span>{{ UI_STRINGS.PANEL.moduleMa }}</span>
         </div>
 
         <!-- A-1. 均線支撐 (BOTH 雙站穩 / ANY 單站穩) -->
-        <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
-          <span class="text-base-content/75">{{ UI_STRINGS.PANEL.maSupport }}</span>
-          <div class="inline-flex p-0.5 bg-base-300/50 rounded-lg text-xs font-numeric font-medium">
+        <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+          <span class="text-base-content/80">{{ UI_STRINGS.PANEL.maSupport }}</span>
+          <div class="inline-flex p-0.5 bg-base-300/50 rounded-lg text-sm font-numeric font-medium">
             <button
               type="button"
-              class="px-2 py-1 rounded-md transition-all"
-              :class="params.maAboveMode === 'BOTH' ? 'bg-base-100 font-bold text-base-content shadow-xs' : 'text-base-content/60'"
+              class="px-2.5 py-1 rounded-md transition-all text-sm"
+              :class="params.maAboveMode === 'BOTH' ? 'bg-base-100 font-bold text-base-content shadow-xs' : 'text-base-content/80'"
               @click="updateField('maAboveMode', 'BOTH')"
             >
               {{ UI_STRINGS.PANEL.maAboveBoth }}
             </button>
             <button
               type="button"
-              class="px-2 py-1 rounded-md transition-all"
-              :class="params.maAboveMode === 'ANY' ? 'bg-base-100 font-bold text-base-content shadow-xs' : 'text-base-content/60'"
+              class="px-2.5 py-1 rounded-md transition-all text-sm"
+              :class="params.maAboveMode === 'ANY' ? 'bg-base-100 font-bold text-base-content shadow-xs' : 'text-base-content/80'"
               @click="updateField('maAboveMode', 'ANY')"
             >
               {{ UI_STRINGS.PANEL.maAboveAny }}
@@ -127,105 +127,105 @@
         </div>
 
         <!-- A-2. 當日三線價差 (糾結度) -->
-        <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
+        <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
           <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
             <input
               type="checkbox"
-              class="checkbox checkbox-xs rounded"
+              class="checkbox checkbox-sm rounded"
               :checked="params.checkConvergence"
               @change="updateField('checkConvergence', $event.target.checked)"
             />
             <span>{{ UI_STRINGS.PANEL.convergence }}</span>
           </label>
-          <div class="flex items-center gap-1.5 font-numeric">
-            <span class="text-base-content/60 text-xs">≤</span>
+          <div class="flex items-center gap-1.5 font-numeric text-sm">
+            <span class="text-base-content/80">≤</span>
             <input
               type="number"
               step="0.5"
               inputmode="decimal"
               :value="params.convergenceMax"
-              class="input input-bordered input-xs w-14 bg-base-100 text-center font-bold text-xs"
+              class="input input-bordered input-sm h-7 w-16 bg-base-100 text-center font-bold text-sm"
               @input="updateDebouncedNumericField('convergenceMax', $event.target.value)"
             />
-            <span class="text-base-content/60 text-xs">%</span>
+            <span class="text-base-content/80">%</span>
           </div>
         </div>
 
         <!-- A-3. 前一日三線價差 (僅「動能攻擊」模式專用，其餘模式不顯示) -->
         <div
           v-if="activeMode === 'MOMENTUM_BREAKOUT'"
-          class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs"
+          class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm"
         >
           <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
             <input
               type="checkbox"
-              class="checkbox checkbox-xs rounded"
+              class="checkbox checkbox-sm rounded"
               :checked="params.checkPrevConvergence"
               @change="updateField('checkPrevConvergence', $event.target.checked)"
             />
             <span>{{ UI_STRINGS.PANEL.prevConvergence }}</span>
           </label>
-          <div class="flex items-center gap-1.5 font-numeric">
-            <span class="text-base-content/60 text-xs">≤</span>
+          <div class="flex items-center gap-1.5 font-numeric text-sm">
+            <span class="text-base-content/80">≤</span>
             <input
               type="number"
               step="0.5"
               inputmode="decimal"
               :value="params.prevConvergenceMax"
-              class="input input-bordered input-xs w-14 bg-base-100 text-center font-bold text-xs"
+              class="input input-bordered input-sm h-7 w-16 bg-base-100 text-center font-bold text-sm"
               @input="updateDebouncedNumericField('prevConvergenceMax', $event.target.value)"
             />
-            <span class="text-base-content/60 text-xs">%</span>
+            <span class="text-base-content/80">%</span>
           </div>
         </div>
 
-        <!-- A-4. 5MA 乖離率區間 (標準等高 36px 行) -->
-        <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
-          <span class="text-base-content/75">{{ UI_STRINGS.PANEL.bias5Range }}</span>
-          <div class="flex items-center gap-1.5 font-numeric">
+        <!-- A-4. 5MA 乖離率區間 (標準等高 38px 行) -->
+        <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+          <span class="text-base-content/80">{{ UI_STRINGS.PANEL.bias5Range }}</span>
+          <div class="flex items-center gap-1.5 font-numeric text-sm">
             <input
               type="number"
               step="0.5"
               inputmode="decimal"
               :value="params.bias5Min"
-              class="input input-bordered input-xs w-14 bg-base-100 text-center font-bold text-xs"
+              class="input input-bordered input-sm h-7 w-16 bg-base-100 text-center font-bold text-sm"
               @input="updateDebouncedNumericField('bias5Min', $event.target.value)"
             />
-            <span class="text-base-content/40 text-xs">{{ UI_STRINGS.PANEL.to }}</span>
+            <span class="text-base-content/50">{{ UI_STRINGS.PANEL.to }}</span>
             <input
               type="number"
               step="0.5"
               inputmode="decimal"
               :value="params.bias5Max"
-              class="input input-bordered input-xs w-14 bg-base-100 text-center font-bold text-xs"
+              class="input input-bordered input-sm h-7 w-16 bg-base-100 text-center font-bold text-sm"
               @input="updateDebouncedNumericField('bias5Max', $event.target.value)"
             />
-            <span class="text-base-content/60 text-xs">%</span>
+            <span class="text-base-content/80">%</span>
           </div>
         </div>
 
-        <!-- A-5. 20MA 月線乖離率區間 (標準等高 36px 行) -->
-        <div class="flex items-center justify-between min-h-[36px] py-1 text-xs">
-          <span class="text-base-content/75">{{ UI_STRINGS.PANEL.bias20Range }}</span>
-          <div class="flex items-center gap-1.5 font-numeric">
+        <!-- A-5. 20MA 月線乖離率區間 (標準等高 38px 行) -->
+        <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+          <span class="text-base-content/80">{{ UI_STRINGS.PANEL.bias20Range }}</span>
+          <div class="flex items-center gap-1.5 font-numeric text-sm">
             <input
               type="number"
               step="0.5"
               inputmode="decimal"
               :value="params.bias20Min"
-              class="input input-bordered input-xs w-14 bg-base-100 text-center font-bold text-xs"
+              class="input input-bordered input-sm h-7 w-16 bg-base-100 text-center font-bold text-sm"
               @input="updateDebouncedNumericField('bias20Min', $event.target.value)"
             />
-            <span class="text-base-content/40 text-xs">{{ UI_STRINGS.PANEL.to }}</span>
+            <span class="text-base-content/50">{{ UI_STRINGS.PANEL.to }}</span>
             <input
               type="number"
               step="0.5"
               inputmode="decimal"
               :value="params.bias20Max"
-              class="input input-bordered input-xs w-14 bg-base-100 text-center font-bold text-xs"
+              class="input input-bordered input-sm h-7 w-16 bg-base-100 text-center font-bold text-sm"
               @input="updateDebouncedNumericField('bias20Max', $event.target.value)"
             />
-            <span class="text-base-content/60 text-xs">%</span>
+            <span class="text-base-content/80">%</span>
           </div>
         </div>
       </div>
@@ -234,7 +234,7 @@
            模組 B：【量能與流動性】
            ============================================================ -->
       <div class="bg-base-100/60 rounded-xl p-3 md:p-3.5 space-y-1.5 border border-base-300/50">
-        <div class="text-xs font-bold text-base-content tracking-wide pb-1 border-b border-base-300/40 flex items-center justify-between">
+        <div class="text-sm font-bold text-base-content tracking-wide pb-1 border-b border-base-300/40 flex items-center justify-between">
           <span>{{ UI_STRINGS.PANEL.moduleVol }}</span>
         </div>
 
@@ -243,36 +243,36 @@
              ========================================== -->
         <template v-if="activeMode === 'MOMENTUM_BREAKOUT'">
           <!-- 1. 當日成交量 >= 1000 張 -->
-          <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkMinVolume !== false"
                 @change="updateField('checkMinVolume', $event.target.checked)"
               />
               <span>{{ UI_STRINGS.PANEL.minVolume }}</span>
             </label>
-            <div class="flex items-center gap-1.5 font-numeric">
-              <span class="text-base-content/60 text-xs">≥</span>
+            <div class="flex items-center gap-1.5 font-numeric text-sm">
+              <span class="text-base-content/80">≥</span>
               <input
                 type="number"
                 step="100"
                 inputmode="numeric"
                 :value="params.minVolume"
-                class="input input-bordered input-xs w-18 bg-base-100 text-center font-bold text-xs"
+                class="input input-bordered input-sm h-7 w-20 bg-base-100 text-center font-bold text-sm"
                 @input="updateDebouncedNumericField('minVolume', $event.target.value)"
               />
-              <span class="text-base-content/60 text-xs">張</span>
+              <span class="text-base-content/80">張</span>
             </div>
           </div>
 
           <!-- 2. 昨日成交量 < 昨日 5 日均量 (MV5) -->
-          <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkPrevVolContraction"
                 @change="updateField('checkPrevVolContraction', $event.target.checked)"
               />
@@ -281,11 +281,11 @@
           </div>
 
           <!-- 3. 排除處置股 -->
-          <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkNotDisposed !== false"
                 @change="updateField('checkNotDisposed', $event.target.checked)"
               />
@@ -294,11 +294,11 @@
           </div>
 
           <!-- 4. 當日帶量攻擊 (當日成交量大於 5 日均量) -->
-          <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkVolExpansion"
                 @change="updateField('checkVolExpansion', $event.target.checked)"
               />
@@ -307,11 +307,11 @@
           </div>
 
           <!-- 5. 實體攻擊紅 K (收盤 > 開盤，且當日漲幅 >= 1.5%) -->
-          <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkRedCandle"
                 @change="updateField('checkRedCandle', $event.target.checked)"
               />
@@ -320,11 +320,11 @@
           </div>
 
           <!-- 6. 排除長上影線避雷針 (上影線長度不能超過實體紅 K 的一半) -->
-          <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkAvoidLongUpperShadow"
                 @change="updateField('checkAvoidLongUpperShadow', $event.target.checked)"
               />
@@ -333,11 +333,11 @@
           </div>
 
           <!-- 7. KD 強勢攻擊區 (K 值 > 50 且 K > D 黃金交叉) -->
-          <div class="flex items-center justify-between min-h-[36px] py-1 text-xs">
+          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkKd !== false && params.kdRequireCross"
                 @change="updateField('checkKd', $event.target.checked); updateField('kdRequireCross', $event.target.checked)"
               />
@@ -351,36 +351,36 @@
              ========================================== -->
         <template v-else>
           <!-- 1. 最低成交量門檻 -->
-          <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkMinVolume !== false"
                 @change="updateField('checkMinVolume', $event.target.checked)"
               />
               <span>{{ UI_STRINGS.PANEL.minVolume }}</span>
             </label>
-            <div class="flex items-center gap-1.5 font-numeric">
-              <span class="text-base-content/60 text-xs">≥</span>
+            <div class="flex items-center gap-1.5 font-numeric text-sm">
+              <span class="text-base-content/80">≥</span>
               <input
                 type="number"
                 step="100"
                 inputmode="numeric"
                 :value="params.minVolume"
-                class="input input-bordered input-xs w-18 bg-base-100 text-center font-bold text-xs"
+                class="input input-bordered input-sm h-7 w-20 bg-base-100 text-center font-bold text-sm"
                 @input="updateDebouncedNumericField('minVolume', $event.target.value)"
               />
-              <span class="text-base-content/60 text-xs">張</span>
+              <span class="text-base-content/80">張</span>
             </div>
           </div>
 
           <!-- 2. 排除處置股 -->
-          <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkNotDisposed !== false"
                 @change="updateField('checkNotDisposed', $event.target.checked)"
               />
@@ -391,12 +391,12 @@
           <!-- 3. 量能洗盤型態 (Mode 1 量縮洗盤 / Mode 2 量縮回踩) -->
           <div
             v-if="activeMode === 'BOTTOM_CONSOLIDATION'"
-            class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs"
+            class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm"
           >
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkVolContraction"
                 @change="updateField('checkVolContraction', $event.target.checked)"
               />
@@ -405,12 +405,12 @@
           </div>
           <div
             v-else-if="activeMode === 'TREND_PULLBACK'"
-            class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs"
+            class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm"
           >
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkVolPullback"
                 @change="updateField('checkVolPullback', $event.target.checked)"
               />
@@ -419,11 +419,11 @@
           </div>
 
           <!-- 4. 排除長黑倒貨 -->
-          <div class="flex items-center justify-between min-h-[36px] py-1 border-b border-base-300/30 text-xs">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkAvoidLongBlack"
                 @change="updateField('checkAvoidLongBlack', $event.target.checked)"
               />
@@ -433,35 +433,35 @@
 
           <!-- 5. KD 動能區過濾 -->
           <div
-            class="flex items-center justify-between min-h-[36px] py-1 text-xs"
+            class="flex items-center justify-between min-h-[38px] py-1 text-sm"
             :class="{ 'border-b border-base-300/30': activeMode === 'BOTTOM_CONSOLIDATION' }"
           >
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.checkKd !== false"
                 @change="updateField('checkKd', $event.target.checked)"
               />
               <span>{{ UI_STRINGS.PANEL.kdFilter }}</span>
             </label>
-            <div class="flex items-center gap-1.5 font-numeric">
-              <span class="text-base-content/60 text-xs">K:</span>
+            <div class="flex items-center gap-1.5 font-numeric text-sm">
+              <span class="text-base-content/80">K:</span>
               <input
                 type="number"
                 step="5"
                 inputmode="numeric"
                 :value="params.kdKMin"
-                class="input input-bordered input-xs w-12 bg-base-100 text-center font-bold text-xs"
+                class="input input-bordered input-sm h-7 w-14 bg-base-100 text-center font-bold text-sm"
                 @input="updateDebouncedNumericField('kdKMin', $event.target.value)"
               />
-              <span class="text-base-content/40 text-xs">{{ UI_STRINGS.PANEL.to }}</span>
+              <span class="text-base-content/50">{{ UI_STRINGS.PANEL.to }}</span>
               <input
                 type="number"
                 step="5"
                 inputmode="numeric"
                 :value="params.kdKMax"
-                class="input input-bordered input-xs w-12 bg-base-100 text-center font-bold text-xs"
+                class="input input-bordered input-sm h-7 w-14 bg-base-100 text-center font-bold text-sm"
                 @input="updateDebouncedNumericField('kdKMax', $event.target.value)"
               />
             </div>
@@ -470,12 +470,12 @@
           <!-- 6. 要求 K > D 黃金交叉 (僅「底部蓄勢」顯示，「多頭回測」不看此條故隱藏) -->
           <div
             v-if="activeMode === 'BOTTOM_CONSOLIDATION'"
-            class="flex items-center justify-between min-h-[36px] py-1 text-xs"
+            class="flex items-center justify-between min-h-[38px] py-1 text-sm"
           >
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
-                class="checkbox checkbox-xs rounded"
+                class="checkbox checkbox-sm rounded"
                 :checked="params.kdRequireCross"
                 @change="updateField('kdRequireCross', $event.target.checked)"
               />

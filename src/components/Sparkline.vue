@@ -265,7 +265,7 @@
     <!-- 資料缺失時乾淨呈現空白/提示，不補假資料 -->
     <div
       v-else
-      class="flex items-center justify-center w-full h-24 text-xs text-base-content/40 italic bg-base-300/20 rounded border border-dashed border-base-300/50"
+      class="flex items-center justify-center w-full h-24 text-sm text-base-content/70 italic bg-base-300/20 rounded border border-dashed border-base-300/50"
     >
       -- 暫無 10 日走勢數據 --
     </div>

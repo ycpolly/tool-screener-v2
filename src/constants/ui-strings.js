@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0830.02',
+    version: 'v0830.03',
     tagline: '盤中即時 · 尾盤篩選',
   },
 

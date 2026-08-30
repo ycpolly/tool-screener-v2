@@ -1,5 +1,5 @@
 <template>
-  <div :data-theme="isDark ? 'business' : 'nord'" class="min-h-dvh bg-base-100 text-base-content antialiased flex flex-col">
+  <div :data-theme="isDark ? 'dracula' : 'cupcake'" class="min-h-dvh bg-base-100 text-base-content antialiased flex flex-col">
     <!-- 頂部 Navbar -->
     <header class="sticky top-0 z-40 bg-base-100/90 backdrop-blur border-b border-base-300 h-13 flex items-center px-4 md:px-6">
       <div class="flex items-baseline gap-2">
@@ -7,7 +7,7 @@
           {{ UI_STRINGS.APP.title }}
         </h1>
         <span
-          class="text-xs font-numeric font-normal text-base-content/50 select-none cursor-pointer"
+          class="text-sm font-numeric font-normal text-base-content/80 select-none cursor-pointer"
           title="點擊重新整理頁面"
           @click="reloadPage"
         >
@@ -32,14 +32,14 @@
           >
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          <span class="text-xs md:text-sm">
+          <span class="text-sm">
             {{ quotesLoading ? UI_STRINGS.REALTIME.fetchingBtn : UI_STRINGS.REALTIME.fetchBtn }}
           </span>
         </button>
 
         <!-- 行情 API 設定按鈕 (鑰匙 SVG 圖示，與主題切換一致的 btn-square 形狀) -->
         <button
-          class="btn btn-sm btn-ghost btn-square text-base-content/70 hover:text-base-content transition-colors"
+          class="btn btn-sm btn-ghost btn-square text-base-content/80 hover:text-base-content transition-colors"
           :title="UI_STRINGS.API_SETTINGS.modalTitle"
           :aria-label="UI_STRINGS.API_SETTINGS.modalTitle"
           @click="openApiModal"
@@ -49,7 +49,7 @@
           </svg>
         </button>
 
-        <!-- 主題切換 (與設定按鈕相同 btn-square 形狀) -->
+        <!-- 主題切換按鈕 (快捷日夜切換) -->
         <ThemeToggle :is-dark="isDark" @toggle="toggleTheme" />
       </div>
     </header>
@@ -57,13 +57,13 @@
     <!-- 主體內容容器 (Mobile-first, max-w-screen-xl) -->
     <main class="container mx-auto px-3 sm:px-4 py-4 md:py-6 max-w-screen-xl space-y-4 flex-1">
       <!-- 基礎資料池錯誤 -->
-      <div v-if="poolError" class="alert alert-error text-xs md:text-sm">
+      <div v-if="poolError" class="alert alert-error text-sm">
         <span>{{ poolError }}</span>
-        <button class="btn btn-xs btn-outline" @click="loadPool">重試</button>
+        <button class="btn btn-sm btn-outline" @click="loadPool">重試</button>
       </div>
 
       <!-- 即時行情警告 / 錯誤 (資料完整性警示) -->
-      <div v-if="quotesError" class="alert alert-warning text-xs md:text-sm shadow-sm">
+      <div v-if="quotesError" class="alert alert-warning text-sm shadow-sm">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
@@ -102,18 +102,18 @@
         <h3 class="font-bold text-base md:text-lg mb-2">
           {{ UI_STRINGS.API_SETTINGS.modalTitle }}
         </h3>
-        <p class="text-xs text-base-content/70 mb-4">
+        <p class="text-sm text-base-content/80 mb-4">
           {{ UI_STRINGS.API_SETTINGS.modalDesc }}
         </p>
 
         <div class="form-control mb-4">
           <label class="label">
-            <span class="label-text text-xs font-medium">{{ UI_STRINGS.API_SETTINGS.urlLabel }}</span>
+            <span class="label-text text-sm font-medium">{{ UI_STRINGS.API_SETTINGS.urlLabel }}</span>
           </label>
           <input
             v-model="inputUrl"
             type="text"
-            class="input input-bordered input-sm w-full font-mono text-xs"
+            class="input input-bordered input-sm w-full font-mono text-sm"
             :placeholder="UI_STRINGS.API_SETTINGS.urlPlaceholder"
           />
         </div>
@@ -165,8 +165,8 @@ const isDark = ref(false)
 
 function toggleTheme() {
   isDark.value = !isDark.value
-  localStorage.setItem('tool_theme', isDark.value ? 'business' : 'nord')
-  document.documentElement.setAttribute('data-theme', isDark.value ? 'business' : 'nord')
+  localStorage.setItem('tool_theme', isDark.value ? 'dracula' : 'cupcake')
+  document.documentElement.setAttribute('data-theme', isDark.value ? 'dracula' : 'cupcake')
 }
 
 // 1. 載入盤後基礎資料池
@@ -259,11 +259,11 @@ function reloadPage() {
 onMounted(() => {
   const savedTheme = localStorage.getItem('tool_theme')
   if (savedTheme) {
-    isDark.value = savedTheme === 'business'
+    isDark.value = savedTheme === 'dracula' || savedTheme === 'night' || savedTheme === 'dim' || savedTheme === 'business' || savedTheme === 'dark'
   } else if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
     isDark.value = true
   }
-  document.documentElement.setAttribute('data-theme', isDark.value ? 'business' : 'nord')
+  document.documentElement.setAttribute('data-theme', isDark.value ? 'dracula' : 'cupcake')
 
   loadPool()
 })
