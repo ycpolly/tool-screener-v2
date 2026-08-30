@@ -1,13 +1,13 @@
 <template>
   <div class="stock-table-container space-y-3">
-    <!-- 頂部工具列：筆數統計與最後更新時間 -->
-    <div class="flex flex-wrap items-center justify-between gap-2 px-1 text-sm text-base-content/80">
-      <div class="flex items-center gap-3">
-        <span class="font-bold text-sm text-base-content">
+    <!-- 頂部工具列：筆數統計與模式放寬建議 -->
+    <div class="flex flex-wrap items-baseline justify-between gap-2 px-1 text-sm text-base-content/80">
+      <div class="flex flex-wrap items-baseline gap-2.5">
+        <span class="font-bold text-sm text-base-content shrink-0">
           {{ UI_STRINGS.SCREENER.resultCount(stocks.length) }}
         </span>
-        <span v-if="formattedUpdatedAt" class="text-base-content/70 font-numeric">
-          {{ UI_STRINGS.SCREENER.lastUpdated(formattedUpdatedAt) }}
+        <span v-if="modeSuggestionText" class="text-sm text-base-content/75 leading-normal">
+          {{ modeSuggestionText }}
         </span>
       </div>
 
@@ -54,13 +54,10 @@
     <!-- 無符合資料狀態 (Empty State) -->
     <div
       v-else-if="stocks.length === 0"
-      class="text-center py-12 px-4 bg-base-200/50 border border-dashed border-base-300 rounded-xl space-y-2"
+      class="text-center py-16 px-4 bg-base-200/50 border border-dashed border-base-300 rounded-xl"
     >
-      <div class="text-base-content/80 text-base font-bold">
+      <div class="text-base-content/70 text-sm font-medium">
         {{ UI_STRINGS.SCREENER.noResult }}
-      </div>
-      <div class="text-sm text-base-content/70 max-w-lg mx-auto leading-relaxed">
-        {{ emptyHintText }}
       </div>
     </div>
 
@@ -70,9 +67,49 @@
         v-for="stock in sortedStocks"
         :key="stock.code"
         :stock="stock"
+        :active-mode="activeMode"
         @select="$emit('select', stock)"
         @open-risk-modal="$emit('openRiskModal', stock)"
       />
+    </div>
+
+    <!-- 未符合個股折疊清單 (僅在策略模式且有未符合個股時顯示) -->
+    <div
+      v-if="!loading && activeMode !== 'ALL' && unmatchedStocks.length > 0"
+      class="pt-3 border-t border-base-300/60 space-y-3"
+    >
+      <div class="flex items-center justify-center">
+        <button
+          type="button"
+          class="btn btn-sm btn-ghost text-sm text-base-content/80 hover:text-base-content font-medium gap-1.5 h-8 min-h-0"
+          @click="showUnmatched = !showUnmatched"
+        >
+          <span>{{ showUnmatched ? UI_STRINGS.SCREENER.collapseUnmatched(unmatchedStocks.length) : UI_STRINGS.SCREENER.expandUnmatched(unmatchedStocks.length) }}</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 transition-transform duration-200"
+            :class="{ 'rotate-180': showUnmatched }"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- 展開未符合清單 (渲染 StockCard，isUnmatched=true) -->
+      <div v-if="showUnmatched" class="space-y-3 opacity-90">
+        <StockCard
+          v-for="stock in unmatchedStocks"
+          :key="stock.code"
+          :stock="stock"
+          :active-mode="activeMode"
+          :is-unmatched="true"
+          @select="$emit('select', stock)"
+          @open-risk-modal="$emit('openRiskModal', stock)"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -84,6 +121,10 @@ import StockCard from './StockCard.vue'
 
 const props = defineProps({
   stocks: {
+    type: Array,
+    default: () => [],
+  },
+  unmatchedStocks: {
     type: Array,
     default: () => [],
   },
@@ -101,11 +142,13 @@ const props = defineProps({
   },
 })
 
-const emptyHintText = computed(() => {
-  if (props.activeMode && UI_STRINGS.SCREENER.emptyHints?.[props.activeMode]) {
-    return UI_STRINGS.SCREENER.emptyHints[props.activeMode]
+const showUnmatched = ref(false)
+
+const modeSuggestionText = computed(() => {
+  if (props.activeMode && UI_STRINGS.SCREENER.suggestions?.[props.activeMode]) {
+    return UI_STRINGS.SCREENER.suggestions[props.activeMode]
   }
-  return UI_STRINGS.SCREENER.emptyHints?.DEFAULT || '可嘗試放寬篩選條件或切換選股模式'
+  return ''
 })
 
 const emit = defineEmits(['select', 'sort', 'openRiskModal'])

@@ -207,7 +207,7 @@
         <!-- A-5. 20MA 月線乖離率區間 (標準等高 38px 行) -->
         <div
           class="flex items-center justify-between min-h-[38px] py-1 text-sm"
-          :class="{ 'border-b border-base-300/30': activeMode === 'BOTTOM_CONSOLIDATION' || params.requireAboveMa60 !== undefined }"
+          :class="{ 'border-b border-base-300/30': activeMode === 'BOTTOM_CONSOLIDATION' }"
         >
           <span class="text-base-content/80">{{ UI_STRINGS.PANEL.bias20Range }}</span>
           <div class="flex items-center gap-1.5 font-numeric text-sm">
@@ -232,9 +232,9 @@
           </div>
         </div>
 
-        <!-- A-6. 站穩季線防身 (收盤價 >= 60MA) (底部蓄勢模式專屬) -->
+        <!-- A-6. 站穩季線防身 (收盤價 >= 60MA) (嚴格限定僅底部蓄勢模式專屬) -->
         <div
-          v-if="activeMode === 'BOTTOM_CONSOLIDATION' || params.requireAboveMa60 !== undefined"
+          v-if="activeMode === 'BOTTOM_CONSOLIDATION'"
           class="flex items-center justify-between min-h-[38px] py-1 text-sm"
         >
           <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
@@ -581,16 +581,49 @@
             </label>
           </div>
 
-          <!-- 7. KD 強勢攻擊區 (K 值 > 50 且 K > D 黃金交叉) -->
+          <!-- 7. KD 動能區過濾 (強勢攻擊區，K: 50 至 100) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkKd !== false"
+                @change="updateField('checkKd', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.kdFilter }}</span>
+            </label>
+            <div class="flex items-center gap-1.5 font-numeric text-sm">
+              <span class="text-base-content/80">K:</span>
+              <input
+                type="number"
+                step="5"
+                inputmode="numeric"
+                :value="params.kdKMin"
+                class="input input-bordered input-sm h-7 w-14 bg-base-100 text-center font-bold text-sm"
+                @input="updateDebouncedNumericField('kdKMin', $event.target.value)"
+              />
+              <span class="text-base-content/50">{{ UI_STRINGS.PANEL.to }}</span>
+              <input
+                type="number"
+                step="5"
+                inputmode="numeric"
+                :value="params.kdKMax"
+                class="input input-bordered input-sm h-7 w-14 bg-base-100 text-center font-bold text-sm"
+                @input="updateDebouncedNumericField('kdKMax', $event.target.value)"
+              />
+            </div>
+          </div>
+
+          <!-- 8. 要求 K > D 黃金交叉 -->
           <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
                 class="checkbox checkbox-sm rounded"
-                :checked="params.checkKd !== false && params.kdRequireCross"
-                @change="updateField('checkKd', $event.target.checked); updateField('kdRequireCross', $event.target.checked)"
+                :checked="params.kdRequireCross"
+                @change="updateField('kdRequireCross', $event.target.checked)"
               />
-              <span>{{ UI_STRINGS.PANEL.kdMomentumAttack }}</span>
+              <span>{{ UI_STRINGS.PANEL.kdGoldenCross }}</span>
             </label>
           </div>
         </template>

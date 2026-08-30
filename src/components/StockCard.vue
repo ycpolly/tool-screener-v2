@@ -103,10 +103,11 @@
         </div>
       </div>
 
-      <!-- ★ 預留槽位 B：篩選判讀純文字結果 (統一 text-sm font-normal) -->
+      <!-- ★ 預留槽位 B：篩選判讀純文字結果 (方案 1 柔和摘要條) -->
       <div
         v-if="filterEvaluationText"
-        class="text-sm font-normal text-base-content/80 leading-normal pt-1.5 border-t border-base-300/40"
+        class="text-sm font-normal leading-normal py-1.5 px-2.5 rounded-lg border transition-colors"
+        :class="isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/70' : 'bg-base-300/50 border-base-300/80 text-base-content'"
       >
         {{ filterEvaluationText }}
       </div>
@@ -266,10 +267,11 @@
         </div>
       </div>
 
-      <!-- ★ 預留槽位 B (電腦端通欄底列，統一 text-sm font-normal) -->
+      <!-- ★ 預留槽位 B (電腦端通欄底列，方案 1 柔和摘要條) -->
       <div
         v-if="filterEvaluationText"
-        class="lg:col-span-12 text-sm font-normal text-base-content/80 leading-normal pt-2 mt-1 border-t border-base-300/40"
+        class="lg:col-span-12 text-sm font-normal leading-normal py-1.5 px-3 rounded-lg border transition-colors mt-1"
+        :class="isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/70' : 'bg-base-300/50 border-base-300/80 text-base-content'"
       >
         {{ filterEvaluationText }}
       </div>
@@ -286,6 +288,14 @@ const props = defineProps({
   stock: {
     type: Object,
     required: true,
+  },
+  activeMode: {
+    type: String,
+    default: '',
+  },
+  isUnmatched: {
+    type: Boolean,
+    default: false,
   },
   ceilingProfit: {
     type: Object,
@@ -400,7 +410,33 @@ const ceilingInfo = computed(() => {
 })
 
 const filterEvaluationText = computed(() => {
-  if (props.filterEvaluation?.reasonText) return props.filterEvaluation.reasonText
-  return null
+  // Case 1: 在「全部股票 (ALL)」模式下
+  if (props.activeMode === 'ALL') {
+    const matchedModes = props.stock?.matchedModes || []
+    if (matchedModes.length > 0) {
+      return UI_STRINGS.SCREENER.matchedStrategy(matchedModes.join(' · '))
+    }
+    return UI_STRINGS.SCREENER.noMatchedStrategy
+  }
+
+  // Case 2: 在特定模式下，若為「未符合/淘汰個股」 (不用 emoji)
+  if (props.isUnmatched) {
+    const reason = props.stock?.filterEvaluation?.reasonText || props.filterEvaluation?.reasonText
+    if (!reason) return null
+    return `${UI_STRINGS.SCREENER.unmatchedReasonPrefix}${reason}`
+  }
+
+  // Case 3: 在特定模式下，若為「符合個股」 (使用 emoji 💡)
+  const modeLabels = {
+    BOTTOM_CONSOLIDATION: '底部蓄勢',
+    TREND_PULLBACK: '多頭回測',
+    MOMENTUM_BREAKOUT: '動能攻擊',
+  }
+  const currentModeName = modeLabels[props.activeMode] || ''
+  if (currentModeName) {
+    return UI_STRINGS.SCREENER.matchedCondition(currentModeName)
+  }
+
+  return props.stock?.filterEvaluation?.reasonText || null
 })
 </script>

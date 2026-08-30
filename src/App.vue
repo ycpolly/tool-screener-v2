@@ -88,6 +88,7 @@
         <!-- 選股結果列表 (專注展示 StockCard) -->
         <StockTable
           :stocks="results"
+          :unmatched-stocks="unmatchedResults"
           :loading="poolLoading"
           :meta="activeMeta"
           :active-mode="activeMode"
@@ -202,7 +203,7 @@ const activeMeta   = computed(() => {
 })
 
 // 4. 篩選邏輯層
-const { activeMode, params, results, modeCounts, modes, setMode } = useScreener(activeStocks)
+const { activeMode, params, results, unmatchedResults, modeCounts, modes, setMode } = useScreener(activeStocks)
 
 function handleResetParams() {
   setMode(activeMode.value)
