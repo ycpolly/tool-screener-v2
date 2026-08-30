@@ -357,6 +357,120 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     }
   }
 
+  // 8. 成交量門檻檢驗 (checkMinVolume)
+  const volume = stock.volume ?? 0
+  if (params.checkMinVolume && typeof params.minVolume === 'number' && volume < params.minVolume) {
+    return {
+      isMatch: false,
+      reasonText: strings.volumeBelow ? strings.volumeBelow(params.minVolume, volume) : `成交量未達標 (${volume} 張 < ${params.minVolume} 張)`,
+    }
+  }
+
+  // 9. 排除處置股票 (checkNotDisposed)
+  if (params.checkNotDisposed && stock.isDisposed) {
+    return { isMatch: false, reasonText: strings.isDisposedStock || '此為處置股票 (關禁閉)' }
+  }
+
+  const vMa5 = stock.vMa5 ?? 0
+
+  // 10. 量縮洗盤 (checkVolContraction: 當日成交量 < 5日量均)
+  if (params.checkVolContraction && vMa5 > 0 && volume >= vMa5) {
+    return { isMatch: false, reasonText: strings.volContractionFailed || '當日成交量未達量縮標準 (≥ 5日量均)' }
+  }
+
+  // 11. 量縮回踩 (checkVolPullback: 當日成交量 < 5日量均 或 < 昨日成交量)
+  if (params.checkVolPullback) {
+    const history = stock.history10d
+    const prevBar = Array.isArray(history) && history.length >= 2 ? history[history.length - 2] : null
+    const prevVolume = prevBar?.volume ?? 0
+    const isBelowVma5 = vMa5 > 0 ? volume < vMa5 : false
+    const isBelowPrevVol = prevVolume > 0 ? volume < prevVolume : false
+
+    if (!isBelowVma5 && !isBelowPrevVol) {
+      return { isMatch: false, reasonText: strings.volPullbackFailed || '未達量縮回踩標準' }
+    }
+  }
+
+  // 12. 昨日量縮 (checkPrevPrevVolContraction: 昨日成交量 < 昨日 5 日量均 MV5)
+  if (params.checkPrevVolContraction) {
+    const history = stock.history10d
+    if (Array.isArray(history) && history.length >= 6) {
+      // 取昨日 (倒數第 2 根) 及往前共 5 根計算昨日的 MV5
+      const bars5 = history.slice(-6, -1)
+      const prevMV5 = Math.round(bars5.reduce((sum, b) => sum + (b.volume || 0), 0) / 5)
+      const prevVol = history[history.length - 2]?.volume ?? 0
+
+      if (prevMV5 > 0 && prevVol >= prevMV5) {
+        return { isMatch: false, reasonText: strings.prevVolContractionFailed || '昨日未達量縮標準' }
+      }
+    }
+  }
+
+  // 13. 當日帶量攻擊 (checkVolExpansion: 當日成交量 > 5日量均)
+  if (params.checkVolExpansion && vMa5 > 0 && volume <= vMa5) {
+    return { isMatch: false, reasonText: strings.volExpansionFailed || '未達帶量攻擊標準 (成交量 ≤ 5日量均)' }
+  }
+
+  // 14. 實體攻擊紅 K (checkRedCandle: 收 > 開 且 漲幅 >= 1.5%)
+  const open = stock.open ?? price
+  const close = price
+  const changePct = typeof stock.changePct === 'number'
+    ? stock.changePct
+    : (stock.prevClose > 0 ? round2(((price - stock.prevClose) / stock.prevClose) * 100) : 0)
+
+  if (params.checkRedCandle && (close <= open || changePct < 1.5)) {
+    return { isMatch: false, reasonText: strings.redCandleFailed || '未達實體攻擊紅 K 標準' }
+  }
+
+  // 15. 排除長黑倒貨 (checkAvoidLongBlack: 實體黑K跌幅 >= 1.5% 且 收在最低點附近)
+  if (params.checkAvoidLongBlack && open > close) {
+    const prevClose = stock.prevClose ?? open
+    const dropPct = prevClose > 0 ? (open - close) / prevClose : 0
+    const high = stock.high ?? price
+    const low = stock.low ?? price
+    const range = high - low
+    const lowRatio = range > 0 ? (close - low) / range : 0.0
+    const threshold = params.blackCandleRatioMax ?? 0.20
+
+    // 同時滿足條件 A (實體跌幅 >= 1.5%) 與 條件 B (收最低點附近 <= threshold) 則排除
+    if (dropPct >= 0.015 && lowRatio <= threshold) {
+      return { isMatch: false, reasonText: strings.avoidLongBlackFailed || '觸發長黑倒貨型態' }
+    }
+  }
+
+  // 16. 排除長上影線避雷針 (checkAvoidLongUpperShadow: 上影線長度 > 實體紅 K 一半則排除)
+  if (params.checkAvoidLongUpperShadow && close > open) {
+    const high = stock.high ?? price
+    const upperShadow = high - close
+    const body = close - open
+
+    if (upperShadow > body * 0.5) {
+      return { isMatch: false, reasonText: strings.avoidUpperShadowFailed || '觸發避雷針型態' }
+    }
+  }
+
+  // 17. KD 動能區檢驗 (checkKd)
+  if (params.checkKd) {
+    const kd = stock.kd ?? { k: 50, d: 50 }
+    const k = kd.k ?? 50
+    const d = kd.d ?? 50
+
+    if (typeof params.kdKMin === 'number' && k < params.kdKMin) {
+      return {
+        isMatch: false,
+        reasonText: strings.kdOutOfRange ? strings.kdOutOfRange(params.kdKMin, params.kdKMax ?? 100, k) : `KD 未在多頭區 (K=${k})`,
+      }
+    }
+    if (typeof params.kdKMax === 'number' && k > params.kdKMax) {
+      return {
+        isMatch: false,
+        reasonText: strings.kdOutOfRange ? strings.kdOutOfRange(params.kdKMin ?? 0, params.kdKMax, k) : `KD 過熱 (K=${k})`,
+      }
+    }
+    if (params.kdRequireCross && k <= d) {
+      return { isMatch: false, reasonText: strings.kdCrossFailed || 'KD 未形成多頭排列 (K ≤ D)' }
+    }
+  }
 
   return { isMatch: true, reasonText: strings.passed || '符合篩選條件' }
 }

@@ -101,25 +101,41 @@ interface MarketData {
 ```typescript
 interface ScreenerParams {
   // 均線支撐與糾結度
-  maAboveMode:           'BOTH' | 'ANY'  // 站穩 5MA/10MA 模式（BOTH: 雙站穩，ANY: 單站穩）
-  checkConvergence:      boolean         // 是否啟用當日三線價差過濾
-  convergenceMax:        number          // 當日三線價差上限（%）
-  checkPrevConvergence?: boolean         // 是否啟用前一交易日三線價差過濾（Mode 3 專用）
-  prevConvergenceMax?:   number          // 前一交易日三線價差上限（%）
-  requireMa20Rising?:     boolean         // 是否要求月線斜率向上（Mode 2 內建）
+  maAboveMode:               'BOTH' | 'ANY'  // 站穩 5MA/10MA 模式（BOTH: 雙站穩，ANY: 單站穩）
+  checkConvergence:          boolean         // 是否啟用當日三線價差過濾
+  convergenceMax:            number          // 當日三線價差上限（%）
+  checkPrevConvergence?:     boolean         // 是否啟用前一交易日三線價差過濾（Mode 3 專用）
+  prevConvergenceMax?:       number          // 前一交易日三線價差上限（%）
+  requireMa20Rising?:         boolean         // 是否要求月線斜率向上（Mode 2 內建）
 
   // 乖離率區間
-  bias5Min:              number          // 5MA 乖離率下限（%）
-  bias5Max:              number          // 5MA 乖離率上限（%）
-  bias20Min:             number          // 20MA 月線乖離率下限（%）
-  bias20Max:             number          // 20MA 月線乖離率上限（%）
+  bias5Min:                  number          // 5MA 乖離率下限（%）
+  bias5Max:                  number          // 5MA 乖離率上限（%）
+  bias20Min:                 number          // 20MA 月線乖離率下限（%）
+  bias20Max:                 number          // 20MA 月線乖離率上限（%）
 
-  // 量能、形態與指標（後續批次審視實作）
-  minVolume?:            number          // 最低成交量（張）
-  requireVolContraction?: boolean        // 量縮洗盤
-  requireRedCandle?:     boolean         // 實體紅K
-  kdMode?:               'low' | 'momentum'
+  // 量能與流動性
+  minVolume?:                number          // 最低成交量（張）
+  checkMinVolume?:           boolean         // 是否啟用成交量門檻
+  checkNotDisposed?:         boolean         // 是否排除處置股
+  checkVolContraction?:      boolean         // 當日量縮洗盤 (量 < 5日量均)
+  checkVolPullback?:         boolean         // 量縮回踩 (量 < 5日量均 或 < 昨日量)
+  checkPrevVolContraction?:  boolean         // 昨日量縮 (昨日量 < 昨日5日量均 MV5)
+  checkVolExpansion?:        boolean         // 當日帶量攻擊 (量 > 5日量均)
+
+  // K棒形態與影線
+  checkRedCandle?:           boolean         // 實體攻擊紅 K (收 > 開 且 漲幅 >= 1.5%)
+  checkAvoidLongBlack?:      boolean         // 排除長黑倒貨
+  blackCandleRatioMax?:      number          // 長黑倒貨下影線佔比上限（預設 0.20 或 0.25）
+  checkAvoidLongUpperShadow?: boolean        // 排除長上影線避雷針 (上影線 <= 實體紅K一半)
+
+  // KD 動能指標
+  checkKd?:                  boolean         // 是否啟用 KD 動能區過濾
+  kdKMin?:                   number          // K 值下限
+  kdKMax?:                   number          // K 值上限
+  kdRequireCross?:           boolean         // 是否要求 K > D 黃金交叉/多頭排列
 }
+
 ```
 
 ### `ScreenerMode`（選股模式）
