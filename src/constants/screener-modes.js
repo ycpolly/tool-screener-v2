@@ -111,6 +111,46 @@ export const SCREENER_MODES = {
       kdRequireCross: true,         // K > D 黃金交叉
     },
   },
+
+  // Mode 4 - 多頭起漲 (Pullback Ignition)
+  PULLBACK_IGNITION: {
+    id: 'PULLBACK_IGNITION',
+
+    label: '多頭起漲',
+    description: '趨勢多頭、指標降溫後再度帶量攻擊起漲',
+    defaultParams: {
+      // 均線與位階
+      maAboveMode: 'BOTH',            // (嚴) 同時站穩 5MA 與 10MA
+      requireAboveMa60: false,
+      bias5Min: 0.0,                  // 5MA 乖離率 0% ~ +8% (發動日必站上短均)
+      bias5Max: 8.0,
+      bias20Min: 2.0,                 // 20MA 乖離率 +2% ~ +20% (強迫股價在月線之上)
+      bias20Max: 20.0,
+      requireMa20Rising: true,        // 今日 20MA > 昨日 20MA (月線斜率向上)
+      checkConvergence: false,        // 不啟用當日糾結 (洗盤剛結束，均線通常有開口)
+      convergenceMax: 8.0,
+      checkPrevConvergence: false,    // 不啟用前日糾結
+      prevConvergenceMax: 3.0,
+
+      // 量能與流動性
+      minVolume: 1000,                // 當日成交量 >= 1000 張
+      checkMinVolume: true,
+      checkNotDisposed: true,         // 排除處置股
+      checkVolExpansion: true,        // 洗盤後帶量攻擊 (當日成交量 > 5日均量)
+
+      // K 棒型態排雷
+      checkRedCandle: true,           // 實體攻擊紅 K (收盤 > 開盤)
+      minRedCandleChangePct: 2.0,     // 漲幅 >= 2.0%
+      checkAvoidLongUpperShadow: true,// 排除長上影線 (上影線 <= 實體一半)
+
+      // KD 動能輔助
+      checkKd: true,                  // KD 輔助
+      kdKMin: 30,                     // 中檔降溫區 (K 介於 30 ~ 65)
+      kdKMax: 65,
+      kdRequireCross: true,           // KD 多頭排列 (K > D)
+    },
+  },
 }
 
 export const DEFAULT_MODE = 'BOTTOM_CONSOLIDATION'
+

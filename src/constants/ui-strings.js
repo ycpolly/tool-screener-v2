@@ -25,7 +25,9 @@ export const UI_STRINGS = {
       BOTTOM_CONSOLIDATION: '可嘗試取消勾選【量縮洗盤】或將【當日三線價差】上調到 5%，以探索更多潛力標的。',
       TREND_PULLBACK: '可嘗試將【月線乖離率】放寬至 0%-15%，或將【5MA 乖離率】下修到 -5%，以探索更多潛力標的。',
       MOMENTUM_BREAKOUT: '可嘗試將【當日成交量】調降至 500 張，或將【當日三線價差】上限放寬到 10%-12%，亦可將【前一日三線價差】微調至 5%，以探索更多潛力標的。',
+      PULLBACK_IGNITION: '可嘗試放寬【月線乖離率】或將【當日成交量】調降至 500 張，以探索更多潛力標的。',
     },
+
     matchedStrategy: (names) => `🎯 命中策略：【${names}】`,
     noMatchedStrategy: '── 全市場常態個股（未觸發特定策略）',
     matchedCondition: (modeName) => `💡 符合【${modeName}】策略條件`,

@@ -319,9 +319,16 @@ export const SCREENER_MODES = {
     label: '動能攻擊',
     description: '剛結束打底、今日帶量出第一根紅棒的發動股（參與 D4）',
     defaultParams: { maAboveMode: 'BOTH', checkConvergence: true, convergenceMax: 8.0, checkPrevConvergence: true, prevConvergenceMax: 3.0, bias5Min: 0.0, bias5Max: 8.0, bias20Min: 0.0, bias20Max: 12.0 }
+  },
+  PULLBACK_IGNITION: {
+    id: 'PULLBACK_IGNITION',
+    label: '多頭起漲',
+    description: '趨勢多頭、指標降溫後再度帶量攻擊起漲',
+    defaultParams: { maAboveMode: 'BOTH', bias5Min: 0.0, bias5Max: 8.0, bias20Min: 2.0, bias20Max: 20.0, requireMa20Rising: true, minVolume: 1000, checkVolExpansion: true, checkRedCandle: true, minRedCandleChangePct: 2.0, checkAvoidLongUpperShadow: true, checkKd: true, kdKMin: 30, kdKMax: 65, kdRequireCross: true }
   }
 }
 ```
+
 
 
 ### Mobile-First 樣式策略
@@ -396,10 +403,11 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] App.vue 接入上述所有元件並完成響應式組裝
 
 ### Phase 3（完整功能）
-- [x] 三大選股模式定義（底部蓄勢、多頭回測、動能攻擊）— 完成 2026-08-30
-- [x] `screener.js` 核心均線演算法（5MA/10MA 支撐、當日/前一日三線糾結度、5MA/20MA 乖離率、Mode 2 月線向上底層條件、Mode 1 季線防身 requireAboveMa60）— 完成 2026-08-30
+- [x] 四大選股模式定義（底部蓄勢、多頭回測、動能攻擊、多頭起漲）— 完成 2026-08-31
+- [x] `screener.js` 核心均線演算法（5MA/10MA 支撐、當日/前一日三線糾結度、5MA/20MA 乖離率、Mode 2 & Mode 4 月線向上底層條件、Mode 1 季線防身 requireAboveMa60）— 完成 2026-08-31
 - [x] 量能與流動性濾網（成交量門檻、排除處置股、Mode 1 狹幅震盪打底 ±1.5%、量縮回踩、昨日量縮、帶量攻擊、實體攻擊紅 K、排除長黑倒貨/長上影線避雷針、KD 區間與多頭排列）— 完成 2026-08-30
 - [x] 全市場時光機回測引擎（支援近 0~5 個交易日歷史切片 `sliceStockAt`、動態推算歷史 `vMa5` 與 `history10d` 內建 `ma60` 季線）— 完成 2026-08-31
+
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）

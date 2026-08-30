@@ -10,10 +10,11 @@
     />
 
     <!-- ============================================================
-         1. 頂部常駐 4 大模式分段切換器 (全部 + 3 大策略，內建即時檔數)
+         1. 頂部常駐 5 大模式分段切換器 (全部 + 4 大策略，內建即時檔數)
          ============================================================ -->
-    <div class="grid grid-cols-4 gap-1.5 p-1 bg-base-300/40 rounded-xl">
+    <div class="grid grid-cols-5 gap-1 p-1 bg-base-300/40 rounded-xl">
       <!-- Tab 0: 全部股票 -->
+
       <button
         type="button"
         class="py-2 px-1 text-center rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap"
@@ -700,10 +701,13 @@ function getShortModeLabel(modeId) {
       return '回測'
     case 'MOMENTUM_BREAKOUT':
       return '動能'
+    case 'PULLBACK_IGNITION':
+      return '起漲'
     default:
       return modeId
   }
 }
+
 
 // 模式 2 (多頭回測) Console 底層條件提示
 watch(
