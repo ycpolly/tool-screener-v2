@@ -13,29 +13,34 @@ export const SCREENER_MODES = {
     label: '底部蓄勢',
     description: '尋找籌碼乾淨、極致壓縮股（參與 D1-D3）',
     defaultParams: {
-      // 均線與糾結
-      maAboveMode: 'BOTH',          // (嚴) 同時站穩 5MA 與 10MA
-      checkConvergence: true,       // 當日三線價差開關
-      convergenceMax: 3.0,          // 當日三線價差 <= 3%
-      bias5Min: -2.0,               // 5MA 乖離率下限 (%)
-      bias5Max: 3.0,                // 5MA 乖離率上限 (%)
-      bias20Min: 0.0,               // 20MA 乖離率下限 (%)
-      bias20Max: 8.0,               // 20MA 乖離率上限 (%)
-      checkPrevConvergence: false,  // 前一日三線價差開關
+      // 均線與位階
+      maAboveMode: 'BOTH',            // (嚴) 同時站穩 5MA 與 10MA
+      requireAboveMa60: true,         // [新增] 站穩季線防身 (收盤價 >= 60MA)
+      checkConvergence: true,         // 當日三線價差開關
+      convergenceMax: 3.0,            // 當日三線價差 <= 3%
+      bias5Min: -2.0,                 // 5MA 乖離率下限 (%)
+      bias5Max: 3.0,                  // 5MA 乖離率上限 (%)
+      bias20Min: 0.0,                 // 20MA 乖離率下限 (%)
+      bias20Max: 8.0,                 // 20MA 乖離率上限 (%)
+      checkPrevConvergence: false,    // 前一日三線價差開關
       prevConvergenceMax: 3.0,
       requireMa20Rising: false,
 
       // 量能與流動性
-      minVolume: 500,               // 當日成交量 >= 500 張
+      minVolume: 500,                 // 當日成交量 >= 500 張
       checkMinVolume: true,
-      checkNotDisposed: true,       // 排除處置股
-      checkVolContraction: true,    // 量縮洗盤 (當日量 < 5日量均)
-      checkAvoidLongBlack: true,    // 排除長黑倒貨 (實體黑K跌幅 >= 1.5% 且收最低 <= 20%)
+      checkNotDisposed: true,         // 排除處置股
+      checkVolContraction: true,      // 嚴格量縮洗盤
+      volContractionRatio: 0.8,       // [更新] 當日成交量 <= 5日均量 * 0.8 (萎縮 20% 以上)
+      checkTightConsolidation: true,  // [新增] 狹幅震盪打底
+      tightChgMin: -1.5,              // [新增] 當日漲跌幅下限 -1.5%
+      tightChgMax: 1.5,               // [新增] 當日漲跌幅上限 +1.5% (排除噴出假蓄勢)
+      checkAvoidLongBlack: true,      // 排除長黑倒貨
       blackCandleRatioMax: 0.20,
-      checkKd: true,                // KD 脫離超賣區
-      kdKMin: 20,                   // 20 <= K <= 60
+      checkKd: true,                  // KD 脫離超賣區
+      kdKMin: 20,                     // 20 <= K <= 60
       kdKMax: 60,
-      kdRequireCross: true,         // K > D 黃金交叉
+      kdRequireCross: true,           // K > D 黃金交叉
     },
   },
 
@@ -47,6 +52,7 @@ export const SCREENER_MODES = {
     defaultParams: {
       // 均線與糾結
       maAboveMode: 'ANY',           // (寬) 站穩 5MA 或 10MA
+      requireAboveMa60: false,
       checkConvergence: true,       // 當日三線價差開關
       convergenceMax: 8.0,          // 當日三線價差 <= 8%
       bias5Min: -3.0,               // 5MA 乖離率下限 (%)
@@ -79,6 +85,7 @@ export const SCREENER_MODES = {
     defaultParams: {
       // 均線與糾結
       maAboveMode: 'BOTH',          // (嚴) 同時站穩 5MA 與 10MA
+      requireAboveMa60: false,
       checkConvergence: true,       // 當日三線價差開關
       convergenceMax: 8.0,          // 當日三線價差 <= 8%
       checkPrevConvergence: true,   // [新條件] 前一日三線價差開關

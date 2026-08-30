@@ -102,6 +102,7 @@ interface MarketData {
 interface ScreenerParams {
   // 均線支撐與糾結度
   maAboveMode:               'BOTH' | 'ANY'  // 站穩 5MA/10MA 模式（BOTH: 雙站穩，ANY: 單站穩）
+  requireAboveMa60?:         boolean         // 是否要求站穩季線防身 (收盤價 >= 60MA)
   checkConvergence:          boolean         // 是否啟用當日三線價差過濾
   convergenceMax:            number          // 當日三線價差上限（%）
   checkPrevConvergence?:     boolean         // 是否啟用前一交易日三線價差過濾（Mode 3 專用）
@@ -118,12 +119,16 @@ interface ScreenerParams {
   minVolume?:                number          // 最低成交量（張）
   checkMinVolume?:           boolean         // 是否啟用成交量門檻
   checkNotDisposed?:         boolean         // 是否排除處置股
-  checkVolContraction?:      boolean         // 當日量縮洗盤 (量 < 5日量均)
+  checkVolContraction?:      boolean         // 當日量縮洗盤 (量 <= 5日量均 * volContractionRatio)
+  volContractionRatio?:      number          // 量縮洗盤門檻比率（預設 1.0，底部蓄勢為 0.8）
   checkVolPullback?:         boolean         // 量縮回踩 (量 < 5日量均 或 < 昨日量)
   checkPrevVolContraction?:  boolean         // 昨日量縮 (昨日量 < 昨日5日量均 MV5)
   checkVolExpansion?:        boolean         // 當日帶量攻擊 (量 > 5日量均)
 
   // K棒形態與影線
+  checkTightConsolidation?:  boolean         // 狹幅震盪打底
+  tightChgMin?:              number          // 狹幅打底漲跌幅下限（%）（預設 -1.5%）
+  tightChgMax?:              number          // 狹幅打底漲跌幅上限（%）（預設 +1.5%）
   checkRedCandle?:           boolean         // 實體攻擊紅 K (收 > 開 且 漲幅 >= 1.5%)
   checkAvoidLongBlack?:      boolean         // 排除長黑倒貨
   blackCandleRatioMax?:      number          // 長黑倒貨下影線佔比上限（預設 0.20 或 0.25）
@@ -135,6 +140,7 @@ interface ScreenerParams {
   kdKMax?:                   number          // K 值上限
   kdRequireCross?:           boolean         // 是否要求 K > D 黃金交叉/多頭排列
 }
+
 
 ```
 

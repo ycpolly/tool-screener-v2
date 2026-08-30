@@ -309,6 +309,12 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     return { isMatch: false, reasonText: strings.bias20Above ? strings.bias20Above(params.bias20Max, bias20) : '20MA乖離過高' }
   }
 
+  // 3.5 季線防身檢驗 (requireAboveMa60: 收盤價 >= 60MA)
+  const ma60 = stock.ma60 ?? 0
+  if (params.requireAboveMa60 && ma60 > 0 && price < ma60) {
+    return { isMatch: false, reasonText: strings.belowMa60Failed || '未站穩季線防身 (現價 < 60MA)' }
+  }
+
   // 4. 均線支撐 (maAboveMode: 'BOTH' | 'ANY')
   if (params.maAboveMode === 'BOTH') {
     const standsBoth = price >= ma5 && price >= ma10
@@ -378,9 +384,17 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
 
   const vMa5 = stock.vMa5 ?? 0
 
-  // 10. 量縮洗盤 (checkVolContraction: 當日成交量 < 5日量均)
-  if (params.checkVolContraction && vMa5 > 0 && volume >= vMa5) {
-    return { isMatch: false, reasonText: strings.volContractionFailed || '當日成交量未達量縮標準 (≥ 5日量均)' }
+  // 10. 量縮洗盤 (checkVolContraction: 當日成交量 <= 5日量均 * ratio)
+  if (params.checkVolContraction && vMa5 > 0) {
+    const ratio = typeof params.volContractionRatio === 'number' ? params.volContractionRatio : 1.0
+    if (volume > vMa5 * ratio) {
+      return {
+        isMatch: false,
+        reasonText: ratio < 1.0
+          ? (strings.strictVolContractionFailed || `未達嚴格量縮標準 (${volume} > ${Math.round(vMa5 * ratio)})`)
+          : (strings.volContractionFailed || '當日成交量未達量縮標準 (≥ 5日量均)'),
+      }
+    }
   }
 
   // 11. 量縮回踩 (checkVolPullback: 當日成交量 < 5日量均 或 < 昨日成交量)
@@ -426,6 +440,23 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
   if (params.checkRedCandle && (close <= open || changePct < 1.5)) {
     return { isMatch: false, reasonText: strings.redCandleFailed || '未達實體攻擊紅 K 標準' }
   }
+
+  // 14.5 狹幅震盪打底 (checkTightConsolidation: 當日漲跌幅介於 tightChgMin 與 tightChgMax 之間)
+  if (params.checkTightConsolidation) {
+    if (typeof params.tightChgMin === 'number' && changePct < params.tightChgMin) {
+      return {
+        isMatch: false,
+        reasonText: strings.tightConsolidationFailed ? strings.tightConsolidationFailed(changePct) : `跌幅過大 (${changePct}%)`,
+      }
+    }
+    if (typeof params.tightChgMax === 'number' && changePct > params.tightChgMax) {
+      return {
+        isMatch: false,
+        reasonText: strings.tightConsolidationFailed ? strings.tightConsolidationFailed(changePct) : `漲幅過大 (${changePct}%)`,
+      }
+    }
+  }
+
 
   // 15. 排除長黑倒貨 (checkAvoidLongBlack: 實體黑K跌幅 >= 1.5% 且 收在最低點附近)
   if (params.checkAvoidLongBlack && open > close) {
