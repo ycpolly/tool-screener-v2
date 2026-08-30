@@ -120,7 +120,8 @@ interface ScreenerParams {
   checkMinVolume?:           boolean         // 是否啟用成交量門檻
   checkNotDisposed?:         boolean         // 是否排除處置股
   checkVolContraction?:      boolean         // 當日量縮洗盤 (量 <= 5日量均 * volContractionRatio)
-  volContractionRatio?:      number          // 量縮洗盤門檻比率（預設 1.0，底部蓄勢為 0.8）
+  volContractionRatio?:      number          // 量縮洗盤門檻比率（預設 1.0，即小於等於 5 日均量）
+
   checkVolPullback?:         boolean         // 量縮回踩 (量 < 5日量均 或 < 昨日量)
   checkPrevVolContraction?:  boolean         // 昨日量縮 (昨日量 < 昨日5日量均 MV5)
   checkVolExpansion?:        boolean         // 當日帶量攻擊 (量 > 5日量均)

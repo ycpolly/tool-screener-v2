@@ -30,11 +30,12 @@ export const SCREENER_MODES = {
       minVolume: 500,                 // 當日成交量 >= 500 張
       checkMinVolume: true,
       checkNotDisposed: true,         // 排除處置股
-      checkVolContraction: true,      // 嚴格量縮洗盤
-      volContractionRatio: 0.8,       // [更新] 當日成交量 <= 5日均量 * 0.8 (萎縮 20% 以上)
+      checkVolContraction: true,      // 量縮洗盤 (當日量 <= 5日均量)
+      volContractionRatio: 1.0,       // [更新] 當日成交量 <= 5日均量 * 1.0
       checkTightConsolidation: true,  // [新增] 狹幅震盪打底
       tightChgMin: -1.5,              // [新增] 當日漲跌幅下限 -1.5%
       tightChgMax: 1.5,               // [新增] 當日漲跌幅上限 +1.5% (排除噴出假蓄勢)
+
       checkAvoidLongBlack: true,      // 排除長黑倒貨
       blackCandleRatioMax: 0.20,
       checkKd: true,                  // KD 脫離超賣區
