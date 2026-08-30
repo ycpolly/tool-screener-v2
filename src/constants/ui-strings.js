@@ -7,8 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0830.05',
-    tagline: '盤中即時 · 尾盤篩選',
+    version: 'v0831.01',
   },
 
   MARKET_REGIME: {
@@ -18,7 +17,7 @@ export const UI_STRINGS = {
   },
 
   SCREENER: {
-    updateBtn: '取得最新價格',
+    updateBtn: '更新',
     updatingBtn: '更新中…',
     resultCount: (n) => `符合 ${n} 檔`,
     noResult: '無符合條件的個股',
@@ -36,6 +35,30 @@ export const UI_STRINGS = {
     disposed: '處置',
     lastUpdated: (t) => `更新於 ${t}`,
   },
+
+  SEARCH: {
+    placeholder: '搜尋股票代號或名稱 (例如 2330 或 台積)...',
+    clear: '清除搜尋',
+    searchingFor: (q) => `搜尋「${q}」`,
+    searchResultCount: (n) => `搜尋符合 ${n} 檔`,
+    searchNoResult: '查無符合代號或名稱的個股',
+    matchedGroupTitle: '符合策略個股',
+    unmatchedGroupTitle: '未符合本策略（含淘汰原因）',
+  },
+
+  TIME_MACHINE: {
+    title: '全市場時光機',
+    subtitle: '時光倒流至近 5 個交易日，驗證各策略歷史選股表現',
+    today: '最新行情',
+    daysAgo: (n) => `${n} 天前`,
+    day1Ago: '昨日 (T-1)',
+    day2Ago: '2天前 (T-2)',
+    day3Ago: '3天前 (T-3)',
+    day4Ago: '4天前 (T-4)',
+    day5Ago: '5天前 (T-5)',
+    activeNotice: (n) => `⏳ 時光倒流中：正在回測 ${n} 個交易日前之全市場歷史數據`,
+  },
+
 
   STOCK_TABLE: {
     headers: {
@@ -81,6 +104,11 @@ export const UI_STRINGS = {
   },
 
   SELL_WARNINGS: {
+    foreign1D: '外資賣1D',
+    foreign3D: '外資賣3D',
+    sitca3D: '投信賣3D',
+    major1D: '主力賣1D',
+    major3D: '主力賣3D',
     foreign: '外資賣超',
     major: '主力賣超',
     sitca: '投信賣超',
@@ -194,7 +222,7 @@ export const UI_STRINGS = {
   },
 
   REALTIME: {
-    fetchBtn: '取得最新價格',
+    fetchBtn: '更新',
     fetchingBtn: '更新中…',
     fetchSuccess: (count) => `已更新 ${count} 筆即時行情`,
     missingWarning: (missingCount) => `即時行情有 ${missingCount} 筆資料未回傳，嚴禁使用舊資料補齊，請重新整理或稍候再試`,

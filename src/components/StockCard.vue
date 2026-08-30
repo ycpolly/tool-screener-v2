@@ -374,12 +374,18 @@ const bias20ColorClass = computed(() => {
 
 const formattedCategories = computed(() => {
   const cats = props.stock.categories
-  if (!Array.isArray(cats) || cats.length === 0) return ''
   const tagMap = UI_STRINGS.CATEGORY_TAGS || {}
-  const labels = cats
-    .map((c) => tagMap[c] || c)
-    .filter(Boolean)
-  return Array.from(new Set(labels)).join(' · ')
+  const labels = Array.isArray(cats)
+    ? cats.map((c) => tagMap[c] || c).filter(Boolean)
+    : []
+  const uniqueLabels = Array.from(new Set(labels))
+
+  // 若有法人/主力賣超警示，以純文字 + ⚠️ emoji 加入標籤列末端
+  if (props.stock.sellWarning) {
+    uniqueLabels.push(props.stock.sellWarning)
+  }
+
+  return uniqueLabels.join(' · ')
 })
 
 const kdStatusText = computed(() => {

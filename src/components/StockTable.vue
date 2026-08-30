@@ -1,34 +1,21 @@
 <template>
-  <div class="stock-table-container space-y-3">
+  <div class="stock-table-container space-y-3 select-none">
     <!-- 頂部工具列：筆數統計與模式放寬建議 -->
     <div class="flex flex-wrap items-baseline justify-between gap-2 px-1 text-sm text-base-content/80">
       <div class="flex flex-wrap items-baseline gap-2.5">
-        <span class="font-bold text-sm text-base-content shrink-0">
+        <!-- 搜尋狀態 vs 常態統計 -->
+        <span v-if="isSearching" class="font-bold text-sm text-base-content shrink-0">
+          {{ UI_STRINGS.SEARCH.searchResultCount(totalFilteredCount) }}
+        </span>
+        <span v-else class="font-bold text-sm text-base-content shrink-0">
           {{ UI_STRINGS.SCREENER.resultCount(stocks.length) }}
         </span>
-        <span v-if="modeSuggestionText" class="text-sm text-base-content/75 leading-normal">
+
+        <!-- 模式放寬建議 (非搜尋時顯示) -->
+        <span v-if="!isSearching && modeSuggestionText" class="text-sm text-base-content/75 leading-normal">
           {{ modeSuggestionText }}
         </span>
       </div>
-
-      <!-- 排序功能暫時註解：待後續討論後再優化
-      <div class="flex items-center gap-1 font-medium">
-        <span class="text-base-content/70 mr-1">排序:</span>
-        <button
-          v-for="opt in sortOptions"
-          :key="opt.key"
-          type="button"
-          class="btn btn-ghost btn-sm font-normal"
-          :class="{ 'btn-active font-bold text-base-content': currentSortKey === opt.key }"
-          @click="toggleSort(opt.key)"
-        >
-          <span>{{ opt.label }}</span>
-          <span v-if="currentSortKey === opt.key" class="ml-0.5 font-numeric text-xs">
-            {{ currentSortDir === 'desc' ? '▼' : '▲' }}
-          </span>
-        </button>
-      </div>
-      -->
     </div>
 
     <!-- 載入中骨架動畫 (Skeleton Loading) -->
@@ -51,66 +38,126 @@
       </div>
     </div>
 
-    <!-- 無符合資料狀態 (Empty State) -->
-    <div
-      v-else-if="stocks.length === 0"
-      class="text-center py-16 px-4 bg-base-200/50 border border-dashed border-base-300 rounded-xl"
-    >
-      <div class="text-base-content/70 text-sm font-medium">
-        {{ UI_STRINGS.SCREENER.noResult }}
+    <!-- ============================================================
+         CASE A: 搜尋狀態中的結果展示 (支援跨符合與未符合直出)
+         ============================================================ -->
+    <template v-else-if="isSearching">
+      <!-- 搜尋完全無結果 -->
+      <div
+        v-if="totalFilteredCount === 0"
+        class="text-center py-16 px-4 bg-base-200/50 border border-dashed border-base-300 rounded-xl"
+      >
+        <div class="text-base-content/70 text-sm font-medium">
+          {{ UI_STRINGS.SEARCH.searchNoResult }}
+        </div>
       </div>
-    </div>
 
-    <!-- 結果清單 (渲染 StockCard) -->
-    <div v-else class="space-y-3">
-      <StockCard
-        v-for="stock in sortedStocks"
-        :key="stock.code"
-        :stock="stock"
-        :active-mode="activeMode"
-        @select="$emit('select', stock)"
-        @open-risk-modal="$emit('openRiskModal', stock)"
-      />
-    </div>
-
-    <!-- 未符合個股折疊清單 (僅在策略模式且有未符合個股時顯示) -->
-    <div
-      v-if="!loading && activeMode !== 'ALL' && unmatchedStocks.length > 0"
-      class="pt-3 border-t border-base-300/60 space-y-3"
-    >
-      <div class="flex items-center justify-center">
-        <button
-          type="button"
-          class="btn btn-sm btn-ghost text-sm text-base-content/80 hover:text-base-content font-medium gap-1.5 h-8 min-h-0"
-          @click="showUnmatched = !showUnmatched"
-        >
-          <span>{{ showUnmatched ? UI_STRINGS.SCREENER.collapseUnmatched(unmatchedStocks.length) : UI_STRINGS.SCREENER.expandUnmatched(unmatchedStocks.length) }}</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 transition-transform duration-200"
-            :class="{ 'rotate-180': showUnmatched }"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+      <!-- 搜尋有結果 -->
+      <div v-else class="space-y-4">
+        <!-- 1. 搜尋符合策略名單 -->
+        <div v-if="searchMatchedStocks.length > 0" class="space-y-3">
+          <div
+            v-if="activeMode !== 'ALL' && searchUnmatchedStocks.length > 0"
+            class="text-xs font-bold text-base-content/70 px-1"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+            {{ UI_STRINGS.SEARCH.matchedGroupTitle }} ({{ searchMatchedStocks.length }})
+          </div>
+          <StockCard
+            v-for="stock in searchMatchedStocks"
+            :key="stock.code"
+            :stock="stock"
+            :active-mode="activeMode"
+            @select="$emit('select', stock)"
+            @open-risk-modal="$emit('openRiskModal', stock)"
+          />
+        </div>
+
+        <!-- 2. 搜尋未符合策略名單 (直接展開顯示淘汰原因，無需大海撈針) -->
+        <div v-if="activeMode !== 'ALL' && searchUnmatchedStocks.length > 0" class="space-y-3">
+          <div
+            v-if="searchMatchedStocks.length > 0"
+            class="text-xs font-bold text-base-content/70 px-1 pt-2 border-t border-base-300/60"
+          >
+            {{ UI_STRINGS.SEARCH.unmatchedGroupTitle }} ({{ searchUnmatchedStocks.length }})
+          </div>
+          <StockCard
+            v-for="stock in searchUnmatchedStocks"
+            :key="stock.code"
+            :stock="stock"
+            :active-mode="activeMode"
+            :is-unmatched="true"
+            @select="$emit('select', stock)"
+            @open-risk-modal="$emit('openRiskModal', stock)"
+          />
+        </div>
+      </div>
+    </template>
+
+    <!-- ============================================================
+         CASE B: 常態無搜尋時的結果展示 (符合在上 + 未符合底部折疊)
+         ============================================================ -->
+    <template v-else>
+      <!-- 無符合資料狀態 (Empty State) -->
+      <div
+        v-if="stocks.length === 0"
+        class="text-center py-16 px-4 bg-base-200/50 border border-dashed border-base-300 rounded-xl"
+      >
+        <div class="text-base-content/70 text-sm font-medium">
+          {{ UI_STRINGS.SCREENER.noResult }}
+        </div>
       </div>
 
-      <!-- 展開未符合清單 (渲染 StockCard，isUnmatched=true) -->
-      <div v-if="showUnmatched" class="space-y-3 opacity-90">
+      <!-- 符合策略結果清單 (渲染 StockCard) -->
+      <div v-else class="space-y-3">
         <StockCard
-          v-for="stock in unmatchedStocks"
+          v-for="stock in sortedStocks"
           :key="stock.code"
           :stock="stock"
           :active-mode="activeMode"
-          :is-unmatched="true"
           @select="$emit('select', stock)"
           @open-risk-modal="$emit('openRiskModal', stock)"
         />
       </div>
-    </div>
+
+      <!-- 未符合個股折疊清單 (僅在策略模式且有未符合個股時顯示) -->
+      <div
+        v-if="activeMode !== 'ALL' && unmatchedStocks.length > 0"
+        class="pt-3 border-t border-base-300/60 space-y-3"
+      >
+        <div class="flex items-center justify-center">
+          <button
+            type="button"
+            class="btn btn-sm btn-ghost text-sm text-base-content/80 hover:text-base-content font-medium gap-1.5 h-8 min-h-0"
+            @click="showUnmatched = !showUnmatched"
+          >
+            <span>{{ showUnmatched ? UI_STRINGS.SCREENER.collapseUnmatched(unmatchedStocks.length) : UI_STRINGS.SCREENER.expandUnmatched(unmatchedStocks.length) }}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 transition-transform duration-200"
+              :class="{ 'rotate-180': showUnmatched }"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- 展開未符合清單 (渲染 StockCard，isUnmatched=true) -->
+        <div v-if="showUnmatched" class="space-y-3 opacity-90">
+          <StockCard
+            v-for="stock in sortedUnmatchedStocks"
+            :key="stock.code"
+            :stock="stock"
+            :active-mode="activeMode"
+            :is-unmatched="true"
+            @select="$emit('select', stock)"
+            @open-risk-modal="$emit('openRiskModal', stock)"
+          />
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -140,10 +187,59 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  searchQuery: {
+    type: String,
+    default: '',
+  },
+  sortKey: {
+    type: String,
+    default: 'changePct',
+  },
+  sortDir: {
+    type: String,
+    default: 'desc',
+  },
 })
 
 const showUnmatched = ref(false)
 
+// 搜尋文字比對工具
+function matchStock(stock, query) {
+  if (!query) return true
+  const q = query.trim().toLowerCase()
+  if (!q) return true
+  const code = String(stock.code || '').toLowerCase()
+  const name = String(stock.name || '').toLowerCase()
+  return code.includes(q) || name.includes(q)
+}
+
+// 是否處於搜尋狀態
+const isSearching = computed(() => {
+  return typeof props.searchQuery === 'string' && props.searchQuery.trim().length > 0
+})
+
+// 搜尋過濾後的符合名單
+const searchMatchedStocks = computed(() => {
+  if (!isSearching.value) return sortedStocks.value
+  return sortedStocks.value.filter((s) => matchStock(s, props.searchQuery))
+})
+
+// 搜尋過濾後的未符合名單
+const searchUnmatchedStocks = computed(() => {
+  if (!isSearching.value) return sortedUnmatchedStocks.value
+  return sortedUnmatchedStocks.value.filter((s) => matchStock(s, props.searchQuery))
+})
+
+// 搜尋模式總結果數
+const totalFilteredCount = computed(() => {
+  if (!isSearching.value) return props.stocks.length
+  if (props.activeMode === 'ALL') {
+    return searchMatchedStocks.value.length
+  }
+  return searchMatchedStocks.value.length + searchUnmatchedStocks.value.length
+})
+
+// 模式放寬建議
 const modeSuggestionText = computed(() => {
   if (props.activeMode && UI_STRINGS.SCREENER.suggestions?.[props.activeMode]) {
     return UI_STRINGS.SCREENER.suggestions[props.activeMode]
@@ -151,46 +247,22 @@ const modeSuggestionText = computed(() => {
   return ''
 })
 
-const emit = defineEmits(['select', 'sort', 'openRiskModal'])
+defineEmits(['select', 'sort', 'openRiskModal'])
 
-const sortOptions = [
-  { key: 'changePct', label: UI_STRINGS.STOCK_TABLE.headers.changePct },
-  { key: 'volume', label: UI_STRINGS.STOCK_TABLE.headers.volume },
-  { key: 'bias20', label: UI_STRINGS.STOCK_TABLE.headers.bias20 },
-  { key: 'code', label: UI_STRINGS.STOCK_TABLE.headers.code },
-]
-
-const currentSortKey = ref('changePct')
-const currentSortDir = ref('desc') // 'desc' | 'asc'
-
-function toggleSort(key) {
-  if (currentSortKey.value === key) {
-    currentSortDir.value = currentSortDir.value === 'desc' ? 'asc' : 'desc'
-  } else {
-    currentSortKey.value = key
-    currentSortDir.value = key === 'code' ? 'asc' : 'desc'
-  }
-  emit('sort', currentSortKey.value, currentSortDir.value)
-}
-
-const formattedUpdatedAt = computed(() => {
-  if (!props.meta?.updatedAt) return ''
-  try {
-    const d = new Date(props.meta.updatedAt)
-    const hours = String(d.getHours()).padStart(2, '0')
-    const minutes = String(d.getMinutes()).padStart(2, '0')
-    const seconds = String(d.getSeconds()).padStart(2, '0')
-    return `${hours}:${minutes}:${seconds}`
-  } catch {
-    return props.meta.updatedAt
-  }
-})
-
+// 符合股票排序
 const sortedStocks = computed(() => {
   const list = [...props.stocks]
-  const key = currentSortKey.value
-  const dir = currentSortDir.value === 'desc' ? -1 : 1
+  return sortList(list, props.sortKey, props.sortDir)
+})
 
+// 未符合股票排序
+const sortedUnmatchedStocks = computed(() => {
+  const list = [...props.unmatchedStocks]
+  return sortList(list, props.sortKey, props.sortDir)
+})
+
+function sortList(list, key, dirStr) {
+  const dir = dirStr === 'desc' ? -1 : 1
   return list.sort((a, b) => {
     let valA = a[key]
     let valB = b[key]
@@ -208,5 +280,5 @@ const sortedStocks = computed(() => {
     }
     return (valA - valB) * dir
   })
-})
+}
 </script>

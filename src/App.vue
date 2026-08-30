@@ -85,6 +85,15 @@
           @reset="handleResetParams"
         />
 
+        <!-- 即時個股搜尋與排序工具列 (介於 ScreenerPanel 與 StockTable 之間) -->
+        <SearchBar
+          v-model="searchQuery"
+          :sort-key="sortKey"
+          :sort-dir="sortDir"
+          @update:sort-key="sortKey = $event"
+          @update:sort-dir="sortDir = $event"
+        />
+
         <!-- 選股結果列表 (專注展示 StockCard) -->
         <StockTable
           :stocks="results"
@@ -92,6 +101,9 @@
           :loading="poolLoading"
           :meta="activeMeta"
           :active-mode="activeMode"
+          :search-query="searchQuery"
+          :sort-key="sortKey"
+          :sort-dir="sortDir"
           @select="handleSelectStock"
           @open-risk-modal="handleOpenRiskModal"
         />
@@ -161,9 +173,13 @@ import { mergeAllRealtimeQuotes } from './engine/screener.js'
 import ThemeToggle from './components/ThemeToggle.vue'
 import MarketBanner from './components/MarketBanner.vue'
 import ScreenerPanel from './components/ScreenerPanel.vue'
+import SearchBar from './components/SearchBar.vue'
 import StockTable from './components/StockTable.vue'
 
-const isDark = ref(false)
+const searchQuery = ref('')
+const sortKey     = ref('changePct')
+const sortDir     = ref('desc')
+const isDark      = ref(false)
 
 function toggleTheme() {
   isDark.value = !isDark.value

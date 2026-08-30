@@ -384,8 +384,9 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 ### Phase 2（UI + 核心 UX）— 由 Gemini 完成（2026-08-27 優化）
 - [x] MarketBanner.vue（大盤風控橫幅，支援 SAFE/CAUTION/DANGER 色彩適配與加權/櫃買數據）
 - [x] ScreenerPanel.vue（選股模式與微調面板：方案 A 頂部 4 大分段 Tabs「全部 + 3 大策略」內建即時檔數 Badge、常駐戰略提示與摘要列、兩大業務模組【均線與位階】與【量能與流動性】、標準 36px 等高行系統、180ms 數字防抖、Neutral 質感自訂標記與一鍵重設、手機單欄/電腦雙欄響應式佈局）
-- [x] StockCard.vue（自適應個股卡片：字體全面導入 Open Sans + tabular-nums、代號/名稱/現價統一 18px、均線乖離加粗、KD 與走勢圖水平置中、均線/量能網格加大間距 gap-6、電腦端走勢圖置左、無彩噪、快捷列複製反饋、槽位 A 關卡與槽位 B 方案 1 策略命中/淘汰原因摘要條）
-- [x] StockTable.vue（選股結果列表容器，支援「符合 N 檔」右側即時模式放寬探索建議、純淨 Empty State、下方可折疊「未符合個股與淘汰原因」清單與 Skeleton 載入骨架）
+- [x] StockCard.vue（自適應個股卡片：字體全面導入 Open Sans + tabular-nums、代號/名稱/現價統一 18px、標籤區純文字呈現屬性與 ⚠️ 法人/主力賣超警示標籤、均線乖離加粗、KD 與走勢圖水平置中、均線/量能網格加大間距 gap-6、電腦端走勢圖置左、無彩噪、快捷列複製反饋、槽位 A 關卡與槽位 B 方案 1 策略命中/淘汰原因摘要條）
+- [x] SearchBar.vue（即時個股搜尋與排序工具列：位於 ScreenerPanel 與 StockTable 之間，左側支援代號/名稱雙向模糊搜尋與一鍵清除，右側整合方案 A 攤開式膠囊排序按鈕組【漲跌幅/成交量/月乖離/代號】雙向升降切換，電腦端左右並排、手機端上下排列）
+- [x] StockTable.vue（選股結果列表容器，支援「符合 N 檔」右側即時模式放寬探索建議、純淨 Empty State、下方可折疊「未符合個股與淘汰原因」清單、搜尋跨區直出與 Skeleton 載入骨架）
 - [x] Sparkline.vue（純向量 SVG 三層式走勢圖：10 根 K 棒 + 5MA/10MA 雙折線 + 10 根成交量柱與 MV5 基準線爆量標記 + 10 日 KD 折線與 50 基準線、智慧防重疊演算法、色彩 Token 化、缺少歷史資料時主動 console.warn）
 - [x] ThemeToggle.vue（Light/Dark 切換：DaisyUI cupcake 暖白與 dracula 吸血鬼暗紫主題切換，全站最小字體全面升級至 text-sm 14px，提升文字對比度至 80%）
 - [x] 頂部 Navbar 與 API 設定 Modal 按鈕全面統一 DaisyUI 原生規格（高對比易讀 btn-neutral、鑰匙 SVG 圖示）
@@ -396,17 +397,19 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 ### Phase 3（完整功能）
 - [x] 三大選股模式定義（底部蓄勢、多頭回測、動能攻擊）— 完成 2026-08-30
 - [x] `screener.js` 核心均線演算法（5MA/10MA 支撐、當日/前一日三線糾結度、5MA/20MA 乖離率、Mode 2 月線向上底層條件、Mode 1 季線防身 requireAboveMa60）— 完成 2026-08-30
-- [x] 量能與流動性濾網（成交量門檻、排除處置股、Mode 1 嚴格量縮 20% 與狹幅震盪打底 ±1.5%、量縮回踩、昨日量縮、帶量攻擊、實體攻擊紅 K、排除長黑倒貨/長上影線避雷針、KD 區間與多頭排列）— 完成 2026-08-30
+- [x] 量能與流動性濾網（成交量門檻、排除處置股、Mode 1 狹幅震盪打底 ±1.5%、量縮回踩、昨日量縮、帶量攻擊、實體攻擊紅 K、排除長黑倒貨/長上影線避雷針、KD 區間與多頭排列）— 完成 2026-08-30
+- [x] 全市場時光機回測引擎（支援近 0~5 個交易日歷史切片 `sliceStockAt`、動態推算歷史 `vMa5` 與 `history10d` 內建 `ma60` 季線）— 完成 2026-08-31
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 - [ ] 手機端細節優化
 - [ ] 壓力天花板與扣除稅費預期純利（calculateCeilingProfit）
 
-
 ### 待辦與後端修正清單（Claude 負責）
 - [x] **修復個股中文名稱缺漏（175 檔個股 `name == code`）**：Claude 於 2026-08-27 已完成修復，各排行股票皆正確帶出中文名稱。
 - [x] **在 `history10d` 補上近 10 日月線（`ma20`）**：已於 2026-08-27 完成，在 `scripts/engine/indicators.py` 加入 `'ma20': calc_sma(sub, 20)`，為前端 Sparkline 提供完整 10 日 MA20 序列。
+- [x] **在 `history10d` 補上近 10 日季線（`ma60`）**：已於 2026-08-31 完成，在 `scripts/engine/indicators.py` 加入 `'ma60': calc_sma(sub, 60)`，為時光機歷史回測提供完整 10 日 MA60 序列。
+
 
 ---
 
