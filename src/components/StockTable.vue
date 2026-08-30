@@ -54,13 +54,13 @@
     <!-- 無符合資料狀態 (Empty State) -->
     <div
       v-else-if="stocks.length === 0"
-      class="text-center py-16 px-4 bg-base-200/50 border border-dashed border-base-300 rounded-xl space-y-2"
+      class="text-center py-12 px-4 bg-base-200/50 border border-dashed border-base-300 rounded-xl space-y-2"
     >
-      <div class="text-base-content/70 text-sm font-medium">
+      <div class="text-base-content/80 text-base font-bold">
         {{ UI_STRINGS.SCREENER.noResult }}
       </div>
-      <div class="text-sm text-base-content/60">
-        可嘗試放寬篩選條件或切換選股模式
+      <div class="text-sm text-base-content/70 max-w-lg mx-auto leading-relaxed">
+        {{ emptyHintText }}
       </div>
     </div>
 
@@ -95,6 +95,17 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  activeMode: {
+    type: String,
+    default: '',
+  },
+})
+
+const emptyHintText = computed(() => {
+  if (props.activeMode && UI_STRINGS.SCREENER.emptyHints?.[props.activeMode]) {
+    return UI_STRINGS.SCREENER.emptyHints[props.activeMode]
+  }
+  return UI_STRINGS.SCREENER.emptyHints?.DEFAULT || '可嘗試放寬篩選條件或切換選股模式'
 })
 
 const emit = defineEmits(['select', 'sort', 'openRiskModal'])

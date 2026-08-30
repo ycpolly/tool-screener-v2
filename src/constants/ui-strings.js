@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0830.03',
+    version: 'v0830.04',
     tagline: '盤中即時 · 尾盤篩選',
   },
 
@@ -22,6 +22,12 @@ export const UI_STRINGS = {
     updatingBtn: '更新中…',
     resultCount: (n) => `符合 ${n} 檔`,
     noResult: '無符合條件的個股',
+    emptyHints: {
+      BOTTOM_CONSOLIDATION: '目前條件較嚴格，建議取消勾選【量縮洗盤】或將【當日三線價差】上調到 5 %，以探索更多潛力標的。',
+      TREND_PULLBACK: '目前條件較嚴格，建議放寬【月線乖離率】或取消勾選【量縮回踩】，以探索更多潛力標的。',
+      MOMENTUM_BREAKOUT: '目前條件較嚴格，建議放寬【成交量門檻】或【當日三線價差】，以探索更多潛力標的。',
+      DEFAULT: '可嘗試放寬篩選條件或切換選股模式',
+    },
     disposed: '處置',
     lastUpdated: (t) => `更新於 ${t}`,
   },
@@ -125,9 +131,8 @@ export const UI_STRINGS = {
     minVolumeThreshold: (n) => `當日成交量 ≥ ${n} 張`,
     notDisposed: '排除處置股',
     aboveMa60: '站穩季線防身 (收盤價 ≥ 60MA)',
-    strictVolContraction: '嚴格量縮洗盤 (量 ≤ 5日均量 × 0.8)',
+    volContraction: '量縮洗盤 (量 < 5日均量)',
     tightConsolidation: '狹幅震盪打底 (漲跌幅 -1.5% ~ +1.5%)',
-    volContraction: '量縮洗盤 (量 < 5日量均)',
     volPullback: '量縮回踩 (量 < 5日量均 或 < 昨日量)',
     prevVolContraction: '昨日成交量 < 昨日 5 日均量 (MV5)',
     volExpansion: '當日帶量攻擊 (當日量 > 5日量均)',

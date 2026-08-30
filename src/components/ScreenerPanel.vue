@@ -308,7 +308,7 @@
                 :checked="params.checkVolContraction"
                 @change="updateField('checkVolContraction', $event.target.checked)"
               />
-              <span>{{ UI_STRINGS.PANEL.strictVolContraction }}</span>
+              <span>{{ UI_STRINGS.PANEL.volContraction }}</span>
             </label>
           </div>
 

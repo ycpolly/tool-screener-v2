@@ -90,6 +90,7 @@
           :stocks="results"
           :loading="poolLoading"
           :meta="activeMeta"
+          :active-mode="activeMode"
           @select="handleSelectStock"
           @open-risk-modal="handleOpenRiskModal"
         />
