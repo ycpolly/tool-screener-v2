@@ -9,7 +9,9 @@ scrapers/yahoo.py
 import json
 import ssl
 import urllib.request
+from datetime import datetime
 from typing import Optional, List, Dict
+
 
 _ctx = ssl.create_default_context()
 _ctx.check_hostname = False
@@ -61,6 +63,7 @@ def fetch_raw_ohlcv(code: str) -> Optional[Dict]:
 
             result = data['chart']['result'][0]
             quote  = result['indicators']['quote'][0]
+            timestamps = result.get('timestamp', [])
 
             raw_c = quote.get('close',  [])
             raw_o = quote.get('open',   [])
@@ -75,13 +78,17 @@ def fetch_raw_ohlcv(code: str) -> Optional[Dict]:
                 v = raw_v[i] if i < len(raw_v) else None
                 if c is None or v is None:
                     continue
+                ts = timestamps[i] if i < len(timestamps) else None
+                date_str = datetime.fromtimestamp(ts).strftime('%Y-%m-%d') if ts else ''
                 ohlcv.append({
+                    'date':   date_str,
                     'open':   raw_o[i] if i < len(raw_o) and raw_o[i] is not None else c,
                     'high':   raw_h[i] if i < len(raw_h) and raw_h[i] is not None else c,
                     'low':    raw_l[i] if i < len(raw_l) and raw_l[i] is not None else c,
                     'close':  c,
                     'volume': int(v),
                 })
+
 
             if len(ohlcv) < 10:
                 # 資料不足，嘗試另一個後綴

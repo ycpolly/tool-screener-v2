@@ -1,15 +1,16 @@
 import { ref, computed, readonly } from 'vue'
-import { runScreener, evaluateStock } from '../engine/screener.js'
+import { runScreener, evaluateStock, sliceStockPoolAt } from '../engine/screener.js'
 import { SCREENER_MODES, DEFAULT_MODE } from '../constants/screener-modes.js'
 
 /**
  * useScreener — 篩選邏輯層
  *
- * 職責：呼叫純引擎，管理篩選條件狀態，不碰 DOM
+ * 職責：呼叫純引擎，管理篩選條件與時光機回測狀態，不碰 DOM
  */
 export function useScreener(stocks) {
-  const activeMode = ref(DEFAULT_MODE)
-  const params     = ref({ ...SCREENER_MODES[DEFAULT_MODE].defaultParams })
+  const activeMode        = ref(DEFAULT_MODE)
+  const params            = ref({ ...SCREENER_MODES[DEFAULT_MODE].defaultParams })
+  const selectedDayOffset = ref(0) // 0: 今日/最新, 1: 1天前 (T-1), 2: 2天前 (T-2)...
 
   // 切換模式時自動載入該模式的預設參數
   function setMode(modeId) {
@@ -23,10 +24,20 @@ export function useScreener(stocks) {
     params.value = { ...SCREENER_MODES[modeId].defaultParams }
   }
 
+  // 切換時光機回測天數 (0 ~ 5)
+  function setDayOffset(offset = 0) {
+    selectedDayOffset.value = Math.max(0, Math.min(5, Number(offset) || 0))
+  }
+
   // 篩選結果運算（包含符合與未符合分流，以及 ALL 模式時的策略命中計算）
   const screenerOutput = computed(() => {
-    const list = stocks.value || []
-    if (!Array.isArray(list)) return { matched: [], unmatched: [] }
+    const rawList = stocks.value || []
+    if (!Array.isArray(rawList)) return { matched: [], unmatched: [] }
+
+    // 若啟用時光機回測，自動將股票池倒流至該歷史交易日
+    const list = selectedDayOffset.value > 0
+      ? sliceStockPoolAt(rawList, selectedDayOffset.value)
+      : rawList
 
     const matched = []
     const unmatched = []
@@ -84,13 +95,13 @@ export function useScreener(stocks) {
 
   // 各模式即時符合檔數統計 (ALL + 3 大策略)
   const modeCounts = computed(() => {
-    const list = stocks.value || []
+    const rawList = stocks.value || []
     const counts = {
-      ALL: list.length,
+      ALL: rawList.length,
     }
     for (const [modeKey, modeObj] of Object.entries(SCREENER_MODES)) {
       const modeParams = activeMode.value === modeKey ? params.value : modeObj.defaultParams
-      const matched = runScreener(list, modeParams, modeKey)
+      const matched = runScreener(rawList, modeParams, modeKey, selectedDayOffset.value)
       counts[modeKey] = matched.length
     }
     return counts
@@ -99,10 +110,12 @@ export function useScreener(stocks) {
   return {
     activeMode: readonly(activeMode),
     params,
+    selectedDayOffset: readonly(selectedDayOffset),
     results,
     unmatchedResults,
     modeCounts,
     modes: SCREENER_MODES,
     setMode,
+    setDayOffset,
   }
 }

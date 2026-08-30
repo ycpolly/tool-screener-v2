@@ -1,6 +1,15 @@
 <template>
   <div class="screener-panel bg-base-200 border border-base-300 rounded-2xl p-3.5 md:p-4 space-y-3.5 shadow-sm select-none">
     <!-- ============================================================
+         0. 頂部：時光機回測切換列 (近 5 個交易日真實日期)
+         ============================================================ -->
+    <TimeMachineBar
+      :day-offset="dayOffset"
+      :updated-at="updatedAt"
+      @update:day-offset="$emit('update:dayOffset', $event)"
+    />
+
+    <!-- ============================================================
          1. 頂部常駐 4 大模式分段切換器 (全部 + 3 大策略，內建即時檔數)
          ============================================================ -->
     <div class="grid grid-cols-4 gap-1.5 p-1 bg-base-300/40 rounded-xl">
@@ -635,6 +644,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { UI_STRINGS } from '../constants/ui-strings'
+import TimeMachineBar from './TimeMachineBar.vue'
 
 const props = defineProps({
   modes: {
@@ -661,9 +671,17 @@ const props = defineProps({
     type: Number,
     default: undefined,
   },
+  dayOffset: {
+    type: Number,
+    default: 0,
+  },
+  updatedAt: {
+    type: String,
+    default: '',
+  },
 })
 
-const emit = defineEmits(['update:activeMode', 'update:params', 'reset'])
+const emit = defineEmits(['update:activeMode', 'update:params', 'reset', 'update:dayOffset'])
 
 // 預設收闔（使用者可自由展開微調）
 const isCollapsed = ref(true)

@@ -512,17 +512,102 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
 }
 
 /**
- * 執行選股篩選
+ * 時光切片：將個股狀態時光倒流至指定天數前（支援近 0 ~ 5 個歷史交易日）
+ * @param {Object} stock     - 原始個股物件（包含完整 history10d）
+ * @param {number} dayOffset - 倒流天數（0: 今日/最新, 1: 昨日, 2: 前日...）
+ * @returns {Object}         - 該歷史日之個股快照物件
+ */
+export function sliceStockAt(stock, dayOffset = 0) {
+  if (!stock || !Array.isArray(stock.history10d) || stock.history10d.length === 0 || dayOffset <= 0) {
+    return stock
+  }
+
+  const len = stock.history10d.length
+  const targetIndex = Math.max(0, len - 1 - dayOffset)
+  const bar = stock.history10d[targetIndex]
+  if (!bar) return stock
+
+  const prevBar = targetIndex > 0 ? stock.history10d[targetIndex - 1] : null
+  const prevClose = typeof bar.prevClose === 'number'
+    ? bar.prevClose
+    : (prevBar ? prevBar.close : bar.open)
+
+  const change = round2(bar.close - prevClose)
+  const changePct = prevClose > 0 ? round2((change / prevClose) * 100) : 0
+
+  // 動態推算該歷史日的 5日量均 (vMa5)
+  const past5Bars = stock.history10d.slice(Math.max(0, targetIndex - 4), targetIndex + 1)
+  const vMa5 = Math.round(past5Bars.reduce((sum, b) => sum + (b.volume || 0), 0) / past5Bars.length)
+
+  // 動態推算該歷史日的 10日量均 (vMa10)
+  const past10Bars = stock.history10d.slice(Math.max(0, targetIndex - 9), targetIndex + 1)
+  const vMa10 = Math.round(past10Bars.reduce((sum, b) => sum + (b.volume || 0), 0) / past10Bars.length)
+
+  const ma5 = bar.ma5 ?? 0
+  const ma10 = bar.ma10 ?? 0
+  const ma20 = bar.ma20 ?? 0
+  const ma60 = bar.ma60 ?? stock.ma60 ?? 0
+
+  const bias5 = ma5 > 0 ? round2(((bar.close - ma5) / ma5) * 100) : 0
+  const bias20 = ma20 > 0 ? round2(((bar.close - ma20) / ma20) * 100) : 0
+
+  return {
+    ...stock,
+    price: bar.close,
+    open: bar.open,
+    high: bar.high,
+    low: bar.low,
+    close: bar.close,
+    prevClose,
+    volume: bar.volume,
+    change,
+    changePct,
+    ma5,
+    ma10,
+    ma20,
+    ma60,
+    vMa5,
+    vMa10,
+    bias5,
+    bias20,
+    kd: {
+      k: bar.k,
+      d: bar.d,
+      prevK: prevBar ? prevBar.k : bar.k,
+      prevD: prevBar ? prevBar.d : bar.d,
+    },
+    // 截斷未來資料，確保前一日糾結與斜率判斷完全基於當時歷史視角
+    history10d: stock.history10d.slice(0, targetIndex + 1),
+    dayOffset,
+  }
+}
+
+/**
+ * 批次將全股票池時光倒流至指定天數前
+ * @param {Object[]} stocks
+ * @param {number}   dayOffset
+ * @returns {Object[]}
+ */
+export function sliceStockPoolAt(stocks = [], dayOffset = 0) {
+  if (!Array.isArray(stocks) || dayOffset <= 0) return stocks
+  return stocks.map(stock => sliceStockAt(stock, dayOffset))
+}
+
+/**
+ * 執行選股篩選（支援歷史時光機回測）
  * @param {Object[]} stocks       - 完整個股陣列（已合體即時行情）
  * @param {Object}   params       - 篩選條件參數
  * @param {string}   [activeMode] - 當前選股模式 ID
+ * @param {number}   [dayOffset]  - 歷史倒流天數（0: 今日/最新, 1: 1天前, 2: 2天前...）
  * @returns {Object[]}            - 符合條件的個股陣列（包含 filterEvaluation）
  */
-export function runScreener(stocks = [], params = {}, activeMode = '') {
+export function runScreener(stocks = [], params = {}, activeMode = '', dayOffset = 0) {
   if (!Array.isArray(stocks)) return []
 
+  const targetStocks = dayOffset > 0 ? sliceStockPoolAt(stocks, dayOffset) : stocks
+
   const results = []
-  for (const stock of stocks) {
+  for (const stock of targetStocks) {
     const price = stock.price ?? 0
     const ma5   = stock.ma5 ?? 0
     const ma20  = stock.ma20 ?? 0

@@ -80,8 +80,11 @@
           :mode-counts="modeCounts"
           :results-count="results.length"
           :total-count="activeStocks.length"
+          :day-offset="selectedDayOffset"
+          :updated-at="meta?.updatedAt || ''"
           @update:active-mode="setMode"
           @update:params="params = $event"
+          @update:day-offset="setDayOffset"
           @reset="handleResetParams"
         />
 
@@ -219,7 +222,17 @@ const activeMeta   = computed(() => {
 })
 
 // 4. 篩選邏輯層
-const { activeMode, params, results, unmatchedResults, modeCounts, modes, setMode } = useScreener(activeStocks)
+const {
+  activeMode,
+  params,
+  selectedDayOffset,
+  results,
+  unmatchedResults,
+  modeCounts,
+  modes,
+  setMode,
+  setDayOffset,
+} = useScreener(activeStocks)
 
 function handleResetParams() {
   setMode(activeMode.value)

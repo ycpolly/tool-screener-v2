@@ -145,6 +145,7 @@ def calc_stock_indicators(ohlcv: List[Dict]) -> Dict[str, Any]:
             kdi = kd_series[idx]
             sub = all_closes[:idx + 1]
             history10d.append({
+                'date':      d.get('date', ''),
                 'open':      round(d['open'],   2),
                 'high':      round(d['high'],   2),
                 'low':       round(d['low'],    2),
@@ -154,9 +155,11 @@ def calc_stock_indicators(ohlcv: List[Dict]) -> Dict[str, Any]:
                 'ma5':       calc_sma(sub, 5),
                 'ma10':      calc_sma(sub, 10),
                 'ma20':      calc_sma(sub, 20),
+                'ma60':      calc_sma(sub, 60),
                 'k':         kdi['k'],
                 'd':         kdi['d'],
             })
+
 
     return {
         'price':          price,
