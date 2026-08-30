@@ -72,23 +72,18 @@
 
       <!-- 核心工作區：先聚焦打磨 StockCard -->
       <template v-if="!poolError">
-        <!-- 暫時註解：待後續階段細緻優化時開啟
-        <MarketBanner
-          :taiex="activeMarket?.taiex"
-          :otc="activeMarket?.otc"
-          :regime="activeMarket?.regime"
-          :loading="poolLoading"
-        />
-
+        <!-- 模式選股與微調面板 -->
         <ScreenerPanel
           :modes="modes"
           :active-mode="activeMode"
           :params="params"
+          :mode-counts="modeCounts"
+          :results-count="results.length"
+          :total-count="activeStocks.length"
           @update:active-mode="setMode"
           @update:params="params = $event"
           @reset="handleResetParams"
         />
-        -->
 
         <!-- 選股結果列表 (專注展示 StockCard) -->
         <StockTable
@@ -206,7 +201,7 @@ const activeMeta   = computed(() => {
 })
 
 // 4. 篩選邏輯層
-const { activeMode, params, results, modes, setMode } = useScreener(activeStocks)
+const { activeMode, params, results, modeCounts, modes, setMode } = useScreener(activeStocks)
 
 function handleResetParams() {
   setMode(activeMode.value)

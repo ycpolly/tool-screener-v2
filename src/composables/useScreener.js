@@ -13,6 +13,11 @@ export function useScreener(stocks) {
 
   // 切換模式時自動載入該模式的預設參數
   function setMode(modeId) {
+    if (modeId === 'ALL') {
+      activeMode.value = 'ALL'
+      params.value = {}
+      return
+    }
     if (!SCREENER_MODES[modeId]) return
     activeMode.value = modeId
     params.value = { ...SCREENER_MODES[modeId].defaultParams }
@@ -23,11 +28,25 @@ export function useScreener(stocks) {
     runScreener(stocks.value, params.value, activeMode.value)
   )
 
+  // 各模式即時符合檔數統計 (ALL + 3 大策略)
+  const modeCounts = computed(() => {
+    const list = stocks.value || []
+    const counts = {
+      ALL: list.length,
+    }
+    for (const [modeKey, modeObj] of Object.entries(SCREENER_MODES)) {
+      const modeParams = activeMode.value === modeKey ? params.value : modeObj.defaultParams
+      const matched = runScreener(list, modeParams, modeKey)
+      counts[modeKey] = matched.length
+    }
+    return counts
+  })
 
   return {
     activeMode: readonly(activeMode),
     params,
     results,
+    modeCounts,
     modes: SCREENER_MODES,
     setMode,
   }

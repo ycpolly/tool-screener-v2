@@ -275,6 +275,11 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     return { isMatch: false, reasonText: strings.invalidCode || '非有效代碼' }
   }
 
+  // 全市場總覽模式 (不套用策略條件)
+  if (activeModeId === 'ALL') {
+    return { isMatch: true, reasonText: strings.passed || '全市場總覽' }
+  }
+
   const price = stock.price ?? 0
   const ma5   = stock.ma5 ?? 0
   const ma10  = stock.ma10 ?? 0
