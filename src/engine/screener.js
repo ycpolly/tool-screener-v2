@@ -578,9 +578,11 @@ export function sliceStockAt(stock, dayOffset = 0) {
     },
     // 截斷未來資料，確保前一日糾結與斜率判斷完全基於當時歷史視角
     history10d: stock.history10d.slice(0, targetIndex + 1),
+    sparkline: stock.history10d.slice(Math.max(0, targetIndex - 9), targetIndex + 1).map(b => b.close),
     dayOffset,
   }
 }
+
 
 /**
  * 批次將全股票池時光倒流至指定天數前

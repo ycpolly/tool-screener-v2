@@ -136,11 +136,12 @@ def calc_stock_indicators(ohlcv: List[Dict]) -> Dict[str, Any]:
         'l8':    l8,
     }
 
-    # ── 近 10 日完整日K（含 MA/KD）──────────────────────────
+    # ── 近 20 日完整日K（含 MA/KD，確保時光機倒流 5 日後仍有完整 10 日繪製走勢圖）────
     history10d = []
-    if len(ohlcv) >= 10:
+    num_history = min(len(ohlcv), 20)
+    if num_history >= 10:
         all_closes = closes
-        for idx in range(len(ohlcv) - 10, len(ohlcv)):
+        for idx in range(len(ohlcv) - num_history, len(ohlcv)):
             d   = ohlcv[idx]
             kdi = kd_series[idx]
             sub = all_closes[:idx + 1]
@@ -159,6 +160,7 @@ def calc_stock_indicators(ohlcv: List[Dict]) -> Dict[str, Any]:
                 'k':         kdi['k'],
                 'd':         kdi['d'],
             })
+
 
 
     return {
