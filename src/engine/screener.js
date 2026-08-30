@@ -1,3 +1,5 @@
+import { UI_STRINGS } from '../constants/ui-strings.js'
+
 /**
  * screener.js — 純演算法引擎
  *
@@ -5,7 +7,7 @@
  * - 本模組不得含有任何 DOM 操作（document / window / innerHTML 等）
  * - 輸入：股票資料陣列 + 篩選條件物件
  * - 輸出：篩選結果陣列
- * - 可直接 `node screener.js` 執行測試
+ * - 可直接 node screener.js 執行測試
  */
 
 /**
@@ -28,6 +30,23 @@ export function isValidStockCode(code) {
  */
 function round2(val) {
   return Math.round((val + Number.EPSILON) * 100) / 100
+}
+
+/**
+ * 計算 5MA, 10MA, 20MA 均線糾結度（%）
+ * 公式：(MAX(MA5, MA10, MA20) - MIN(MA5, MA10, MA20)) / MIN(MA5, MA10, MA20) * 100
+ * @param {number} ma5
+ * @param {number} ma10
+ * @param {number} ma20
+ * @returns {number}
+ */
+export function calculateMAConvergence(ma5, ma10, ma20) {
+  if (!ma5 || !ma10 || !ma20 || ma5 <= 0 || ma10 <= 0 || ma20 <= 0) {
+    return 999.0
+  }
+  const minMA = Math.min(ma5, ma10, ma20)
+  const maxMA = Math.max(ma5, ma10, ma20)
+  return round2(((maxMA - minMA) / minMA) * 100)
 }
 
 /**
@@ -242,23 +261,144 @@ export function mergeAllRealtimeQuotes(baseStocks = [], baseMarket = null, quote
 }
 
 /**
- * 執行選股篩選
- * @param {Object[]} stocks   - 完整個股陣列（已合體即時行情）
- * @param {Object}   params   - 篩選條件參數
- * @returns {Object[]}        - 符合條件的個股陣列
+ * 評估單一個股是否通過篩選條件（均線支撐 / 糾結度 / 乖離區間 / 月線斜率）
+ * @param {Object} stock - 個股物件
+ * @param {Object} params - 篩選參數
+ * @param {string} [activeModeId] - 當前選股模式 ID
+ * @returns {{ isMatch: boolean, reasonText: string }}
  */
-export function runScreener(stocks, params) {
-  if (!Array.isArray(stocks)) return []
-  return stocks.filter(stock => evaluate(stock, params))
+export function evaluateStock(stock, params = {}, activeModeId = '') {
+  const strings = UI_STRINGS.FILTER_REASONS || {}
+
+  // 1. 代碼檢驗
+  if (!isValidStockCode(stock.code)) {
+    return { isMatch: false, reasonText: strings.invalidCode || '非有效代碼' }
+  }
+
+  const price = stock.price ?? 0
+  const ma5   = stock.ma5 ?? 0
+  const ma10  = stock.ma10 ?? 0
+  const ma20  = stock.ma20 ?? 0
+
+  // 2. 5MA 乖離率檢驗
+  const bias5 = typeof stock.bias5 === 'number'
+    ? stock.bias5
+    : (ma5 > 0 ? round2(((price - ma5) / ma5) * 100) : 0)
+
+  if (typeof params.bias5Min === 'number' && bias5 < params.bias5Min) {
+    return { isMatch: false, reasonText: strings.bias5Below ? strings.bias5Below(params.bias5Min, bias5) : '5MA乖離過低' }
+  }
+  if (typeof params.bias5Max === 'number' && bias5 > params.bias5Max) {
+    return { isMatch: false, reasonText: strings.bias5Above ? strings.bias5Above(params.bias5Max, bias5) : '5MA乖離過高' }
+  }
+
+  // 3. 20MA 月線乖離率檢驗
+  const bias20 = typeof stock.bias20 === 'number'
+    ? stock.bias20
+    : (ma20 > 0 ? round2(((price - ma20) / ma20) * 100) : 0)
+
+  if (typeof params.bias20Min === 'number' && bias20 < params.bias20Min) {
+    return { isMatch: false, reasonText: strings.bias20Below ? strings.bias20Below(params.bias20Min, bias20) : '20MA乖離過低' }
+  }
+  if (typeof params.bias20Max === 'number' && bias20 > params.bias20Max) {
+    return { isMatch: false, reasonText: strings.bias20Above ? strings.bias20Above(params.bias20Max, bias20) : '20MA乖離過高' }
+  }
+
+  // 4. 均線支撐 (maAboveMode: 'BOTH' | 'ANY')
+  if (params.maAboveMode === 'BOTH') {
+    const standsBoth = price >= ma5 && price >= ma10
+    if (!standsBoth) {
+      return { isMatch: false, reasonText: strings.maAboveBothFailed || '未同時站穩 5MA 與 10MA' }
+    }
+  } else if (params.maAboveMode === 'ANY') {
+    const standsAny = price >= ma5 || price >= ma10
+    if (!standsAny) {
+      return { isMatch: false, reasonText: strings.maAboveAnyFailed || '未站穩 5MA 或 10MA' }
+    }
+  }
+
+  // 5. 當日三線價差糾結度 (checkConvergence)
+  if (params.checkConvergence && typeof params.convergenceMax === 'number') {
+    const conv = calculateMAConvergence(ma5, ma10, ma20)
+    if (conv > params.convergenceMax) {
+      return {
+        isMatch: false,
+        reasonText: strings.convergenceFailed ? strings.convergenceFailed(params.convergenceMax, conv) : `三線價差過大 (${conv}%)`,
+      }
+    }
+  }
+
+  // 6. 前一交易日三線價差糾結度 (checkPrevConvergence - Mode 3 專用)
+  if (params.checkPrevConvergence && typeof params.prevConvergenceMax === 'number') {
+    const history = stock.history10d
+    const prevBar = Array.isArray(history) && history.length >= 2 ? history[history.length - 2] : null
+
+    if (!prevBar || !prevBar.ma5 || !prevBar.ma10 || !prevBar.ma20) {
+      return { isMatch: false, reasonText: '缺少前一交易日均線數據' }
+    }
+
+    const prevConv = calculateMAConvergence(prevBar.ma5, prevBar.ma10, prevBar.ma20)
+    if (prevConv > params.prevConvergenceMax) {
+      return {
+        isMatch: false,
+        reasonText: strings.prevConvergenceFailed ? strings.prevConvergenceFailed(params.prevConvergenceMax, prevConv) : `前一日三線價差過大 (${prevConv}%)`,
+      }
+    }
+  }
+
+  // 7. 月線斜率向上 (Mode 2 內建底層條件 / requireMa20Rising)
+  if (params.requireMa20Rising || activeModeId === 'TREND_PULLBACK') {
+    const history = stock.history10d
+    const prevBar = Array.isArray(history) && history.length >= 2 ? history[history.length - 2] : null
+    const prevMa20 = prevBar?.ma20
+
+    if (typeof prevMa20 !== 'number' || ma20 <= prevMa20) {
+      return { isMatch: false, reasonText: strings.ma20NotRising || '月線斜率未向上' }
+    }
+  }
+
+
+  return { isMatch: true, reasonText: strings.passed || '符合篩選條件' }
 }
 
 /**
- * 評估單一個股是否通過篩選條件
- * @param {Object} stock
- * @param {Object} params
- * @returns {boolean}
+ * 執行選股篩選
+ * @param {Object[]} stocks       - 完整個股陣列（已合體即時行情）
+ * @param {Object}   params       - 篩選條件參數
+ * @param {string}   [activeMode] - 當前選股模式 ID
+ * @returns {Object[]}            - 符合條件的個股陣列（包含 filterEvaluation）
  */
-function evaluate(stock, params) {
-  // 目前回傳全部通過，供 Phase 1 / Phase 2 UI 開發使用，Phase 3 將補齊完整篩選規則
-  return true
+export function runScreener(stocks = [], params = {}, activeMode = '') {
+  if (!Array.isArray(stocks)) return []
+
+  const results = []
+  for (const stock of stocks) {
+    const price = stock.price ?? 0
+    const ma5   = stock.ma5 ?? 0
+    const ma20  = stock.ma20 ?? 0
+
+    const bias5 = typeof stock.bias5 === 'number'
+      ? stock.bias5
+      : (ma5 > 0 ? round2(((price - ma5) / ma5) * 100) : 0)
+
+    const bias20 = typeof stock.bias20 === 'number'
+      ? stock.bias20
+      : (ma20 > 0 ? round2(((price - ma20) / ma20) * 100) : 0)
+
+    const enrichedStock = {
+      ...stock,
+      bias5,
+      bias20,
+    }
+
+    const evalResult = evaluateStock(enrichedStock, params, activeMode)
+    enrichedStock.filterEvaluation = evalResult
+
+    if (evalResult.isMatch) {
+      results.push(enrichedStock)
+    }
+  }
+
+  return results
 }
+

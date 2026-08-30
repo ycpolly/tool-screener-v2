@@ -18,10 +18,11 @@ export function useScreener(stocks) {
     params.value = { ...SCREENER_MODES[modeId].defaultParams }
   }
 
-  // 篩選結果（computed 自動響應 stocks / params 變化）
+  // 篩選結果（computed 自動響應 stocks / params / activeMode 變化）
   const results = computed(() =>
-    runScreener(stocks.value, params.value)
+    runScreener(stocks.value, params.value, activeMode.value)
   )
+
 
   return {
     activeMode: readonly(activeMode),

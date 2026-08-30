@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-08-27**（完成 Phase 1 GCP 即時行情接入、雙軌 URL 管理、資料合體與嚴格正確性檢查）
+> **最後更新：2026-08-30**（實作 Phase 3 三大選股模式、均線支撐、三線糾結與乖離率篩選演算法）
 
 ---
 
@@ -302,19 +302,27 @@ GCP 即時行情    ─→  useRealtimeQuotes.js ← 即時更新層
 ```javascript
 // src/constants/screener-modes.js
 export const SCREENER_MODES = {
-  LOW_ENTRY: {
-    id: 'LOW_ENTRY',
-    label: '低接卡位',
-    defaultParams: { bias5Min: -3.0, bias5Max: 5.0, ... }
+  BOTTOM_CONSOLIDATION: {
+    id: 'BOTTOM_CONSOLIDATION',
+    label: '底部蓄勢',
+    description: '尋找籌碼乾淨、極致壓縮股（參與 D1-D3）',
+    defaultParams: { maAboveMode: 'BOTH', checkConvergence: true, convergenceMax: 3.0, bias5Min: -2.0, bias5Max: 3.0, bias20Min: 0.0, bias20Max: 8.0 }
   },
-  MOMENTUM: {
-    id: 'MOMENTUM',
-    label: '爆量走強',
-    defaultParams: { bias5Min: 0.0, bias5Max: 8.0, ... }
+  TREND_PULLBACK: {
+    id: 'TREND_PULLBACK',
+    label: '多頭回測',
+    description: '多頭趨勢中，量縮拉回找支撐的強勢中繼股',
+    defaultParams: { maAboveMode: 'ANY', checkConvergence: true, convergenceMax: 8.0, bias5Min: -3.0, bias5Max: 2.0, bias20Min: 2.0, bias20Max: 12.0, requireMa20Rising: true }
+  },
+  MOMENTUM_BREAKOUT: {
+    id: 'MOMENTUM_BREAKOUT',
+    label: '動能攻擊',
+    description: '剛結束打底、今日帶量出第一根紅棒的發動股（參與 D4）',
+    defaultParams: { maAboveMode: 'BOTH', checkConvergence: true, convergenceMax: 8.0, checkPrevConvergence: true, prevConvergenceMax: 3.0, bias5Min: 0.0, bias5Max: 8.0, bias20Min: 0.0, bias20Max: 12.0 }
   }
-  // 未來新增模式：直接在這裡加，不動引擎
 }
 ```
+
 
 ### Mobile-First 樣式策略
 
@@ -381,15 +389,19 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] Sparkline.vue（純向量 SVG 三層式走勢圖：10 根 K 棒 + 5MA/10MA 雙折線 + 10 根成交量柱與 MV5 基準線爆量標記 + 10 日 KD 折線與 50 基準線、智慧防重疊演算法、色彩 Token 化、缺少歷史資料時主動 console.warn）
 - [x] ThemeToggle.vue（Light/Dark 切換：DaisyUI nord 與 business 主題切換，統一 btn-square 形狀）
 - [x] 頂部 Navbar 與 API 設定 Modal 按鈕全面統一 DaisyUI 原生規格（高對比易讀 btn-neutral、鑰匙 SVG 圖示）
+- [x] Navbar 標題小字版號（純文字無底色/無 Badge，點擊觸發頁面強制重載避免快取，命名規範 `vMMDD.NN`）
 - [x] UI 字串對照（`src/constants/ui-strings.js`：補齊 `ForeignBuy`、`MajorBuy`、`SitcaBuy` 等所有分類標籤繁體中文對照）
 - [x] App.vue 接入上述所有元件並完成響應式組裝
 
 ### Phase 3（完整功能）
-- [ ] `screener.js` 完整篩選演算法（所有條件）
+- [x] 三大選股模式定義（底部蓄勢、多頭回測、動能攻擊）— 完成 2026-08-30
+- [x] `screener.js` 核心均線演算法（5MA/10MA 支撐、當日/前一日三線糾結度、5MA/20MA 乖離率、Mode 2 月線向上底層條件）— 完成 2026-08-30
+- [ ] 量能與流動性濾網（成交量、量縮洗盤、爆量走強、實體紅 K、KD 動能區）
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 - [ ] 手機端細節優化
+- [ ] 壓力天花板與扣除稅費預期純利（calculateCeilingProfit）
 
 ### 待辦與後端修正清單（Claude 負責）
 - [x] **修復個股中文名稱缺漏（175 檔個股 `name == code`）**：Claude 於 2026-08-27 已完成修復，各排行股票皆正確帶出中文名稱。

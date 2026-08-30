@@ -100,16 +100,25 @@ interface MarketData {
 
 ```typescript
 interface ScreenerParams {
-  bias5Min:  number          // 5MA 乖離率下限（%）
-  bias5Max:  number          // 5MA 乖離率上限（%）
-  bias20Min: number          // 月線乖離率下限（%）
-  bias20Max: number          // 月線乖離率上限（%）
-  minVolume: number          // 最低成交量（張）
-  kdMode:    'low'|'momentum'
-  requireVolContraction: boolean   // 量縮洗盤
-  requireRedCandle:      boolean   // 實體紅K
-  requireMaAlignment:    'strict'|'loose'|'none'
-  convergenceMax?:       number    // 三線糾結最大價差（%），null = 不啟用
+  // 均線支撐與糾結度
+  maAboveMode:           'BOTH' | 'ANY'  // 站穩 5MA/10MA 模式（BOTH: 雙站穩，ANY: 單站穩）
+  checkConvergence:      boolean         // 是否啟用當日三線價差過濾
+  convergenceMax:        number          // 當日三線價差上限（%）
+  checkPrevConvergence?: boolean         // 是否啟用前一交易日三線價差過濾（Mode 3 專用）
+  prevConvergenceMax?:   number          // 前一交易日三線價差上限（%）
+  requireMa20Rising?:     boolean         // 是否要求月線斜率向上（Mode 2 內建）
+
+  // 乖離率區間
+  bias5Min:              number          // 5MA 乖離率下限（%）
+  bias5Max:              number          // 5MA 乖離率上限（%）
+  bias20Min:             number          // 20MA 月線乖離率下限（%）
+  bias20Max:             number          // 20MA 月線乖離率上限（%）
+
+  // 量能、形態與指標（後續批次審視實作）
+  minVolume?:            number          // 最低成交量（張）
+  requireVolContraction?: boolean        // 量縮洗盤
+  requireRedCandle?:     boolean         // 實體紅K
+  kdMode?:               'low' | 'momentum'
 }
 ```
 
@@ -117,12 +126,13 @@ interface ScreenerParams {
 
 ```typescript
 interface ScreenerMode {
-  id:            string
+  id:            'BOTTOM_CONSOLIDATION' | 'TREND_PULLBACK' | 'MOMENTUM_BREAKOUT' | string
   label:         string
   description:   string
   defaultParams: ScreenerParams
 }
 ```
+
 
 ---
 

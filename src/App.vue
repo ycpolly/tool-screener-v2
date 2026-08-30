@@ -2,10 +2,17 @@
   <div :data-theme="isDark ? 'business' : 'nord'" class="min-h-dvh bg-base-100 text-base-content antialiased flex flex-col">
     <!-- 頂部 Navbar -->
     <header class="sticky top-0 z-40 bg-base-100/90 backdrop-blur border-b border-base-300 h-13 flex items-center px-4 md:px-6">
-      <div class="flex items-baseline gap-2.5">
+      <div class="flex items-baseline gap-2">
         <h1 class="font-bold text-base md:text-lg tracking-tight text-base-content">
           {{ UI_STRINGS.APP.title }}
         </h1>
+        <span
+          class="text-xs font-numeric font-normal text-base-content/50 select-none cursor-pointer"
+          title="點擊重新整理頁面"
+          @click="reloadPage"
+        >
+          {{ UI_STRINGS.APP.version }}
+        </span>
       </div>
 
       <div class="ml-auto flex items-center gap-2">
@@ -248,6 +255,10 @@ function handleFetchRealtime() {
   if (!baseStocks.value || baseStocks.value.length === 0) return
   const codes = baseStocks.value.map(s => s.code)
   fetchQuotes(codes)
+}
+
+function reloadPage() {
+  window.location.reload()
 }
 
 onMounted(() => {

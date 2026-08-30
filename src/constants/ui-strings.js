@@ -7,6 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
+    version: 'v0830.01',
     tagline: '盤中即時 · 尾盤篩選',
   },
 
@@ -103,12 +104,33 @@ export const UI_STRINGS = {
   PANEL: {
     title: '篩選條件',
     resetBtn: '重設為預設值',
+    maSupport: '均線支撐',
+    maAboveBoth: '(嚴) 同時站穩 5MA 與 10MA',
+    maAboveAny: '(寬) 站穩 5MA 或 10MA',
+    convergence: '當日三線價差',
+    convergenceThreshold: (n) => `當日三線價差 ≤ ${n}%`,
+    prevConvergence: '前一日三線價差',
+    prevConvergenceThreshold: (n) => `前一交易日三線價差 ≤ ${n}%`,
     bias5Range: '5MA 乖離率 (%)',
     bias20Range: '月線乖離率 (%)',
     minVolume: '最低成交量 (張)',
     requireVolContraction: '要求量縮整理',
     requireRedCandle: '要求實體紅 K',
     to: '至',
+  },
+
+  FILTER_REASONS: {
+    passed: '符合篩選條件',
+    invalidCode: '非有效股票代碼',
+    bias5Below: (min, val) => `5MA 乖離過低 (${val}% < ${min}%)`,
+    bias5Above: (max, val) => `5MA 乖離過高 (${val}% > ${max}%)`,
+    bias20Below: (min, val) => `20MA 乖離過低 (${val}% < ${min}%)`,
+    bias20Above: (max, val) => `20MA 乖離過高 (${val}% > ${max}%)`,
+    maAboveBothFailed: '未同時站穩 5MA 與 10MA',
+    maAboveAnyFailed: '未站穩 5MA 或 10MA',
+    convergenceFailed: (max, val) => `當日三線價差過大 (${val}% > ${max}%)`,
+    prevConvergenceFailed: (max, val) => `前一日三線價差過大 (${val}% > ${max}%)`,
+    ma20NotRising: '月線斜率未向上 (今日 20MA ≤ 前一日 20MA)',
   },
 
   API_SETTINGS: {
