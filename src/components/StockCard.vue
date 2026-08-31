@@ -446,11 +446,12 @@ const dayTradersWarningText = computed(() => {
   if (!chips) return ''
   const pct = chips.dayTradersPct ?? 0
   const branches = chips.dayTradersBranches ?? []
-  if (pct > 0 && branches.length > 0) {
+  if (branches.length > 0) {
     return UI_STRINGS.CHIPS.dayTradersRisk(pct, branches)
   }
   return ''
 })
+
 
 
 const kdStatusText = computed(() => {
