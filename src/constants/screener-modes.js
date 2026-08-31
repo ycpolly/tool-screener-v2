@@ -192,4 +192,4 @@ export const SCREENER_MODES = {
   },
 }
 
-export const DEFAULT_MODE = 'BOTTOM_CONSOLIDATION'
+export const DEFAULT_MODE = 'ALL'

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="stock-card bg-base-200 border border-base-300 rounded-xl p-4 transition-all duration-200 hover:shadow-md hover:border-base-content/20"
+    class="stock-card bg-base-200 border border-base-300 rounded-xl p-4 transition-all duration-200 hover:shadow-md hover:border-base-content/20 [content-visibility:auto] [contain-intrinsic-size:160px]"
   >
     <!-- ============================================================
          手機端佈局 (< 1024px)：由上而下 5 層自然排列

@@ -9,7 +9,7 @@ import { SCREENER_MODES, DEFAULT_MODE } from '../constants/screener-modes.js'
  */
 export function useScreener(stocks) {
   const activeMode        = ref(DEFAULT_MODE)
-  const params            = ref({ ...SCREENER_MODES[DEFAULT_MODE].defaultParams })
+  const params            = ref(DEFAULT_MODE === 'ALL' ? {} : { ...(SCREENER_MODES[DEFAULT_MODE]?.defaultParams || {}) })
   const selectedDayOffset = ref(0) // 0: 今日/最新, 1: 1天前 (T-1), 2: 2天前 (T-2)...
 
   // 切換模式時自動載入該模式的預設參數

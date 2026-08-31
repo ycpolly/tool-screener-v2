@@ -17,7 +17,7 @@
             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <span>{{ UI_STRINGS.TIME_MACHINE.title || '全市場時光機' }}:</span>
+        <span>{{ UI_STRINGS.TIME_MACHINE.title || '時光機' }}</span>
       </span>
 
       <!-- 6 大時光膠囊按鈕 (T-0 ~ T-5 全部由真實日 K 提取真實日期，0 日曆誤差) -->
@@ -25,7 +25,7 @@
         v-for="d in timeMachineDates"
         :key="d.offset"
         type="button"
-        class="px-2.5 py-1.5 rounded-lg text-sm transition-all shrink-0 font-numeric"
+        class="px-2.5 py-1.5 rounded-lg text-sm transition-all shrink-0 font-numeric cursor-pointer"
         :class="dayOffset === d.offset
           ? 'bg-base-100 text-base-content font-bold shadow-xs border border-base-300'
           : 'text-base-content/75 hover:text-base-content hover:bg-base-300/40'"

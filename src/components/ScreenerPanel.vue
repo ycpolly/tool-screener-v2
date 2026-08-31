@@ -16,7 +16,7 @@
       <!-- Tab 0: 全部股票 -->
       <button
         type="button"
-        class="py-2 px-1 text-center rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap"
+        class="py-2 px-1 text-center rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap cursor-pointer"
         :class="activeMode === 'ALL' ? 'bg-base-100 text-base-content shadow-sm' : 'text-base-content/80 hover:text-base-content'"
         @click="$emit('update:activeMode', 'ALL')"
       >
@@ -32,7 +32,7 @@
         v-for="mode in Object.values(modes)"
         :key="mode.id"
         type="button"
-        class="py-2 px-1 text-center rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap"
+        class="py-2 px-1 text-center rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap cursor-pointer"
         :class="activeMode === mode.id ? 'bg-base-100 text-base-content shadow-sm' : 'text-base-content/80 hover:text-base-content'"
         @click="$emit('update:activeMode', mode.id)"
       >

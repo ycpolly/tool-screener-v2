@@ -7,7 +7,7 @@
           {{ UI_STRINGS.APP.title }}
         </h1>
         <span
-          class="text-sm font-numeric font-normal text-base-content/80 select-none cursor-pointer"
+          class="text-xs sm:text-sm font-numeric font-normal text-base-content/80 select-none cursor-pointer"
           title="點擊重新整理頁面"
           @click="reloadPage"
         >
@@ -16,30 +16,9 @@
       </div>
 
       <div class="ml-auto flex items-center gap-2">
-        <!-- 取得最新價格按鈕 (DaisyUI btn-neutral，高對比易讀) -->
-        <button
-          class="btn btn-sm btn-neutral gap-1.5 font-medium"
-          :disabled="poolLoading || quotesLoading"
-          @click="handleFetchRealtime"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
-            :class="{ 'animate-spin': quotesLoading }"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          <span class="text-sm">
-            {{ quotesLoading ? UI_STRINGS.REALTIME.fetchingBtn : UI_STRINGS.REALTIME.fetchBtn }}
-          </span>
-        </button>
-
         <!-- 行情 API 設定按鈕 (鑰匙 SVG 圖示，與主題切換一致的 btn-square 形狀) -->
         <button
-          class="btn btn-sm btn-ghost btn-square text-base-content/80 hover:text-base-content transition-colors"
+          class="btn btn-sm btn-ghost btn-square text-base-content/80 hover:text-base-content transition-colors cursor-pointer"
           :title="UI_STRINGS.API_SETTINGS.modalTitle"
           :aria-label="UI_STRINGS.API_SETTINGS.modalTitle"
           @click="openApiModal"
@@ -55,7 +34,7 @@
     </header>
 
     <!-- 主體內容容器 (Mobile-first, max-w-screen-xl) -->
-    <main class="container mx-auto px-3 sm:px-4 py-4 md:py-6 max-w-screen-xl space-y-4 flex-1">
+    <main class="container mx-auto px-3 sm:px-4 py-3 md:py-5 max-w-screen-xl space-y-3.5 flex-1">
       <!-- 基礎資料池錯誤 -->
       <div v-if="poolError" class="alert alert-error text-sm">
         <span>{{ poolError }}</span>
@@ -68,6 +47,43 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
         <span>{{ quotesError }}</span>
+      </div>
+
+      <!-- 即時數據脈搏與更新控制列 (Data Pulse & Action Bar) -->
+      <div class="flex items-center justify-between px-3 py-2 bg-base-200/60 border border-base-300/60 rounded-xl">
+        <!-- 左側：資料時間戳記與連線狀態點 -->
+        <div class="flex items-center gap-2 text-xs sm:text-sm font-numeric text-base-content/80">
+          <span
+            class="inline-block w-2 h-2 rounded-full shrink-0"
+            :class="quotesLoading ? 'bg-warning animate-ping' : (quotesLastUpdated ? 'bg-success shadow-xs' : 'bg-primary/80')"
+          ></span>
+          <span class="font-medium tracking-wide">
+            {{ dataTimestampText || '資料載入中…' }}
+          </span>
+        </div>
+
+        <!-- 右側：更新操作按鈕 (預留未來自動更新開關空間) -->
+        <div class="flex items-center gap-2">
+          <button
+            class="btn btn-sm btn-neutral gap-1.5 font-medium h-8 min-h-0 cursor-pointer"
+            :disabled="poolLoading || quotesLoading"
+            @click="handleFetchRealtime"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3.5 w-3.5"
+              :class="{ 'animate-spin': quotesLoading }"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span class="text-xs sm:text-sm">
+              {{ quotesLoading ? UI_STRINGS.REALTIME.fetchingBtn : UI_STRINGS.REALTIME.fetchBtn }}
+            </span>
+          </button>
+        </div>
       </div>
 
       <!-- 核心工作區：先聚焦打磨 StockCard -->
@@ -219,6 +235,26 @@ const activeMeta   = computed(() => {
     ...meta.value,
     lastRealtimeUpdate: quotesLastUpdated.value,
   }
+})
+
+// 頂部導覽列資料時間戳記文字
+const dataTimestampText = computed(() => {
+  if (quotesLastUpdated.value) {
+    return `${UI_STRINGS.APP.realtimePrefix || '即時 '}${quotesLastUpdated.value}`
+  }
+  const rawUpdated = meta.value?.updatedAt
+  if (!rawUpdated) return ''
+  try {
+    const d = new Date(rawUpdated)
+    if (!isNaN(d.getTime())) {
+      const mm = String(d.getMonth() + 1).padStart(2, '0')
+      const dd = String(d.getDate()).padStart(2, '0')
+      const hh = String(d.getHours()).padStart(2, '0')
+      const min = String(d.getMinutes()).padStart(2, '0')
+      return `${UI_STRINGS.APP.dataTimePrefix || '資料 '}${mm}/${dd} ${hh}:${min}`
+    }
+  } catch {}
+  return `${UI_STRINGS.APP.dataTimePrefix || '資料 '}${rawUpdated}`
 })
 
 // 4. 篩選邏輯層

@@ -8,6 +8,8 @@ export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
     version: 'v0831.02',
+    dataTimePrefix: '資料 ',
+    realtimePrefix: '即時 ',
   },
 
   MARKET_REGIME: {
@@ -52,7 +54,7 @@ export const UI_STRINGS = {
   },
 
   TIME_MACHINE: {
-    title: '全市場時光機',
+    title: '時光機',
     subtitle: '時光倒流至近 5 個交易日，驗證各策略歷史選股表現',
     today: '最新行情',
     daysAgo: (n) => `${n} 天前`,

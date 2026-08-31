@@ -21,6 +21,113 @@ function getInitialGcpUrl() {
   return (import.meta.env.VITE_GCP_URL ?? '').trim()
 }
 
+/**
+ * 格式化時間字串，支援 "HH:mm:ss"、"YYYY-MM-DD HH:mm:ss"、"HHmmss" (TWSE 6碼)
+ * @param {string} str
+ * @returns {string}
+ */
+function formatTimeString(str) {
+  if (!str || typeof str !== 'string') return ''
+  const trimmed = str.trim()
+  // "2026-08-31 10:54:28" -> "10:54:28"
+  if (trimmed.includes(' ')) {
+    return trimmed.split(' ')[1]
+  }
+  // TWSE 6碼格式 "105428" -> "10:54:28"
+  if (/^\d{6}$/.test(trimmed)) {
+    return `${trimmed.slice(0, 2)}:${trimmed.slice(2, 4)}:${trimmed.slice(4, 6)}`
+  }
+  return trimmed
+}
+
+/**
+ * 格式化 Unix 時間戳記 (毫秒或秒) 為 "HH:mm:ss"
+ * @param {number} ts
+ * @returns {string}
+ */
+function formatTimestamp(ts) {
+  if (typeof ts !== 'number' || isNaN(ts) || ts <= 0) return ''
+  const ms = ts < 1e11 ? ts * 1000 : ts
+  const d = new Date(ms)
+  if (isNaN(d.getTime())) return ''
+  return d.toLocaleTimeString('zh-TW', { hour12: false })
+}
+
+/**
+ * 智慧解析交易所/公開來源的官方撮合時間戳記
+ * @param {Object} json - API 回傳根物件
+ * @param {Object} returnedData - 各代碼之行情物件 Map
+ * @returns {string}
+ */
+export function extractExchangeTime(json, returnedData) {
+  // 1. 優先檢查根層級 exchangeTime, queryTime, timestamp
+  if (json) {
+    if (typeof json.exchangeTime === 'string' && json.exchangeTime.trim()) {
+      const formatted = formatTimeString(json.exchangeTime)
+      if (formatted) return formatted
+    }
+    if (typeof json.time === 'string' && json.time.trim()) {
+      const formatted = formatTimeString(json.time)
+      if (formatted) return formatted
+    }
+    if (typeof json.timestamp === 'number' && json.timestamp > 0) {
+      const formatted = formatTimestamp(json.timestamp)
+      if (formatted) return formatted
+    }
+  }
+
+  // 2. 檢查大盤指數 (t00 加權, o00 櫃買) 或指標個股 (2330, 2317) 之交易所撮合時間
+  const priorityCodes = ['t00', 'o00', '2330', '2317', '2454']
+  if (returnedData) {
+    for (const code of priorityCodes) {
+      const item = returnedData[code]
+      if (item) {
+        if (typeof item.time === 'string' && item.time.trim()) {
+          const formatted = formatTimeString(item.time)
+          if (formatted) return formatted
+        }
+        if (typeof item.t === 'string' && item.t.trim()) {
+          const formatted = formatTimeString(item.t)
+          if (formatted) return formatted
+        }
+        if (typeof item.tlong === 'number' && item.tlong > 0) {
+          const formatted = formatTimestamp(item.tlong)
+          if (formatted) return formatted
+        }
+        if (typeof item.timestamp === 'number' && item.timestamp > 0) {
+          const formatted = formatTimestamp(item.timestamp)
+          if (formatted) return formatted
+        }
+      }
+    }
+
+    // 3. 掃描所有回傳的有效個股中撮合時間
+    for (const item of Object.values(returnedData)) {
+      if (item) {
+        if (typeof item.time === 'string' && item.time.trim()) {
+          const formatted = formatTimeString(item.time)
+          if (formatted) return formatted
+        }
+        if (typeof item.t === 'string' && item.t.trim()) {
+          const formatted = formatTimeString(item.t)
+          if (formatted) return formatted
+        }
+        if (typeof item.tlong === 'number' && item.tlong > 0) {
+          const formatted = formatTimestamp(item.tlong)
+          if (formatted) return formatted
+        }
+        if (typeof item.timestamp === 'number' && item.timestamp > 0) {
+          const formatted = formatTimestamp(item.timestamp)
+          if (formatted) return formatted
+        }
+      }
+    }
+  }
+
+  // Fallback: 接收到 response 之本地時間
+  return new Date().toLocaleTimeString('zh-TW', { hour12: false })
+}
+
 const _gcpUrl      = ref(getInitialGcpUrl())
 const _quotes      = ref({})   // { [code]: { price, open, high, low, volume, change, changePct, ... } }
 const _loading     = ref(false)
@@ -29,6 +136,7 @@ const _error       = ref(null)
 const _missing     = ref([])
 
 export function useRealtimeQuotes() {
+
   const isConfigured = computed(() => !!_gcpUrl.value)
 
   /**
@@ -122,7 +230,7 @@ export function useRealtimeQuotes() {
       }
 
       _quotes.value = validQuotes
-      _lastUpdated.value = new Date().toLocaleTimeString('zh-TW', { hour12: false })
+      _lastUpdated.value = extractExchangeTime(json, returnedData)
 
       return validQuotes
     } catch (err) {
@@ -133,6 +241,7 @@ export function useRealtimeQuotes() {
       _loading.value = false
     }
   }
+
 
   /**
    * 取得單一個股的即時報價
