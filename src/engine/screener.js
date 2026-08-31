@@ -361,8 +361,8 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     }
   }
 
-  // 7. 月線斜率向上 (Mode 2 內建底層條件 / requireMa20Rising)
-  if (params.requireMa20Rising || activeModeId === 'TREND_PULLBACK') {
+  // 7. 月線斜率向上 (Mode 2 多頭回測 & Mode 4 洗盤起漲 內建底層靈魂條件)
+  if (params.requireMa20Rising || activeModeId === 'TREND_PULLBACK' || activeModeId === 'WASHOUT_IGNITION' || activeModeId === 'PULLBACK_IGNITION') {
     const history = stock.history10d
     const prevBar = Array.isArray(history) && history.length >= 2 ? history[history.length - 2] : null
     const prevMa20 = prevBar?.ma20
@@ -371,6 +371,7 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
       return { isMatch: false, reasonText: strings.ma20NotRising || '月線斜率未向上' }
     }
   }
+
 
   // 8. 成交量門檻檢驗 (checkMinVolume)
   const volume = stock.volume ?? 0
