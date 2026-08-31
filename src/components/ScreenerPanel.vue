@@ -164,21 +164,18 @@
           </div>
         </div>
 
-        <!-- A-2. 月線斜率向上 (多頭回測與洗盤起漲專屬) -->
+        <!-- A-2. 月線斜率向上 (多頭回測與洗盤起漲專屬，底層靈魂條件) -->
         <div
           v-if="activeMode === 'TREND_PULLBACK' || activeMode === 'WASHOUT_IGNITION'"
           class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm"
         >
-
-          <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
-            <input
-              type="checkbox"
-              class="checkbox checkbox-sm rounded"
-              :checked="params.requireMa20Rising !== false"
-              @change="updateField('requireMa20Rising', $event.target.checked)"
-            />
-            <span>{{ UI_STRINGS.PANEL.ma20Rising }}</span>
-          </label>
+          <div class="flex items-center gap-2 text-base-content/85">
+            <span class="inline-block w-2 h-2 rounded-full bg-success/80 shrink-0"></span>
+            <span>{{ UI_STRINGS.PANEL.ma20Rising || '月線斜率向上 (當日 20MA > 前一日 20MA)' }}</span>
+          </div>
+          <span class="text-xs text-base-content/75 bg-base-300/60 px-2 py-0.5 rounded font-medium shrink-0">
+            底層必備
+          </span>
         </div>
 
         <!-- A-3. 當日三線價差 (僅底部蓄勢、動能攻擊、多頭回測模式顯示) -->
@@ -1015,17 +1012,6 @@ function getShortModeLabel(modeId) {
   }
 }
 
-// 模式 4 (多頭回測) 與 模式 5 (洗盤起漲) Console 底層條件提示
-watch(
-  () => props.activeMode,
-  (newMode) => {
-    if (newMode === 'TREND_PULLBACK' || newMode === 'WASHOUT_IGNITION') {
-      console.log(`[選股引擎] 模式【${currentMode.value?.label || newMode}】：已啟用底層必要條件「月線斜率向上 (MA20 Rising)」過濾。`)
-    }
-  },
-
-  { immediate: true }
-)
 
 // 判斷當前參數是否已被自訂微調（與模式預設值對比）
 const isCustomized = computed(() => {
