@@ -60,7 +60,47 @@ function formatTimestamp(ts) {
  * @returns {string}
  */
 export function extractExchangeTime(json, returnedData) {
-  // 1. 優先檢查根層級 exchangeTime, queryTime, timestamp
+  // 1. 【最優先】檢查大盤指數 (t00 加權, o00 櫃買) 或指標個股 (2330, 2317) 之交易所官方撮合時間 (如 "13:30:00")
+  const priorityCodes = ['t00', 'o00', '2330', '2317', '2454']
+  if (returnedData) {
+    for (const code of priorityCodes) {
+      const item = returnedData[code]
+      if (item) {
+        if (typeof item.time === 'string' && item.time.trim()) {
+          const formatted = formatTimeString(item.time)
+          if (formatted) return formatted
+        }
+        if (typeof item.t === 'string' && item.t.trim()) {
+          const formatted = formatTimeString(item.t)
+          if (formatted) return formatted
+        }
+        if (typeof item.updatedAt === 'string' && item.updatedAt.trim()) {
+          const formatted = formatTimeString(item.updatedAt)
+          if (formatted) return formatted
+        }
+      }
+    }
+
+    // 2. 掃描所有回傳的有效個股中之交易所撮合時間 (如 "13:30:00" 或 "13:24:59")
+    for (const item of Object.values(returnedData)) {
+      if (item) {
+        if (typeof item.time === 'string' && item.time.trim()) {
+          const formatted = formatTimeString(item.time)
+          if (formatted) return formatted
+        }
+        if (typeof item.t === 'string' && item.t.trim()) {
+          const formatted = formatTimeString(item.t)
+          if (formatted) return formatted
+        }
+        if (typeof item.updatedAt === 'string' && item.updatedAt.trim()) {
+          const formatted = formatTimeString(item.updatedAt)
+          if (formatted) return formatted
+        }
+      }
+    }
+  }
+
+  // 3. 次要檢查根層級 exchangeTime, queryTime, timestamp (GCP 伺服器時間)
   if (json) {
     if (typeof json.exchangeTime === 'string' && json.exchangeTime.trim()) {
       const formatted = formatTimeString(json.exchangeTime)
@@ -76,57 +116,10 @@ export function extractExchangeTime(json, returnedData) {
     }
   }
 
-  // 2. 檢查大盤指數 (t00 加權, o00 櫃買) 或指標個股 (2330, 2317) 之交易所撮合時間
-  const priorityCodes = ['t00', 'o00', '2330', '2317', '2454']
-  if (returnedData) {
-    for (const code of priorityCodes) {
-      const item = returnedData[code]
-      if (item) {
-        if (typeof item.time === 'string' && item.time.trim()) {
-          const formatted = formatTimeString(item.time)
-          if (formatted) return formatted
-        }
-        if (typeof item.t === 'string' && item.t.trim()) {
-          const formatted = formatTimeString(item.t)
-          if (formatted) return formatted
-        }
-        if (typeof item.tlong === 'number' && item.tlong > 0) {
-          const formatted = formatTimestamp(item.tlong)
-          if (formatted) return formatted
-        }
-        if (typeof item.timestamp === 'number' && item.timestamp > 0) {
-          const formatted = formatTimestamp(item.timestamp)
-          if (formatted) return formatted
-        }
-      }
-    }
-
-    // 3. 掃描所有回傳的有效個股中撮合時間
-    for (const item of Object.values(returnedData)) {
-      if (item) {
-        if (typeof item.time === 'string' && item.time.trim()) {
-          const formatted = formatTimeString(item.time)
-          if (formatted) return formatted
-        }
-        if (typeof item.t === 'string' && item.t.trim()) {
-          const formatted = formatTimeString(item.t)
-          if (formatted) return formatted
-        }
-        if (typeof item.tlong === 'number' && item.tlong > 0) {
-          const formatted = formatTimestamp(item.tlong)
-          if (formatted) return formatted
-        }
-        if (typeof item.timestamp === 'number' && item.timestamp > 0) {
-          const formatted = formatTimestamp(item.timestamp)
-          if (formatted) return formatted
-        }
-      }
-    }
-  }
-
   // Fallback: 接收到 response 之本地時間
   return new Date().toLocaleTimeString('zh-TW', { hour12: false })
 }
+
 
 const _gcpUrl      = ref(getInitialGcpUrl())
 const _quotes      = ref({})   // { [code]: { price, open, high, low, volume, change, changePct, ... } }
