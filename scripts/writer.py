@@ -35,15 +35,23 @@ _RANKING_TO_CATEGORY = {
     'foreignBuy3D':  'ForeignBuy3D',
     'majorBuy1D':    'MajorBuy1D',
     'majorBuy3D':    'MajorBuy3D',
+    'foreignSell1D': 'ForeignSell1D',
+    'foreignSell3D': 'ForeignSell3D',
+    'sitcaSell3D':   'SitcaSell3D',
+    'majorSell1D':   'MajorSell1D',
+    'majorSell3D':   'MajorSell3D',
     'turnoverRate':  'TurnoverRate',
 }
 
 # 「傘形」合併 categories（只要子類出現就加上傘形）
 _UMBRELLA_CATEGORIES = {
-    'SitcaBuy':   {'SitcaBuy3D', 'SitcaBuy5D'},
-    'ForeignBuy': {'ForeignBuy1D', 'ForeignBuy3D'},
-    'MajorBuy':   {'MajorBuy1D', 'MajorBuy3D'},
+    'SitcaBuy':    {'SitcaBuy3D', 'SitcaBuy5D'},
+    'ForeignBuy':  {'ForeignBuy1D', 'ForeignBuy3D'},
+    'MajorBuy':    {'MajorBuy1D', 'MajorBuy3D'},
+    'ForeignSell': {'ForeignSell1D', 'ForeignSell3D'},
+    'MajorSell':   {'MajorSell1D', 'MajorSell3D'},
 }
+
 
 
 def _is_valid_stock_code(code: str) -> bool:
