@@ -11,23 +11,60 @@ export function useScreener(stocks) {
   const activeMode        = ref(DEFAULT_MODE)
   const params            = ref(DEFAULT_MODE === 'ALL' ? {} : { ...(SCREENER_MODES[DEFAULT_MODE]?.defaultParams || {}) })
   const selectedDayOffset = ref(0) // 0: 今日/最新, 1: 1天前 (T-1), 2: 2天前 (T-2)...
+  const isPremium         = ref(false) // 一鍵精選 (嚴格限縮) 狀態
 
-  // 切換模式時自動載入該模式的預設參數
+  // 一鍵精選切換
+  function togglePremium() {
+    isPremium.value = !isPremium.value
+    if (activeMode.value === 'ALL') return
+    const modeObj = SCREENER_MODES[activeMode.value]
+    if (!modeObj) return
+    if (isPremium.value) {
+      params.value = {
+        ...modeObj.defaultParams,
+        ...(modeObj.premiumParams || {}),
+      }
+    } else {
+      params.value = { ...modeObj.defaultParams }
+    }
+  }
+
+  // 重設為標準預設條件 (還原常態並關閉精選)
+  function resetParams() {
+    isPremium.value = false
+    if (activeMode.value === 'ALL') {
+      params.value = {}
+    } else if (SCREENER_MODES[activeMode.value]) {
+      params.value = { ...SCREENER_MODES[activeMode.value].defaultParams }
+    }
+  }
+
+  // 切換模式時自動載入該模式的預設參數 (若啟用一鍵精選則套用精選條件)
   function setMode(modeId) {
     if (modeId === 'ALL') {
       activeMode.value = 'ALL'
       params.value = {}
+      isPremium.value = false
       return
     }
     if (!SCREENER_MODES[modeId]) return
     activeMode.value = modeId
-    params.value = { ...SCREENER_MODES[modeId].defaultParams }
+    const modeObj = SCREENER_MODES[modeId]
+    if (isPremium.value && modeObj.premiumParams) {
+      params.value = {
+        ...modeObj.defaultParams,
+        ...modeObj.premiumParams,
+      }
+    } else {
+      params.value = { ...modeObj.defaultParams }
+    }
   }
 
   // 切換時光機回測天數 (0 ~ 5)
   function setDayOffset(offset = 0) {
     selectedDayOffset.value = Math.max(0, Math.min(5, Number(offset) || 0))
   }
+
 
   // 篩選結果運算（包含符合與未符合分流，以及 ALL 模式時的策略命中計算）
   const screenerOutput = computed(() => {
@@ -111,11 +148,14 @@ export function useScreener(stocks) {
     activeMode: readonly(activeMode),
     params,
     selectedDayOffset: readonly(selectedDayOffset),
+    isPremium: readonly(isPremium),
     results,
     unmatchedResults,
     modeCounts,
     modes: SCREENER_MODES,
     setMode,
     setDayOffset,
+    togglePremium,
+    resetParams,
   }
 }

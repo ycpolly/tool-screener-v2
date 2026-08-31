@@ -47,6 +47,11 @@ export const SCREENER_MODES = {
       kdKMax: 40,
       kdRequireCross: true,           // KD 黃金交叉 (K > D)
     },
+    premiumParams: {
+      minVolume: 2000,                // 流動性拉高至 2000 張
+      minRedCandleChangePct: 3.5,     // 實體紅 K 漲幅拉高至 3.5%
+      kdKMax: 25,                     // K 值上限由 40 縮至 25 (極端超賣)
+    },
   },
 
   // Mode 2 - 底部蓄勢 (Bottom Consolidation)
@@ -87,6 +92,12 @@ export const SCREENER_MODES = {
       kdKMax: 60,
       kdRequireCross: true,           // K > D 黃金交叉
     },
+    premiumParams: {
+      convergenceMax: 2.0,            // 三線價差壓縮至 2% 以內
+      tightChgMin: -1.0,              // 振幅限制在正負 1% 內
+      tightChgMax: 1.0,
+      bias20Max: 5.0,                 // 月線乖離上限壓低至 5%
+    },
   },
 
   // Mode 3 - 動能攻擊 (Momentum Breakout)
@@ -124,6 +135,11 @@ export const SCREENER_MODES = {
       kdKMax: 100,
       kdRequireCross: true,         // K > D 黃金交叉
     },
+    premiumParams: {
+      minVolume: 2000,              // 門檻拉高至 2000 張
+      prevConvergenceMax: 2.0,      // 昨日三線價差緊縮至 2.0%
+      minRedCandleChangePct: 3.0,   // 攻擊紅 K 漲幅至少 3.0% 以上
+    },
   },
 
   // Mode 4 - 多頭回測 (Trend Pullback)
@@ -150,6 +166,7 @@ export const SCREENER_MODES = {
       checkMinVolume: true,
       checkNotDisposed: true,       // 排除處置股
       checkVolPullback: true,       // 量縮回踩 (當日量 < 5日量均 或 < 昨日量)
+      checkVolPullbackStrict: false,// 嚴格 AND 雙重量縮 (一鍵精選啟用)
       excludeSell3D: true,          // 隱藏外資 / 主力 / 投信賣超 3D (含 0050 豁免)
       excludeSell1D: false,         // 隱藏外資 / 主力賣超 1D
       checkAvoidLongBlack: true,    // 排除長黑倒貨 (實體黑K跌幅 >= 1.5% 且收相對低 <= 25%)
@@ -158,6 +175,11 @@ export const SCREENER_MODES = {
       kdKMin: 40,                   // 40 <= K <= 75
       kdKMax: 75,
       kdRequireCross: false,
+    },
+    premiumParams: {
+      bias5Min: -1.5,               // 緊貼 5MA (-1.5% ~ +1.5%)
+      bias5Max: 1.5,
+      checkVolPullbackStrict: true, // 嚴格 AND 雙重量縮 (量 < 5MA均量 AND 量 < 昨日量)
     },
   },
 
@@ -198,6 +220,11 @@ export const SCREENER_MODES = {
       kdKMin: 30,                     // 中檔降溫區 (K 介於 30 ~ 65)
       kdKMax: 65,
       kdRequireCross: true,           // KD 多頭排列 (K > D)
+    },
+    premiumParams: {
+      minVolume: 2000,                // 門檻拉高至 2000 張
+      minRedCandleChangePct: 3.5,     // 實體紅 K 漲幅拉高至 3.5%
+      kdKMax: 55,                     // K 值上限壓低至 55
     },
   },
 }

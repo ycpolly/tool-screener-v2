@@ -494,16 +494,23 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     }
   }
 
-  // 11. 量縮回踩 (checkVolPullback: 當日成交量 < 5日量均 或 < 昨日成交量)
+  // 11. 量縮回踩 (checkVolPullback: 當日成交量 < 5日量均 或 < 昨日成交量；若 checkVolPullbackStrict 則必須同時小於 5日量均 AND 昨日量)
   if (params.checkVolPullback) {
     const prevVolume = prevBar?.volume ?? 0
     const isBelowVma5 = vMa5 > 0 ? volume < vMa5 : false
     const isBelowPrevVol = prevVolume > 0 ? volume < prevVolume : false
 
-    if (!isBelowVma5 && !isBelowPrevVol) {
-      return { isMatch: false, reasonText: strings.volPullbackFailed || '未達量縮回踩標準' }
+    if (params.checkVolPullbackStrict) {
+      if (!isBelowVma5 || !isBelowPrevVol) {
+        return { isMatch: false, reasonText: strings.strictVolPullbackFailed || '未達嚴格雙重量縮標準 (需同時小於5日量均與昨日量)' }
+      }
+    } else {
+      if (!isBelowVma5 && !isBelowPrevVol) {
+        return { isMatch: false, reasonText: strings.volPullbackFailed || '未達量縮回踩標準' }
+      }
     }
   }
+
 
   // 12. 昨日量縮 (checkPrevVolContraction: 昨日成交量 < 昨日 5 日量均 MV5)
   if (params.checkPrevVolContraction) {

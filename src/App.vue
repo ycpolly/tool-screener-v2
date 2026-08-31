@@ -98,10 +98,12 @@
           :total-count="activeStocks.length"
           :day-offset="selectedDayOffset"
           :updated-at="meta?.updatedAt || ''"
+          :is-premium="isPremium"
           @update:active-mode="setMode"
           @update:params="params = $event"
           @update:day-offset="setDayOffset"
-          @reset="handleResetParams"
+          @toggle-premium="togglePremium"
+          @reset="resetParams"
         />
 
         <!-- 即時個股搜尋與排序工具列 (介於 ScreenerPanel 與 StockTable 之間) -->
@@ -288,21 +290,21 @@ const {
   activeMode,
   params,
   selectedDayOffset,
+  isPremium,
   results,
   unmatchedResults,
   modeCounts,
   modes,
   setMode,
   setDayOffset,
+  togglePremium,
+  resetParams,
 } = useScreener(activeStocks)
-
-function handleResetParams() {
-  setMode(activeMode.value)
-}
 
 function handleSelectStock(stock) {
   console.log('[Stock Selected]', stock.code, stock.name)
 }
+
 
 function handleOpenRiskModal(stock) {
   console.log('[Open Risk Modal]', stock.code, stock.name)

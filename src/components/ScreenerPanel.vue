@@ -63,11 +63,27 @@
         </span>
       </div>
 
-      <!-- 右側動作：重設 + 展開/收合 (僅策略模式顯示微調按鈕) -->
+      <!-- 右側動作：一鍵精選 + 重設 + 展開/收合 (僅策略模式顯示微調按鈕) -->
       <div class="flex items-center gap-2 shrink-0">
         <template v-if="activeMode !== 'ALL'">
+          <!-- ⚡ 一鍵精選按鈕 -->
           <button
-            v-if="isCustomized"
+            type="button"
+            class="btn btn-sm text-sm font-medium h-8 min-h-0 transition-all flex items-center gap-1 cursor-pointer"
+            :class="isPremium
+              ? 'bg-warning/20 text-warning-content border border-warning/60 font-bold shadow-xs'
+              : 'btn-ghost text-base-content/80 hover:text-base-content border border-base-300'"
+            :title="isPremium ? (UI_STRINGS.PANEL.premiumActive || '已啟用一鍵精選') : (UI_STRINGS.PANEL.premiumToggle || '一鍵精選')"
+            @click="$emit('toggle-premium')"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-warning shrink-0" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+            </svg>
+            <span>{{ UI_STRINGS.PANEL.premiumToggle || '一鍵精選' }}</span>
+          </button>
+
+          <button
+            v-if="isCustomized && !isPremium"
             type="button"
             class="btn btn-sm btn-ghost text-sm text-base-content/80 hover:text-base-content font-normal h-8 min-h-0"
             :title="UI_STRINGS.PANEL.resetBtn"
@@ -1112,9 +1128,14 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  isPremium: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const emit = defineEmits(['update:activeMode', 'update:params', 'reset', 'update:dayOffset'])
+const emit = defineEmits(['update:activeMode', 'update:params', 'reset', 'update:dayOffset', 'toggle-premium'])
+
 
 // 預設收闔（使用者可自由展開微調）
 const isCollapsed = ref(true)
