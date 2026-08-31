@@ -663,13 +663,20 @@ export function sliceStockAt(stock, dayOffset = 0) {
   const change = round2(bar.close - prevClose)
   const changePct = prevClose > 0 ? round2((change / prevClose) * 100) : 0
 
-  // 動態推算該歷史日的 5日量均 (vMa5)
+  // 動態推算該歷史日的 5日量均 (vMa5) 與 10日量均 (vMa10)
   const past5Bars = stock.history10d.slice(Math.max(0, targetIndex - 4), targetIndex + 1)
-  const vMa5 = Math.round(past5Bars.reduce((sum, b) => sum + (b.volume || 0), 0) / past5Bars.length)
-
-  // 動態推算該歷史日的 10日量均 (vMa10)
   const past10Bars = stock.history10d.slice(Math.max(0, targetIndex - 9), targetIndex + 1)
+  const past20Bars = stock.history10d.slice(Math.max(0, targetIndex - 19), targetIndex + 1)
+
+  const vMa5 = Math.round(past5Bars.reduce((sum, b) => sum + (b.volume || 0), 0) / past5Bars.length)
   const vMa10 = Math.round(past10Bars.reduce((sum, b) => sum + (b.volume || 0), 0) / past10Bars.length)
+
+  const high5d = Math.max(...past5Bars.map(b => b.high ?? b.close ?? 0))
+  const high10d = Math.max(...past10Bars.map(b => b.high ?? b.close ?? 0))
+  const high20d = Math.max(...past20Bars.map(b => b.high ?? b.close ?? 0))
+  const low5d = Math.min(...past5Bars.map(b => b.low ?? b.close ?? 0))
+  const low10d = Math.min(...past10Bars.map(b => b.low ?? b.close ?? 0))
+  const low20d = Math.min(...past20Bars.map(b => b.low ?? b.close ?? 0))
 
   const ma5 = bar.ma5 ?? 0
   const ma10 = bar.ma10 ?? 0
@@ -692,9 +699,14 @@ export function sliceStockAt(stock, dayOffset = 0) {
     changePct,
     isLimitUp: changePct >= 9.5,
     isLimitDown: changePct <= -9.5,
+    high5d,
+    high10d,
+    high20d,
+    low5d,
+    low10d,
+    low20d,
     ma5,
     ma10,
-
     ma20,
     ma60,
     vMa5,
@@ -712,6 +724,7 @@ export function sliceStockAt(stock, dayOffset = 0) {
     sparkline: stock.history10d.slice(Math.max(0, targetIndex - 9), targetIndex + 1).map(b => b.close),
     dayOffset,
   }
+
 }
 
 
