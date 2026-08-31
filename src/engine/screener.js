@@ -220,18 +220,33 @@ export function mergeRealtimeQuote(baseStock, quote) {
   const isLimitUp = changePct >= 9.5
   const isLimitDown = changePct <= -9.5
 
+  const todayHigh = quote.high ?? Math.max(quote.open ?? price, price)
+  const todayLow = quote.low ?? Math.min(quote.open ?? price, price)
+  const high5d = Math.max(baseStock.high5d || 0, todayHigh)
+  const high10d = Math.max(baseStock.high10d || 0, todayHigh)
+  const high20d = Math.max(baseStock.high20d || 0, todayHigh)
+  const low5d = baseStock.low5d ? Math.min(baseStock.low5d, todayLow) : todayLow
+  const low10d = baseStock.low10d ? Math.min(baseStock.low10d, todayLow) : todayLow
+  const low20d = baseStock.low20d ? Math.min(baseStock.low20d, todayLow) : todayLow
+
   return {
     ...baseStock,
     price,
     prevClose,
     open:      quote.open    ?? baseStock.open ?? price,
-    high:      quote.high    ?? baseStock.high ?? price,
-    low:       quote.low     ?? baseStock.low  ?? price,
+    high:      todayHigh,
+    low:       todayLow,
     volume:    quote.volume  ?? baseStock.volume ?? 0,
     change,
     changePct,
     isLimitUp,
     isLimitDown,
+    high5d,
+    high10d,
+    high20d,
+    low5d,
+    low10d,
+    low20d,
     ma5,
     ma10,
     ma20,
@@ -243,6 +258,7 @@ export function mergeRealtimeQuote(baseStock, quote) {
     kd,
   }
 }
+
 
 
 
@@ -414,10 +430,18 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
   }
 
   // 6. 前一交易日三線價差糾結度 (checkPrevConvergence - Mode 3 專用)
-  if (params.checkPrevConvergence && typeof params.prevConvergenceMax === 'number') {
-    const history = stock.history10d
-    const prevBar = Array.isArray(history) && history.length >= 2 ? history[history.length - 2] : null
+  const history = stock.history10d || []
+  const len = history.length
+  const lastBar = len > 0 ? history[len - 1] : null
+  const isLive = isLiveTradingDay(lastBar)
+  const isTodayLive = isLive && (stock.dayOffset === 0 || stock.dayOffset === undefined)
 
+  // 昨日 (T-1) 基準 Bar
+  const prevBar = isTodayLive
+    ? (len >= 1 ? history[len - 1] : null)
+    : (len >= 2 ? history[len - 2] : null)
+
+  if (params.checkPrevConvergence && typeof params.prevConvergenceMax === 'number') {
     if (!prevBar || !prevBar.ma5 || !prevBar.ma10 || !prevBar.ma20) {
       return { isMatch: false, reasonText: '缺少前一交易日均線數據' }
     }
@@ -433,8 +457,6 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
 
   // 7. 月線斜率向上 (Mode 2 多頭回測 & Mode 4 洗盤起漲 內建底層靈魂條件)
   if (params.requireMa20Rising || activeModeId === 'TREND_PULLBACK' || activeModeId === 'WASHOUT_IGNITION' || activeModeId === 'PULLBACK_IGNITION') {
-    const history = stock.history10d
-    const prevBar = Array.isArray(history) && history.length >= 2 ? history[history.length - 2] : null
     const prevMa20 = prevBar?.ma20
 
     if (typeof prevMa20 !== 'number' || ma20 <= prevMa20) {
@@ -474,8 +496,6 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
 
   // 11. 量縮回踩 (checkVolPullback: 當日成交量 < 5日量均 或 < 昨日成交量)
   if (params.checkVolPullback) {
-    const history = stock.history10d
-    const prevBar = Array.isArray(history) && history.length >= 2 ? history[history.length - 2] : null
     const prevVolume = prevBar?.volume ?? 0
     const isBelowVma5 = vMa5 > 0 ? volume < vMa5 : false
     const isBelowPrevVol = prevVolume > 0 ? volume < prevVolume : false
@@ -485,20 +505,27 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     }
   }
 
-  // 12. 昨日量縮 (checkPrevPrevVolContraction: 昨日成交量 < 昨日 5 日量均 MV5)
+  // 12. 昨日量縮 (checkPrevVolContraction: 昨日成交量 < 昨日 5 日量均 MV5)
   if (params.checkPrevVolContraction) {
-    const history = stock.history10d
-    if (Array.isArray(history) && history.length >= 6) {
-      // 取昨日 (倒數第 2 根) 及往前共 5 根計算昨日的 MV5
+    if (isTodayLive && len >= 5) {
+      const bars5 = history.slice(-5)
+      const prevMV5 = Math.round(bars5.reduce((sum, b) => sum + (b.volume || 0), 0) / 5)
+      const prevVol = history[len - 1]?.volume ?? 0
+
+      if (prevMV5 > 0 && prevVol >= prevMV5) {
+        return { isMatch: false, reasonText: strings.prevVolContractionFailed || '昨日未達量縮標準' }
+      }
+    } else if (!isTodayLive && len >= 6) {
       const bars5 = history.slice(-6, -1)
       const prevMV5 = Math.round(bars5.reduce((sum, b) => sum + (b.volume || 0), 0) / 5)
-      const prevVol = history[history.length - 2]?.volume ?? 0
+      const prevVol = history[len - 2]?.volume ?? 0
 
       if (prevMV5 > 0 && prevVol >= prevMV5) {
         return { isMatch: false, reasonText: strings.prevVolContractionFailed || '昨日未達量縮標準' }
       }
     }
   }
+
 
   // 13. 當日帶量攻擊 (checkVolExpansion: 當日成交量 > 5日量均)
   if (params.checkVolExpansion && vMa5 > 0 && volume <= vMa5) {
