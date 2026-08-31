@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0831.04',
+    version: 'v0831.05',
     dataTimePrefix: '資料 ',
     realtimePrefix: '即時 ',
   },
