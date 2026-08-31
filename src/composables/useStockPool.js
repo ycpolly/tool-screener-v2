@@ -46,7 +46,7 @@ function computeSellWarning(stockCode, rankings) {
   }
 
   if (tags.length === 0) return null
-  return `⚠️ ${tags.join(' · ')}`
+  return tags.join(' · ')
 }
 
 export function useStockPool() {

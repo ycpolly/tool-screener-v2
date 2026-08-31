@@ -26,16 +26,49 @@
       </div>
 
       <!-- 第 2 層：標籤純文字 (統一 text-sm font-normal, text-base-content/80) -->
-      <div v-if="formattedCategories" class="text-sm font-normal text-base-content/80 leading-normal">
-        {{ formattedCategories }}
+      <div v-if="categoryLabels.length > 0 || sellWarningText" class="text-sm font-normal text-base-content/80 leading-normal">
+        <span v-if="categoryLabels.length > 0">{{ categoryLabels.join(' · ') }}</span>
+        <span v-if="categoryLabels.length > 0 && sellWarningText" class="text-base-content/40"> · </span>
+        <span v-if="sellWarningText" class="inline-flex items-center text-base-content/80">
+          <svg class="inline-block w-3.5 h-3.5 shrink-0 align-[-0.12em] mr-1" viewBox="0 0 16 16" fill="none">
+            <path d="M7.134 1.5a1 1 0 011.732 0l6.062 10.5A1 1 0 0114.062 13.5H1.938a1 1 0 01-.866-1.5L7.134 1.5z" fill="#F59E0B" />
+            <path d="M8 5.5v3.5" stroke="#18181B" stroke-width="1.5" stroke-linecap="round" />
+            <circle cx="8" cy="11.25" r="0.8" fill="#18181B" />
+          </svg>
+          <span>{{ sellWarningText }}</span>
+        </span>
       </div>
 
-      <!-- 短沖/隔日沖分點避雷警示列 (手機端) -->
+      <!-- 籌碼透視區塊（籌碼集中度 + 短沖避雷，頂部細分隔線 + 緊湊間距 + 基本文字色 + 百分比加粗） -->
       <div
-        v-if="dayTradersWarningText"
-        class="text-xs font-medium leading-normal py-1 px-2.5 rounded-lg bg-warning/10 border border-warning/30 text-warning"
+        v-if="hasChipsSection"
+        class="pt-2 pb-1.5 border-t border-base-300/40 space-y-1 text-sm font-normal text-base-content/80 leading-normal"
       >
-        {{ dayTradersWarningText }}
+        <!-- 籌碼集中度 (百分比加粗，帶明確空白) -->
+        <div v-if="chipsConcentrationItems.length > 0" class="font-numeric flex items-baseline flex-wrap">
+          <span class="mr-2">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
+          <template v-for="(item, idx) in chipsConcentrationItems" :key="item.label">
+            <span class="inline-flex items-baseline gap-1">
+              <span>{{ item.label }}</span>
+              <strong class="font-bold text-base-content">{{ item.val }}</strong>
+            </span>
+            <span v-if="idx < chipsConcentrationItems.length - 1" class="text-base-content/40 mx-1.5">·</span>
+          </template>
+        </div>
+
+        <!-- 短沖避雷警示 (基本文字色，百分比加粗，SVG 警示圖示) -->
+        <div v-if="dayTradersInfo" class="font-numeric flex items-center">
+          <svg class="inline-block w-3.5 h-3.5 shrink-0 align-[-0.12em] mr-1" viewBox="0 0 16 16" fill="none">
+            <path d="M7.134 1.5a1 1 0 011.732 0l6.062 10.5A1 1 0 0114.062 13.5H1.938a1 1 0 01-.866-1.5L7.134 1.5z" fill="#F59E0B" />
+            <path d="M8 5.5v3.5" stroke="#18181B" stroke-width="1.5" stroke-linecap="round" />
+            <circle cx="8" cy="11.25" r="0.8" fill="#18181B" />
+          </svg>
+          <span>
+            <span>{{ UI_STRINGS.CHIPS.dayTradersPrefix || '短沖佔 ' }}</span>
+            <strong class="font-bold text-base-content">{{ dayTradersInfo.pct }}</strong>
+            <span v-if="dayTradersInfo.branchesText"> ({{ dayTradersInfo.branchesText }})</span>
+          </span>
+        </div>
       </div>
 
 
@@ -193,16 +226,49 @@
         </div>
 
         <!-- 標籤 (統一 text-sm font-normal) -->
-        <div v-if="formattedCategories" class="text-sm font-normal text-base-content/80 leading-normal">
-          {{ formattedCategories }}
+        <div v-if="categoryLabels.length > 0 || sellWarningText" class="text-sm font-normal text-base-content/80 leading-normal">
+          <span v-if="categoryLabels.length > 0">{{ categoryLabels.join(' · ') }}</span>
+          <span v-if="categoryLabels.length > 0 && sellWarningText" class="text-base-content/40"> · </span>
+          <span v-if="sellWarningText" class="inline-flex items-center text-base-content/80">
+            <svg class="inline-block w-3.5 h-3.5 shrink-0 align-[-0.12em] mr-1" viewBox="0 0 16 16" fill="none">
+              <path d="M7.134 1.5a1 1 0 011.732 0l6.062 10.5A1 1 0 0114.062 13.5H1.938a1 1 0 01-.866-1.5L7.134 1.5z" fill="#F59E0B" />
+              <path d="M8 5.5v3.5" stroke="#18181B" stroke-width="1.5" stroke-linecap="round" />
+              <circle cx="8" cy="11.25" r="0.8" fill="#18181B" />
+            </svg>
+            <span>{{ sellWarningText }}</span>
+          </span>
         </div>
 
-        <!-- 短沖/隔日沖分點避雷警示列 (電腦端) -->
+        <!-- 籌碼透視區塊（籌碼集中度 + 短沖避雷，上下細分隔線 + 緊湊間距 + 基本文字色 + 百分比加粗） -->
         <div
-          v-if="dayTradersWarningText"
-          class="text-xs font-medium leading-normal py-1 px-2.5 rounded-lg bg-warning/10 border border-warning/30 text-warning"
+          v-if="hasChipsSection"
+          class="pt-2 pb-2 border-t border-b border-base-300/40 space-y-1 text-sm font-normal text-base-content/80 leading-normal"
         >
-          {{ dayTradersWarningText }}
+          <!-- 籌碼集中度 (百分比加粗，帶明確空白) -->
+          <div v-if="chipsConcentrationItems.length > 0" class="font-numeric flex items-baseline flex-wrap">
+            <span class="mr-2">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
+            <template v-for="(item, idx) in chipsConcentrationItems" :key="item.label">
+              <span class="inline-flex items-baseline gap-1">
+                <span>{{ item.label }}</span>
+                <strong class="font-bold text-base-content">{{ item.val }}</strong>
+              </span>
+              <span v-if="idx < chipsConcentrationItems.length - 1" class="text-base-content/40 mx-1.5">·</span>
+            </template>
+          </div>
+
+          <!-- 短沖避雷警示 (基本文字色，百分比加粗，SVG 警示圖示) -->
+          <div v-if="dayTradersInfo" class="font-numeric flex items-center">
+            <svg class="inline-block w-3.5 h-3.5 shrink-0 align-[-0.12em] mr-1" viewBox="0 0 16 16" fill="none">
+              <path d="M7.134 1.5a1 1 0 011.732 0l6.062 10.5A1 1 0 0114.062 13.5H1.938a1 1 0 01-.866-1.5L7.134 1.5z" fill="#F59E0B" />
+              <path d="M8 5.5v3.5" stroke="#18181B" stroke-width="1.5" stroke-linecap="round" />
+              <circle cx="8" cy="11.25" r="0.8" fill="#18181B" />
+            </svg>
+            <span>
+              <span>{{ UI_STRINGS.CHIPS.dayTradersPrefix || '短沖佔 ' }}</span>
+              <strong class="font-bold text-base-content">{{ dayTradersInfo.pct }}</strong>
+              <span v-if="dayTradersInfo.branchesText"> ({{ dayTradersInfo.branchesText }})</span>
+            </span>
+          </div>
         </div>
 
 
@@ -408,48 +474,46 @@ const bias20ColorClass = computed(() => {
   return bias20.value > 0 ? 'text-rise' : bias20.value < 0 ? 'text-fall' : 'text-base-content/75'
 })
 
-const formattedCategories = computed(() => {
+const categoryLabels = computed(() => {
   const cats = props.stock.categories
   const tagMap = UI_STRINGS.CATEGORY_TAGS || {}
   const labels = Array.isArray(cats)
     ? cats.map((c) => tagMap[c] || c).filter(Boolean)
     : []
-  const uniqueLabels = Array.from(new Set(labels))
-
-  // 若有 1D/3D/5D 籌碼集中度，加入標籤列呈現
-  if (chipsConcentrationText.value) {
-    uniqueLabels.push(chipsConcentrationText.value)
-  }
-
-  // 若有法人/主力賣超警示，以純文字 + ⚠️ emoji 加入標籤列末端
-  if (props.stock.sellWarning) {
-    uniqueLabels.push(props.stock.sellWarning)
-  }
-
-  return uniqueLabels.join(' · ')
+  return Array.from(new Set(labels))
 })
 
-const chipsConcentrationText = computed(() => {
+const sellWarningText = computed(() => {
+  if (!props.stock.sellWarning) return ''
+  return props.stock.sellWarning.replace(/^⚠️\s*/, '')
+})
+
+const chipsConcentrationItems = computed(() => {
   const chips = props.stock.chips
-  if (!chips) return ''
+  if (!chips) return []
   const { concentration1d: d1, concentration3d: d3, concentration5d: d5 } = chips
-  if (d1 == null && d3 == null && d5 == null) return ''
-  const parts = []
-  if (d1 != null) parts.push(`1D ${d1 >= 0 ? '+' : ''}${d1}%`)
-  if (d3 != null) parts.push(`3D ${d3 >= 0 ? '+' : ''}${d3}%`)
-  if (d5 != null) parts.push(`5D ${d5 >= 0 ? '+' : ''}${d5}%`)
-  return parts.length > 0 ? `${UI_STRINGS.CHIPS.concentrationLabel} ${parts.join(' · ')}` : ''
+  if (d1 == null && d3 == null && d5 == null) return []
+  const items = []
+  if (d1 != null) items.push({ label: '1D', val: `${d1 >= 0 ? '+' : ''}${Number(d1).toFixed(1)}%` })
+  if (d3 != null) items.push({ label: '3D', val: `${d3 >= 0 ? '+' : ''}${Number(d3).toFixed(1)}%` })
+  if (d5 != null) items.push({ label: '5D', val: `${d5 >= 0 ? '+' : ''}${Number(d5).toFixed(1)}%` })
+  return items
 })
 
-const dayTradersWarningText = computed(() => {
+const dayTradersInfo = computed(() => {
   const chips = props.stock.chips
-  if (!chips) return ''
-  const pct = chips.dayTradersPct ?? 0
+  if (!chips) return null
   const branches = chips.dayTradersBranches ?? []
-  if (branches.length > 0) {
-    return UI_STRINGS.CHIPS.dayTradersRisk(pct, branches)
+  if (branches.length === 0) return null
+  const pct = typeof chips.dayTradersPct === 'number' ? chips.dayTradersPct.toFixed(1) : (chips.dayTradersPct ?? '0.0')
+  return {
+    pct: `${pct}%`,
+    branchesText: branches.join(' · '),
   }
-  return ''
+})
+
+const hasChipsSection = computed(() => {
+  return chipsConcentrationItems.value.length > 0 || !!dayTradersInfo.value
 })
 
 

@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0831.06',
+    version: 'v0831.07',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -252,12 +252,13 @@ export const UI_STRINGS = {
   },
 
   CHIPS: {
-    concentrationLabel: '集中度',
+    concentrationLabel: '籌碼集中度',
     concentration1d: '1D',
     concentration3d: '3D',
     concentration5d: '5D',
-    concentrationSummary: (d1, d3, d5) => `集中度 1D ${d1 >= 0 ? '+' : ''}${d1}% · 3D ${d3 >= 0 ? '+' : ''}${d3}% · 5D ${d5 >= 0 ? '+' : ''}${d5}%`,
-    dayTradersRisk: (pct, branches) => `⚠️ 短沖佔 ${pct}% (${branches.join(' · ')})`,
+    concentrationSummary: (d1, d3, d5) => `籌碼集中度 1D ${d1 >= 0 ? '+' : ''}${d1}% · 3D ${d3 >= 0 ? '+' : ''}${d3}% · 5D ${d5 >= 0 ? '+' : ''}${d5}%`,
+    dayTradersPrefix: '短沖佔 ',
+    dayTradersRisk: (pct, branches) => `短沖佔 ${pct}% (${branches.join(' · ')})`,
   },
 }
 
