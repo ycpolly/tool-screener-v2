@@ -19,7 +19,7 @@
           <span class="text-lg font-bold" :class="priceColorClass">
             {{ formatNumber(stock.price) }}
           </span>
-          <span class="text-sm font-semibold" :class="priceColorClass">
+          <span class="text-sm font-semibold" :class="changeColorClass">
             {{ formatChange(stock.change, stock.changePct) }}
           </span>
         </div>
@@ -177,7 +177,7 @@
           </div>
           <div class="flex items-baseline gap-1.5 shrink-0 font-numeric">
             <span class="text-lg font-bold" :class="priceColorClass">{{ formatNumber(stock.price) }}</span>
-            <span class="text-sm font-semibold" :class="priceColorClass">{{ formatChange(stock.change, stock.changePct) }}</span>
+            <span class="text-sm font-semibold" :class="changeColorClass">{{ formatChange(stock.change, stock.changePct) }}</span>
           </div>
         </div>
 
@@ -350,6 +350,13 @@ const priceColorClass = computed(() => {
   if (props.stock.isLimitDown || pct <= -9.5) {
     return 'bg-fall text-white px-1.5 py-0.5 rounded font-bold shadow-xs'
   }
+  if (pct > 0) return 'text-rise'
+  if (pct < 0) return 'text-fall'
+  return 'text-flat'
+})
+
+const changeColorClass = computed(() => {
+  const pct = props.stock.changePct ?? 0
   if (pct > 0) return 'text-rise'
   if (pct < 0) return 'text-fall'
   return 'text-flat'

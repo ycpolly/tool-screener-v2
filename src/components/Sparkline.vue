@@ -274,6 +274,7 @@
 
 <script setup>
 import { computed, watchEffect } from 'vue'
+import { isLiveTradingDay } from '../engine/screener.js'
 
 const props = defineProps({
   history: {
@@ -299,30 +300,69 @@ const xCoords = [21.5, 36, 50.5, 65, 79.5, 94, 108.5, 123, 137.5, 152]
 // 資料有效性檢驗
 const hasValidData = computed(() => {
   const list = props.history || props.stock?.history10d
-  return Array.isArray(list) && list.length >= 10
+  return Array.isArray(list) && list.length >= 9
 })
 
 // 若資料有缺漏，在 console 印出警告告知開發者與使用者
 watchEffect(() => {
   const list = props.history || props.stock?.history10d
   const code = props.stockCode || props.stock?.code || '未知代號'
-  if (!Array.isArray(list) || list.length < 10) {
+  if (!Array.isArray(list) || list.length < 9) {
     console.warn(
       `[Sparkline 警示] 個股 ${code} 缺少完整 10 日技術歷史資料（當前筆數: ${list?.length || 0}）。`
     )
   }
 })
 
-// 標準化近 10 日資料（包含 MA20 的完整支援）
+// 標準化近 10 日資料（智慧整合今日盤中第 10 根 K 棒 + 均線動態計算）
 const normalizedK10d = computed(() => {
   const rawList = props.history || props.stock?.history10d
-  if (!Array.isArray(rawList) || rawList.length < 10) return []
+  if (!Array.isArray(rawList) || rawList.length < 9) return []
+
+  const len = rawList.length
+  const lastBar = rawList[len - 1]
+  const isLive = isLiveTradingDay(lastBar)
+  const isTodayLive = isLive && (props.stock?.dayOffset === 0 || props.stock?.dayOffset === undefined)
+
+  // 若當前處於開盤交易日且有今日即時價格，將今日動態作為第 10 根 K 棒 (與券商即時 K 線一致)
+  if (isTodayLive && props.stock && typeof props.stock.price === 'number' && props.stock.price > 0) {
+    const history9 = rawList.slice(Math.max(0, len - 9))
+    const price = props.stock.price
+    const open = props.stock.open ?? price
+    const high = props.stock.high ?? Math.max(open, price)
+    const low = props.stock.low ?? Math.min(open, price)
+    const prevClose = props.stock.prevClose ?? lastBar.close
+    const volume = props.stock.volume ?? 0
+
+    // 動態推算今日盤中 5MA 與 10MA
+    const ma5 = Number(((history9.slice(-4).reduce((s, b) => s + (b.close || 0), 0) + price) / 5).toFixed(2))
+    const ma10 = Number(((history9.slice(-9).reduce((s, b) => s + (b.close || 0), 0) + price) / 10).toFixed(2))
+    const ma20 = typeof props.stock.ma20 === 'number' ? props.stock.ma20 : lastBar.ma20
+
+    const todayBar = {
+      date: new Date().toISOString().slice(0, 10),
+      open,
+      high,
+      low,
+      close: price,
+      prevClose,
+      volume,
+      ma5,
+      ma10,
+      ma20,
+      k: props.stock.kd?.k ?? lastBar.k,
+      d: props.stock.kd?.d ?? lastBar.d,
+    }
+
+    return [...history9, todayBar]
+  }
+
+  // 盤後或歷史時光機回測：取最後 10 根歷史 K 棒
   const slice = rawList.slice(-10)
   const curMa20 = props.stock?.ma20
 
   return slice.map((d, idx, arr) => {
     if (typeof d.ma20 === 'number') return d
-    // 若靜態 JSON 尚未重新爬取 ma20，以 stock.ma20 結合當日收盤進行平滑反推
     if (typeof curMa20 === 'number') {
       const todayClose = arr[arr.length - 1].close || curMa20
       const dayClose = d.close || todayClose
@@ -332,6 +372,7 @@ const normalizedK10d = computed(() => {
     return d
   })
 })
+
 
 // 核心運算：三層圖表之所有座標與幾何位置
 const chartData = computed(() => {

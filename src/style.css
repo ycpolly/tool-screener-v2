@@ -38,6 +38,9 @@ body {
 .text-fall { color: var(--color-fall); }
 .text-flat { color: var(--color-flat); }
 
+.bg-rise { background-color: var(--color-rise); }
+.bg-fall { background-color: var(--color-fall); }
+
 .bg-rise-subtle { background-color: oklch(from var(--color-rise) l c h / 0.08); }
 .bg-fall-subtle { background-color: oklch(from var(--color-fall) l c h / 0.08); }
 
