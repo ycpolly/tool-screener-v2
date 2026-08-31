@@ -1,6 +1,6 @@
 <template>
   <div class="time-machine-bar select-none">
-    <!-- 攤開式時光膠囊列 (全部統一使用資料庫中真實開盤日日期) -->
+    <!-- 攤開式時光膠囊列 (支援開盤即時與歷史真實開盤日) -->
     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 text-sm">
       <span class="text-base-content/65 font-medium shrink-0 flex items-center gap-1 mr-1">
         <svg
@@ -41,6 +41,7 @@
 import { computed } from 'vue'
 import { UI_STRINGS } from '../constants/ui-strings.js'
 import { useStockPool } from '../composables/useStockPool.js'
+import { isLiveTradingDay } from '../engine/screener.js'
 
 const props = defineProps({
   dayOffset: {
@@ -53,7 +54,7 @@ defineEmits(['update:dayOffset'])
 
 const { stocks } = useStockPool()
 
-// 從真實資料庫的 history10d 提取真實開盤日日期，完全避免日曆推算誤差
+// 智慧時光機日期列表：開盤交易日 (週一至五) 顯示「今日即時」，非交易日/已收盤顯示「最新收盤」
 const timeMachineDates = computed(() => {
   const sample = stocks.value?.[0]?.history10d || []
   if (sample.length === 0) {
@@ -64,31 +65,73 @@ const timeMachineDates = computed(() => {
     }))
   }
 
-  const dates = []
   const len = sample.length
-  for (let offset = 0; offset <= Math.min(5, len - 1); offset++) {
-    const targetIdx = len - 1 - offset
-    const bar = sample[targetIdx]
-    const dateStr = bar?.date // e.g. "2026-08-28"
-    let monthDay = `T-${offset}`
-    if (dateStr) {
-      const parts = dateStr.split('-')
-      if (parts.length === 3) {
-        monthDay = `${parseInt(parts[1], 10)}/${parseInt(parts[2], 10)}`
-      }
-    }
+  const isLive = isLiveTradingDay(sample[len - 1])
+  const dates = []
 
-    const label = offset === 0
-      ? `${monthDay} (最新)`
-      : `${monthDay} (T-${offset})`
+  if (isLive) {
+    // 盤中全新交易日 (例如週一至週五 8/31 盤中)
+    const now = new Date()
+    const m = now.getMonth() + 1
+    const d = now.getDate()
+    const monthDay = `${m}/${d}`
 
+    // Offset 0: 今日即時
     dates.push({
-      offset,
-      label,
-      shortLabel: offset === 0 ? '最新' : `T-${offset}`,
+      offset: 0,
+      label: `${monthDay} (即時)`,
+      shortLabel: '即時',
       monthDay,
-      date: dateStr,
+      date: `${now.getFullYear()}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`,
     })
+
+    // Offset 1 ~ 5: 往前回溯歷史已收盤交易日 (T-1 為 sample[len - 1] 上個交易日)
+    for (let offset = 1; offset <= Math.min(5, len); offset++) {
+      const targetIdx = len - offset
+      const bar = sample[targetIdx]
+      const dateStr = bar?.date
+      let histMonthDay = `T-${offset}`
+      if (dateStr) {
+        const parts = dateStr.split('-')
+        if (parts.length === 3) {
+          histMonthDay = `${parseInt(parts[1], 10)}/${parseInt(parts[2], 10)}`
+        }
+      }
+
+      dates.push({
+        offset,
+        label: `${histMonthDay} (T-${offset})`,
+        shortLabel: `T-${offset}`,
+        monthDay: histMonthDay,
+        date: dateStr,
+      })
+    }
+  } else {
+    // 週末休市或盤後已由 Python 更新當日日K
+    for (let offset = 0; offset <= Math.min(5, len - 1); offset++) {
+      const targetIdx = len - 1 - offset
+      const bar = sample[targetIdx]
+      const dateStr = bar?.date
+      let histMonthDay = `T-${offset}`
+      if (dateStr) {
+        const parts = dateStr.split('-')
+        if (parts.length === 3) {
+          histMonthDay = `${parseInt(parts[1], 10)}/${parseInt(parts[2], 10)}`
+        }
+      }
+
+      const label = offset === 0
+        ? `${histMonthDay} (最新)`
+        : `${histMonthDay} (T-${offset})`
+
+      dates.push({
+        offset,
+        label,
+        shortLabel: offset === 0 ? '最新' : `T-${offset}`,
+        monthDay: histMonthDay,
+        date: dateStr,
+      })
+    }
   }
 
   return dates

@@ -518,6 +518,24 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
 }
 
 /**
+ * 判斷當前是否處於「全新開盤交易日（即時行情階段）」
+ * 規則：今天為週一至週五 (開盤交易日) 且 今天日期晚於資料庫中最新收盤日 K 日期
+ * @param {Object} [sampleBar]
+ * @returns {boolean}
+ */
+export function isLiveTradingDay(sampleBar) {
+  if (!sampleBar || !sampleBar.date) return false
+  const now = new Date()
+  const day = now.getDay()
+  if (day === 0 || day === 6) return false
+  const y = now.getFullYear()
+  const m = String(now.getMonth() + 1).padStart(2, '0')
+  const d = String(now.getDate()).padStart(2, '0')
+  const todayStr = `${y}-${m}-${d}`
+  return todayStr > sampleBar.date
+}
+
+/**
  * 時光切片：將個股狀態時光倒流至指定天數前（支援近 0 ~ 5 個歷史交易日）
  * @param {Object} stock     - 原始個股物件（包含完整 history10d）
  * @param {number} dayOffset - 倒流天數（0: 今日/最新, 1: 昨日, 2: 前日...）
@@ -529,7 +547,13 @@ export function sliceStockAt(stock, dayOffset = 0) {
   }
 
   const len = stock.history10d.length
-  const targetIndex = Math.max(0, len - 1 - dayOffset)
+  const isLive = isLiveTradingDay(stock.history10d[len - 1])
+
+  // 若為盤中全新交易日：T-1 對應 len - 1 (上個收盤日)；若為週末/已收盤：T-1 對應 len - 2
+  const targetIndex = isLive
+    ? Math.max(0, len - dayOffset)
+    : Math.max(0, len - 1 - dayOffset)
+
   const bar = stock.history10d[targetIndex]
   if (!bar) return stock
 
@@ -537,6 +561,7 @@ export function sliceStockAt(stock, dayOffset = 0) {
   const prevClose = typeof bar.prevClose === 'number'
     ? bar.prevClose
     : (prevBar ? prevBar.close : bar.open)
+
 
   const change = round2(bar.close - prevClose)
   const changePct = prevClose > 0 ? round2((change / prevClose) * 100) : 0
