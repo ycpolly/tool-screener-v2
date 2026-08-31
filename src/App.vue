@@ -67,7 +67,7 @@
         <div class="flex items-center gap-2 text-xs sm:text-sm font-numeric text-base-content/80">
           <span
             class="inline-block w-2 h-2 rounded-full shrink-0"
-            :class="quotesLoading ? 'bg-warning animate-ping' : (quotesLastUpdated ? 'bg-success shadow-xs' : 'bg-primary/80')"
+            :class="quotesLoading ? 'bg-warning animate-ping' : (isPostMarketTime ? 'bg-base-content/40' : (quotesLastUpdated ? 'bg-success shadow-xs' : 'bg-primary/80'))"
           ></span>
           <span class="font-medium tracking-wide">
             {{ dataTimestampText || '資料載入中…' }}
@@ -265,18 +265,47 @@ const activeMeta   = computed(() => {
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
 // 頂部導覽列資料時間戳記文字（包含 年/月/日、星期 與 撮合時間，三階段區分：盤中/收盤/盤後）
+const isPostMarketTime = computed(() => {
+  const now = new Date()
+  const nowHour = now.getHours()
+  // 17:00 之後以盤後爬蟲資料庫為準
+  return nowHour >= 17 || nowHour < 8
+})
+
 const dataTimestampText = computed(() => {
   const now = new Date()
   const yyyy = now.getFullYear()
   const mm = String(now.getMonth() + 1).padStart(2, '0')
   const dd = String(now.getDate()).padStart(2, '0')
   const weekDay = WEEKDAYS[now.getDay()]
+  const nowHour = now.getHours()
+  const nowMin = now.getMinutes()
 
+  const rawUpdated = meta.value?.updatedAt
+
+  // 1. 傍晚 17:00 後 / 隔日清晨 08:00 前：以盤後爬蟲資料庫為準，顯示「⚪ 盤後」
+  if (isPostMarketTime.value && rawUpdated) {
+    try {
+      const d = new Date(rawUpdated)
+      if (!isNaN(d.getTime())) {
+        const dY = d.getFullYear()
+        const dM = String(d.getMonth() + 1).padStart(2, '0')
+        const dD = String(d.getDate()).padStart(2, '0')
+        const dW = WEEKDAYS[d.getDay()]
+        const hh = String(d.getHours()).padStart(2, '0')
+        const min = String(d.getMinutes()).padStart(2, '0')
+        const prefix = UI_STRINGS.APP.prefixPostMarket || '盤後 '
+        return `${prefix}${dY}/${dM}/${dD} (${dW}) ${hh}:${min}`
+      }
+    } catch {}
+    return `${UI_STRINGS.APP.prefixPostMarket || '盤後 '}${rawUpdated}`
+  }
+
+  // 2. 09:00 ~ 17:00 之間若有 GCP 即時行情：
+  //    - 09:00 ~ 13:30 顯示「🟢 盤中」
+  //    - 13:30 ~ 17:00 顯示「🟢 收盤」
   if (quotesLastUpdated.value) {
     const timeStr = quotesLastUpdated.value
-    // 依據時間判定是否為 13:30 之後的收盤撮合行情
-    const nowHour = now.getHours()
-    const nowMin = now.getMinutes()
     const isClosedIntraday = (nowHour > 13) || (nowHour === 13 && nowMin >= 30)
     const prefix = isClosedIntraday
       ? (UI_STRINGS.APP.prefixClosed || '收盤 ')
@@ -288,7 +317,7 @@ const dataTimestampText = computed(() => {
     return `${prefix}${yyyy}/${mm}/${dd} (${weekDay}) ${timeStr}`
   }
 
-  const rawUpdated = meta.value?.updatedAt
+  // 3. 無即時報價時之 fallback
   if (!rawUpdated) return ''
   try {
     const d = new Date(rawUpdated)
@@ -305,6 +334,7 @@ const dataTimestampText = computed(() => {
   } catch {}
   return `${UI_STRINGS.APP.prefixPostMarket || '盤後 '}${rawUpdated}`
 })
+
 
 
 
