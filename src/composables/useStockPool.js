@@ -62,13 +62,30 @@ export function useStockPool() {
       const rawStocks   = data.stocks   ?? []
       const rawRankings = data.rankings ?? {}
 
-      _stocks.value = rawStocks.map((s) => ({
-        ...s,
-        sellWarning: computeSellWarning(s.code, rawRankings),
-      }))
+      const f1 = new Set((rawRankings.foreignSell1D?.stocks || []).map((s) => s.code))
+      const f3 = new Set((rawRankings.foreignSell3D?.stocks || []).map((s) => s.code))
+      const s3 = new Set((rawRankings.sitcaSell3D?.stocks || []).map((s) => s.code))
+      const m1 = new Set((rawRankings.majorSell1D?.stocks || []).map((s) => s.code))
+      const m3 = new Set((rawRankings.majorSell3D?.stocks || []).map((s) => s.code))
+
+      _stocks.value = rawStocks.map((s) => {
+        const sellCats = []
+        if (f1.has(s.code)) sellCats.push('ForeignSell1D')
+        if (f3.has(s.code)) sellCats.push('ForeignSell3D')
+        if (s3.has(s.code)) sellCats.push('SitcaSell3D')
+        if (m1.has(s.code)) sellCats.push('MajorSell1D')
+        if (m3.has(s.code)) sellCats.push('MajorSell3D')
+
+        return {
+          ...s,
+          categories: Array.from(new Set([...(s.categories || []), ...sellCats])),
+          sellWarning: computeSellWarning(s.code, rawRankings),
+        }
+      })
       _rankings.value = rawRankings
       _market.value   = data.market   ?? null
       _meta.value     = data.meta     ?? null
+
     } catch (err) {
       _error.value = err.message
       console.error('[useStockPool] 載入失敗:', err)
