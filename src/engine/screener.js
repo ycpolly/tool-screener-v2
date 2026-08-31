@@ -315,7 +315,7 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     return { isMatch: false, reasonText: strings.belowMa60Failed || '未站穩季線防身 (現價 < 60MA)' }
   }
 
-  // 4. 均線支撐 (maAboveMode: 'BOTH' | 'ANY')
+  // 4. 均線支撐 (maAboveMode: 'BOTH' | 'ANY' | '5MA' | 'NONE')
   if (params.maAboveMode === 'BOTH') {
     const standsBoth = price >= ma5 && price >= ma10
     if (!standsBoth) {
@@ -325,6 +325,10 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     const standsAny = price >= ma5 || price >= ma10
     if (!standsAny) {
       return { isMatch: false, reasonText: strings.maAboveAnyFailed || '未站穩 5MA 或 10MA' }
+    }
+  } else if (params.maAboveMode === '5MA' || params.maAboveMode === 'MA5') {
+    if (price < ma5) {
+      return { isMatch: false, reasonText: strings.maAbove5maFailed || '未站上 5MA' }
     }
   }
 
@@ -430,14 +434,15 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     return { isMatch: false, reasonText: strings.volExpansionFailed || '未達帶量攻擊標準 (成交量 ≤ 5日量均)' }
   }
 
-  // 14. 實體攻擊紅 K (checkRedCandle: 收 > 開 且 漲幅 >= 1.5%)
+  // 14. 實體攻擊紅 K (checkRedCandle: 收 > 開 且 漲幅 >= minRedCandleChangePct)
   const open = stock.open ?? price
   const close = price
   const changePct = typeof stock.changePct === 'number'
     ? stock.changePct
     : (stock.prevClose > 0 ? round2(((price - stock.prevClose) / stock.prevClose) * 100) : 0)
 
-  if (params.checkRedCandle && (close <= open || changePct < 1.5)) {
+  const minRedChange = typeof params.minRedCandleChangePct === 'number' ? params.minRedCandleChangePct : 1.5
+  if (params.checkRedCandle && (close <= open || changePct < minRedChange)) {
     return { isMatch: false, reasonText: strings.redCandleFailed || '未達實體攻擊紅 K 標準' }
   }
 

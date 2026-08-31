@@ -302,17 +302,17 @@ GCP 即時行情    ─→  useRealtimeQuotes.js ← 即時更新層
 ```javascript
 // src/constants/screener-modes.js
 export const SCREENER_MODES = {
+  BOTTOM_REVERSAL: {
+    id: 'BOTTOM_REVERSAL',
+    label: '跌深反轉',
+    description: '空頭超賣區爆量收紅，V型反轉發動日',
+    defaultParams: { maAboveMode: 'NONE', bias5Min: -5.0, bias5Max: 5.0, bias20Min: -30.0, bias20Max: -2.0, requireAboveMa60: false, requireMa20Rising: false, minVolume: 1000, checkVolExpansion: true, checkRedCandle: true, minRedCandleChangePct: 2.0, checkAvoidLongUpperShadow: true, checkKd: true, kdKMin: 10, kdKMax: 40, kdRequireCross: true }
+  },
   BOTTOM_CONSOLIDATION: {
     id: 'BOTTOM_CONSOLIDATION',
     label: '底部蓄勢',
     description: '尋找籌碼乾淨、極致壓縮股（參與 D1-D3）',
-    defaultParams: { maAboveMode: 'BOTH', checkConvergence: true, convergenceMax: 3.0, bias5Min: -2.0, bias5Max: 3.0, bias20Min: 0.0, bias20Max: 8.0 }
-  },
-  TREND_PULLBACK: {
-    id: 'TREND_PULLBACK',
-    label: '多頭回測',
-    description: '多頭趨勢中，量縮拉回找支撐的強勢中繼股',
-    defaultParams: { maAboveMode: 'ANY', checkConvergence: true, convergenceMax: 8.0, bias5Min: -3.0, bias5Max: 2.0, bias20Min: 2.0, bias20Max: 12.0, requireMa20Rising: true }
+    defaultParams: { maAboveMode: 'BOTH', checkConvergence: true, convergenceMax: 3.0, bias5Min: -2.0, bias5Max: 3.0, bias20Min: 0.0, bias20Max: 8.0, requireAboveMa60: true }
   },
   MOMENTUM_BREAKOUT: {
     id: 'MOMENTUM_BREAKOUT',
@@ -320,19 +320,20 @@ export const SCREENER_MODES = {
     description: '剛結束打底、今日帶量出第一根紅棒的發動股（參與 D4）',
     defaultParams: { maAboveMode: 'BOTH', checkConvergence: true, convergenceMax: 8.0, checkPrevConvergence: true, prevConvergenceMax: 3.0, bias5Min: 0.0, bias5Max: 8.0, bias20Min: 0.0, bias20Max: 12.0 }
   },
-  PULLBACK_IGNITION: {
-    id: 'PULLBACK_IGNITION',
-    label: '多頭起漲',
+  TREND_PULLBACK: {
+    id: 'TREND_PULLBACK',
+    label: '多頭回測',
+    description: '多頭趨勢中，量縮拉回找支撐的強勢中繼股',
+    defaultParams: { maAboveMode: 'ANY', checkConvergence: true, convergenceMax: 8.0, bias5Min: -3.0, bias5Max: 2.0, bias20Min: 2.0, bias20Max: 12.0, requireMa20Rising: true }
+  },
+  WASHOUT_IGNITION: {
+    id: 'WASHOUT_IGNITION',
+    label: '洗盤起漲',
     description: '趨勢多頭、指標降溫後再度帶量攻擊起漲',
     defaultParams: { maAboveMode: 'BOTH', bias5Min: 0.0, bias5Max: 8.0, bias20Min: 2.0, bias20Max: 20.0, requireMa20Rising: true, minVolume: 1000, checkVolExpansion: true, checkRedCandle: true, minRedCandleChangePct: 2.0, checkAvoidLongUpperShadow: true, checkKd: true, kdKMin: 30, kdKMax: 65, kdRequireCross: true }
-  },
-  BOTTOM_REVERSAL: {
-    id: 'BOTTOM_REVERSAL',
-    label: '跌深反轉',
-    description: '空頭超賣區爆量收紅，V型反轉發動日',
-    defaultParams: { maAboveMode: 'NONE', bias5Min: -5.0, bias5Max: 5.0, bias20Min: -30.0, bias20Max: -2.0, requireAboveMa60: false, requireMa20Rising: false, minVolume: 1000, checkVolExpansion: true, checkRedCandle: true, minRedCandleChangePct: 2.0, checkAvoidLongUpperShadow: true, checkKd: true, kdKMin: 10, kdKMax: 40, kdRequireCross: true }
   }
 }
+
 ```
 
 

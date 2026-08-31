@@ -149,11 +149,12 @@ interface ScreenerParams {
 
 ```typescript
 interface ScreenerMode {
-  id:            'BOTTOM_CONSOLIDATION' | 'TREND_PULLBACK' | 'MOMENTUM_BREAKOUT' | 'PULLBACK_IGNITION' | 'BOTTOM_REVERSAL' | string
+  id:            'BOTTOM_REVERSAL' | 'BOTTOM_CONSOLIDATION' | 'MOMENTUM_BREAKOUT' | 'TREND_PULLBACK' | 'WASHOUT_IGNITION' | string
   label:         string
   description:   string
   defaultParams: ScreenerParams
 }
+
 
 
 ```

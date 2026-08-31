@@ -12,23 +12,22 @@
     <!-- ============================================================
          1. 頂部常駐 6 大模式分段切換器 (全部 + 5 大策略，內建即時檔數)
          ============================================================ -->
-    <div class="grid grid-cols-3 sm:grid-cols-6 gap-1 p-1 bg-base-300/40 rounded-xl">
+    <div class="grid grid-cols-6 gap-1 p-1 bg-base-300/40 rounded-xl">
       <!-- Tab 0: 全部股票 -->
-
-
       <button
         type="button"
         class="py-2 px-1 text-center rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap"
         :class="activeMode === 'ALL' ? 'bg-base-100 text-base-content shadow-sm' : 'text-base-content/80 hover:text-base-content'"
         @click="$emit('update:activeMode', 'ALL')"
       >
-        <span>{{ UI_STRINGS.PANEL.allTab }}</span>
+        <span class="hidden sm:inline">{{ UI_STRINGS.PANEL.allTab }}</span>
+        <span class="sm:hidden">全部</span>
         <span class="text-xs md:text-sm font-numeric font-medium opacity-80">
           ({{ modeCounts?.ALL ?? totalCount ?? 0 }})
         </span>
       </button>
 
-      <!-- Tab 1~3: 3 大策略模式 -->
+      <!-- Tab 1~5: 5 大策略模式 (依生命週期時間序排序) -->
       <button
         v-for="mode in Object.values(modes)"
         :key="mode.id"
@@ -114,10 +113,38 @@
           <span>{{ UI_STRINGS.PANEL.moduleMa }}</span>
         </div>
 
-        <!-- A-1. 均線支撐 (BOTH 雙站穩 / ANY 單站穩) -->
+        <!-- A-1. 均線支撐 (maAboveMode) -->
         <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
           <span class="text-base-content/80">{{ UI_STRINGS.PANEL.maSupport }}</span>
-          <div class="inline-flex p-0.5 bg-base-300/50 rounded-lg text-sm font-numeric font-medium">
+
+          <!-- 跌深反轉模式：無限制 vs 站上 5MA -->
+          <div
+            v-if="activeMode === 'BOTTOM_REVERSAL'"
+            class="inline-flex p-0.5 bg-base-300/50 rounded-lg text-sm font-numeric font-medium"
+          >
+            <button
+              type="button"
+              class="px-2.5 py-1 rounded-md transition-all text-sm"
+              :class="params.maAboveMode === 'NONE' ? 'bg-base-100 font-bold text-base-content shadow-xs' : 'text-base-content/80'"
+              @click="updateField('maAboveMode', 'NONE')"
+            >
+              {{ UI_STRINGS.PANEL.maAboveNone }}
+            </button>
+            <button
+              type="button"
+              class="px-2.5 py-1 rounded-md transition-all text-sm"
+              :class="params.maAboveMode === '5MA' || params.maAboveMode === 'MA5' ? 'bg-base-100 font-bold text-base-content shadow-xs' : 'text-base-content/80'"
+              @click="updateField('maAboveMode', '5MA')"
+            >
+              {{ UI_STRINGS.PANEL.maAbove5ma }}
+            </button>
+          </div>
+
+          <!-- 其他模式：同時站穩 5MA/10MA vs 站穩 5MA 或 10MA -->
+          <div
+            v-else
+            class="inline-flex p-0.5 bg-base-300/50 rounded-lg text-sm font-numeric font-medium"
+          >
             <button
               type="button"
               class="px-2.5 py-1 rounded-md transition-all text-sm"
@@ -137,8 +164,28 @@
           </div>
         </div>
 
-        <!-- A-2. 當日三線價差 (糾結度) -->
-        <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+        <!-- A-2. 月線斜率向上 (多頭回測與洗盤起漲專屬) -->
+        <div
+          v-if="activeMode === 'TREND_PULLBACK' || activeMode === 'WASHOUT_IGNITION'"
+          class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm"
+        >
+
+          <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+            <input
+              type="checkbox"
+              class="checkbox checkbox-sm rounded"
+              :checked="params.requireMa20Rising !== false"
+              @change="updateField('requireMa20Rising', $event.target.checked)"
+            />
+            <span>{{ UI_STRINGS.PANEL.ma20Rising }}</span>
+          </label>
+        </div>
+
+        <!-- A-3. 當日三線價差 (僅底部蓄勢、動能攻擊、多頭回測模式顯示) -->
+        <div
+          v-if="activeMode === 'BOTTOM_CONSOLIDATION' || activeMode === 'MOMENTUM_BREAKOUT' || activeMode === 'TREND_PULLBACK'"
+          class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm"
+        >
           <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
             <input
               type="checkbox"
@@ -162,7 +209,7 @@
           </div>
         </div>
 
-        <!-- A-3. 前一日三線價差 (僅「動能攻擊」模式專用，其餘模式不顯示) -->
+        <!-- A-4. 前一日三線價差 (僅「動能攻擊」模式專用) -->
         <div
           v-if="activeMode === 'MOMENTUM_BREAKOUT'"
           class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm"
@@ -190,7 +237,7 @@
           </div>
         </div>
 
-        <!-- A-4. 5MA 乖離率區間 (標準等高 38px 行) -->
+        <!-- A-5. 5MA 乖離率區間 (標準等高 38px 行) -->
         <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
           <span class="text-base-content/80">{{ UI_STRINGS.PANEL.bias5Range }}</span>
           <div class="flex items-center gap-1.5 font-numeric text-sm">
@@ -215,7 +262,7 @@
           </div>
         </div>
 
-        <!-- A-5. 20MA 月線乖離率區間 (標準等高 38px 行) -->
+        <!-- A-6. 20MA 月線乖離率區間 (標準等高 38px 行) -->
         <div
           class="flex items-center justify-between min-h-[38px] py-1 text-sm"
           :class="{ 'border-b border-base-300/30': activeMode === 'BOTTOM_CONSOLIDATION' }"
@@ -243,7 +290,7 @@
           </div>
         </div>
 
-        <!-- A-6. 站穩季線防身 (收盤價 >= 60MA) (嚴格限定僅底部蓄勢模式專屬) -->
+        <!-- A-7. 站穩季線防身 (收盤價 >= 60MA) (嚴格限定僅底部蓄勢模式專屬) -->
         <div
           v-if="activeMode === 'BOTTOM_CONSOLIDATION'"
           class="flex items-center justify-between min-h-[38px] py-1 text-sm"
@@ -269,9 +316,137 @@
         </div>
 
         <!-- ==========================================
-             Case 1: 底部蓄勢 (Mode 1) 專屬順序
+             Case 1: 跌深反轉 (Mode: BOTTOM_REVERSAL) 專屬順序
              ========================================== -->
-        <template v-if="activeMode === 'BOTTOM_CONSOLIDATION'">
+        <template v-if="activeMode === 'BOTTOM_REVERSAL'">
+          <!-- 1. 當日成交量 >= 1000 張 -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkMinVolume !== false"
+                @change="updateField('checkMinVolume', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.minVolume }}</span>
+            </label>
+            <div class="flex items-center gap-1.5 font-numeric text-sm">
+              <span class="text-base-content/80">≥</span>
+              <input
+                type="number"
+                step="100"
+                inputmode="numeric"
+                :value="params.minVolume"
+                class="input input-bordered input-sm h-7 w-20 bg-base-100 text-center font-bold text-sm"
+                @input="updateDebouncedNumericField('minVolume', $event.target.value)"
+              />
+              <span class="text-base-content/80">張</span>
+            </div>
+          </div>
+
+          <!-- 2. 排除處置股 -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkNotDisposed !== false"
+                @change="updateField('checkNotDisposed', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.notDisposed }}</span>
+            </label>
+          </div>
+
+          <!-- 3. 低檔爆量攻擊 (當日量 > 5日量均) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkVolExpansion"
+                @change="updateField('checkVolExpansion', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.volExpansionReversal || '低檔爆量攻擊 (當日量 > 5日量均)' }}</span>
+            </label>
+          </div>
+
+          <!-- 4. 實體反轉紅 K (收盤 > 開盤 且 漲幅 >= 2%) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkRedCandle"
+                @change="updateField('checkRedCandle', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.redCandleReversal || '實體反轉紅 K (收盤 > 開盤 且 漲幅 ≥ 2%)' }}</span>
+            </label>
+          </div>
+
+          <!-- 5. 排除長上影線避雷針 -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkAvoidLongUpperShadow"
+                @change="updateField('checkAvoidLongUpperShadow', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.avoidUpperShadow }}</span>
+            </label>
+          </div>
+
+          <!-- 6. KD 低檔超賣區轉折 (K: 10 至 40) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkKd !== false"
+                @change="updateField('checkKd', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.kdFilter }}</span>
+            </label>
+            <div class="flex items-center gap-1.5 font-numeric text-sm">
+              <span class="text-base-content/80">K:</span>
+              <input
+                type="number"
+                step="5"
+                inputmode="numeric"
+                :value="params.kdKMin"
+                class="input input-bordered input-sm h-7 w-14 bg-base-100 text-center font-bold text-sm"
+                @input="updateDebouncedNumericField('kdKMin', $event.target.value)"
+              />
+              <span class="text-base-content/50">{{ UI_STRINGS.PANEL.to }}</span>
+              <input
+                type="number"
+                step="5"
+                inputmode="numeric"
+                :value="params.kdKMax"
+                class="input input-bordered input-sm h-7 w-14 bg-base-100 text-center font-bold text-sm"
+                @input="updateDebouncedNumericField('kdKMax', $event.target.value)"
+              />
+            </div>
+          </div>
+
+          <!-- 7. 要求 K > D 黃金交叉 -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.kdRequireCross"
+                @change="updateField('kdRequireCross', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.kdGoldenCross }}</span>
+            </label>
+          </div>
+        </template>
+
+        <!-- ==========================================
+             Case 2: 底部蓄勢 (Mode: BOTTOM_CONSOLIDATION) 專屬順序
+             ========================================== -->
+        <template v-else-if="activeMode === 'BOTTOM_CONSOLIDATION'">
           <!-- 1. 當日成交量 >= 500 張 -->
           <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
@@ -310,7 +485,7 @@
             </label>
           </div>
 
-          <!-- 3. 嚴格量縮洗盤 (當日成交量 <= 5日均量 * 0.8) -->
+          <!-- 3. 嚴格量縮洗盤 (當日成交量 <= 5日均量) -->
           <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
@@ -397,7 +572,148 @@
         </template>
 
         <!-- ==========================================
-             Case 2: 多頭回測 (Mode 2) 專屬順序
+             Case 3: 動能攻擊 (Mode: MOMENTUM_BREAKOUT) 專屬順序
+             ========================================== -->
+        <template v-else-if="activeMode === 'MOMENTUM_BREAKOUT'">
+          <!-- 1. 當日成交量 >= 1000 張 -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkMinVolume !== false"
+                @change="updateField('checkMinVolume', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.minVolume }}</span>
+            </label>
+            <div class="flex items-center gap-1.5 font-numeric text-sm">
+              <span class="text-base-content/80">≥</span>
+              <input
+                type="number"
+                step="100"
+                inputmode="numeric"
+                :value="params.minVolume"
+                class="input input-bordered input-sm h-7 w-20 bg-base-100 text-center font-bold text-sm"
+                @input="updateDebouncedNumericField('minVolume', $event.target.value)"
+              />
+              <span class="text-base-content/80">張</span>
+            </div>
+          </div>
+
+          <!-- 2. 昨日成交量 < 昨日 5 日均量 (MV5) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkPrevVolContraction"
+                @change="updateField('checkPrevVolContraction', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.prevVolContraction }}</span>
+            </label>
+          </div>
+
+          <!-- 3. 排除處置股 -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkNotDisposed !== false"
+                @change="updateField('checkNotDisposed', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.notDisposed }}</span>
+            </label>
+          </div>
+
+          <!-- 4. 當日帶量攻擊 (當日成交量大於 5 日均量) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkVolExpansion"
+                @change="updateField('checkVolExpansion', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.volExpansion }}</span>
+            </label>
+          </div>
+
+          <!-- 5. 實體攻擊紅 K (收盤 > 開盤，且當日漲幅 >= 1.5%) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkRedCandle"
+                @change="updateField('checkRedCandle', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.redCandle }}</span>
+            </label>
+          </div>
+
+          <!-- 6. 排除長上影線避雷針 -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkAvoidLongUpperShadow"
+                @change="updateField('checkAvoidLongUpperShadow', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.avoidUpperShadow }}</span>
+            </label>
+          </div>
+
+          <!-- 7. KD 動能區過濾 (強勢攻擊區，K: 50 至 100) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.checkKd !== false"
+                @change="updateField('checkKd', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.kdFilter }}</span>
+            </label>
+            <div class="flex items-center gap-1.5 font-numeric text-sm">
+              <span class="text-base-content/80">K:</span>
+              <input
+                type="number"
+                step="5"
+                inputmode="numeric"
+                :value="params.kdKMin"
+                class="input input-bordered input-sm h-7 w-14 bg-base-100 text-center font-bold text-sm"
+                @input="updateDebouncedNumericField('kdKMin', $event.target.value)"
+              />
+              <span class="text-base-content/50">{{ UI_STRINGS.PANEL.to }}</span>
+              <input
+                type="number"
+                step="5"
+                inputmode="numeric"
+                :value="params.kdKMax"
+                class="input input-bordered input-sm h-7 w-14 bg-base-100 text-center font-bold text-sm"
+                @input="updateDebouncedNumericField('kdKMax', $event.target.value)"
+              />
+            </div>
+          </div>
+
+          <!-- 8. 要求 K > D 黃金交叉 -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.kdRequireCross"
+                @change="updateField('kdRequireCross', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.kdGoldenCross }}</span>
+            </label>
+          </div>
+        </template>
+
+        <!-- ==========================================
+             Case 4: 多頭回測 (Mode: TREND_PULLBACK) 專屬順序
              ========================================== -->
         <template v-else-if="activeMode === 'TREND_PULLBACK'">
           <!-- 1. 最低成交量門檻 -->
@@ -499,9 +815,10 @@
         </template>
 
         <!-- ==========================================
-             Case 3: 動能攻擊 (Mode 3) 專屬順序
+             Case 5: 洗盤起漲 (Mode: WASHOUT_IGNITION) 專屬順序
              ========================================== -->
-        <template v-else-if="activeMode === 'MOMENTUM_BREAKOUT'">
+        <template v-else-if="activeMode === 'WASHOUT_IGNITION'">
+
           <!-- 1. 當日成交量 >= 1000 張 -->
           <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
@@ -527,20 +844,7 @@
             </div>
           </div>
 
-          <!-- 2. 昨日成交量 < 昨日 5 日均量 (MV5) -->
-          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
-            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
-              <input
-                type="checkbox"
-                class="checkbox checkbox-sm rounded"
-                :checked="params.checkPrevVolContraction"
-                @change="updateField('checkPrevVolContraction', $event.target.checked)"
-              />
-              <span>{{ UI_STRINGS.PANEL.prevVolContraction }}</span>
-            </label>
-          </div>
-
-          <!-- 3. 排除處置股 -->
+          <!-- 2. 排除處置股 -->
           <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
@@ -553,7 +857,7 @@
             </label>
           </div>
 
-          <!-- 4. 當日帶量攻擊 (當日成交量大於 5 日均量) -->
+          <!-- 3. 洗盤後帶量攻擊 (當日量 > 5日量均) -->
           <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
@@ -562,11 +866,11 @@
                 :checked="params.checkVolExpansion"
                 @change="updateField('checkVolExpansion', $event.target.checked)"
               />
-              <span>{{ UI_STRINGS.PANEL.volExpansion }}</span>
+              <span>{{ UI_STRINGS.PANEL.volExpansionPullback || '洗盤後帶量攻擊 (當日量 > 5日量均)' }}</span>
             </label>
           </div>
 
-          <!-- 5. 實體攻擊紅 K (收盤 > 開盤，且當日漲幅 >= 1.5%) -->
+          <!-- 4. 實體攻擊紅 K (收盤 > 開盤 且 漲幅 >= 2%) -->
           <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
@@ -575,11 +879,11 @@
                 :checked="params.checkRedCandle"
                 @change="updateField('checkRedCandle', $event.target.checked)"
               />
-              <span>{{ UI_STRINGS.PANEL.redCandle }}</span>
+              <span>{{ UI_STRINGS.PANEL.redCandle2Pct || '實體攻擊紅 K (收盤 > 開盤 且 漲幅 ≥ 2%)' }}</span>
             </label>
           </div>
 
-          <!-- 6. 排除長上影線避雷針 (上影線長度不能超過實體紅 K 的一半) -->
+          <!-- 5. 排除長上影線避雷針 -->
           <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
@@ -592,7 +896,7 @@
             </label>
           </div>
 
-          <!-- 7. KD 動能區過濾 (強勢攻擊區，K: 50 至 100) -->
+          <!-- 6. KD 中檔降溫區轉折 (K: 30 至 65) -->
           <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
@@ -625,7 +929,7 @@
             </div>
           </div>
 
-          <!-- 8. 要求 K > D 黃金交叉 -->
+          <!-- 7. 要求 K > D 多頭排列 -->
           <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
@@ -693,34 +997,33 @@ const currentMode = computed(() => {
   return props.modes?.[props.activeMode] || {}
 })
 
-// 手機端精簡標籤
+// 手機端精簡標籤 (依生命週期順序)
 function getShortModeLabel(modeId) {
   switch (modeId) {
+    case 'BOTTOM_REVERSAL':
+      return '反轉'
     case 'BOTTOM_CONSOLIDATION':
       return '底部'
-    case 'TREND_PULLBACK':
-      return '回測'
     case 'MOMENTUM_BREAKOUT':
       return '動能'
-    case 'PULLBACK_IGNITION':
+    case 'TREND_PULLBACK':
+      return '回測'
+    case 'WASHOUT_IGNITION':
       return '起漲'
-    case 'BOTTOM_REVERSAL':
-      return '跌深'
     default:
       return modeId
   }
 }
 
-
-
-// 模式 2 (多頭回測) Console 底層條件提示
+// 模式 4 (多頭回測) 與 模式 5 (洗盤起漲) Console 底層條件提示
 watch(
   () => props.activeMode,
   (newMode) => {
-    if (newMode === 'TREND_PULLBACK') {
-      console.log('[選股引擎] 模式 2 (多頭回測)：已啟用底層必要條件「月線斜率向上 (MA20 Rising)」過濾。')
+    if (newMode === 'TREND_PULLBACK' || newMode === 'WASHOUT_IGNITION') {
+      console.log(`[選股引擎] 模式【${currentMode.value?.label || newMode}】：已啟用底層必要條件「月線斜率向上 (MA20 Rising)」過濾。`)
     }
   },
+
   { immediate: true }
 )
 
