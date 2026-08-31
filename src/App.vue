@@ -16,9 +16,9 @@
       </div>
 
       <div class="ml-auto flex items-center gap-2">
-        <!-- 行情 API 設定按鈕 (鑰匙 SVG 圖示，與主題切換一致的 btn-square 形狀) -->
+        <!-- 行情 API 設定按鈕 (與主題切換一致的 rounded-lg h-8 w-8) -->
         <button
-          class="btn btn-sm btn-ghost btn-square text-base-content/80 hover:text-base-content transition-colors cursor-pointer"
+          class="btn btn-sm btn-ghost h-8 w-8 min-h-0 p-0 rounded-lg text-base-content/80 hover:text-base-content transition-colors cursor-pointer flex items-center justify-center"
           :title="UI_STRINGS.API_SETTINGS.modalTitle"
           :aria-label="UI_STRINGS.API_SETTINGS.modalTitle"
           @click="openApiModal"
@@ -62,10 +62,10 @@
           </span>
         </div>
 
-        <!-- 右側：更新操作按鈕 (預留未來自動更新開關空間) -->
+        <!-- 右側：更新操作按鈕 (預留未來自動更新開關空間，統一 rounded-lg h-8) -->
         <div class="flex items-center gap-2">
           <button
-            class="btn btn-sm btn-neutral gap-1.5 font-medium h-8 min-h-0 cursor-pointer"
+            class="btn btn-sm btn-neutral gap-1.5 font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer"
             :disabled="poolLoading || quotesLoading"
             @click="handleFetchRealtime"
           >

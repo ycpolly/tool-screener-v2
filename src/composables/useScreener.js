@@ -130,14 +130,21 @@ export function useScreener(stocks) {
   // 未符合當前模式的股票（包含淘汰原因）
   const unmatchedResults = computed(() => screenerOutput.value.unmatched)
 
-  // 各模式即時符合檔數統計 (ALL + 3 大策略)
+  // 各模式即時符合檔數統計 (ALL + 5 大策略，支援一鍵精選連動)
   const modeCounts = computed(() => {
     const rawList = stocks.value || []
     const counts = {
       ALL: rawList.length,
     }
     for (const [modeKey, modeObj] of Object.entries(SCREENER_MODES)) {
-      const modeParams = activeMode.value === modeKey ? params.value : modeObj.defaultParams
+      let modeParams
+      if (activeMode.value === modeKey) {
+        modeParams = params.value
+      } else if (isPremium.value && modeObj.premiumParams) {
+        modeParams = { ...modeObj.defaultParams, ...modeObj.premiumParams }
+      } else {
+        modeParams = modeObj.defaultParams
+      }
       const matched = runScreener(rawList, modeParams, modeKey, selectedDayOffset.value)
       counts[modeKey] = matched.length
     }

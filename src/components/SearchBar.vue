@@ -1,14 +1,14 @@
 <template>
   <div class="search-sort-bar flex flex-col md:flex-row md:items-center justify-between gap-2.5 md:gap-3 w-full select-none">
-    <!-- 左側：搜尋輸入框 (在電腦端 flex-1 彈性延伸，手機端設定 h-11 44px 標準高度，飽滿舒適) -->
+    <!-- 左側：搜尋輸入框 (統一 h-9 36px 高度與 rounded-lg 方形圓角) -->
     <div
-      class="flex items-center flex-1 bg-base-200 border border-base-300 rounded-xl px-3.5 h-11 transition-all focus-within:border-base-content/40 focus-within:bg-base-100/90 shadow-2xs"
+      class="flex items-center flex-1 bg-base-200 border border-base-300 rounded-lg px-3 h-9 transition-all focus-within:border-base-content/40 focus-within:bg-base-100/90"
     >
       <!-- 左側放大鏡 SVG 圖示 (清晰高辨識度) -->
-      <div class="flex items-center text-base-content/70 shrink-0 mr-2.5 pointer-events-none">
+      <div class="flex items-center text-base-content/70 shrink-0 mr-2 pointer-events-none">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-4.5 w-4.5"
+          class="h-4 w-4"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -37,7 +37,7 @@
       <button
         v-if="modelValue"
         type="button"
-        class="flex items-center text-base-content/50 hover:text-base-content transition-colors shrink-0 ml-2"
+        class="flex items-center text-base-content/50 hover:text-base-content transition-colors shrink-0 ml-2 cursor-pointer"
         :title="UI_STRINGS.SEARCH.clear"
         @click="$emit('update:modelValue', '')"
       >
@@ -58,14 +58,14 @@
       </button>
     </div>
 
-    <!-- 右側：攤開式排序膠囊按鈕組 (已移除「排序:」前綴，三角形顏色與文字一致) -->
+    <!-- 右側：攤開式排序按鈕組 (統一 h-9 36px 高度與 rounded-lg 方形圓角) -->
     <div class="flex items-center gap-1.5 shrink-0 overflow-x-auto py-0.5 no-scrollbar">
       <button
         v-for="opt in sortOptions"
         :key="opt.key"
         type="button"
-        class="px-2.5 py-1.5 md:py-2 rounded-lg text-sm transition-all flex items-center gap-1 shrink-0 font-numeric"
-        :class="sortKey === opt.key ? 'bg-base-200 border border-base-300 font-bold text-base-content shadow-2xs' : 'text-base-content/75 hover:text-base-content hover:bg-base-200/50'"
+        class="h-9 px-2.5 rounded-lg text-sm transition-colors flex items-center gap-1 shrink-0 font-numeric cursor-pointer"
+        :class="sortKey === opt.key ? 'bg-base-200 border border-base-300 font-bold text-base-content' : 'text-base-content/75 hover:text-base-content hover:bg-base-200/50'"
         @click="handleToggleSort(opt.key)"
       >
         <span>{{ opt.label }}</span>
@@ -98,10 +98,10 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'update:sortKey', 'update:sortDir'])
 
 const sortOptions = [
-  { key: 'changePct', label: UI_STRINGS.STOCK_TABLE.headers.changePct },
-  { key: 'volume', label: UI_STRINGS.STOCK_TABLE.headers.volume },
-  { key: 'bias20', label: UI_STRINGS.STOCK_TABLE.headers.bias20 },
-  { key: 'code', label: UI_STRINGS.STOCK_TABLE.headers.code },
+  { key: 'changePct', label: UI_STRINGS.STOCK_TABLE.headers.changePct || '漲跌幅' },
+  { key: 'volume', label: UI_STRINGS.STOCK_TABLE.headers.volume || '成交量' },
+  { key: 'bias20', label: UI_STRINGS.STOCK_TABLE.headers.bias20 || '月乖離' },
+  { key: 'code', label: UI_STRINGS.STOCK_TABLE.headers.code || '代號' },
 ]
 
 function handleToggleSort(key) {

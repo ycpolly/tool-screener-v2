@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="btn btn-ghost btn-sm btn-square text-base-content/70 hover:text-base-content transition-colors"
+    class="btn btn-ghost btn-sm h-8 w-8 min-h-0 p-0 rounded-lg text-base-content/70 hover:text-base-content transition-colors cursor-pointer"
     :aria-label="isDark ? '切換為亮色模式' : '切換為暗色模式'"
     :title="isDark ? '切換為亮色模式' : '切換為暗色模式'"
     @click="$emit('toggle')"

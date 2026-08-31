@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0831.09',
+    version: 'v0831.10',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -79,7 +79,9 @@ export const UI_STRINGS = {
       name: '名稱',
       price: '現價',
       change: '漲跌幅',
+      changePct: '漲跌幅',
       volume: '成交量',
+      bias20: '月乖離',
       maStatus: '均線狀態',
       kdStatus: 'KD 指標',
       chips: '籌碼動向',
@@ -195,6 +197,8 @@ export const UI_STRINGS = {
     excludeSell1D: '排除外資 / 主力當日賣超 1D',
     premiumToggle: '一鍵精選',
     premiumActive: '已啟用一鍵精選',
+    premiumActiveText: '精選中',
+    resetCustom: '重設自訂',
     to: '至',
   },
 
