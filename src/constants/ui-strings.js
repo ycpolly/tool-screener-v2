@@ -195,6 +195,8 @@ export const UI_STRINGS = {
     kdFilter: 'KD 動能區過濾',
     kdMomentumAttack: 'KD 強勢攻擊區 (K 值 > 50 且 K > D 黃金交叉)',
     kdGoldenCross: 'K > D 黃金交叉',
+    excludeSell3D: '排除外資 / 主力 / 投信連續 3 日賣超 (含 0050 豁免)',
+    excludeSell1D: '排除外資 / 主力當日賣超 1D',
     to: '至',
   },
 
@@ -226,7 +228,10 @@ export const UI_STRINGS = {
     avoidUpperShadowFailed: '觸發避雷針型態 (上影線長度超過實體紅 K 一半)',
     kdOutOfRange: (min, max, val) => `KD 未處於指定區間 (K=${val} 不在 ${min}~${max})`,
     kdCrossFailed: 'KD 未形成多頭排列 (K ≤ D)',
+    excludeSell3DFailed: (triggered) => `觸發連續 3 日賣超避雷 (${triggered})`,
+    excludeSell1DFailed: (triggered) => `觸發當日賣超避雷 (${triggered})`,
   },
+
 
 
   API_SETTINGS: {

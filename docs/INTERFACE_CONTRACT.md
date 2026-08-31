@@ -153,6 +153,10 @@ interface ScreenerParams {
   kdKMin?:                   number          // K 值下限
   kdKMax?:                   number          // K 值上限
   kdRequireCross?:           boolean         // 是否要求 K > D 黃金交叉/多頭排列
+
+  // 籌碼避雷過濾
+  excludeSell3D?:            boolean         // 隱藏外資 / 主力 / 投信賣超 3D (含 0050 土洋對作豁免)
+  excludeSell1D?:            boolean         // 隱藏外資 / 主力當日賣超 1D
 }
 
 

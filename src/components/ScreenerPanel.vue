@@ -427,7 +427,7 @@
           </div>
 
           <!-- 7. 要求 K > D 黃金交叉 -->
-          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
@@ -436,6 +436,32 @@
                 @change="updateField('kdRequireCross', $event.target.checked)"
               />
               <span>{{ UI_STRINGS.PANEL.kdGoldenCross }}</span>
+            </label>
+          </div>
+
+          <!-- 8. 排除連續 3 日賣超 (含 0050 豁免) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.excludeSell3D !== false"
+                @change="updateField('excludeSell3D', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.excludeSell3D }}</span>
+            </label>
+          </div>
+
+          <!-- 9. 排除當日賣超 1D -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.excludeSell1D"
+                @change="updateField('excludeSell1D', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.excludeSell1D }}</span>
             </label>
           </div>
         </template>
@@ -555,7 +581,7 @@
           </div>
 
           <!-- 7. 要求 K > D 黃金交叉 -->
-          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
@@ -564,6 +590,32 @@
                 @change="updateField('kdRequireCross', $event.target.checked)"
               />
               <span>{{ UI_STRINGS.PANEL.kdGoldenCross }}</span>
+            </label>
+          </div>
+
+          <!-- 8. 排除連續 3 日賣超 (含 0050 豁免) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.excludeSell3D !== false"
+                @change="updateField('excludeSell3D', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.excludeSell3D }}</span>
+            </label>
+          </div>
+
+          <!-- 9. 排除當日賣超 1D -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.excludeSell1D"
+                @change="updateField('excludeSell1D', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.excludeSell1D }}</span>
             </label>
           </div>
         </template>
@@ -696,7 +748,7 @@
           </div>
 
           <!-- 8. 要求 K > D 黃金交叉 -->
-          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
@@ -705,6 +757,32 @@
                 @change="updateField('kdRequireCross', $event.target.checked)"
               />
               <span>{{ UI_STRINGS.PANEL.kdGoldenCross }}</span>
+            </label>
+          </div>
+
+          <!-- 9. 排除連續 3 日賣超 (含 0050 豁免) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.excludeSell3D !== false"
+                @change="updateField('excludeSell3D', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.excludeSell3D }}</span>
+            </label>
+          </div>
+
+          <!-- 10. 排除當日賣超 1D -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.excludeSell1D !== false"
+                @change="updateField('excludeSell1D', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.excludeSell1D }}</span>
             </label>
           </div>
         </template>
@@ -778,7 +856,7 @@
           </div>
 
           <!-- 5. KD 動能區過濾 -->
-          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
@@ -808,6 +886,32 @@
                 @input="updateDebouncedNumericField('kdKMax', $event.target.value)"
               />
             </div>
+          </div>
+
+          <!-- 6. 排除連續 3 日賣超 (含 0050 豁免) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.excludeSell3D !== false"
+                @change="updateField('excludeSell3D', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.excludeSell3D }}</span>
+            </label>
+          </div>
+
+          <!-- 7. 排除當日賣超 1D -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.excludeSell1D"
+                @change="updateField('excludeSell1D', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.excludeSell1D }}</span>
+            </label>
           </div>
         </template>
 
@@ -927,7 +1031,7 @@
           </div>
 
           <!-- 7. 要求 K > D 多頭排列 -->
-          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
@@ -936,6 +1040,32 @@
                 @change="updateField('kdRequireCross', $event.target.checked)"
               />
               <span>{{ UI_STRINGS.PANEL.kdGoldenCross }}</span>
+            </label>
+          </div>
+
+          <!-- 8. 排除連續 3 日賣超 (含 0050 豁免) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.excludeSell3D !== false"
+                @change="updateField('excludeSell3D', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.excludeSell3D }}</span>
+            </label>
+          </div>
+
+          <!-- 9. 排除當日賣超 1D -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.excludeSell1D !== false"
+                @change="updateField('excludeSell1D', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.excludeSell1D }}</span>
             </label>
           </div>
         </template>

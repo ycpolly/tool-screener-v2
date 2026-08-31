@@ -33,6 +33,8 @@ export const SCREENER_MODES = {
       checkMinVolume: true,
       checkNotDisposed: true,         // 排除處置股
       checkVolExpansion: true,        // 低檔爆量攻擊 (當日量 > 5日量均)
+      excludeSell3D: true,            // 隱藏外資 / 主力 / 投信賣超 3D (含 0050 豁免)
+      excludeSell1D: false,           // 隱藏外資 / 主力賣超 1D
 
       // K 棒型態排雷
       checkRedCandle: true,           // 實體反轉紅 K (收盤 > 開盤 且 漲幅 >= 2%)
@@ -75,6 +77,8 @@ export const SCREENER_MODES = {
       checkTightConsolidation: true,  // [新增] 狹幅震盪打底
       tightChgMin: -1.5,              // [新增] 當日漲跌幅下限 -1.5%
       tightChgMax: 1.5,               // [新增] 當日漲跌幅上限 +1.5% (排除噴出假蓄勢)
+      excludeSell3D: true,            // 隱藏外資 / 主力 / 投信賣超 3D (含 0050 豁免)
+      excludeSell1D: false,           // 隱藏外資 / 主力賣超 1D
 
       checkAvoidLongBlack: true,      // 排除長黑倒貨
       blackCandleRatioMax: 0.20,
@@ -110,6 +114,8 @@ export const SCREENER_MODES = {
       checkPrevVolContraction: true,// 昨日成交量 < 昨日 5 日量均 (MV5)
       checkNotDisposed: true,       // 排除處置股
       checkVolExpansion: true,      // 當日帶量攻擊 (當日量 > 5日量均)
+      excludeSell3D: true,          // 隱藏外資 / 主力 / 投信賣超 3D (含 0050 豁免)
+      excludeSell1D: true,           // 隱藏外資 / 主力賣超 1D (發動日嚴禁當日倒貨)
       checkRedCandle: true,         // 實體攻擊紅 K (收 > 開 且 漲幅 >= 1.5%)
       minRedCandleChangePct: 1.5,
       checkAvoidLongUpperShadow: true, // 排除長上影線避雷針 (上影線 <= 實體紅K一半)
@@ -144,6 +150,8 @@ export const SCREENER_MODES = {
       checkMinVolume: true,
       checkNotDisposed: true,       // 排除處置股
       checkVolPullback: true,       // 量縮回踩 (當日量 < 5日量均 或 < 昨日量)
+      excludeSell3D: true,          // 隱藏外資 / 主力 / 投信賣超 3D (含 0050 豁免)
+      excludeSell1D: false,         // 隱藏外資 / 主力賣超 1D
       checkAvoidLongBlack: true,    // 排除長黑倒貨 (實體黑K跌幅 >= 1.5% 且收相對低 <= 25%)
       blackCandleRatioMax: 0.25,
       checkKd: true,                // KD 多頭回檔
@@ -177,6 +185,8 @@ export const SCREENER_MODES = {
       checkMinVolume: true,
       checkNotDisposed: true,         // 排除處置股
       checkVolExpansion: true,        // 洗盤後帶量攻擊 (當日成交量 > 5日均量)
+      excludeSell3D: true,            // 隱藏外資 / 主力 / 投信賣超 3D (含 0050 豁免)
+      excludeSell1D: true,            // 隱藏外資 / 主力賣超 1D (發動日嚴禁當日倒貨)
 
       // K 棒型態排雷
       checkRedCandle: true,           // 實體攻擊紅 K (收盤 > 開盤)

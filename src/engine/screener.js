@@ -611,8 +611,56 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     }
   }
 
+  // 18. 排除連續 3 日賣超 (excludeSell3D: 外資賣3D / 主力賣3D / 投信賣3D，含 0050 土洋對作豁免)
+  if (params.excludeSell3D) {
+    const cats = stock.categories || []
+    const is0050 = cats.includes('0050')
+    const isForeignBuy3D = cats.includes('ForeignBuy3D')
+    const isMajorBuy3D = cats.includes('MajorBuy3D')
+    const isExempted = is0050 && isForeignBuy3D && isMajorBuy3D // 0050 土洋對作豁免投信賣 3D
+
+    const isForeignSell3D = cats.includes('ForeignSell3D')
+    const isMajorSell3D = cats.includes('MajorSell3D')
+    const isSitcaSell3D = cats.includes('SitcaSell3D')
+
+    if (isForeignSell3D || isMajorSell3D || (!isExempted && isSitcaSell3D)) {
+      const triggered = []
+      if (isForeignSell3D) triggered.push('外資賣3D')
+      if (isMajorSell3D) triggered.push('主力賣3D')
+      if (!isExempted && isSitcaSell3D) triggered.push('投信賣3D')
+      const trigStr = triggered.join(' · ')
+      return {
+        isMatch: false,
+        reasonText: strings.excludeSell3DFailed
+          ? strings.excludeSell3DFailed(trigStr)
+          : `觸發連續 3 日賣超避雷 (${trigStr})`,
+      }
+    }
+  }
+
+  // 19. 排除當日賣超 1D (excludeSell1D: 外資賣1D / 主力賣1D)
+  if (params.excludeSell1D) {
+    const cats = stock.categories || []
+    const isForeignSell1D = cats.includes('ForeignSell1D')
+    const isMajorSell1D = cats.includes('MajorSell1D')
+
+    if (isForeignSell1D || isMajorSell1D) {
+      const triggered = []
+      if (isForeignSell1D) triggered.push('外資賣1D')
+      if (isMajorSell1D) triggered.push('主力賣1D')
+      const trigStr = triggered.join(' · ')
+      return {
+        isMatch: false,
+        reasonText: strings.excludeSell1DFailed
+          ? strings.excludeSell1DFailed(trigStr)
+          : `觸發當日賣超避雷 (${trigStr})`,
+      }
+    }
+  }
+
   return { isMatch: true, reasonText: strings.passed || '符合篩選條件' }
 }
+
 
 /**
  * 判斷當前是否處於「全新開盤交易日（即時行情階段）」
