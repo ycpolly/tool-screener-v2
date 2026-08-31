@@ -344,10 +344,17 @@ function formatBias(bias) {
 
 const priceColorClass = computed(() => {
   const pct = props.stock.changePct ?? 0
+  if (props.stock.isLimitUp || pct >= 9.5) {
+    return 'bg-rise text-white px-1.5 py-0.5 rounded font-bold shadow-xs'
+  }
+  if (props.stock.isLimitDown || pct <= -9.5) {
+    return 'bg-fall text-white px-1.5 py-0.5 rounded font-bold shadow-xs'
+  }
   if (pct > 0) return 'text-rise'
   if (pct < 0) return 'text-fall'
   return 'text-flat'
 })
+
 
 const bias5 = computed(() => {
   if (!props.stock.price || !props.stock.ma5) return 0

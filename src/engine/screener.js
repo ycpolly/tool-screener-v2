@@ -163,6 +163,9 @@ export function mergeRealtimeQuote(baseStock, quote) {
   const bias5 = ma5 > 0 ? round2(((price - ma5) / ma5) * 100) : 0
   const bias20 = ma20 > 0 ? round2(((price - ma20) / ma20) * 100) : 0
 
+  const isLimitUp = changePct >= 9.5
+  const isLimitDown = changePct <= -9.5
+
   return {
     ...baseStock,
     price,
@@ -173,10 +176,13 @@ export function mergeRealtimeQuote(baseStock, quote) {
     volume:    quote.volume  ?? baseStock.volume ?? 0,
     change,
     changePct,
+    isLimitUp,
+    isLimitDown,
     bias5,
     bias20,
   }
 }
+
 
 /**
  * 即時合體：將大盤基底與加權 (t00) 及櫃買 (o00) 即時行情合併
@@ -595,8 +601,11 @@ export function sliceStockAt(stock, dayOffset = 0) {
     volume: bar.volume,
     change,
     changePct,
+    isLimitUp: changePct >= 9.5,
+    isLimitDown: changePct <= -9.5,
     ma5,
     ma10,
+
     ma20,
     ma60,
     vMa5,

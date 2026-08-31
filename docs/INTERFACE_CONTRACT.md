@@ -31,6 +31,9 @@ interface Stock {
   change:      number       // 漲跌價差
   changePct:   number       // 漲跌幅 %（正=漲，負=跌）
   volume:      number       // 成交量（張）
+  isLimitUp?:  boolean      // 是否觸及漲停 (漲幅 >= +9.5%，UI 呈現紅底白字)
+  isLimitDown?: boolean     // 是否觸及跌停 (跌幅 <= -9.5%，UI 呈現綠底白字)
+
 
   // 均線基底（盤後更新）
   ma5:   number
