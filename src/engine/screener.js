@@ -363,8 +363,11 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
 
   // 全市場總覽模式 (不套用策略條件)
   if (activeModeId === 'ALL') {
-    return { isMatch: true, reasonText: strings.passed || '全市場總覽' }
+    return { isMatch: true, reasonText: strings.passed || '全市場總覽', details: [] }
   }
+
+  const details = diagnoseStock(stock, params, activeModeId)
+  const fail = (reasonText) => ({ isMatch: false, reasonText, details })
 
   const price = stock.price ?? 0
   const ma5   = stock.ma5 ?? 0
@@ -377,10 +380,10 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     : (ma5 > 0 ? round2(((price - ma5) / ma5) * 100) : 0)
 
   if (typeof params.bias5Min === 'number' && bias5 < params.bias5Min) {
-    return { isMatch: false, reasonText: strings.bias5Below ? strings.bias5Below(params.bias5Min, bias5) : '5MA乖離過低' }
+    return fail(strings.bias5Below ? strings.bias5Below(params.bias5Min, bias5) : '5MA乖離過低')
   }
   if (typeof params.bias5Max === 'number' && bias5 > params.bias5Max) {
-    return { isMatch: false, reasonText: strings.bias5Above ? strings.bias5Above(params.bias5Max, bias5) : '5MA乖離過高' }
+    return fail(strings.bias5Above ? strings.bias5Above(params.bias5Max, bias5) : '5MA乖離過高')
   }
 
   // 3. 20MA 月線乖離率檢驗
@@ -389,32 +392,32 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     : (ma20 > 0 ? round2(((price - ma20) / ma20) * 100) : 0)
 
   if (typeof params.bias20Min === 'number' && bias20 < params.bias20Min) {
-    return { isMatch: false, reasonText: strings.bias20Below ? strings.bias20Below(params.bias20Min, bias20) : '20MA乖離過低' }
+    return fail(strings.bias20Below ? strings.bias20Below(params.bias20Min, bias20) : '20MA乖離過低')
   }
   if (typeof params.bias20Max === 'number' && bias20 > params.bias20Max) {
-    return { isMatch: false, reasonText: strings.bias20Above ? strings.bias20Above(params.bias20Max, bias20) : '20MA乖離過高' }
+    return fail(strings.bias20Above ? strings.bias20Above(params.bias20Max, bias20) : '20MA乖離過高')
   }
 
   // 3.5 季線防身檢驗 (requireAboveMa60: 收盤價 >= 60MA)
   const ma60 = stock.ma60 ?? 0
   if (params.requireAboveMa60 && ma60 > 0 && price < ma60) {
-    return { isMatch: false, reasonText: strings.belowMa60Failed || '未站穩季線防身 (現價 < 60MA)' }
+    return fail(strings.belowMa60Failed || '未站穩季線防身 (現價 < 60MA)')
   }
 
   // 4. 均線支撐 (maAboveMode: 'BOTH' | 'ANY' | '5MA' | 'NONE')
   if (params.maAboveMode === 'BOTH') {
     const standsBoth = price >= ma5 && price >= ma10
     if (!standsBoth) {
-      return { isMatch: false, reasonText: strings.maAboveBothFailed || '未同時站穩 5MA 與 10MA' }
+      return fail(strings.maAboveBothFailed || '未同時站穩 5MA 與 10MA')
     }
   } else if (params.maAboveMode === 'ANY') {
     const standsAny = price >= ma5 || price >= ma10
     if (!standsAny) {
-      return { isMatch: false, reasonText: strings.maAboveAnyFailed || '未站穩 5MA 或 10MA' }
+      return fail(strings.maAboveAnyFailed || '未站穩 5MA 或 10MA')
     }
   } else if (params.maAboveMode === '5MA' || params.maAboveMode === 'MA5') {
     if (price < ma5) {
-      return { isMatch: false, reasonText: strings.maAbove5maFailed || '未站上 5MA' }
+      return fail(strings.maAbove5maFailed || '未站上 5MA')
     }
   }
 
@@ -422,10 +425,7 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
   if (params.checkConvergence && typeof params.convergenceMax === 'number') {
     const conv = calculateMAConvergence(ma5, ma10, ma20)
     if (conv > params.convergenceMax) {
-      return {
-        isMatch: false,
-        reasonText: strings.convergenceFailed ? strings.convergenceFailed(params.convergenceMax, conv) : `三線價差過大 (${conv}%)`,
-      }
+      return fail(strings.convergenceFailed ? strings.convergenceFailed(params.convergenceMax, conv) : `三線價差過大 (${conv}%)`)
     }
   }
 
@@ -443,15 +443,12 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
 
   if (params.checkPrevConvergence && typeof params.prevConvergenceMax === 'number') {
     if (!prevBar || !prevBar.ma5 || !prevBar.ma10 || !prevBar.ma20) {
-      return { isMatch: false, reasonText: '缺少前一交易日均線數據' }
+      return fail('缺少前一交易日均線數據')
     }
 
     const prevConv = calculateMAConvergence(prevBar.ma5, prevBar.ma10, prevBar.ma20)
     if (prevConv > params.prevConvergenceMax) {
-      return {
-        isMatch: false,
-        reasonText: strings.prevConvergenceFailed ? strings.prevConvergenceFailed(params.prevConvergenceMax, prevConv) : `前一日三線價差過大 (${prevConv}%)`,
-      }
+      return fail(strings.prevConvergenceFailed ? strings.prevConvergenceFailed(params.prevConvergenceMax, prevConv) : `前一日三線價差過大 (${prevConv}%)`)
     }
   }
 
@@ -460,7 +457,7 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     const prevMa20 = prevBar?.ma20
 
     if (typeof prevMa20 !== 'number' || ma20 <= prevMa20) {
-      return { isMatch: false, reasonText: strings.ma20NotRising || '月線斜率未向上' }
+      return fail(strings.ma20NotRising || '月線斜率未向上')
     }
   }
 
@@ -468,15 +465,12 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
   // 8. 成交量門檻檢驗 (checkMinVolume)
   const volume = stock.volume ?? 0
   if (params.checkMinVolume && typeof params.minVolume === 'number' && volume < params.minVolume) {
-    return {
-      isMatch: false,
-      reasonText: strings.volumeBelow ? strings.volumeBelow(params.minVolume, volume) : `成交量未達標 (${volume} 張 < ${params.minVolume} 張)`,
-    }
+    return fail(strings.volumeBelow ? strings.volumeBelow(params.minVolume, volume) : `成交量未達標 (${volume} 張 < ${params.minVolume} 張)`)
   }
 
   // 9. 排除處置股票 (checkNotDisposed)
   if (params.checkNotDisposed && stock.isDisposed) {
-    return { isMatch: false, reasonText: strings.isDisposedStock || '此為處置股票 (關禁閉)' }
+    return fail(strings.isDisposedStock || '此為處置股票 (關禁閉)')
   }
 
   const vMa5 = stock.vMa5 ?? 0
@@ -485,12 +479,9 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
   if (params.checkVolContraction && vMa5 > 0) {
     const ratio = typeof params.volContractionRatio === 'number' ? params.volContractionRatio : 1.0
     if (volume > vMa5 * ratio) {
-      return {
-        isMatch: false,
-        reasonText: ratio < 1.0
-          ? (strings.strictVolContractionFailed || `未達嚴格量縮標準 (${volume} > ${Math.round(vMa5 * ratio)})`)
-          : (strings.volContractionFailed || '當日成交量未達量縮標準 (≥ 5日量均)'),
-      }
+      return fail(ratio < 1.0
+        ? (strings.strictVolContractionFailed || `未達嚴格量縮標準 (${volume} > ${Math.round(vMa5 * ratio)})`)
+        : (strings.volContractionFailed || '當日成交量未達量縮標準 (≥ 5日量均)'))
     }
   }
 
@@ -502,11 +493,11 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
 
     if (params.checkVolPullbackStrict) {
       if (!isBelowVma5 || !isBelowPrevVol) {
-        return { isMatch: false, reasonText: strings.strictVolPullbackFailed || '未達嚴格雙重量縮標準 (需同時小於5日量均與昨日量)' }
+        return fail(strings.strictVolPullbackFailed || '未達嚴格雙重量縮標準 (需同時小於5日量均與昨日量)')
       }
     } else {
       if (!isBelowVma5 && !isBelowPrevVol) {
-        return { isMatch: false, reasonText: strings.volPullbackFailed || '未達量縮回踩標準' }
+        return fail(strings.volPullbackFailed || '未達量縮回踩標準')
       }
     }
   }
@@ -520,7 +511,7 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
       const prevVol = history[len - 1]?.volume ?? 0
 
       if (prevMV5 > 0 && prevVol >= prevMV5) {
-        return { isMatch: false, reasonText: strings.prevVolContractionFailed || '昨日未達量縮標準' }
+        return fail(strings.prevVolContractionFailed || '昨日未達量縮標準')
       }
     } else if (!isTodayLive && len >= 6) {
       const bars5 = history.slice(-6, -1)
@@ -528,7 +519,7 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
       const prevVol = history[len - 2]?.volume ?? 0
 
       if (prevMV5 > 0 && prevVol >= prevMV5) {
-        return { isMatch: false, reasonText: strings.prevVolContractionFailed || '昨日未達量縮標準' }
+        return fail(strings.prevVolContractionFailed || '昨日未達量縮標準')
       }
     }
   }
@@ -536,7 +527,7 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
 
   // 13. 當日帶量攻擊 (checkVolExpansion: 當日成交量 > 5日量均)
   if (params.checkVolExpansion && vMa5 > 0 && volume <= vMa5) {
-    return { isMatch: false, reasonText: strings.volExpansionFailed || '未達帶量攻擊標準 (成交量 ≤ 5日量均)' }
+    return fail(strings.volExpansionFailed || '未達帶量攻擊標準 (成交量 ≤ 5日量均)')
   }
 
   // 14. 實體攻擊紅 K (checkRedCandle: 收 > 開 且 漲幅 >= minRedCandleChangePct)
@@ -548,22 +539,16 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
 
   const minRedChange = typeof params.minRedCandleChangePct === 'number' ? params.minRedCandleChangePct : 1.5
   if (params.checkRedCandle && (close <= open || changePct < minRedChange)) {
-    return { isMatch: false, reasonText: strings.redCandleFailed || '未達實體攻擊紅 K 標準' }
+    return fail(strings.redCandleFailed || '未達實體攻擊紅 K 標準')
   }
 
   // 14.5 狹幅震盪打底 (checkTightConsolidation: 當日漲跌幅介於 tightChgMin 與 tightChgMax 之間)
   if (params.checkTightConsolidation) {
     if (typeof params.tightChgMin === 'number' && changePct < params.tightChgMin) {
-      return {
-        isMatch: false,
-        reasonText: strings.tightConsolidationFailed ? strings.tightConsolidationFailed(changePct) : `跌幅過大 (${changePct}%)`,
-      }
+      return fail(strings.tightConsolidationFailed ? strings.tightConsolidationFailed(changePct) : `跌幅過大 (${changePct}%)`)
     }
     if (typeof params.tightChgMax === 'number' && changePct > params.tightChgMax) {
-      return {
-        isMatch: false,
-        reasonText: strings.tightConsolidationFailed ? strings.tightConsolidationFailed(changePct) : `漲幅過大 (${changePct}%)`,
-      }
+      return fail(strings.tightConsolidationFailed ? strings.tightConsolidationFailed(changePct) : `漲幅過大 (${changePct}%)`)
     }
   }
 
@@ -580,7 +565,7 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
 
     // 同時滿足條件 A (實體跌幅 >= 1.5%) 與 條件 B (收最低點附近 <= threshold) 則排除
     if (dropPct >= 0.015 && lowRatio <= threshold) {
-      return { isMatch: false, reasonText: strings.avoidLongBlackFailed || '觸發長黑倒貨型態' }
+      return fail(strings.avoidLongBlackFailed || '觸發長黑倒貨型態')
     }
   }
 
@@ -591,7 +576,7 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     const body = close - open
 
     if (upperShadow > body * 0.5) {
-      return { isMatch: false, reasonText: strings.avoidUpperShadowFailed || '觸發避雷針型態' }
+      return fail(strings.avoidUpperShadowFailed || '觸發避雷針型態')
     }
   }
 
@@ -602,19 +587,13 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     const d = kd.d ?? 50
 
     if (typeof params.kdKMin === 'number' && k < params.kdKMin) {
-      return {
-        isMatch: false,
-        reasonText: strings.kdOutOfRange ? strings.kdOutOfRange(params.kdKMin, params.kdKMax ?? 100, k) : `KD 未在多頭區 (K=${k})`,
-      }
+      return fail(strings.kdOutOfRange ? strings.kdOutOfRange(params.kdKMin, params.kdKMax ?? 100, k) : `KD 未在多頭區 (K=${k})`)
     }
     if (typeof params.kdKMax === 'number' && k > params.kdKMax) {
-      return {
-        isMatch: false,
-        reasonText: strings.kdOutOfRange ? strings.kdOutOfRange(params.kdKMin ?? 0, params.kdKMax, k) : `KD 過熱 (K=${k})`,
-      }
+      return fail(strings.kdOutOfRange ? strings.kdOutOfRange(params.kdKMin ?? 0, params.kdKMax, k) : `KD 過熱 (K=${k})`)
     }
     if (params.kdRequireCross && k <= d) {
-      return { isMatch: false, reasonText: strings.kdCrossFailed || 'KD 未形成多頭排列 (K ≤ D)' }
+      return fail(strings.kdCrossFailed || 'KD 未形成多頭排列 (K ≤ D)')
     }
   }
 
@@ -637,12 +616,9 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
       if (isMajorSell3D) triggered.push('主力賣3D')
       if (!isExempted && isSitcaSell3D) triggered.push('投信賣3D')
       const trigStr = triggered.join(' · ')
-      return {
-        isMatch: false,
-        reasonText: strings.excludeSell3DFailed
-          ? strings.excludeSell3DFailed(trigStr)
-          : `觸發連續 3 日賣超避雷 (${trigStr})`,
-      }
+      return fail(strings.excludeSell3DFailed
+        ? strings.excludeSell3DFailed(trigStr)
+        : `觸發連續 3 日賣超避雷 (${trigStr})`)
     }
   }
 
@@ -658,16 +634,298 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
       if (isForeignSell1D) triggered.push('外資賣1D')
       if (isMajorSell1D) triggered.push('主力賣1D')
       const trigStr = triggered.join(' · ')
-      return {
-        isMatch: false,
-        reasonText: strings.excludeSell1DFailed
-          ? strings.excludeSell1DFailed(trigStr)
-          : `觸發當日賣超避雷 (${trigStr})`,
-      }
+      return fail(strings.excludeSell1DFailed
+        ? strings.excludeSell1DFailed(trigStr)
+        : `觸發當日賣超避雷 (${trigStr})`)
     }
   }
 
-  return { isMatch: true, reasonText: strings.passed || '符合篩選條件' }
+  return {
+    isMatch: true,
+    reasonText: strings.passed || '符合篩選條件',
+    details: diagnoseStock(stock, params, activeModeId),
+  }
+}
+
+/**
+ * 深入診斷個股在特定模式與參數下的各項指標通關狀態
+ * @param {Object} stock
+ * @param {Object} [params]
+ * @param {string} [activeModeId]
+ * @returns {Array<{ label: string, pass: boolean, desc: string }>}
+ */
+export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
+  if (!stock || activeModeId === 'ALL') return []
+  const details = []
+
+  const price = stock.price ?? 0
+  const ma5   = stock.ma5 ?? 0
+  const ma10  = stock.ma10 ?? 0
+  const ma20  = stock.ma20 ?? 0
+  const ma60  = stock.ma60 ?? 0
+  const volume = stock.volume ?? 0
+  const vMa5   = stock.vMa5 ?? 0
+  const open   = stock.open ?? price
+  const close  = price
+  const changePct = typeof stock.changePct === 'number'
+    ? stock.changePct
+    : (stock.prevClose > 0 ? round2(((price - stock.prevClose) / stock.prevClose) * 100) : 0)
+
+  const history = stock.history10d || []
+  const len = history.length
+  const lastBar = len > 0 ? history[len - 1] : null
+  const isLive = isLiveTradingDay(lastBar)
+  const isTodayLive = isLive && (stock.dayOffset === 0 || stock.dayOffset === undefined)
+  const prevBar = isTodayLive
+    ? (len >= 1 ? history[len - 1] : null)
+    : (len >= 2 ? history[len - 2] : null)
+
+  // 1. 均線支撐 (maAboveMode)
+  if (params.maAboveMode === 'BOTH') {
+    const pass = price >= ma5 && price >= ma10
+    details.push({
+      label: '均線支撐',
+      pass,
+      desc: pass
+        ? `現價 ${price.toFixed(2)} 雙站穩 5MA (${ma5.toFixed(2)}) 與 10MA (${ma10.toFixed(2)})`
+        : `未同時站穩 5MA (${ma5.toFixed(2)}) 與 10MA (${ma10.toFixed(2)})`,
+    })
+  } else if (params.maAboveMode === 'ANY') {
+    const pass = price >= ma5 || price >= ma10
+    details.push({
+      label: '均線支撐',
+      pass,
+      desc: pass
+        ? `現價 ${price.toFixed(2)} 站穩 5MA (${ma5.toFixed(2)}) 或 10MA (${ma10.toFixed(2)})`
+        : `未站穩 5MA (${ma5.toFixed(2)}) 或 10MA (${ma10.toFixed(2)})`,
+    })
+  } else if (params.maAboveMode === '5MA' || params.maAboveMode === 'MA5') {
+    const pass = price >= ma5
+    details.push({
+      label: '均線支撐',
+      pass,
+      desc: pass
+        ? `現價 ${price.toFixed(2)} 站穩 5MA (${ma5.toFixed(2)})`
+        : `未站上 5MA (${ma5.toFixed(2)})`,
+    })
+  }
+
+  // 1.5 季線防身
+  if (params.requireAboveMa60 && ma60 > 0) {
+    const pass = price >= ma60
+    details.push({
+      label: '季線防身',
+      pass,
+      desc: pass
+        ? `現價 ${price.toFixed(2)} 站穩 60MA 季線 (${ma60.toFixed(2)})`
+        : `未站上 60MA 季線 (現價 ${price.toFixed(2)} < 季線 ${ma60.toFixed(2)})`,
+    })
+  }
+
+  // 2. 5MA 乖離
+  if (typeof params.bias5Min === 'number' || typeof params.bias5Max === 'number') {
+    const bias5 = typeof stock.bias5 === 'number'
+      ? stock.bias5
+      : (ma5 > 0 ? round2(((price - ma5) / ma5) * 100) : 0)
+    const minPass = typeof params.bias5Min === 'number' ? bias5 >= params.bias5Min : true
+    const maxPass = typeof params.bias5Max === 'number' ? bias5 <= params.bias5Max : true
+    const pass = minPass && maxPass
+    details.push({
+      label: '5MA乖離',
+      pass,
+      desc: `5MA 乖離率 ${bias5 >= 0 ? '+' : ''}${bias5}% (區間 ${params.bias5Min ?? '-∞'}% ~ ${params.bias5Max ?? '+∞'}%)`,
+    })
+  }
+
+  // 3. 20MA 乖離
+  if (typeof params.bias20Min === 'number' || typeof params.bias20Max === 'number') {
+    const bias20 = typeof stock.bias20 === 'number'
+      ? stock.bias20
+      : (ma20 > 0 ? round2(((price - ma20) / ma20) * 100) : 0)
+    const minPass = typeof params.bias20Min === 'number' ? bias20 >= params.bias20Min : true
+    const maxPass = typeof params.bias20Max === 'number' ? bias20 <= params.bias20Max : true
+    const pass = minPass && maxPass
+    details.push({
+      label: '月線乖離',
+      pass,
+      desc: `20MA 乖離率 ${bias20 >= 0 ? '+' : ''}${bias20}% (區間 ${params.bias20Min ?? '-∞'}% ~ ${params.bias20Max ?? '+∞'}%)`,
+    })
+  }
+
+  // 4. 三線糾結度
+  if (params.checkConvergence && typeof params.convergenceMax === 'number') {
+    const conv = calculateMAConvergence(ma5, ma10, ma20)
+    const pass = conv <= params.convergenceMax
+    details.push({
+      label: '三線糾結',
+      pass,
+      desc: `當日三線價差 ${conv}% (門檻 ≤ ${params.convergenceMax}%)`,
+    })
+  }
+
+  // 5. 前一日三線糾結度
+  if (params.checkPrevConvergence && typeof params.prevConvergenceMax === 'number') {
+    if (prevBar && prevBar.ma5 && prevBar.ma10 && prevBar.ma20) {
+      const prevConv = calculateMAConvergence(prevBar.ma5, prevBar.ma10, prevBar.ma20)
+      const pass = prevConv <= params.prevConvergenceMax
+      details.push({
+        label: '昨日糾結',
+        pass,
+        desc: `前一日三線價差 ${prevConv}% (門檻 ≤ ${params.prevConvergenceMax}%)`,
+      })
+    }
+  }
+
+  // 6. 月線斜率向上
+  if (params.requireMa20Rising || activeModeId === 'TREND_PULLBACK' || activeModeId === 'WASHOUT_IGNITION' || activeModeId === 'PULLBACK_IGNITION') {
+    const prevMa20 = prevBar?.ma20
+    const pass = typeof prevMa20 === 'number' && ma20 > prevMa20
+    details.push({
+      label: '月線斜率',
+      pass,
+      desc: pass
+        ? `月線斜率向上 (今日 ${ma20.toFixed(2)} > 昨日 ${prevMa20 ? prevMa20.toFixed(2) : '-'})`
+        : `月線斜率未向上 (今日 ${ma20.toFixed(2)} ≤ 昨日 ${prevMa20 ? prevMa20.toFixed(2) : '-'})`,
+    })
+  }
+
+  // 7. 成交量能
+  if (params.checkMinVolume && typeof params.minVolume === 'number') {
+    const pass = volume >= params.minVolume
+    details.push({
+      label: '成交量能',
+      pass,
+      desc: `成交量 ${volume.toLocaleString()} 張 (門檻 ≥ ${params.minVolume.toLocaleString()} 張)`,
+    })
+  }
+
+  // 8. 帶量攻擊
+  if (params.checkVolExpansion && vMa5 > 0) {
+    const pass = volume > vMa5
+    details.push({
+      label: '量能攻擊',
+      pass,
+      desc: pass
+        ? `帶量攻擊 (當日量 ${volume.toLocaleString()} 張 > 5日均量 ${vMa5.toLocaleString()} 張)`
+        : `未達帶量 (當日量 ${volume.toLocaleString()} 張 ≤ 5日均量 ${vMa5.toLocaleString()} 張)`,
+    })
+  }
+
+  // 9. 量縮回踩
+  if (params.checkVolPullback) {
+    const prevVolume = prevBar?.volume ?? 0
+    const isBelowVma5 = vMa5 > 0 ? volume < vMa5 : false
+    const isBelowPrevVol = prevVolume > 0 ? volume < prevVolume : false
+    const pass = params.checkVolPullbackStrict
+      ? (isBelowVma5 && isBelowPrevVol)
+      : (isBelowVma5 || isBelowPrevVol)
+    details.push({
+      label: '量縮回踩',
+      pass,
+      desc: pass
+        ? `量縮回踩 (當日量 ${volume.toLocaleString()} 張 < 5日量均 ${vMa5.toLocaleString()} 或 昨日量 ${prevVolume.toLocaleString()})`
+        : `未達量縮 (當日量 ${volume.toLocaleString()} 張 未小於均量或昨日量)`,
+    })
+  }
+
+  // 10. 量縮洗盤
+  if (params.checkVolContraction && vMa5 > 0) {
+    const ratio = typeof params.volContractionRatio === 'number' ? params.volContractionRatio : 1.0
+    const pass = volume <= vMa5 * ratio
+    details.push({
+      label: '量縮洗盤',
+      pass,
+      desc: pass
+        ? `量縮洗盤 (當日量 ${volume.toLocaleString()} 張 ≤ 5日量均 ${Math.round(vMa5 * ratio).toLocaleString()} 張)`
+        : `未達量縮 (當日量 ${volume.toLocaleString()} 張 > 5日量均 ${Math.round(vMa5 * ratio).toLocaleString()} 張)`,
+    })
+  }
+
+  // 11. 實體攻擊紅 K
+  if (params.checkRedCandle) {
+    const minRedChange = typeof params.minRedCandleChangePct === 'number' ? params.minRedCandleChangePct : 1.5
+    const isRed = close > open
+    const pass = isRed && changePct >= minRedChange
+    details.push({
+      label: '實體紅 K',
+      pass,
+      desc: pass
+        ? `實體攻擊紅 K (實體紅 K 漲幅 +${changePct}% ≥ ${minRedChange}%)`
+        : `未達攻擊紅 K (漲幅 ${changePct >= 0 ? '+' : ''}${changePct}%，門檻 ≥ ${minRedChange}%)`,
+    })
+  }
+
+  // 12. 狹幅打底
+  if (params.checkTightConsolidation) {
+    const minPass = typeof params.tightChgMin === 'number' ? changePct >= params.tightChgMin : true
+    const maxPass = typeof params.tightChgMax === 'number' ? changePct <= params.tightChgMax : true
+    const pass = minPass && maxPass
+    details.push({
+      label: '狹幅打底',
+      pass,
+      desc: `當日震盪幅度 ${changePct >= 0 ? '+' : ''}${changePct}% (區間 ${params.tightChgMin ?? -1.5}% ~ +${params.tightChgMax ?? 1.5}%)`,
+    })
+  }
+
+  // 13. 上影線收斂
+  if (params.checkAvoidLongUpperShadow && close > open) {
+    const high = stock.high ?? price
+    const upperShadow = high - close
+    const body = close - open
+    const pass = upperShadow <= body * 0.5
+    details.push({
+      label: '上影線',
+      pass,
+      desc: pass ? '上影線短 (≤ 實體紅 K 一半，無避雷針)' : '上影線過長 (觸發避雷針賣壓)',
+    })
+  }
+
+  // 14. KD 動能
+  if (params.checkKd) {
+    const kd = stock.kd ?? { k: 50, d: 50 }
+    const k = kd.k ?? 50
+    const d = kd.d ?? 50
+    let pass = true
+    if (typeof params.kdKMin === 'number' && k < params.kdKMin) pass = false
+    if (typeof params.kdKMax === 'number' && k > params.kdKMax) pass = false
+    if (params.kdRequireCross && k <= d) pass = false
+    details.push({
+      label: 'KD動能',
+      pass,
+      desc: `K 值 ${k} / D 值 ${d} (${pass ? '多頭排列' : '未達動能區'})`,
+    })
+  }
+
+  // 15. 籌碼避雷 (3D)
+  if (params.excludeSell3D) {
+    const cats = stock.categories || []
+    const warn = stock.sellWarning || ''
+    const is0050 = cats.includes('0050')
+    const isForeignBuy3D = cats.includes('ForeignBuy3D')
+    const isMajorBuy3D = cats.includes('MajorBuy3D')
+    const isExempted = is0050 && isForeignBuy3D && isMajorBuy3D
+    const isForeignSell3D = cats.includes('ForeignSell3D') || warn.includes('外資賣3D')
+    const isMajorSell3D = cats.includes('MajorSell3D') || warn.includes('主力賣3D')
+    const isSitcaSell3D = cats.includes('SitcaSell3D') || warn.includes('投信賣3D')
+    const pass = !isForeignSell3D && !isMajorSell3D && (isExempted || !isSitcaSell3D)
+    details.push({
+      label: '籌碼避雷',
+      pass,
+      desc: pass ? '通過 (無外資/主力/投信連續 3 日賣超)' : '未通過 (觸發連續 3 日賣超)',
+    })
+  }
+
+  // 16. 處置股票
+  if (params.checkNotDisposed) {
+    const pass = !stock.isDisposed
+    details.push({
+      label: '處置檢驗',
+      pass,
+      desc: pass ? '正常交易 (非處置股)' : '處置中 (關禁閉)',
+    })
+  }
+
+  return details
 }
 
 

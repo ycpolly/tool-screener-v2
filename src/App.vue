@@ -62,10 +62,10 @@
           </span>
         </div>
 
-        <!-- 右側：更新操作按鈕 (預留未來自動更新開關空間，統一 rounded-lg h-8) -->
+        <!-- 右側：更新操作按鈕 (預留未來自動更新開關空間，統一 rounded-lg h-8，無陰影) -->
         <div class="flex items-center gap-2">
           <button
-            class="btn btn-sm btn-neutral gap-1.5 font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer"
+            class="btn btn-sm btn-neutral gap-1.5 font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer shadow-none"
             :disabled="poolLoading || quotesLoading"
             @click="handleFetchRealtime"
           >

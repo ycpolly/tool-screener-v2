@@ -58,10 +58,10 @@
       <!-- 右側動作：一鍵精選 + 重設自訂 + 展開/收合 (僅策略模式顯示微調按鈕) -->
       <div class="flex items-center gap-2 shrink-0">
         <template v-if="activeMode !== 'ALL'">
-          <!-- 一鍵精選膠囊按鈕 (統一 rounded-lg 與 h-8，啟用時顯示「精選中」) -->
+          <!-- 一鍵精選膠囊按鈕 (統一 rounded-lg 與 h-8，無陰影，啟用時顯示「精選中」) -->
           <button
             type="button"
-            class="btn btn-sm text-sm font-medium h-8 min-h-0 px-2.5 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+            class="btn btn-sm text-sm font-medium h-8 min-h-0 px-2.5 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shadow-none"
             :class="isPremium
               ? 'bg-neutral text-neutral-content border-neutral font-bold'
               : 'bg-base-100/70 hover:bg-base-300/60 text-base-content/75 hover:text-base-content border border-base-300/80'"
@@ -86,17 +86,17 @@
           <button
             v-if="isCustomized"
             type="button"
-            class="btn btn-sm btn-ghost text-sm text-warning/90 hover:text-warning hover:bg-warning/10 font-medium h-8 min-h-0 px-2 rounded-lg cursor-pointer transition-colors"
+            class="btn btn-sm btn-ghost text-sm text-warning/90 hover:text-warning hover:bg-warning/10 font-medium h-8 min-h-0 px-2 rounded-lg cursor-pointer transition-colors shadow-none"
             :title="UI_STRINGS.SCREENER.resetCustom || '重設自訂'"
             @click="$emit('reset')"
           >
             {{ UI_STRINGS.SCREENER.resetCustom || '重設自訂' }}
           </button>
 
-          <!-- 調整參數按鈕 (統一 rounded-lg 與 h-8) -->
+          <!-- 調整參數按鈕 (統一 rounded-lg 與 h-8，無陰影) -->
           <button
             type="button"
-            class="btn btn-sm btn-neutral gap-1.5 text-sm font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer"
+            class="btn btn-sm btn-neutral gap-1.5 text-sm font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer shadow-none"
             @click="isCollapsed = !isCollapsed"
           >
             <span>{{ isCollapsed ? UI_STRINGS.PANEL.adjustParams : UI_STRINGS.PANEL.collapseParams }}</span>
@@ -108,7 +108,7 @@
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
         </template>

@@ -199,6 +199,10 @@ export const UI_STRINGS = {
     premiumActive: '已啟用一鍵精選',
     premiumActiveText: '精選中',
     resetCustom: '重設自訂',
+    expandDetails: '展開細節',
+    collapseDetails: '收合細節',
+    expandDiagnosis: '展開診斷',
+    collapseDiagnosis: '收合診斷',
     to: '至',
   },
 

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="stock-card bg-base-200 border border-base-300 rounded-xl p-4 transition-all duration-200 hover:shadow-md hover:border-base-content/20 [content-visibility:auto] [contain-intrinsic-size:160px]"
+    class="stock-card bg-base-200 border border-base-300 rounded-xl p-6 transition-all duration-200 hover:shadow-md hover:border-base-content/20 [content-visibility:auto] [contain-intrinsic-size:160px]"
   >
     <!-- ============================================================
          手機端佈局 (< 1024px)：由上而下 5 層自然排列
@@ -56,13 +56,8 @@
           </template>
         </div>
 
-        <!-- 短沖避雷警示 (基本文字色，百分比加粗，SVG 警示圖示) -->
+        <!-- 短沖避雷 (基本文字色，百分比加粗，已依指令移除左側驚嘆號圖示) -->
         <div v-if="dayTradersInfo" class="font-numeric flex items-center">
-          <svg class="inline-block w-3.5 h-3.5 shrink-0 align-[-0.12em] mr-1" viewBox="0 0 16 16" fill="none">
-            <path d="M7.134 1.5a1 1 0 011.732 0l6.062 10.5A1 1 0 0114.062 13.5H1.938a1 1 0 01-.866-1.5L7.134 1.5z" fill="#F59E0B" />
-            <path d="M8 5.5v3.5" stroke="#18181B" stroke-width="1.5" stroke-linecap="round" />
-            <circle cx="8" cy="11.25" r="0.8" fill="#18181B" />
-          </svg>
           <span>
             <span>{{ UI_STRINGS.CHIPS.dayTradersPrefix || '短沖佔 ' }}</span>
             <strong class="font-bold text-base-content">{{ dayTradersInfo.pct }}</strong>
@@ -88,72 +83,121 @@
       </div>
       -->
 
-      <!-- 第 3 層：Sparkline 技術走勢圖 + KD 動能指標 (水平置中於走勢圖下方) -->
-      <div class="space-y-1.5 py-1">
-        <div class="w-full flex items-center justify-center">
-          <Sparkline
-            :history="stock.history10d"
-            :stock="stock"
-            :stock-code="stock.code"
-          />
+      <!-- 第 3 層：Sparkline 技術走勢圖 (純淨走勢) -->
+      <div class="py-1 flex items-center justify-center">
+        <Sparkline
+          :history="stock.history10d"
+          :stock="stock"
+          :stock-code="stock.code"
+        />
+      </div>
+
+      <!-- 第 4 層：量化指標網格 (均線 vs 量能 + KD 動能指標) -->
+      <div class="space-y-1.5 pt-2 border-t border-base-300/60 font-numeric text-sm font-normal leading-normal">
+        <div class="grid grid-cols-2 gap-6">
+          <!-- 左欄：均線與乖離率 (乖離率加粗 700) -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma5 }}</span>
+              <span>
+                <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma5) }}</strong>
+                <span :class="bias5ColorClass" class="font-bold">({{ formatBias(bias5) }})</span>
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma10 }}</span>
+              <span>
+                <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma10) }}</strong>
+                <span class="font-bold text-base-content/80">({{ formatBias(bias10) }})</span>
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma20 }}</span>
+              <span>
+                <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma20) }}</strong>
+                <span :class="bias20ColorClass" class="font-bold">({{ formatBias(bias20) }})</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- 右欄：當日量能與均量縮放比對 -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.volume }}</span>
+              <strong class="font-bold text-base-content">{{ stock.volume?.toLocaleString() }}</strong>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.mv5 }}</span>
+              <strong class="font-bold text-base-content">{{ stock.vMa5?.toLocaleString() }}</strong>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.mv10 }}</span>
+              <strong class="font-bold text-base-content">{{ stock.vMa10?.toLocaleString() }}</strong>
+            </div>
+          </div>
         </div>
-        <div class="flex items-center justify-center gap-2 text-sm font-normal text-base-content/80 font-numeric leading-normal">
-          <span>{{ UI_STRINGS.METRICS.kd }} <strong class="text-base-content font-bold">{{ stock.kd?.k }} / {{ stock.kd?.d }}</strong></span>
-          <span v-if="kdStatusText" class="text-base-content/80 font-medium">{{ kdStatusText }}</span>
+
+        <!-- KD 動能指標 (位於 MA & MV 下方) -->
+        <div class="flex items-center justify-between pt-1 border-t border-base-300/40 text-sm font-normal text-base-content/80 font-numeric">
+          <span class="text-base-content/80">{{ UI_STRINGS.METRICS.kd }}</span>
+          <span>
+            <strong class="text-base-content font-bold mr-1.5">{{ stock.kd?.k }} / {{ stock.kd?.d }}</strong>
+            <span v-if="kdStatusText" class="font-medium text-base-content/80">({{ kdStatusText }})</span>
+          </span>
         </div>
       </div>
 
-      <!-- 第 4 層：左右 3 排完美對稱網格 (均線 vs 量能，擴大欄位間距 gap-6) -->
-      <div class="grid grid-cols-2 gap-6 pt-2 border-t border-base-300/60 font-numeric text-sm font-normal leading-normal">
-        <!-- 左欄：均線與乖離率 (乖離率加粗 700) -->
-        <div class="space-y-1.5">
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma5 }}</span>
-            <span>
-              <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma5) }}</strong>
-              <span :class="bias5ColorClass" class="font-bold">({{ formatBias(bias5) }})</span>
-            </span>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma10 }}</span>
-            <span>
-              <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma10) }}</strong>
-              <span class="font-bold text-base-content/80">({{ formatBias(bias10) }})</span>
-            </span>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma20 }}</span>
-            <span>
-              <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma20) }}</strong>
-              <span :class="bias20ColorClass" class="font-bold">({{ formatBias(bias20) }})</span>
-            </span>
-          </div>
-        </div>
-
-        <!-- 右欄：當日量能與均量縮放比對 -->
-        <div class="space-y-1.5">
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.volume }}</span>
-            <strong class="font-bold text-base-content">{{ stock.volume?.toLocaleString() }}</strong>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.mv5 }}</span>
-            <strong class="font-bold text-base-content">{{ stock.vMa5?.toLocaleString() }}</strong>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.mv10 }}</span>
-            <strong class="font-bold text-base-content">{{ stock.vMa10?.toLocaleString() }}</strong>
-          </div>
-        </div>
-      </div>
-
-      <!-- ★ 預留槽位 B：篩選判讀純文字結果 (方案 1 柔和摘要條) -->
+      <!-- ★ 預留槽位 B：篩選判讀純文字結果 (支援點擊向下展開指標診斷清單) -->
       <div
         v-if="filterEvaluationText"
-        class="text-sm font-normal leading-normal py-1.5 px-2.5 rounded-lg border transition-colors"
-        :class="isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/70' : 'bg-base-300/50 border-base-300/80 text-base-content'"
+        class="text-sm font-normal leading-normal py-1.5 px-2.5 rounded-lg border transition-colors select-none"
+        :class="[
+          isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/75' : 'bg-base-300/50 border-base-300/80 text-base-content',
+          hasEvaluationDetails ? 'cursor-pointer hover:bg-base-300/70' : ''
+        ]"
+        @click="hasEvaluationDetails && (isDetailsExpanded = !isDetailsExpanded)"
       >
-        {{ filterEvaluationText }}
+        <div class="flex items-center justify-between gap-1.5">
+          <span class="font-medium flex-1">{{ filterEvaluationText }}</span>
+          <span
+            v-if="hasEvaluationDetails"
+            class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0"
+          >
+            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || '收合診斷') : (UI_STRINGS.SCREENER.collapseDetails || '收合細節')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || '展開診斷') : (UI_STRINGS.SCREENER.expandDetails || '展開細節')) }}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3.5 w-3.5 transition-transform duration-200"
+              :class="{ 'rotate-180': isDetailsExpanded }"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+
+        <!-- 展開後的純文字指標通關診斷清單 -->
+        <div
+          v-if="isDetailsExpanded && hasEvaluationDetails"
+          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-xs font-numeric"
+        >
+          <div
+            v-for="(item, idx) in evaluationDetails"
+            :key="idx"
+            class="flex items-start gap-1.5 leading-relaxed"
+          >
+            <span
+              class="shrink-0 font-bold"
+              :class="item.pass ? 'text-success' : 'text-error'"
+            >
+              {{ item.pass ? '✓' : '✗' }}
+            </span>
+            <span class="text-base-content/90">
+              <strong class="text-base-content mr-1 font-semibold">{{ item.label }}:</strong>{{ item.desc }}
+            </span>
+          </div>
+        </div>
       </div>
 
       <!-- 第 5 層：極簡快捷操作列 (統一 text-sm font-normal) -->
@@ -190,26 +234,20 @@
     </div>
 
     <!-- ============================================================
-         電腦端佈局 (>= 1024px)：水平 3 欄式寬扁卡片 (左: 走勢KD | 中: 報價操作 | 右: 均線量能)
+         電腦端佈局 (>= 1024px)：水平 3 欄式寬扁卡片 (左 3/12: 走勢KD | 中 5/12: 報價操作與籌碼 | 右 4/12: 均線量能)
          ============================================================ -->
-    <div class="hidden lg:grid lg:grid-cols-12 lg:gap-5 lg:items-center">
-      <!-- 左欄 (4/12)：走勢圖 + KD 指標 (水平置中於走勢圖下方) -->
-      <div class="lg:col-span-4 space-y-1.5 pr-2">
-        <div class="w-full flex items-center justify-center">
-          <Sparkline
-            :history="stock.history10d"
-            :stock="stock"
-            :stock-code="stock.code"
-          />
-        </div>
-        <div class="flex items-center justify-center gap-2 text-sm font-normal text-base-content/80 font-numeric leading-normal">
-          <span>{{ UI_STRINGS.METRICS.kd }} <strong class="text-base-content font-bold">{{ stock.kd?.k }} / {{ stock.kd?.d }}</strong></span>
-          <span v-if="kdStatusText" class="text-base-content/80 font-medium">{{ kdStatusText }}</span>
-        </div>
+    <div class="hidden lg:grid lg:grid-cols-12 lg:gap-5 lg:items-end">
+      <!-- 左欄 (3/12)：走勢圖 (純淨走勢，靠左微收) -->
+      <div class="lg:col-span-3 pr-2 flex items-center justify-center">
+        <Sparkline
+          :history="stock.history10d"
+          :stock="stock"
+          :stock-code="stock.code"
+        />
       </div>
 
-      <!-- 中欄 (4/12)：代號、名稱、報價、標籤與快捷操作 -->
-      <div class="lg:col-span-4 space-y-2 px-3 border-l border-r border-base-300/60">
+      <!-- 中欄 (5/12)：代號、名稱、報價、標籤與快捷操作 (加大水平空間，餘裕飽滿) -->
+      <div class="lg:col-span-5 space-y-2 px-3 border-l border-r border-base-300/60">
         <!-- 核心報價 (代號、名稱、即時現價同為 text-lg，漲跌幅為 text-sm) -->
         <div class="flex items-baseline justify-between gap-2">
           <div class="flex items-baseline gap-2 min-w-0">
@@ -256,13 +294,8 @@
             </template>
           </div>
 
-          <!-- 短沖避雷警示 (基本文字色，百分比加粗，SVG 警示圖示) -->
+          <!-- 短沖避雷 (基本文字色，百分比加粗，已依指令移除左側驚嘆號圖示) -->
           <div v-if="dayTradersInfo" class="font-numeric flex items-center">
-            <svg class="inline-block w-3.5 h-3.5 shrink-0 align-[-0.12em] mr-1" viewBox="0 0 16 16" fill="none">
-              <path d="M7.134 1.5a1 1 0 011.732 0l6.062 10.5A1 1 0 0114.062 13.5H1.938a1 1 0 01-.866-1.5L7.134 1.5z" fill="#F59E0B" />
-              <path d="M8 5.5v3.5" stroke="#18181B" stroke-width="1.5" stroke-linecap="round" />
-              <circle cx="8" cy="11.25" r="0.8" fill="#18181B" />
-            </svg>
             <span>
               <span>{{ UI_STRINGS.CHIPS.dayTradersPrefix || '短沖佔 ' }}</span>
               <strong class="font-bold text-base-content">{{ dayTradersInfo.pct }}</strong>
@@ -311,57 +344,112 @@
         </div>
       </div>
 
-      <!-- 右欄 (4/12)：均線與量能量化比對 (擴大欄位間距 gap-6) -->
-      <div class="lg:col-span-4 grid grid-cols-2 gap-6 font-numeric text-sm font-normal leading-normal pl-2">
-        <!-- 均線組 (乖離率加粗 700) -->
-        <div class="space-y-1.5">
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma5 }}</span>
-            <span>
-              <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma5) }}</strong>
-              <span :class="bias5ColorClass" class="font-bold">({{ formatBias(bias5) }})</span>
-            </span>
+      <!-- 右欄 (4/12)：量化指標網格 (均線 vs 量能 + KD 動能指標) -->
+      <div class="lg:col-span-4 space-y-1.5 font-numeric text-sm font-normal leading-normal pl-2">
+        <div class="grid grid-cols-2 gap-6">
+          <!-- 均線組 (乖離率加粗 700) -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma5 }}</span>
+              <span>
+                <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma5) }}</strong>
+                <span :class="bias5ColorClass" class="font-bold">({{ formatBias(bias5) }})</span>
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma10 }}</span>
+              <span>
+                <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma10) }}</strong>
+                <span class="font-bold text-base-content/80">({{ formatBias(bias10) }})</span>
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma20 }}</span>
+              <span>
+                <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma20) }}</strong>
+                <span :class="bias20ColorClass" class="font-bold">({{ formatBias(bias20) }})</span>
+              </span>
+            </div>
           </div>
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma10 }}</span>
-            <span>
-              <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma10) }}</strong>
-              <span class="font-bold text-base-content/80">({{ formatBias(bias10) }})</span>
-            </span>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.ma20 }}</span>
-            <span>
-              <strong class="font-bold text-base-content mr-1">{{ formatNumber(stock.ma20) }}</strong>
-              <span :class="bias20ColorClass" class="font-bold">({{ formatBias(bias20) }})</span>
-            </span>
+
+          <!-- 量能組 -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.volume }}</span>
+              <strong class="font-bold text-base-content">{{ stock.volume?.toLocaleString() }}</strong>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.mv5 }}</span>
+              <strong class="font-bold text-base-content">{{ stock.vMa5?.toLocaleString() }}</strong>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.mv10 }}</span>
+              <strong class="font-bold text-base-content">{{ stock.vMa10?.toLocaleString() }}</strong>
+            </div>
           </div>
         </div>
 
-        <!-- 量能組 -->
-        <div class="space-y-1.5">
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.volume }}</span>
-            <strong class="font-bold text-base-content">{{ stock.volume?.toLocaleString() }}</strong>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.mv5 }}</span>
-            <strong class="font-bold text-base-content">{{ stock.vMa5?.toLocaleString() }}</strong>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.mv10 }}</span>
-            <strong class="font-bold text-base-content">{{ stock.vMa10?.toLocaleString() }}</strong>
-          </div>
+        <!-- KD 動能指標 (位於 MA & MV 下方) -->
+        <div class="flex items-center justify-between pt-1 border-t border-base-300/40 text-sm font-normal text-base-content/80 font-numeric">
+          <span class="text-base-content/80">{{ UI_STRINGS.METRICS.kd }}</span>
+          <span>
+            <strong class="text-base-content font-bold mr-1.5">{{ stock.kd?.k }} / {{ stock.kd?.d }}</strong>
+            <span v-if="kdStatusText" class="font-medium text-base-content/80">({{ kdStatusText }})</span>
+          </span>
         </div>
       </div>
 
-      <!-- ★ 預留槽位 B (電腦端通欄底列，方案 1 柔和摘要條) -->
+      <!-- ★ 預留槽位 B (電腦端通欄底列，支援點擊展開指標診斷清單) -->
       <div
         v-if="filterEvaluationText"
-        class="lg:col-span-12 text-sm font-normal leading-normal py-1.5 px-3 rounded-lg border transition-colors mt-1"
-        :class="isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/70' : 'bg-base-300/50 border-base-300/80 text-base-content'"
+        class="lg:col-span-12 text-sm font-normal leading-normal py-1.5 px-3 rounded-lg border transition-colors mt-1 select-none"
+        :class="[
+          isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/75' : 'bg-base-300/50 border-base-300/80 text-base-content',
+          hasEvaluationDetails ? 'cursor-pointer hover:bg-base-300/70' : ''
+        ]"
+        @click="hasEvaluationDetails && (isDetailsExpanded = !isDetailsExpanded)"
       >
-        {{ filterEvaluationText }}
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-medium">{{ filterEvaluationText }}</span>
+          <span
+            v-if="hasEvaluationDetails"
+            class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0"
+          >
+            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || '收合診斷') : (UI_STRINGS.SCREENER.collapseDetails || '收合細節')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || '展開診斷') : (UI_STRINGS.SCREENER.expandDetails || '展開細節')) }}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3.5 w-3.5 transition-transform duration-200"
+              :class="{ 'rotate-180': isDetailsExpanded }"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+
+        <!-- 展開後的純文字指標通關診斷清單 -->
+        <div
+          v-if="isDetailsExpanded && hasEvaluationDetails"
+          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-xs sm:text-sm font-numeric"
+        >
+          <div
+            v-for="(item, idx) in evaluationDetails"
+            :key="idx"
+            class="flex items-start gap-1.5 leading-relaxed"
+          >
+            <span
+              class="shrink-0 font-bold"
+              :class="item.pass ? 'text-success' : 'text-error'"
+            >
+              {{ item.pass ? '✓' : '✗' }}
+            </span>
+            <span class="text-base-content/90">
+              <strong class="text-base-content mr-1 font-semibold">{{ item.label }}:</strong>{{ item.desc }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -545,6 +633,16 @@ const ceilingInfo = computed(() => {
   return null
 })
 
+const isDetailsExpanded = ref(false)
+
+const evaluationDetails = computed(() => {
+  return props.stock?.filterEvaluation?.details || props.filterEvaluation?.details || []
+})
+
+const hasEvaluationDetails = computed(() => {
+  return evaluationDetails.value.length > 0
+})
+
 const filterEvaluationText = computed(() => {
   // Case 1: 在「全部股票 (ALL)」模式下
   if (props.activeMode === 'ALL') {
@@ -564,9 +662,11 @@ const filterEvaluationText = computed(() => {
 
   // Case 3: 在特定模式下，若為「符合個股」 (使用 emoji 💡)
   const modeLabels = {
+    BOTTOM_REVERSAL: '跌深反轉',
     BOTTOM_CONSOLIDATION: '底部蓄勢',
-    TREND_PULLBACK: '多頭回測',
     MOMENTUM_BREAKOUT: '動能攻擊',
+    TREND_PULLBACK: '多頭回測',
+    WASHOUT_IGNITION: '洗盤起漲',
   }
   const currentModeName = modeLabels[props.activeMode] || ''
   if (currentModeName) {
