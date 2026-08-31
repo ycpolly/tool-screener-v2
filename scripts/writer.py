@@ -102,7 +102,9 @@ def build_stock_pool(
     etf_holdings:   Dict,           # {holdings0050: {...}, holdings0051: {...}}
     rankings:       Dict,           # {top100Volume: {...}, ...}
     market_data:    Optional[Dict], # {taiex, otc, regime}
+    chips_data:     Optional[Dict] = None, # {code: {concentration1d, concentration3d, concentration5d, dayTradersPct, dayTradersBranches}}
 ) -> Dict:
+
     """
     組裝完整的 stock-pool.json 資料結構
 
@@ -204,8 +206,12 @@ def build_stock_pool(
             # Sparkline & 歷史
             'sparkline':  data.get('sparkline',  []),
             'history10d': data.get('history10d', []),
+
+            # 籌碼集中度與短沖分點
+            'chips': chips_data.get(code) if chips_data and code in chips_data else None,
         }
         stocks.append(stock)
+
 
     print(f'[writer] 組裝完成：{len(stocks)} 檔個股')
 

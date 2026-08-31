@@ -13,6 +13,7 @@ main.py
   - GitHub Actions 呼叫入口
 """
 
+import sys
 import time
 from datetime import datetime
 
@@ -20,10 +21,12 @@ from scripts.scrapers.disposed     import fetch_disposed_codes
 from scripts.scrapers.moneydj      import fetch_etf_holdings
 from scripts.scrapers.fubon        import fetch_all_rankings
 from scripts.scrapers.yahoo        import fetch_raw_ohlcv_batch
+from scripts.scrapers.chips        import fetch_all_chips_batch
 from scripts.engine.indicators     import calc_stock_indicators
 from scripts.engine.calibration    import calibrate_closing_prices
 from scripts.engine.market_regime  import fetch_market_data
 from scripts.writer                import build_stock_pool, write_json
+
 
 
 def collect(verbose: bool = True) -> dict:
@@ -82,12 +85,13 @@ def collect(verbose: bool = True) -> dict:
     }
 
 
-def enrich(raw: dict, verbose: bool = True) -> dict:
+def enrich(raw: dict, with_chips: bool = False, verbose: bool = True) -> dict:
     """
-    階段二：Yahoo 抓 K 線 + 計算指標 + 校正收盤
+    階段二：Yahoo 抓 K 線 + 計算指標 + 校正收盤 + (選填) 籌碼集中度與短沖分析
 
     Args:
         raw: collect() 的回傳值
+        with_chips: 是否抓取 1D/3D/5D 籌碼集中度與短沖分點（晚上 19:00 第二批執行）
 
     Returns:
         {
@@ -96,6 +100,7 @@ def enrich(raw: dict, verbose: bool = True) -> dict:
           "etf_holdings":   {...},
           "rankings":       {...},
           "market_data":    {...},
+          "chips_data":     {...} or None,
         }
     """
     if verbose:
@@ -141,7 +146,6 @@ def enrich(raw: dict, verbose: bool = True) -> dict:
         }
 
     # TWSE MIS 盤後收盤價校正
-    # 先組裝成 calibration 需要的格式
     stocks_for_cal = [
         {
             'code':       code,
@@ -155,7 +159,6 @@ def enrich(raw: dict, verbose: bool = True) -> dict:
         for code, data in yahoo_results.items()
         if data
     ]
-    from scripts.engine.calibration import calibrate_closing_prices
     calibrate_closing_prices(stocks_for_cal)
 
     # 把校正結果同步回 yahoo_results
@@ -169,6 +172,16 @@ def enrich(raw: dict, verbose: bool = True) -> dict:
             yahoo_results[code]['sparkline']  = s['sparkline']
             yahoo_results[code]['history10d'] = s['history10d']
 
+    # 籌碼集中度與短沖避雷分析 (若指定 with_chips)
+    chips_data = None
+    if with_chips:
+        stocks_for_chips = [
+            {'code': code, 'history10d': data.get('history10d', [])}
+            for code, data in yahoo_results.items()
+            if data
+        ]
+        chips_data = fetch_all_chips_batch(stocks_for_chips, max_workers=10, verbose=verbose)
+
     if verbose:
         ok = sum(1 for v in yahoo_results.values() if v)
         elapsed = time.time() - t0
@@ -180,6 +193,7 @@ def enrich(raw: dict, verbose: bool = True) -> dict:
         'etf_holdings':   raw['etf_holdings'],
         'rankings':       raw['rankings'],
         'market_data':    raw['market_data'],
+        'chips_data':     chips_data,
     }
 
 
@@ -198,6 +212,7 @@ def write(enriched: dict, verbose: bool = True) -> None:
         etf_holdings   = enriched['etf_holdings'],
         rankings       = enriched['rankings'],
         market_data    = enriched['market_data'],
+        chips_data     = enriched.get('chips_data'),
     )
     write_json(pool)
 
@@ -206,14 +221,15 @@ def write(enriched: dict, verbose: bool = True) -> None:
 
 
 def main():
+    with_chips = '--with-chips' in sys.argv
     start = time.time()
     print(f'\n{"=" * 60}')
-    print(f'tool-screener-v2 資料更新')
+    print(f'tool-screener-v2 資料更新 {"(含 1D/3D/5D 籌碼集中度與短沖避雷)" if with_chips else "(第一批選股名單更新)"}')
     print(f'開始時間：{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
     print(f'{"=" * 60}\n')
 
     raw      = collect()
-    enriched = enrich(raw)
+    enriched = enrich(raw, with_chips=with_chips)
     write(enriched)
 
     elapsed = time.time() - start
@@ -222,3 +238,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

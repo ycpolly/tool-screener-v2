@@ -245,5 +245,15 @@ export const UI_STRINGS = {
     fetchFailed: '連線行情 API 失敗，請檢查網址、CORS 或網路狀態',
     lastUpdated: (t) => `即時更新於 ${t}`,
   },
+
+  CHIPS: {
+    concentrationLabel: '集中度',
+    concentration1d: '1D',
+    concentration3d: '3D',
+    concentration5d: '5D',
+    concentrationSummary: (d1, d3, d5) => `集中度 1D ${d1 >= 0 ? '+' : ''}${d1}% · 3D ${d3 >= 0 ? '+' : ''}${d3}% · 5D ${d5 >= 0 ? '+' : ''}${d5}%`,
+    dayTradersRisk: (pct, branches) => `⚠️ 短沖佔 ${pct}% (${branches.join(' · ')})`,
+  },
 }
+
 

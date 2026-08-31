@@ -59,10 +59,20 @@ interface Stock {
     l8:    number           // 前8日最低
   }
 
+  // 籌碼集中度與短沖避雷（盤後更新）
+  chips?: {
+    concentration1d?: number      // 近1日籌碼集中度 %，e.g. 10.51
+    concentration3d?: number      // 近3日籌碼集中度 %，e.g. 18.04
+    concentration5d?: number      // 近5日籌碼集中度 %，e.g. 15.42
+    dayTradersPct?:   number      // 今日短沖主力買超佔比 %，e.g. 20.97
+    dayTradersBranches?: string[] // 今日短沖主力分點名單，e.g. ["富邦", "凱基-台北", "台灣摩根士丹利"]
+  }
+
   // Sparkline
   sparkline:  number[]      // 近10日收盤價陣列
   history10d: DayBar[]      // 近10日完整日K（含 ma5/ma10/kd）
 }
+
 
 interface DayBar {
   open: number;  high: number;  low: number;  close: number

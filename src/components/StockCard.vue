@@ -30,6 +30,15 @@
         {{ formattedCategories }}
       </div>
 
+      <!-- 短沖/隔日沖分點避雷警示列 (手機端) -->
+      <div
+        v-if="dayTradersWarningText"
+        class="text-xs font-medium leading-normal py-1 px-2.5 rounded-lg bg-warning/10 border border-warning/30 text-warning"
+      >
+        {{ dayTradersWarningText }}
+      </div>
+
+
       <!-- ★ 預留槽位 A：天花板關卡價與預期純利 (暫時註解隱藏) -->
       <!--
       <div
@@ -187,6 +196,15 @@
         <div v-if="formattedCategories" class="text-sm font-normal text-base-content/80 leading-normal">
           {{ formattedCategories }}
         </div>
+
+        <!-- 短沖/隔日沖分點避雷警示列 (電腦端) -->
+        <div
+          v-if="dayTradersWarningText"
+          class="text-xs font-medium leading-normal py-1 px-2.5 rounded-lg bg-warning/10 border border-warning/30 text-warning"
+        >
+          {{ dayTradersWarningText }}
+        </div>
+
 
         <!-- ★ 預留槽位 A (電腦端，暫時註解隱藏) -->
         <!--
@@ -398,6 +416,11 @@ const formattedCategories = computed(() => {
     : []
   const uniqueLabels = Array.from(new Set(labels))
 
+  // 若有 1D/3D/5D 籌碼集中度，加入標籤列呈現
+  if (chipsConcentrationText.value) {
+    uniqueLabels.push(chipsConcentrationText.value)
+  }
+
   // 若有法人/主力賣超警示，以純文字 + ⚠️ emoji 加入標籤列末端
   if (props.stock.sellWarning) {
     uniqueLabels.push(props.stock.sellWarning)
@@ -405,6 +428,30 @@ const formattedCategories = computed(() => {
 
   return uniqueLabels.join(' · ')
 })
+
+const chipsConcentrationText = computed(() => {
+  const chips = props.stock.chips
+  if (!chips) return ''
+  const { concentration1d: d1, concentration3d: d3, concentration5d: d5 } = chips
+  if (d1 == null && d3 == null && d5 == null) return ''
+  const parts = []
+  if (d1 != null) parts.push(`1D ${d1 >= 0 ? '+' : ''}${d1}%`)
+  if (d3 != null) parts.push(`3D ${d3 >= 0 ? '+' : ''}${d3}%`)
+  if (d5 != null) parts.push(`5D ${d5 >= 0 ? '+' : ''}${d5}%`)
+  return parts.length > 0 ? `${UI_STRINGS.CHIPS.concentrationLabel} ${parts.join(' · ')}` : ''
+})
+
+const dayTradersWarningText = computed(() => {
+  const chips = props.stock.chips
+  if (!chips) return ''
+  const pct = chips.dayTradersPct ?? 0
+  const branches = chips.dayTradersBranches ?? []
+  if (pct > 0 && branches.length > 0) {
+    return UI_STRINGS.CHIPS.dayTradersRisk(pct, branches)
+  }
+  return ''
+})
+
 
 const kdStatusText = computed(() => {
   const kd = props.stock.kd
