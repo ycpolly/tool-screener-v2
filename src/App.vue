@@ -239,7 +239,7 @@ const activeMeta   = computed(() => {
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
-// 頂部導覽列資料時間戳記文字（包含 年/月/日、星期 與 撮合時間）
+// 頂部導覽列資料時間戳記文字（包含 年/月/日、星期 與 撮合時間，三階段區分：盤中/收盤/盤後）
 const dataTimestampText = computed(() => {
   const now = new Date()
   const yyyy = now.getFullYear()
@@ -249,10 +249,18 @@ const dataTimestampText = computed(() => {
 
   if (quotesLastUpdated.value) {
     const timeStr = quotesLastUpdated.value
+    // 依據時間判定是否為 13:30 之後的收盤撮合行情
+    const nowHour = now.getHours()
+    const nowMin = now.getMinutes()
+    const isClosedIntraday = (nowHour > 13) || (nowHour === 13 && nowMin >= 30)
+    const prefix = isClosedIntraday
+      ? (UI_STRINGS.APP.prefixClosed || '收盤 ')
+      : (UI_STRINGS.APP.prefixIntraday || '盤中 ')
+
     if (timeStr.includes('-') || timeStr.includes('/')) {
-      return `${UI_STRINGS.APP.realtimePrefix || '即時 '}${timeStr}`
+      return `${prefix}${timeStr}`
     }
-    return `${UI_STRINGS.APP.realtimePrefix || '即時 '}${yyyy}/${mm}/${dd} (${weekDay}) ${timeStr}`
+    return `${prefix}${yyyy}/${mm}/${dd} (${weekDay}) ${timeStr}`
   }
 
   const rawUpdated = meta.value?.updatedAt
@@ -266,11 +274,13 @@ const dataTimestampText = computed(() => {
       const dW = WEEKDAYS[d.getDay()]
       const hh = String(d.getHours()).padStart(2, '0')
       const min = String(d.getMinutes()).padStart(2, '0')
-      return `${UI_STRINGS.APP.dataTimePrefix || '資料 '}${dY}/${dM}/${dD} (${dW}) ${hh}:${min}`
+      const prefix = UI_STRINGS.APP.prefixPostMarket || '盤後 '
+      return `${prefix}${dY}/${dM}/${dD} (${dW}) ${hh}:${min}`
     }
   } catch {}
-  return `${UI_STRINGS.APP.dataTimePrefix || '資料 '}${rawUpdated}`
+  return `${UI_STRINGS.APP.prefixPostMarket || '盤後 '}${rawUpdated}`
 })
+
 
 
 // 4. 篩選邏輯層

@@ -70,17 +70,21 @@ const timeMachineDates = computed(() => {
   const dates = []
 
   if (isLive) {
-    // 盤中全新交易日 (例如週一至週五 8/31 盤中)
+    // 盤中全新交易日 (依 13:30 前後區分「盤中」或「收盤」)
     const now = new Date()
     const m = now.getMonth() + 1
     const d = now.getDate()
     const monthDay = `${m}/${d}`
+    const nowHour = now.getHours()
+    const nowMin = now.getMinutes()
+    const isClosed = (nowHour > 13) || (nowHour === 13 && nowMin >= 30)
+    const tag = isClosed ? (UI_STRINGS.TIME_MACHINE.closed || '收盤') : (UI_STRINGS.TIME_MACHINE.intraday || '盤中')
 
-    // Offset 0: 今日即時
+    // Offset 0: 今日 (盤中) 或 (收盤)
     dates.push({
       offset: 0,
-      label: `${monthDay} (即時)`,
-      shortLabel: '即時',
+      label: `${monthDay} (${tag})`,
+      shortLabel: tag,
       monthDay,
       date: `${now.getFullYear()}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`,
     })
@@ -107,7 +111,7 @@ const timeMachineDates = computed(() => {
       })
     }
   } else {
-    // 週末休市或盤後已由 Python 更新當日日K
+    // 週末休市或盤後已由 Python 更新當日日K (顯示「盤後」)
     for (let offset = 0; offset <= Math.min(5, len - 1); offset++) {
       const targetIdx = len - 1 - offset
       const bar = sample[targetIdx]
@@ -121,18 +125,19 @@ const timeMachineDates = computed(() => {
       }
 
       const label = offset === 0
-        ? `${histMonthDay} (最新)`
+        ? `${histMonthDay} (${UI_STRINGS.TIME_MACHINE.postMarket || '盤後'})`
         : `${histMonthDay} (T-${offset})`
 
       dates.push({
         offset,
         label,
-        shortLabel: offset === 0 ? '最新' : `T-${offset}`,
+        shortLabel: offset === 0 ? (UI_STRINGS.TIME_MACHINE.postMarket || '盤後') : `T-${offset}`,
         monthDay: histMonthDay,
         date: dateStr,
       })
     }
   }
+
 
   return dates
 })

@@ -7,9 +7,10 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0831.05',
-    dataTimePrefix: '資料 ',
-    realtimePrefix: '即時 ',
+    version: 'v0831.06',
+    prefixIntraday: '盤中 ',
+    prefixClosed: '收盤 ',
+    prefixPostMarket: '盤後 ',
   },
 
 
@@ -34,18 +35,19 @@ export const UI_STRINGS = {
 
 
 
-    matchedStrategy: (names) => `🎯 命中策略：【${names}】`,
-    noMatchedStrategy: '── 全市場常態個股（未觸發特定策略）',
-    matchedCondition: (modeName) => `💡 符合【${modeName}】策略條件`,
-    unmatchedReasonPrefix: '淘汰原因：',
+    matchedStrategy: (names) => `符合策略：${names}`,
+    noMatchedStrategy: '未符合特定策略',
+    matchedCondition: (mode) => `符合「${mode}」選股條件`,
+    unmatchedReasonPrefix: '未符合：',
     expandUnmatched: (n) => `查看未符合個股 (${n} 檔) 與淘汰原因`,
     collapseUnmatched: (n) => `收合未符合個股 (${n} 檔)`,
     disposed: '處置',
+    noDisposedNotice: '已依策略嚴格過濾處置股票',
     lastUpdated: (t) => `更新於 ${t}`,
   },
 
   SEARCH: {
-    placeholder: '搜尋股票代號或名稱 (例如 2330 或 台積)...',
+    placeholder: '搜尋代號 / 名稱 (例如 2330 或 台積電)',
     clear: '清除搜尋',
     searchingFor: (q) => `搜尋「${q}」`,
     searchResultCount: (n) => `搜尋符合 ${n} 檔`,
@@ -57,6 +59,9 @@ export const UI_STRINGS = {
   TIME_MACHINE: {
     title: '時光機',
     subtitle: '時光倒流至近 5 個交易日，驗證各策略歷史選股表現',
+    intraday: '盤中',
+    closed: '收盤',
+    postMarket: '盤後',
     today: '最新行情',
     daysAgo: (n) => `${n} 天前`,
     day1Ago: '昨日 (T-1)',
