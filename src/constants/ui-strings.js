@@ -7,10 +7,11 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0831.02',
+    version: 'v0831.03',
     dataTimePrefix: '資料 ',
     realtimePrefix: '即時 ',
   },
+
 
   MARKET_REGIME: {
     SAFE: { badge: '多頭順風', title: '市場多頭順風，可執行操作' },
