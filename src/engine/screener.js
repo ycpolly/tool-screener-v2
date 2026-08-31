@@ -143,17 +143,19 @@ export function mergeRealtimeQuote(baseStock, quote) {
   }
 
   const price = quote.price
+  const isLive = isLiveTradingDay(baseStock.history10d?.[baseStock.history10d.length - 1])
   const prevClose = (typeof quote.prevClose === 'number' && quote.prevClose > 0)
     ? quote.prevClose
-    : (baseStock.prevClose ?? price)
+    : (isLive && typeof baseStock.price === 'number' && baseStock.price > 0 ? baseStock.price : (baseStock.prevClose ?? price))
 
   const change = (typeof quote.change === 'number')
     ? quote.change
     : round2(price - prevClose)
 
-  const changePct = prevClose > 0
-    ? round2(((price - prevClose) / prevClose) * 100)
-    : (quote.changePct ?? 0)
+  const changePct = (typeof quote.changePct === 'number' && !isNaN(quote.changePct))
+    ? quote.changePct
+    : (prevClose > 0 ? round2(((price - prevClose) / prevClose) * 100) : 0)
+
 
   const ma5 = baseStock.ma5 ?? 0
   const ma20 = baseStock.ma20 ?? 0
