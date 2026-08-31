@@ -237,25 +237,41 @@ const activeMeta   = computed(() => {
   }
 })
 
-// 頂部導覽列資料時間戳記文字
+const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
+
+// 頂部導覽列資料時間戳記文字（包含 年/月/日、星期 與 撮合時間）
 const dataTimestampText = computed(() => {
+  const now = new Date()
+  const yyyy = now.getFullYear()
+  const mm = String(now.getMonth() + 1).padStart(2, '0')
+  const dd = String(now.getDate()).padStart(2, '0')
+  const weekDay = WEEKDAYS[now.getDay()]
+
   if (quotesLastUpdated.value) {
-    return `${UI_STRINGS.APP.realtimePrefix || '即時 '}${quotesLastUpdated.value}`
+    const timeStr = quotesLastUpdated.value
+    if (timeStr.includes('-') || timeStr.includes('/')) {
+      return `${UI_STRINGS.APP.realtimePrefix || '即時 '}${timeStr}`
+    }
+    return `${UI_STRINGS.APP.realtimePrefix || '即時 '}${yyyy}/${mm}/${dd} (${weekDay}) ${timeStr}`
   }
+
   const rawUpdated = meta.value?.updatedAt
   if (!rawUpdated) return ''
   try {
     const d = new Date(rawUpdated)
     if (!isNaN(d.getTime())) {
-      const mm = String(d.getMonth() + 1).padStart(2, '0')
-      const dd = String(d.getDate()).padStart(2, '0')
+      const dY = d.getFullYear()
+      const dM = String(d.getMonth() + 1).padStart(2, '0')
+      const dD = String(d.getDate()).padStart(2, '0')
+      const dW = WEEKDAYS[d.getDay()]
       const hh = String(d.getHours()).padStart(2, '0')
       const min = String(d.getMinutes()).padStart(2, '0')
-      return `${UI_STRINGS.APP.dataTimePrefix || '資料 '}${mm}/${dd} ${hh}:${min}`
+      return `${UI_STRINGS.APP.dataTimePrefix || '資料 '}${dY}/${dM}/${dD} (${dW}) ${hh}:${min}`
     }
   } catch {}
   return `${UI_STRINGS.APP.dataTimePrefix || '資料 '}${rawUpdated}`
 })
+
 
 // 4. 篩選邏輯層
 const {
