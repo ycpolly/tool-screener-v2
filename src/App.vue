@@ -15,7 +15,19 @@
         </span>
       </div>
 
-      <div class="ml-auto flex items-center gap-2">
+      <div class="ml-auto flex items-center gap-1.5 sm:gap-2">
+        <!-- 選股池來源總覽按鈕 (與 API 設定一致的 rounded-lg h-8 w-8) -->
+        <button
+          class="btn btn-sm btn-ghost h-8 w-8 min-h-0 p-0 rounded-lg text-base-content/80 hover:text-base-content transition-colors cursor-pointer flex items-center justify-center"
+          :title="UI_STRINGS.STOCK_POOL_MODAL.title"
+          :aria-label="UI_STRINGS.STOCK_POOL_MODAL.title"
+          @click="openPoolModal"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+        </button>
+
         <!-- 行情 API 設定按鈕 (與主題切換一致的 rounded-lg h-8 w-8) -->
         <button
           class="btn btn-sm btn-ghost h-8 w-8 min-h-0 p-0 rounded-lg text-base-content/80 hover:text-base-content transition-colors cursor-pointer flex items-center justify-center"
@@ -180,6 +192,16 @@
         <button>close</button>
       </form>
     </dialog>
+
+    <!-- 選股池來源總覽 Modal -->
+    <StockPoolModal
+      :is-open="showPoolModal"
+      :stocks="baseStocks"
+      :rankings="baseRankings"
+      :updated-at="meta?.updatedAt"
+      @close="closePoolModal"
+      @select-stock="handleSelectStockFromPool"
+    />
   </div>
 </template>
 
@@ -196,6 +218,7 @@ import MarketBanner from './components/MarketBanner.vue'
 import ScreenerPanel from './components/ScreenerPanel.vue'
 import SearchBar from './components/SearchBar.vue'
 import StockTable from './components/StockTable.vue'
+import StockPoolModal from './components/modals/StockPoolModal.vue'
 
 const searchQuery = ref('')
 const sortKey     = ref('changePct')
@@ -209,7 +232,7 @@ function toggleTheme() {
 }
 
 // 1. 載入盤後基礎資料池
-const { stocks: baseStocks, market: baseMarket, meta, loading: poolLoading, error: poolError, loadPool } = useStockPool()
+const { stocks: baseStocks, rankings: baseRankings, market: baseMarket, meta, loading: poolLoading, error: poolError, loadPool } = useStockPool()
 
 // 2. 即時行情微服務
 const {
@@ -310,7 +333,23 @@ function handleOpenRiskModal(stock) {
   console.log('[Open Risk Modal]', stock.code, stock.name)
 }
 
-// 5. 即時更新與 API 設定 Modal
+// 5. 選股池來源總覽 Modal
+const showPoolModal = ref(false)
+
+function openPoolModal() {
+  showPoolModal.value = true
+}
+
+function closePoolModal() {
+  showPoolModal.value = false
+}
+
+function handleSelectStockFromPool(stock) {
+  searchQuery.value = stock.code
+  closePoolModal()
+}
+
+// 6. 即時更新與 API 設定 Modal
 const showApiModal = ref(false)
 const inputUrl     = ref('')
 

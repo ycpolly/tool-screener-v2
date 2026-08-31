@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0831.11',
+    version: 'v0831.12',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -270,6 +270,27 @@ export const UI_STRINGS = {
     concentrationSummary: (d1, d3, d5) => `籌碼集中度 1D ${d1 >= 0 ? '+' : ''}${d1}% · 3D ${d3 >= 0 ? '+' : ''}${d3}% · 5D ${d5 >= 0 ? '+' : ''}${d5}%`,
     dayTradersPrefix: '短沖佔 ',
     dayTradersRisk: (pct, branches) => `短沖佔 ${pct}% (${branches.join(' · ')})`,
+  },
+
+  STOCK_POOL_MODAL: {
+    title: '選股池來源總覽',
+    desc: '展示系統每日定時從富邦 DJ、MoneyDJ 與證交所爬取納入監控的原始資料來源與個股對照。',
+    totalStocks: (n) => `總計納入 ${n} 檔個股`,
+    sourceCount: (n) => `共 ${n} 個資料來源`,
+    sourceUrlLabel: '原始資料來源',
+    stockListLabel: '包含個股名單',
+    copyCodesBtn: '複製所有代號',
+    copiedCodesToast: '已複製該來源所有代號',
+    searchInPoolPlaceholder: '在當前來源中搜尋股票…',
+    noStockInSource: '此來源目前無符合個股',
+    closeBtn: '關閉',
+    groups: {
+      ALL: '全部來源',
+      RANK: '熱門排行',
+      BUY: '法人與主力買超',
+      SELL: '避雷賣超',
+      INDEX: '成分股與處置',
+    },
   },
 }
 
