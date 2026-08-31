@@ -30,7 +30,8 @@
         {{ formattedCategories }}
       </div>
 
-      <!-- ★ 預留槽位 A：天花板關卡價與預期純利 (統一 text-sm font-normal) -->
+      <!-- ★ 預留槽位 A：天花板關卡價與預期純利 (暫時註解隱藏) -->
+      <!--
       <div
         v-if="ceilingInfo"
         class="flex items-center justify-between text-sm font-normal leading-normal py-1.5 px-2.5 rounded-lg bg-base-300/40 cursor-pointer hover:bg-base-300/70 transition-colors"
@@ -43,6 +44,7 @@
           {{ UI_STRINGS.METRICS.expectedProfit }} {{ ceilingInfo.netProfitPct >= 0 ? '+' : '' }}{{ ceilingInfo.netProfitPct }}% ↗
         </span>
       </div>
+      -->
 
       <!-- 第 3 層：Sparkline 技術走勢圖 + KD 動能指標 (水平置中於走勢圖下方) -->
       <div class="space-y-1.5 py-1">
@@ -186,7 +188,8 @@
           {{ formattedCategories }}
         </div>
 
-        <!-- ★ 預留槽位 A (電腦端，統一 text-sm font-normal) -->
+        <!-- ★ 預留槽位 A (電腦端，暫時註解隱藏) -->
+        <!--
         <div
           v-if="ceilingInfo"
           class="flex items-center justify-between text-sm font-normal leading-normal py-1 px-2 rounded bg-base-300/40 cursor-pointer hover:bg-base-300/70 transition-colors"
@@ -199,6 +202,7 @@
             {{ UI_STRINGS.METRICS.expectedProfit }} {{ ceilingInfo.netProfitPct >= 0 ? '+' : '' }}{{ ceilingInfo.netProfitPct }}% ↗
           </span>
         </div>
+        -->
 
         <!-- 快捷操作列 (統一 text-sm font-normal) -->
         <div class="flex items-center gap-2.5 text-sm font-normal text-base-content/80 leading-normal pt-0.5">

@@ -157,10 +157,64 @@ export function mergeRealtimeQuote(baseStock, quote) {
     : (prevClose > 0 ? round2(((price - prevClose) / prevClose) * 100) : 0)
 
 
-  const ma5 = baseStock.ma5 ?? 0
-  const ma20 = baseStock.ma20 ?? 0
+  const history = baseStock.history10d || []
+  const len = history.length
+  let ma5 = baseStock.ma5 ?? 0
+  let ma10 = baseStock.ma10 ?? 0
+  let ma20 = baseStock.ma20 ?? 0
+  let vMa5 = baseStock.vMa5 ?? 0
+  let vMa10 = baseStock.vMa10 ?? 0
+  let kd = baseStock.kd
+
+  if (isLive && len >= 4) {
+    const last4 = history.slice(-4)
+    ma5 = round2((last4.reduce((s, b) => s + (b.close || 0), 0) + price) / 5)
+
+    if (len >= 9) {
+      const last9 = history.slice(-9)
+      ma10 = round2((last9.reduce((s, b) => s + (b.close || 0), 0) + price) / 10)
+
+      if (typeof quote.volume === 'number' && quote.volume >= 0) {
+        vMa5 = Math.round((last4.reduce((s, b) => s + (b.volume || 0), 0) + quote.volume) / 5)
+        vMa10 = Math.round((last9.reduce((s, b) => s + (b.volume || 0), 0) + quote.volume) / 10)
+      }
+    }
+
+    if (len >= 19) {
+      const last19 = history.slice(-19)
+      ma20 = round2((last19.reduce((s, b) => s + (b.close || 0), 0) + price) / 20)
+    } else if (typeof baseStock.ma20 === 'number' && baseStock.ma20 > 0) {
+      const offset = (price - (baseStock.price || price)) / 20
+      ma20 = round2(baseStock.ma20 + offset)
+    }
+
+    // 動態推算盤中即時 KD(9,3)
+    if (len >= 8) {
+      const last8 = history.slice(-8)
+      const pastHighs = last8.map(b => b.high ?? b.close ?? 0)
+      const pastLows = last8.map(b => b.low ?? b.close ?? 0)
+      const high = quote.high ?? Math.max(quote.open ?? price, price)
+      const low = quote.low ?? Math.min(quote.open ?? price, price)
+      const h9 = Math.max(...pastHighs, high)
+      const l9 = Math.min(...pastLows, low)
+      const rsv = h9 > l9 ? ((price - l9) / (h9 - l9)) * 100 : 50
+      const prevK = baseStock.kd?.k ?? 50
+      const prevD = baseStock.kd?.d ?? 50
+      const k = round2(prevK * (2/3) + rsv * (1/3))
+      const d = round2(prevD * (2/3) + k * (1/3))
+      kd = {
+        k,
+        d,
+        prevK: baseStock.kd?.k ?? prevK,
+        prevD: baseStock.kd?.d ?? prevD,
+        h8: h9,
+        l8: l9,
+      }
+    }
+  }
 
   const bias5 = ma5 > 0 ? round2(((price - ma5) / ma5) * 100) : 0
+  const bias10 = ma10 > 0 ? round2(((price - ma10) / ma10) * 100) : 0
   const bias20 = ma20 > 0 ? round2(((price - ma20) / ma20) * 100) : 0
 
   const isLimitUp = changePct >= 9.5
@@ -178,10 +232,18 @@ export function mergeRealtimeQuote(baseStock, quote) {
     changePct,
     isLimitUp,
     isLimitDown,
+    ma5,
+    ma10,
+    ma20,
+    vMa5,
+    vMa10,
     bias5,
+    bias10,
     bias20,
+    kd,
   }
 }
+
 
 
 /**
