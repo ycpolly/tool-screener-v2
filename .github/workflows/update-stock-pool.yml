@@ -44,15 +44,13 @@ jobs:
 
 
 
-      - name: Commit updated stock-pool.json
+      - name: Commit and push updated stock-pool.json
         run: |
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add public/data/stock-pool.json
-          git diff --cached --quiet || git commit -m "data: update stock-pool.json [$(date +'%Y-%m-%d %H:%M') CST]"
+          if ! git diff --cached --quiet; then
+            git commit -m "data: update stock-pool.json [$(date +'%Y-%m-%d %H:%M') CST]"
+            git push origin main
+          fi
 
-      - name: Push changes
-        uses: ad-m/github-push-action@v0.8.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
