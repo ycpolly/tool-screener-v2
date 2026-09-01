@@ -159,6 +159,19 @@ def build_stock_pool(
             if c and n and n != c:
                 name_dict[c] = n
 
+    # ── 讀取既有 chipsHistory（歷史快照累積制）──
+    existing_chips_history: Dict[str, Dict] = {}
+    if OUTPUT_PATH.exists():
+        try:
+            with open(OUTPUT_PATH, 'r', encoding='utf-8') as f:
+                old_pool = json.load(f)
+                for s in old_pool.get('stocks', []):
+                    c = s.get('code')
+                    if c and isinstance(s.get('chipsHistory'), dict):
+                        existing_chips_history[c] = s['chipsHistory']
+        except Exception as e:
+            print(f'[writer] 讀取既有 chipsHistory 提示: {e}')
+
     # 建立個股物件
     stocks = []
     for code in sorted(all_codes):
@@ -172,6 +185,27 @@ def build_stock_pool(
         cats = _build_categories(code, rankings, etf_holdings, data.get('categories', []))
         if not cats:
             continue  # 不屬於任何類別，不納入
+
+        # 決定今日快照日期（優先使用 history10d 最後一筆日期）
+        today_bar_date = (
+            data.get('history10d', [])[-1].get('date')
+            if data.get('history10d')
+            else datetime.now().strftime('%Y-%m-%d')
+        )
+
+        current_chips = chips_data.get(code) if chips_data and code in chips_data else None
+
+        # 組合/延續 chipsHistory（自動維護近 10 個歷史交易日）
+        chips_hist = dict(existing_chips_history.get(code, {}))
+        if today_bar_date:
+            chips_hist[today_bar_date] = {
+                'categories': cats,
+                'chips': current_chips,
+            }
+        # 限制最多保留近 10 天歷史快照
+        if len(chips_hist) > 10:
+            sorted_dates = sorted(chips_hist.keys())
+            chips_hist = {d: chips_hist[d] for d in sorted_dates[-10:]}
 
         stock = {
             'code':      code,
@@ -215,8 +249,9 @@ def build_stock_pool(
             'sparkline':  data.get('sparkline',  []),
             'history10d': data.get('history10d', []),
 
-            # 籌碼集中度與短沖分點
-            'chips': chips_data.get(code) if chips_data and code in chips_data else None,
+            # 籌碼集中度與短沖分點（當日最新與歷史快照）
+            'chips':        current_chips,
+            'chipsHistory': chips_hist,
         }
         stocks.append(stock)
 

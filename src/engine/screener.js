@@ -1001,6 +1001,41 @@ export function sliceStockAt(stock, dayOffset = 0) {
   const bias5 = ma5 > 0 ? round2(((bar.close - ma5) / ma5) * 100) : 0
   const bias20 = ma20 > 0 ? round2(((bar.close - ma20) / ma20) * 100) : 0
 
+  const targetDate = bar.date
+  let slicedCategories = stock.categories || []
+  let slicedChips = stock.chips || null
+
+  // 嘗試自 chipsHistory 載入該歷史交易日之真實標籤與籌碼集中度
+  if (stock.chipsHistory && targetDate && stock.chipsHistory[targetDate]) {
+    const hist = stock.chipsHistory[targetDate]
+    if (Array.isArray(hist.categories)) {
+      slicedCategories = hist.categories
+    }
+    if (hist.chips !== undefined) {
+      slicedChips = hist.chips
+    }
+  }
+
+  // 依據歷史 categories 動態計算避雷警示字串
+  let slicedSellWarning = stock.sellWarning
+  if (Array.isArray(slicedCategories)) {
+    const tags = []
+    if (slicedCategories.includes('ForeignSell3D')) {
+      tags.push('外資賣3D')
+    } else if (slicedCategories.includes('ForeignSell1D')) {
+      tags.push('外資賣1D')
+    }
+    if (slicedCategories.includes('SitcaSell3D')) {
+      tags.push('投信賣3D')
+    }
+    if (slicedCategories.includes('MajorSell3D')) {
+      tags.push('主力賣3D')
+    } else if (slicedCategories.includes('MajorSell1D')) {
+      tags.push('主力賣1D')
+    }
+    slicedSellWarning = tags.length > 0 ? tags.join(' · ') : null
+  }
+
   return {
     ...stock,
     price: bar.close,
@@ -1028,6 +1063,9 @@ export function sliceStockAt(stock, dayOffset = 0) {
     vMa10,
     bias5,
     bias20,
+    categories: slicedCategories,
+    chips: slicedChips,
+    sellWarning: slicedSellWarning,
     kd: {
       k: bar.k,
       d: bar.d,
@@ -1039,7 +1077,6 @@ export function sliceStockAt(stock, dayOffset = 0) {
     sparkline: stock.history10d.slice(Math.max(0, targetIndex - 9), targetIndex + 1).map(b => b.close),
     dayOffset,
   }
-
 }
 
 

@@ -215,7 +215,8 @@ Python 輸出 → `public/data/stock-pool.json`
 - `market` 欄位統一使用英文 `"tse"` / `"otc"`，不使用 `"上市"` / `"上櫃"`（解決 v1 `calibrate_with_twse_mis()` 的市場判斷 bug）
 - `categories` 為字串陣列，前端篩選與 badge 顯示的唯一依據
 - `isDisposed` 每次更新必須即時從官方 API 重新拉取，嚴禁沿用上次結果
-- `history10d` 的長度保證為 10 筆（不足時用最早一筆補齊，前端不需防守）
+- `history10d` 的長度保證為 10~20 筆（不足時用最早一筆補齊，前端不需防守）
+- `chipsHistory` 為字典結構（`{ [YYYY-MM-DD]: { categories: string[], chips: Object } }`），由後端 `writer.py` 每日自動累積保留近 10 個交易日快照，供前端 `sliceStockAt` 時光機還原真實歷史籌碼與避雷標籤
 
 ---
 
@@ -430,6 +431,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] StockCard 槽位 B 篩選評估理由「就地向下展開診斷清單」（支援符合與未符合雙向 `✓`/`✗` 明細與實測量化數值，一鍵收合，無 Modal 遮擋）— 完成 2026-08-31
 - [x] StockCard 技術指標與排版重構（KD 動能指標整合至 MA/MV 底列形成完整指標看板，Sparkline 走勢圖獨立展示；電腦端改為 3/5/4 寬裕比例；全站按鈕移除陰影回歸乾淨純扁平）— 完成 2026-08-31
 - [x] StockPoolModal.vue（選股池來源總覽 Modal：整合 17 大富邦 DJ / MoneyDJ / 證交所爬蟲端點、大類與來源雙層 Tab 切換、直式 v1 對帳表格由上至下嚴格保留 `#1`~`#N` 爬蟲順序、完整顯示買賣超張數與數值、點擊股票直連主畫面篩選）— 完成 2026-08-31
+- [x] chipsHistory 籌碼與標籤時光機快照累積機制（後端 `writer.py` 自動延續保存近 10 個交易日之真實 `categories` 與 `chips`，前端 `sliceStockAt` 時光機切換時同步還原歷史籌碼、短沖名單與避雷標籤）— 完成 2026-09-01
 
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）
