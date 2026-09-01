@@ -566,7 +566,10 @@ const categoryLabels = computed(() => {
   const cats = props.stock.categories
   const tagMap = UI_STRINGS.CATEGORY_TAGS || {}
   const labels = Array.isArray(cats)
-    ? cats.map((c) => tagMap[c] || c).filter(Boolean)
+    ? cats
+        .filter((c) => !c.includes('Sell')) // 排除賣超標籤（已在右側 ⚠️ sellWarningText 警示列統一獨立展示）
+        .map((c) => tagMap[c] || c)
+        .filter(Boolean)
     : []
   return Array.from(new Set(labels))
 })
