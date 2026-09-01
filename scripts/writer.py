@@ -8,9 +8,15 @@ writer.py
 
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import List, Dict, Optional, Set
+
+# 台灣時區 (UTC+8)，確保 GitHub Actions (預設 UTC) 寫入正確台灣時間
+_TAIWAN_TZ = timezone(timedelta(hours=8))
+
+def _now_taiwan() -> datetime:
+    return datetime.now(_TAIWAN_TZ)
 
 # 輸出路徑（相對於 tool-screener-v2 根目錄）
 OUTPUT_PATH = Path('public/data/stock-pool.json')
@@ -190,7 +196,7 @@ def build_stock_pool(
         today_bar_date = (
             data.get('history10d', [])[-1].get('date')
             if data.get('history10d')
-            else datetime.now().strftime('%Y-%m-%d')
+            else _now_taiwan().strftime('%Y-%m-%d')
         )
 
         current_chips = chips_data.get(code) if chips_data and code in chips_data else None
@@ -260,7 +266,7 @@ def build_stock_pool(
 
     return {
         'meta': {
-            'updatedAt':   datetime.now().strftime('%Y-%m-%dT%H:%M:%S+08:00'),
+            'updatedAt':   _now_taiwan().strftime('%Y-%m-%dT%H:%M:%S+08:00'),
             'totalStocks': len(stocks),
         },
         'stocks':   stocks,
