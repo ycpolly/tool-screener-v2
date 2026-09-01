@@ -55,7 +55,10 @@ export function useStockPool() {
     _error.value   = null
 
     try {
-      const res = await fetch(`${import.meta.env.BASE_URL}data/stock-pool.json`)
+      // 加入動態時間戳記與 no-store 避免瀏覽器快取舊的 stock-pool.json
+      const res = await fetch(`${import.meta.env.BASE_URL}data/stock-pool.json?t=${Date.now()}`, {
+        cache: 'no-store',
+      })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
       const data = await res.json()
