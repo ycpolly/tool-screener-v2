@@ -433,6 +433,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] StockPoolModal.vue（選股池來源總覽 Modal：整合 17 大富邦 DJ / MoneyDJ / 證交所爬蟲端點、大類與來源雙層 Tab 切換、直式 v1 對帳表格由上至下嚴格保留 `#1`~`#N` 爬蟲順序、完整顯示買賣超張數與數值、點擊股票直連主畫面篩選）— 完成 2026-08-31
 - [x] chipsHistory 籌碼與標籤時光機快照累積機制（後端 `writer.py` 自動延續保存近 10 個交易日之真實 `categories` 與 `chips`，前端 `sliceStockAt` 時光機切換時同步還原歷史籌碼、短沖名單與避雷標籤）— 完成 2026-09-01
 - [x] 盤前交易日狀態機邊界修復（`isLiveTradingDay` 與 `App.vue` 納入上午 09:00 前之盤前狀態，盤前 00:00~08:59 嚴格以昨晚盤後為基準，時光機與頂部狀態列不偷跑顯示今日盤中）— 完成 2026-09-03
+- [x] 策略展開診斷清單關鍵風控項補齊（`diagnoseStock` 補齊「長黑避雷 checkAvoidLongBlack」、「當日避雷 excludeSell1D」、「昨日量縮 checkPrevVolContraction」，確保未符合時清單能 100% 精準對應紅字 ✗ 淘汰理由）— 完成 2026-09-03
 
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）

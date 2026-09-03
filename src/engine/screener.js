@@ -828,6 +828,31 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     })
   }
 
+  // 9.5 昨日量縮 (checkPrevVolContraction: 昨日成交量 < 昨日 5 日量均 MV5)
+  if (params.checkPrevVolContraction) {
+    let prevMV5 = 0
+    let prevVol = 0
+    let pass = false
+    if (isTodayLive && len >= 5) {
+      const bars5 = history.slice(-5)
+      prevMV5 = Math.round(bars5.reduce((sum, b) => sum + (b.volume || 0), 0) / 5)
+      prevVol = history[len - 1]?.volume ?? 0
+      pass = prevMV5 > 0 && prevVol < prevMV5
+    } else if (!isTodayLive && len >= 6) {
+      const bars5 = history.slice(-6, -1)
+      prevMV5 = Math.round(bars5.reduce((sum, b) => sum + (b.volume || 0), 0) / 5)
+      prevVol = history[len - 2]?.volume ?? 0
+      pass = prevMV5 > 0 && prevVol < prevMV5
+    }
+    details.push({
+      label: '昨日量縮',
+      pass,
+      desc: pass
+        ? `昨日量縮 (昨日量 ${prevVol.toLocaleString()} 張 < 昨日均量 ${prevMV5.toLocaleString()} 張)`
+        : `昨日未達量縮 (昨日量 ${prevVol.toLocaleString()} 張 ≥ 昨日均量 ${prevMV5.toLocaleString()} 張)`,
+    })
+  }
+
   // 10. 量縮洗盤
   if (params.checkVolContraction && vMa5 > 0) {
     const ratio = typeof params.volContractionRatio === 'number' ? params.volContractionRatio : 1.0
@@ -880,6 +905,34 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     })
   }
 
+  // 13.5 排除長黑倒貨 (checkAvoidLongBlack: 實體黑K跌幅 >= 1.5% 且 收在最低點附近)
+  if (params.checkAvoidLongBlack) {
+    const isBlack = open > close
+    let isDump = false
+    let dropPct = 0
+    let lowRatio = 0
+    if (isBlack) {
+      const prevClose = stock.prevClose ?? open
+      dropPct = prevClose > 0 ? (open - close) / prevClose : 0
+      const high = stock.high ?? price
+      const low = stock.low ?? price
+      const range = high - low
+      lowRatio = range > 0 ? (close - low) / range : 0.0
+      const threshold = params.blackCandleRatioMax ?? 0.20
+      if (dropPct >= 0.015 && lowRatio <= threshold) {
+        isDump = true
+      }
+    }
+    const pass = !isDump
+    details.push({
+      label: '長黑避雷',
+      pass,
+      desc: pass
+        ? '通過 (無實體長黑摜壓至最低點)'
+        : `觸發長黑倒貨型態 (實體黑K跌幅 ${(dropPct * 100).toFixed(1)}% ≥ 1.5% 且收最低點附近)`,
+    })
+  }
+
   // 14. KD 動能
   if (params.checkKd) {
     const kd = stock.kd ?? { k: 50, d: 50 }
@@ -912,6 +965,25 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
       label: '籌碼避雷',
       pass,
       desc: pass ? '通過 (無外資/主力/投信連續 3 日賣超)' : '未通過 (觸發連續 3 日賣超)',
+    })
+  }
+
+  // 15.5 當日避雷 (1D)
+  if (params.excludeSell1D) {
+    const cats = stock.categories || []
+    const warn = stock.sellWarning || ''
+    const isForeignSell1D = cats.includes('ForeignSell1D') || warn.includes('外資賣1D')
+    const isMajorSell1D = cats.includes('MajorSell1D') || warn.includes('主力賣1D')
+    const triggered = []
+    if (isForeignSell1D) triggered.push('外資賣1D')
+    if (isMajorSell1D) triggered.push('主力賣1D')
+    const pass = triggered.length === 0
+    details.push({
+      label: '當日避雷',
+      pass,
+      desc: pass
+        ? '通過 (無外資/主力當日賣超)'
+        : `觸發當日賣超避雷 (${triggered.join(' · ')})`,
     })
   }
 
