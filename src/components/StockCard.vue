@@ -44,13 +44,13 @@
         v-if="hasChipsSection"
         class="pt-2 pb-1.5 border-t border-base-300/40 space-y-1 text-sm font-normal text-base-content/80 leading-normal"
       >
-        <!-- 籌碼集中度 (百分比加粗，帶明確空白) -->
+        <!-- 籌碼集中度 (百分比加粗，正值紅字，帶明確空白) -->
         <div v-if="chipsConcentrationItems.length > 0" class="font-numeric flex items-baseline flex-wrap">
           <span class="mr-2">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
           <template v-for="(item, idx) in chipsConcentrationItems" :key="item.label">
             <span class="inline-flex items-baseline gap-1">
               <span>{{ item.label }}</span>
-              <strong class="font-bold text-base-content">{{ item.val }}</strong>
+              <strong class="font-bold" :class="item.isPositive ? 'text-rise' : 'text-base-content'">{{ item.val }}</strong>
             </span>
             <span v-if="idx < chipsConcentrationItems.length - 1" class="text-base-content/40 mx-1.5">·</span>
           </template>
@@ -150,14 +150,14 @@
       <!-- ★ 預留槽位 B：篩選判讀純文字結果 (支援點擊向下展開指標診斷清單) -->
       <div
         v-if="filterEvaluationText"
-        class="text-sm font-normal leading-normal py-1.5 px-2.5 rounded-lg border transition-colors select-none"
+        class="text-sm font-normal leading-normal py-1.5 px-2.5 rounded-lg border transition-colors"
         :class="[
           isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/75' : 'bg-base-300/50 border-base-300/80 text-base-content',
           hasEvaluationDetails ? 'cursor-pointer hover:bg-base-300/70' : ''
         ]"
         @click="hasEvaluationDetails && (isDetailsExpanded = !isDetailsExpanded)"
       >
-        <div class="flex items-center justify-between gap-1.5">
+        <div class="flex items-center justify-between gap-1.5 select-none">
           <span class="font-medium flex-1">{{ filterEvaluationText }}</span>
           <span
             v-if="hasEvaluationDetails"
@@ -177,10 +177,11 @@
           </span>
         </div>
 
-        <!-- 展開後的純文字指標通關診斷清單 -->
+        <!-- 展開後的純文字指標通關診斷清單 (允許選取複製文字) -->
         <div
           v-if="isDetailsExpanded && hasEvaluationDetails"
-          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-xs font-numeric"
+          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-xs font-numeric select-text cursor-auto"
+          @click.stop
         >
           <div
             v-for="(item, idx) in evaluationDetails"
@@ -194,7 +195,7 @@
               {{ item.pass ? '✓' : '✗' }}
             </span>
             <span class="text-base-content/90">
-              <strong class="text-base-content mr-1 font-semibold">{{ item.label }}:</strong>{{ item.desc }}
+              <strong class="text-base-content font-semibold">{{ item.label }}：</strong>{{ item.desc }}
             </span>
           </div>
         </div>
@@ -282,13 +283,13 @@
           v-if="hasChipsSection"
           class="pt-2 pb-2 border-t border-b border-base-300/40 space-y-1 text-sm font-normal text-base-content/80 leading-normal"
         >
-          <!-- 籌碼集中度 (百分比加粗，帶明確空白) -->
+          <!-- 籌碼集中度 (百分比加粗，正值紅字，帶明確空白) -->
           <div v-if="chipsConcentrationItems.length > 0" class="font-numeric flex items-baseline flex-wrap">
             <span class="mr-2">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
             <template v-for="(item, idx) in chipsConcentrationItems" :key="item.label">
               <span class="inline-flex items-baseline gap-1">
                 <span>{{ item.label }}</span>
-                <strong class="font-bold text-base-content">{{ item.val }}</strong>
+                <strong class="font-bold" :class="item.isPositive ? 'text-rise' : 'text-base-content'">{{ item.val }}</strong>
               </span>
               <span v-if="idx < chipsConcentrationItems.length - 1" class="text-base-content/40 mx-1.5">·</span>
             </template>
@@ -402,14 +403,14 @@
       <!-- ★ 預留槽位 B (電腦端通欄底列，支援點擊展開指標診斷清單) -->
       <div
         v-if="filterEvaluationText"
-        class="lg:col-span-12 text-sm font-normal leading-normal py-1.5 px-3 rounded-lg border transition-colors mt-1 select-none"
+        class="lg:col-span-12 text-sm font-normal leading-normal py-1.5 px-3 rounded-lg border transition-colors mt-1"
         :class="[
           isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/75' : 'bg-base-300/50 border-base-300/80 text-base-content',
           hasEvaluationDetails ? 'cursor-pointer hover:bg-base-300/70' : ''
         ]"
         @click="hasEvaluationDetails && (isDetailsExpanded = !isDetailsExpanded)"
       >
-        <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center justify-between gap-2 select-none">
           <span class="font-medium">{{ filterEvaluationText }}</span>
           <span
             v-if="hasEvaluationDetails"
@@ -429,10 +430,11 @@
           </span>
         </div>
 
-        <!-- 展開後的純文字指標通關診斷清單 -->
+        <!-- 展開後的純文字指標通關診斷清單 (允許選取複製文字) -->
         <div
           v-if="isDetailsExpanded && hasEvaluationDetails"
-          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-xs sm:text-sm font-numeric"
+          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-xs sm:text-sm font-numeric select-text cursor-auto"
+          @click.stop
         >
           <div
             v-for="(item, idx) in evaluationDetails"
@@ -446,7 +448,7 @@
               {{ item.pass ? '✓' : '✗' }}
             </span>
             <span class="text-base-content/90">
-              <strong class="text-base-content mr-1 font-semibold">{{ item.label }}:</strong>{{ item.desc }}
+              <strong class="text-base-content font-semibold">{{ item.label }}：</strong>{{ item.desc }}
             </span>
           </div>
         </div>
@@ -585,9 +587,9 @@ const chipsConcentrationItems = computed(() => {
   const { concentration1d: d1, concentration3d: d3, concentration5d: d5 } = chips
   if (d1 == null && d3 == null && d5 == null) return []
   const items = []
-  if (d1 != null) items.push({ label: '1D', val: `${d1 >= 0 ? '+' : ''}${Number(d1).toFixed(1)}%` })
-  if (d3 != null) items.push({ label: '3D', val: `${d3 >= 0 ? '+' : ''}${Number(d3).toFixed(1)}%` })
-  if (d5 != null) items.push({ label: '5D', val: `${d5 >= 0 ? '+' : ''}${Number(d5).toFixed(1)}%` })
+  if (d1 != null) items.push({ label: '1D', val: `${d1 >= 0 ? '+' : ''}${Number(d1).toFixed(1)}%`, isPositive: d1 > 0 })
+  if (d3 != null) items.push({ label: '3D', val: `${d3 >= 0 ? '+' : ''}${Number(d3).toFixed(1)}%`, isPositive: d3 > 0 })
+  if (d5 != null) items.push({ label: '5D', val: `${d5 >= 0 ? '+' : ''}${Number(d5).toFixed(1)}%`, isPositive: d5 > 0 })
   return items
 })
 
@@ -656,8 +658,33 @@ const filterEvaluationText = computed(() => {
     return UI_STRINGS.SCREENER.noMatchedStrategy
   }
 
-  // Case 2: 在特定模式下，若為「未符合/淘汰個股」 (不用 emoji)
+  // Case 2: 在特定模式下，若為「未符合/淘汰個股」
   if (props.isUnmatched) {
+    const details = evaluationDetails.value || []
+    const failedItems = details.filter((item) => !item.pass)
+
+    if (failedItems.length > 0) {
+      const shortMap = UI_STRINGS.SCREENER.shortFailLabels || {}
+      const labels = failedItems.map((item) => {
+        if (item.label === '均線支撐') {
+          if (item.desc && (item.desc.includes('10MA') || item.desc.includes('雙均線'))) {
+            return '未站穩均線'
+          }
+          return shortMap['均線支撐'] || '未站穩 5MA'
+        }
+        const rawKey = item.label || ''
+        const noSpaceKey = rawKey.replace(/\s+/g, '')
+        const spacedKey = rawKey
+          .replace(/([A-Za-z0-9]+)([\u4e00-\u9fa5]+)/g, '$1 $2')
+          .replace(/([\u4e00-\u9fa5]+)([A-Za-z0-9]+)/g, '$1 $2')
+        return shortMap[rawKey] || shortMap[noSpaceKey] || shortMap[spacedKey] || rawKey
+      })
+      const reasonsText = labels.join(' · ')
+      return UI_STRINGS.SCREENER.unmatchedSummary
+        ? UI_STRINGS.SCREENER.unmatchedSummary(failedItems.length, reasonsText)
+        : `${failedItems.length} 項未達標：${reasonsText}`
+    }
+
     const reason = props.stock?.filterEvaluation?.reasonText || props.filterEvaluation?.reasonText
     if (!reason) return null
     return `${UI_STRINGS.SCREENER.unmatchedReasonPrefix}${reason}`

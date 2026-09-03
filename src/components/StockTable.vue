@@ -1,5 +1,5 @@
 <template>
-  <div class="stock-table-container space-y-3 select-none">
+  <div class="stock-table-container space-y-3">
     <!-- 頂部工具列：筆數統計與模式放寬建議 -->
     <div class="flex flex-wrap items-baseline justify-between gap-2 px-1 text-sm text-base-content/80">
       <div class="flex flex-wrap items-baseline gap-2.5">

@@ -434,6 +434,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] chipsHistory 籌碼與標籤時光機快照累積機制（後端 `writer.py` 自動延續保存近 10 個交易日之真實 `categories` 與 `chips`，前端 `sliceStockAt` 時光機切換時同步還原歷史籌碼、短沖名單與避雷標籤）— 完成 2026-09-01
 - [x] 盤前交易日狀態機邊界修復（`isLiveTradingDay` 與 `App.vue` 納入上午 09:00 前之盤前狀態，盤前 00:00~08:59 嚴格以昨晚盤後為基準，時光機與頂部狀態列不偷跑顯示今日盤中）— 完成 2026-09-03
 - [x] 策略展開診斷清單關鍵風控項補齊（`diagnoseStock` 補齊「長黑避雷 checkAvoidLongBlack」、「當日避雷 excludeSell1D」、「昨日量縮 checkPrevVolContraction」，確保未符合時清單能 100% 精準對應紅字 ✗ 淘汰理由）— 完成 2026-09-03
+- [x] StockCard 未達標摘要與診斷清單體驗優化（未符合外層預覽改為彙整「N 項未達標：未站穩 5MA · 成交量不足」全條件概覽；籌碼集中度正值紅字高亮；展開診斷標籤冒號改全形「：」；移除容器 select-none 徹底釋放滑鼠反藍選取與右鍵複製文字權限）— 完成 2026-09-03
 
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）
