@@ -656,6 +656,7 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
  */
 export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
   if (!stock || activeModeId === 'ALL') return []
+  const dLabels = UI_STRINGS.DIAGNOSIS_LABELS || {}
   const details = []
 
   const price = stock.price ?? 0
@@ -684,7 +685,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
   if (params.maAboveMode === 'BOTH') {
     const pass = price >= ma5 && price >= ma10
     details.push({
-      label: '均線支撐',
+      label: dLabels.maSupport || '均線支撐',
       pass,
       desc: pass
         ? `現價 ${price.toFixed(2)} 雙站穩 5MA (${ma5.toFixed(2)}) 與 10MA (${ma10.toFixed(2)})`
@@ -693,7 +694,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
   } else if (params.maAboveMode === 'ANY') {
     const pass = price >= ma5 || price >= ma10
     details.push({
-      label: '均線支撐',
+      label: dLabels.maSupport || '均線支撐',
       pass,
       desc: pass
         ? `現價 ${price.toFixed(2)} 站穩 5MA (${ma5.toFixed(2)}) 或 10MA (${ma10.toFixed(2)})`
@@ -702,7 +703,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
   } else if (params.maAboveMode === '5MA' || params.maAboveMode === 'MA5') {
     const pass = price >= ma5
     details.push({
-      label: '均線支撐',
+      label: dLabels.maSupport || '均線支撐',
       pass,
       desc: pass
         ? `現價 ${price.toFixed(2)} 站穩 5MA (${ma5.toFixed(2)})`
@@ -714,7 +715,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
   if (params.requireAboveMa60 && ma60 > 0) {
     const pass = price >= ma60
     details.push({
-      label: '季線防身',
+      label: dLabels.ma60Defense || '季線防身',
       pass,
       desc: pass
         ? `現價 ${price.toFixed(2)} 站穩 60MA 季線 (${ma60.toFixed(2)})`
@@ -731,7 +732,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     const maxPass = typeof params.bias5Max === 'number' ? bias5 <= params.bias5Max : true
     const pass = minPass && maxPass
     details.push({
-      label: '5MA乖離',
+      label: dLabels.bias5 || '5MA 乖離',
       pass,
       desc: `5MA 乖離率 ${bias5 >= 0 ? '+' : ''}${bias5}% (區間 ${params.bias5Min ?? '-∞'}% ~ ${params.bias5Max ?? '+∞'}%)`,
     })
@@ -746,7 +747,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     const maxPass = typeof params.bias20Max === 'number' ? bias20 <= params.bias20Max : true
     const pass = minPass && maxPass
     details.push({
-      label: '月線乖離',
+      label: dLabels.bias20 || '月線乖離',
       pass,
       desc: `20MA 乖離率 ${bias20 >= 0 ? '+' : ''}${bias20}% (區間 ${params.bias20Min ?? '-∞'}% ~ ${params.bias20Max ?? '+∞'}%)`,
     })
@@ -757,7 +758,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     const conv = calculateMAConvergence(ma5, ma10, ma20)
     const pass = conv <= params.convergenceMax
     details.push({
-      label: '三線糾結',
+      label: dLabels.convergence || '三線糾結',
       pass,
       desc: `當日三線價差 ${conv}% (門檻 ≤ ${params.convergenceMax}%)`,
     })
@@ -769,7 +770,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
       const prevConv = calculateMAConvergence(prevBar.ma5, prevBar.ma10, prevBar.ma20)
       const pass = prevConv <= params.prevConvergenceMax
       details.push({
-        label: '昨日糾結',
+        label: dLabels.prevConvergence || '昨日糾結',
         pass,
         desc: `前一日三線價差 ${prevConv}% (門檻 ≤ ${params.prevConvergenceMax}%)`,
       })
@@ -781,7 +782,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     const prevMa20 = prevBar?.ma20
     const pass = typeof prevMa20 === 'number' && ma20 > prevMa20
     details.push({
-      label: '月線斜率',
+      label: dLabels.ma20Slope || '月線斜率',
       pass,
       desc: pass
         ? `月線斜率向上 (今日 ${ma20.toFixed(2)} > 昨日 ${prevMa20 ? prevMa20.toFixed(2) : '-'})`
@@ -793,7 +794,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
   if (params.checkMinVolume && typeof params.minVolume === 'number') {
     const pass = volume >= params.minVolume
     details.push({
-      label: '成交量能',
+      label: dLabels.volume || '成交量能',
       pass,
       desc: `成交量 ${volume.toLocaleString()} 張 (門檻 ≥ ${params.minVolume.toLocaleString()} 張)`,
     })
@@ -803,7 +804,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
   if (params.checkVolExpansion && vMa5 > 0) {
     const pass = volume > vMa5
     details.push({
-      label: '量能攻擊',
+      label: dLabels.volExpansion || '量能攻擊',
       pass,
       desc: pass
         ? `帶量攻擊 (當日量 ${volume.toLocaleString()} 張 > 5日均量 ${vMa5.toLocaleString()} 張)`
@@ -820,7 +821,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
       ? (isBelowVma5 && isBelowPrevVol)
       : (isBelowVma5 || isBelowPrevVol)
     details.push({
-      label: '量縮回踩',
+      label: dLabels.volPullback || '量縮回踩',
       pass,
       desc: pass
         ? `量縮回踩 (當日量 ${volume.toLocaleString()} 張 < 5日量均 ${vMa5.toLocaleString()} 或 昨日量 ${prevVolume.toLocaleString()})`
@@ -845,7 +846,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
       pass = prevMV5 > 0 && prevVol < prevMV5
     }
     details.push({
-      label: '昨日量縮',
+      label: dLabels.prevVolContraction || '昨日量縮',
       pass,
       desc: pass
         ? `昨日量縮 (昨日量 ${prevVol.toLocaleString()} 張 < 昨日均量 ${prevMV5.toLocaleString()} 張)`
@@ -858,7 +859,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     const ratio = typeof params.volContractionRatio === 'number' ? params.volContractionRatio : 1.0
     const pass = volume <= vMa5 * ratio
     details.push({
-      label: '量縮洗盤',
+      label: dLabels.volContraction || '量縮洗盤',
       pass,
       desc: pass
         ? `量縮洗盤 (當日量 ${volume.toLocaleString()} 張 ≤ 5日量均 ${Math.round(vMa5 * ratio).toLocaleString()} 張)`
@@ -872,7 +873,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     const isRed = close > open
     const pass = isRed && changePct >= minRedChange
     details.push({
-      label: '實體紅 K',
+      label: dLabels.redCandle || '實體紅 K',
       pass,
       desc: pass
         ? `實體攻擊紅 K (實體紅 K 漲幅 +${changePct}% ≥ ${minRedChange}%)`
@@ -886,7 +887,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     const maxPass = typeof params.tightChgMax === 'number' ? changePct <= params.tightChgMax : true
     const pass = minPass && maxPass
     details.push({
-      label: '狹幅打底',
+      label: dLabels.tightConsolidation || '狹幅打底',
       pass,
       desc: `當日震盪幅度 ${changePct >= 0 ? '+' : ''}${changePct}% (區間 ${params.tightChgMin ?? -1.5}% ~ +${params.tightChgMax ?? 1.5}%)`,
     })
@@ -899,7 +900,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     const body = close - open
     const pass = upperShadow <= body * 0.5
     details.push({
-      label: '上影線',
+      label: dLabels.upperShadow || '上影線',
       pass,
       desc: pass ? '上影線短 (≤ 實體紅 K 一半，無避雷針)' : '上影線過長 (觸發避雷針賣壓)',
     })
@@ -925,7 +926,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     }
     const pass = !isDump
     details.push({
-      label: '長黑避雷',
+      label: dLabels.avoidLongBlack || '長黑避雷',
       pass,
       desc: pass
         ? '通過 (無實體長黑摜壓至最低點)'
@@ -943,7 +944,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     if (typeof params.kdKMax === 'number' && k > params.kdKMax) pass = false
     if (params.kdRequireCross && k <= d) pass = false
     details.push({
-      label: 'KD動能',
+      label: dLabels.kdMomentum || 'KD 動能',
       pass,
       desc: `K 值 ${k} / D 值 ${d} (${pass ? '多頭排列' : '未達動能區'})`,
     })
@@ -962,7 +963,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     const isSitcaSell3D = cats.includes('SitcaSell3D') || warn.includes('投信賣3D')
     const pass = !isForeignSell3D && !isMajorSell3D && (isExempted || !isSitcaSell3D)
     details.push({
-      label: '籌碼避雷',
+      label: dLabels.chipsSell3D || '籌碼避雷',
       pass,
       desc: pass ? '通過 (無外資/主力/投信連續 3 日賣超)' : '未通過 (觸發連續 3 日賣超)',
     })
@@ -979,7 +980,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     if (isMajorSell1D) triggered.push('主力賣1D')
     const pass = triggered.length === 0
     details.push({
-      label: '當日避雷',
+      label: dLabels.chipsSell1D || '當日避雷',
       pass,
       desc: pass
         ? '通過 (無外資/主力當日賣超)'
@@ -991,7 +992,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
   if (params.checkNotDisposed) {
     const pass = !stock.isDisposed
     details.push({
-      label: '處置檢驗',
+      label: dLabels.disposed || '處置檢驗',
       pass,
       desc: pass ? '正常交易 (非處置股)' : '處置中 (關禁閉)',
     })
