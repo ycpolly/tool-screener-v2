@@ -268,8 +268,8 @@ const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 const isPostMarketTime = computed(() => {
   const now = new Date()
   const nowHour = now.getHours()
-  // 17:00 之後以盤後爬蟲資料庫為準
-  return nowHour >= 17 || nowHour < 8
+  // 17:00 之後 或 隔日開盤前 (00:00 ~ 08:59)：以盤後爬蟲資料庫為準
+  return nowHour >= 17 || nowHour < 9
 })
 
 const dataTimestampText = computed(() => {

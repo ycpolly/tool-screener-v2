@@ -935,11 +935,16 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
  * @param {Object} [sampleBar]
  * @returns {boolean}
  */
-export function isLiveTradingDay(sampleBar) {
+export function isLiveTradingDay(sampleBar, currentTime = new Date()) {
   if (!sampleBar || !sampleBar.date) return false
-  const now = new Date()
+  const now = currentTime
   const day = now.getDay()
   if (day === 0 || day === 6) return false
+
+  // 台股上午 09:00 開盤。開盤前 (00:00 ~ 08:59) 屬於盤前，尚未進入今日即時交易時段，以昨日盤後為基準
+  const hour = now.getHours()
+  if (hour < 9) return false
+
   const y = now.getFullYear()
   const m = String(now.getMonth() + 1).padStart(2, '0')
   const d = String(now.getDate()).padStart(2, '0')
@@ -949,17 +954,18 @@ export function isLiveTradingDay(sampleBar) {
 
 /**
  * 時光切片：將個股狀態時光倒流至指定天數前（支援近 0 ~ 5 個歷史交易日）
- * @param {Object} stock     - 原始個股物件（包含完整 history10d）
- * @param {number} dayOffset - 倒流天數（0: 今日/最新, 1: 昨日, 2: 前日...）
- * @returns {Object}         - 該歷史日之個股快照物件
+ * @param {Object} stock             - 原始個股物件（包含完整 history10d）
+ * @param {number} dayOffset         - 倒流天數（0: 今日/最新, 1: 昨日, 2: 前日...）
+ * @param {Date}   [currentTime]     - 當前時間（預設 new Date()）
+ * @returns {Object}                 - 該歷史日之個股快照物件
  */
-export function sliceStockAt(stock, dayOffset = 0) {
+export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date()) {
   if (!stock || !Array.isArray(stock.history10d) || stock.history10d.length === 0 || dayOffset <= 0) {
     return stock
   }
 
   const len = stock.history10d.length
-  const isLive = isLiveTradingDay(stock.history10d[len - 1])
+  const isLive = isLiveTradingDay(stock.history10d[len - 1], currentTime)
 
   // 若為盤中全新交易日：T-1 對應 len - 1 (上個收盤日)；若為週末/已收盤：T-1 對應 len - 2
   const targetIndex = isLive
@@ -1086,23 +1092,24 @@ export function sliceStockAt(stock, dayOffset = 0) {
  * @param {number}   dayOffset
  * @returns {Object[]}
  */
-export function sliceStockPoolAt(stocks = [], dayOffset = 0) {
+export function sliceStockPoolAt(stocks = [], dayOffset = 0, currentTime = new Date()) {
   if (!Array.isArray(stocks) || dayOffset <= 0) return stocks
-  return stocks.map(stock => sliceStockAt(stock, dayOffset))
+  return stocks.map(stock => sliceStockAt(stock, dayOffset, currentTime))
 }
 
 /**
  * 執行選股篩選（支援歷史時光機回測）
- * @param {Object[]} stocks       - 完整個股陣列（已合體即時行情）
- * @param {Object}   params       - 篩選條件參數
- * @param {string}   [activeMode] - 當前選股模式 ID
- * @param {number}   [dayOffset]  - 歷史倒流天數（0: 今日/最新, 1: 1天前, 2: 2天前...）
- * @returns {Object[]}            - 符合條件的個股陣列（包含 filterEvaluation）
+ * @param {Object[]} stocks          - 完整個股陣列（已合體即時行情）
+ * @param {Object}   params          - 篩選條件參數
+ * @param {string}   [activeMode]    - 當前選股模式 ID
+ * @param {number}   [dayOffset]     - 歷史倒流天數（0: 今日/最新, 1: 1天前, 2: 2天前...）
+ * @param {Date}     [currentTime]   - 當前時間（預設 new Date()）
+ * @returns {Object[]}               - 符合條件的個股陣列（包含 filterEvaluation）
  */
-export function runScreener(stocks = [], params = {}, activeMode = '', dayOffset = 0) {
+export function runScreener(stocks = [], params = {}, activeMode = '', dayOffset = 0, currentTime = new Date()) {
   if (!Array.isArray(stocks)) return []
 
-  const targetStocks = dayOffset > 0 ? sliceStockPoolAt(stocks, dayOffset) : stocks
+  const targetStocks = dayOffset > 0 ? sliceStockPoolAt(stocks, dayOffset, currentTime) : stocks
 
   const results = []
   for (const stock of targetStocks) {
