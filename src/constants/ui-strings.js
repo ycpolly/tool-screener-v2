@@ -348,6 +348,19 @@ export const UI_STRINGS = {
       INDEX: '成分股與處置',
     },
   },
+
+  SNAPSHOT: {
+    title: '【豐盛幫手選股快照】',
+    copyTimePrefix: '複製時間：',
+    dataTimePrefix: '資料時間：',
+    standardSection: '一般篩選',
+    premiumSection: '一鍵精選',
+    flat: '0、平盤',
+    upPrefix: '漲 ',
+    downPrefix: '跌 ',
+    copiedToast: '已複製五大模式選股快照至剪貼簿',
+    copyBtnTitle: '複製五大模式選股快照',
+  },
 }
 
 

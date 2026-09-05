@@ -1,4 +1,5 @@
 import { UI_STRINGS } from '../constants/ui-strings.js'
+import { SCREENER_MODES } from '../constants/screener-modes.js'
 
 /**
  * screener.js — 純演算法引擎
@@ -1213,5 +1214,132 @@ export function runScreener(stocks = [], params = {}, activeMode = '', dayOffset
   }
 
   return results
+}
+
+const SNAPSHOT_WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
+
+/**
+ * 產生全市場五大模式選股快照之純文字內容
+ * 包含複製時間、資料時間、一般篩選與一鍵精選
+ * @param {Object} options
+ * @param {Object[]} options.stocks
+ * @param {Object} [options.meta]
+ * @param {string} [options.quotesLastUpdated]
+ * @param {number} [options.dayOffset]
+ * @param {Date} [options.currentTime]
+ * @returns {string}
+ */
+export function buildScreenerSnapshotText({
+  stocks = [],
+  meta = null,
+  quotesLastUpdated = '',
+  dayOffset = 0,
+  currentTime = new Date(),
+} = {}) {
+  const strings = UI_STRINGS.SNAPSHOT || {}
+
+  // 1. 複製時間 (格式：MM/DD (週X) HH:mm:ss)
+  const cM = String(currentTime.getMonth() + 1).padStart(2, '0')
+  const cD = String(currentTime.getDate()).padStart(2, '0')
+  const cW = SNAPSHOT_WEEKDAYS[currentTime.getDay()]
+  const cH = String(currentTime.getHours()).padStart(2, '0')
+  const cMin = String(currentTime.getMinutes()).padStart(2, '0')
+  const cS = String(currentTime.getSeconds()).padStart(2, '0')
+  const copyTimeStr = `${cM}/${cD} (${cW}) ${cH}:${cMin}:${cS}`
+
+  // 2. 資料時間 (格式：MM/DD (週X) HH:mm:ss)
+  let dataTimeStr = ''
+  if (quotesLastUpdated && typeof quotesLastUpdated === 'string') {
+    const timeStr = quotesLastUpdated.trim()
+    if (timeStr.includes('-') || timeStr.includes('/')) {
+      try {
+        const d = new Date(timeStr.replace(/-/g, '/'))
+        if (!isNaN(d.getTime())) {
+          const dM = String(d.getMonth() + 1).padStart(2, '0')
+          const dD = String(d.getDate()).padStart(2, '0')
+          const dW = SNAPSHOT_WEEKDAYS[d.getDay()]
+          const dH = String(d.getHours()).padStart(2, '0')
+          const dMin = String(d.getMinutes()).padStart(2, '0')
+          const dSec = String(d.getSeconds()).padStart(2, '0')
+          dataTimeStr = `${dM}/${dD} (${dW}) ${dH}:${dMin}:${dSec}`
+        }
+      } catch {}
+    }
+    if (!dataTimeStr) {
+      const formattedTime = timeStr.length === 5 ? `${timeStr}:00` : timeStr
+      dataTimeStr = `${cM}/${cD} (${cW}) ${formattedTime}`
+    }
+  } else if (meta?.updatedAt) {
+    try {
+      const d = new Date(meta.updatedAt)
+      if (!isNaN(d.getTime())) {
+        const dM = String(d.getMonth() + 1).padStart(2, '0')
+        const dD = String(d.getDate()).padStart(2, '0')
+        const dW = SNAPSHOT_WEEKDAYS[d.getDay()]
+        const dH = String(d.getHours()).padStart(2, '0')
+        const dMin = String(d.getMinutes()).padStart(2, '0')
+        const dSec = String(d.getSeconds()).padStart(2, '0')
+        dataTimeStr = `${dM}/${dD} (${dW}) ${dH}:${dMin}:${dSec}`
+      }
+    } catch {}
+  }
+
+  if (!dataTimeStr) {
+    dataTimeStr = copyTimeStr
+  }
+
+  // 3. 股票項目格式化：• 2330 台積電 940 (+20、漲 2.17%) / (-10、跌 1.26%) / (0、平盤)
+  function formatStockLine(stock) {
+    const code = stock.code || ''
+    const name = stock.name || ''
+    const price = stock.price ?? '--'
+    const change = typeof stock.change === 'number' ? stock.change : 0
+    const changePct = typeof stock.changePct === 'number' ? Math.abs(stock.changePct).toFixed(2) : '0.00'
+
+    let changeStr = ''
+    if (change > 0) {
+      changeStr = `+${change}、${strings.upPrefix || '漲 '}${changePct}%`
+    } else if (change < 0) {
+      changeStr = `${change}、${strings.downPrefix || '跌 '}${changePct}%`
+    } else {
+      changeStr = strings.flat || '0、平盤'
+    }
+
+    return `• ${code} ${name} ${price} (${changeStr})`
+  }
+
+  const lines = []
+  lines.push(strings.title || '【豐盛幫手選股快照】')
+  lines.push(`${strings.copyTimePrefix || '複製時間：'}${copyTimeStr}`)
+  lines.push(`${strings.dataTimePrefix || '資料時間：'}${dataTimeStr}`)
+  lines.push('')
+
+  // 4. 一般篩選區段
+  lines.push(strings.standardSection || '一般篩選')
+  for (const [modeKey, modeObj] of Object.entries(SCREENER_MODES)) {
+    const matched = runScreener(stocks, modeObj.defaultParams, modeKey, dayOffset, currentTime)
+    lines.push(`■ ${modeObj.label} (${matched.length})`)
+    for (const s of matched) {
+      lines.push(formatStockLine(s))
+    }
+  }
+
+  lines.push('')
+
+  // 5. 一鍵精選區段
+  lines.push(strings.premiumSection || '一鍵精選')
+  for (const [modeKey, modeObj] of Object.entries(SCREENER_MODES)) {
+    const premiumParams = {
+      ...modeObj.defaultParams,
+      ...(modeObj.premiumParams || {}),
+    }
+    const matched = runScreener(stocks, premiumParams, modeKey, dayOffset, currentTime)
+    lines.push(`■ ${modeObj.label} (${matched.length})`)
+    for (const s of matched) {
+      lines.push(formatStockLine(s))
+    }
+  }
+
+  return lines.join('\n')
 }
 

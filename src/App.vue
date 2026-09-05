@@ -74,8 +74,40 @@
           </span>
         </div>
 
-        <!-- 右側：更新操作按鈕 (預留未來自動更新開關空間，統一 rounded-lg h-8，無陰影) -->
-        <div class="flex items-center gap-2">
+        <!-- 右側：更新與快照操作按鈕 (統一 rounded-lg h-8，無陰影) -->
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <!-- 選股快照按鈕 (第二級 UI: btn-outline btn-neutral，純剪貼簿 SVG) -->
+          <button
+            class="btn btn-sm btn-outline btn-neutral h-8 w-8 min-h-0 p-0 rounded-lg cursor-pointer shadow-none transition-all flex items-center justify-center"
+            :title="UI_STRINGS.SNAPSHOT.copyBtnTitle"
+            :aria-label="UI_STRINGS.SNAPSHOT.copyBtnTitle"
+            :disabled="poolLoading || activeStocks.length === 0"
+            @click="handleCopySnapshot"
+          >
+            <!-- 正常狀態：剪貼簿圖示 -->
+            <svg
+              v-if="!copiedRecently"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <!-- 成功狀態：打勾圖示 (綠色) -->
+            <svg
+              v-else
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 text-success"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
+
           <button
             class="btn btn-sm btn-neutral gap-1.5 font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer shadow-none"
             :disabled="poolLoading || quotesLoading"
@@ -202,6 +234,25 @@
       @close="closePoolModal"
       @select-stock="handleSelectStockFromPool"
     />
+
+    <!-- 複製快照成功 Toast 提示 -->
+    <transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="opacity-0 translate-y-2"
+      enter-to-class="opacity-100 translate-y-0"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 translate-y-2"
+    >
+      <div v-if="showCopiedToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none px-4 max-w-sm w-full">
+        <div class="alert alert-neutral shadow-lg py-2.5 px-4 text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 border border-base-content/10">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          </svg>
+          <span class="font-medium">{{ UI_STRINGS.SNAPSHOT.copiedToast }}</span>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -211,7 +262,7 @@ import { UI_STRINGS } from './constants/ui-strings.js'
 import { useStockPool } from './composables/useStockPool.js'
 import { useScreener } from './composables/useScreener.js'
 import { useRealtimeQuotes } from './composables/useRealtimeQuotes.js'
-import { mergeAllRealtimeQuotes } from './engine/screener.js'
+import { mergeAllRealtimeQuotes, buildScreenerSnapshotText } from './engine/screener.js'
 
 import ThemeToggle from './components/ThemeToggle.vue'
 import MarketBanner from './components/MarketBanner.vue'
@@ -418,6 +469,54 @@ function handleFetchRealtime() {
 
 function reloadPage() {
   window.location.reload()
+}
+
+// 7. 選股快照複製
+const copiedRecently = ref(false)
+const showCopiedToast = ref(false)
+let copyTimer = null
+let toastTimer = null
+
+async function handleCopySnapshot() {
+  if (!activeStocks.value || activeStocks.value.length === 0) return
+
+  const text = buildScreenerSnapshotText({
+    stocks: activeStocks.value,
+    meta: meta.value,
+    quotesLastUpdated: quotesLastUpdated.value,
+    dayOffset: selectedDayOffset.value,
+  })
+
+  try {
+    if (navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text)
+    } else {
+      const textarea = document.createElement('textarea')
+      textarea.value = text
+      textarea.style.position = 'fixed'
+      textarea.style.opacity = '0'
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+    }
+
+    copiedRecently.value = true
+    showCopiedToast.value = true
+
+    clearTimeout(copyTimer)
+    clearTimeout(toastTimer)
+
+    copyTimer = setTimeout(() => {
+      copiedRecently.value = false
+    }, 1500)
+
+    toastTimer = setTimeout(() => {
+      showCopiedToast.value = false
+    }, 2000)
+  } catch (err) {
+    console.error('[Snapshot Copy Failed]', err)
+  }
 }
 
 onMounted(() => {
