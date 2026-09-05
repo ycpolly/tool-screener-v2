@@ -446,6 +446,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 盤前與休市行情更新攔截與基底資料庫防護（Pre-market Update Intercept & Database Protection：週一至五 00:00~08:59 盤前與週末休市時段點擊「更新」時自動攔截，彈出輕量提示 Toast『尚未開盤（09:00 正式開盤），維持盤後選股結果』或『週末休市，維持週五盤後選股結果』，阻斷不必要之 API 請求；底層 `mergeRealtimeQuote` 與 `mergeAllRealtimeQuotes` 新增雙重保險防護，非即時開盤時段一律保護原始基底資料，嚴禁 0 成交量或試撮價沖銷既有選股名單；全域 Toast 支援 success 打勾與 info 圓形驚嘆號雙圖示自適應）— 完成 2026-09-05（v0905.04）
 - [x] 個股標籤官方排行榜 URL 智慧對照模組（`src/constants/category-urls.js`：收錄 17 大選股來源標籤對應之富邦 DJ / 證交所官方排行榜完整端點；自動依據個股 `market` 屬性判定上市 `_0_` 或上櫃 `_1_` 智慧派發專屬網址，如 3624 光頡自動匹配上櫃 `zg_D_1_1.djhtm`、2330 台積電自動匹配上市 `zg_D_0_1.djhtm`；提供 `getStockCategoryItems` 格式化陣列供卡片超連結渲染）— 完成 2026-09-05
 
+- [ ] StockCard 標籤官方排行榜超連結（Gemini 負責）：在 `src/components/StockCard.vue` 引入 `src/constants/category-urls.js` 之 `getStockCategoryItems(props.stock)`，將手機端與電腦端第 2 層標籤由純文字 `span` 改為可點擊之 `<a>` 標籤（`target="_blank" rel="noopener"`、`@click.stop` 防冒泡，hover 底線），保持原有 `text-sm text-base-content/80` 沉穩排版與 `·` 點分隔號。
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
