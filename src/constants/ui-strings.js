@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0905.03',
+    version: 'v0905.04',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -349,6 +349,8 @@ export const UI_STRINGS = {
     missingWarning: (missingCount) => `即時行情有 ${missingCount} 筆資料未回傳，嚴禁使用舊資料補齊，請重新整理或稍候再試`,
     fetchFailed: '連線行情 API 失敗，請檢查網址、CORS 或網路狀態',
     lastUpdated: (t) => `即時更新於 ${t}`,
+    preMarketNotice: '尚未開盤（09:00 正式開盤），維持盤後選股結果',
+    weekendNotice: '週末休市，維持週五盤後選股結果',
   },
 
   CHIPS: {

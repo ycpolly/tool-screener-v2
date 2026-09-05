@@ -267,7 +267,7 @@
       @select-stock="handleSelectStockFromPool"
     />
 
-    <!-- 複製快照成功 Toast 提示 -->
+    <!-- 輕量 Toast 提示 (快照複製、盤前與休市提示) -->
     <transition
       enter-active-class="transition duration-200 ease-out"
       enter-from-class="opacity-0 translate-y-2"
@@ -276,12 +276,29 @@
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 translate-y-2"
     >
-      <div v-if="showCopiedToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none px-4 max-w-sm w-full">
+      <div v-if="toastText" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none px-4 max-w-sm w-full">
         <div class="alert alert-neutral shadow-lg py-2.5 px-4 text-sm rounded-xl flex items-center justify-center gap-2 border border-base-content/10">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg
+            v-if="toastType === 'success'"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 text-success shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
           </svg>
-          <span class="font-medium">{{ UI_STRINGS.SNAPSHOT.copiedToast }}</span>
+          <svg
+            v-else
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 text-info shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="font-medium">{{ toastText }}</span>
         </div>
       </div>
     </transition>
@@ -501,6 +518,21 @@ function handleClearApi() {
 }
 
 function handleFetchRealtime() {
+  const now = new Date()
+  const day = now.getDay()
+  const hour = now.getHours()
+  const isWeekend = day === 0 || day === 6
+  const isPreMarket = !isWeekend && hour < 9
+
+  if (isPreMarket) {
+    triggerToast(UI_STRINGS.REALTIME.preMarketNotice, 'info')
+    return
+  }
+  if (isWeekend) {
+    triggerToast(UI_STRINGS.REALTIME.weekendNotice, 'info')
+    return
+  }
+
   if (!isConfigured.value) {
     openApiModal()
     return
@@ -516,24 +548,28 @@ function reloadPage() {
 
 // 7. 選股快照複製與行動端原生分享
 const copiedRecently = ref(false)
-const showCopiedToast = ref(false)
+const toastText = ref('')
+const toastType = ref('success')
 let copyTimer = null
 let toastTimer = null
 
+function triggerToast(text, type = 'info', duration = 2200) {
+  toastText.value = text
+  toastType.value = type
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => {
+    toastText.value = ''
+  }, duration)
+}
+
 function triggerSuccessFeedback() {
   copiedRecently.value = true
-  showCopiedToast.value = true
+  triggerToast(UI_STRINGS.SNAPSHOT.copiedToast, 'success')
 
   clearTimeout(copyTimer)
-  clearTimeout(toastTimer)
-
   copyTimer = setTimeout(() => {
     copiedRecently.value = false
   }, 1500)
-
-  toastTimer = setTimeout(() => {
-    showCopiedToast.value = false
-  }, 2000)
 }
 
 async function copyTextToClipboard(text) {

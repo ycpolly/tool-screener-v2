@@ -138,13 +138,18 @@ function evaluateMarketRegime(taiex, otc) {
  * @param {Object} quote     - GCP 即時行情回傳的個股報價
  * @returns {Object}         - 合體後的完整個股物件
  */
-export function mergeRealtimeQuote(baseStock, quote) {
+export function mergeRealtimeQuote(baseStock, quote, currentTime = new Date()) {
   if (!quote || typeof quote.price !== 'number' || quote.price <= 0) {
     return baseStock
   }
 
+  const isLive = isLiveTradingDay(baseStock.history10d?.[baseStock.history10d.length - 1], currentTime)
+  // 若當前非開盤撮合交易階段（如 09:00 前盤前試撮或週末），嚴禁讓 0 成交量或試撮價覆蓋盤後資料庫
+  if (!isLive) {
+    return baseStock
+  }
+
   const price = quote.price
-  const isLive = isLiveTradingDay(baseStock.history10d?.[baseStock.history10d.length - 1])
   const prevClose = (typeof quote.prevClose === 'number' && quote.prevClose > 0)
     ? quote.prevClose
     : (isLive && typeof baseStock.price === 'number' && baseStock.price > 0 ? baseStock.price : (baseStock.prevClose ?? price))
@@ -329,14 +334,21 @@ export function mergeMarketQuotes(baseMarket, quotesMap = {}) {
  * @param {Object}   quotesMap
  * @returns {{ stocks: Object[], market: Object }}
  */
-export function mergeAllRealtimeQuotes(baseStocks = [], baseMarket = null, quotesMap = {}) {
+export function mergeAllRealtimeQuotes(baseStocks = [], baseMarket = null, quotesMap = {}, currentTime = new Date()) {
   if (!quotesMap || Object.keys(quotesMap).length === 0) {
+    return { stocks: baseStocks, market: baseMarket }
+  }
+
+  // 盤前與休市防護：若尚未進入今日即時開盤撮合時段 (09:00 前或週末)，直接返回基底資料庫，防範 0 成交量污染
+  const sampleBar = baseStocks[0]?.history10d?.[baseStocks[0]?.history10d?.length - 1]
+  const isLive = isLiveTradingDay(sampleBar, currentTime)
+  if (!isLive) {
     return { stocks: baseStocks, market: baseMarket }
   }
 
   const mergedStocks = baseStocks.map(stock => {
     const quote = quotesMap[stock.code]
-    return quote ? mergeRealtimeQuote(stock, quote) : stock
+    return quote ? mergeRealtimeQuote(stock, quote, currentTime) : stock
   })
 
   const mergedMarket = baseMarket ? mergeMarketQuotes(baseMarket, quotesMap) : baseMarket
