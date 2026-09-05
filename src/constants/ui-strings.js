@@ -51,7 +51,7 @@ export const UI_STRINGS = {
 
   SCREENER: {
     updateBtn: '更新',
-    updatingBtn: '更新中…',
+    updatingBtn: '更新中',
     premiumToggle: '一鍵精選',
     premiumActiveText: '精選中',
     premiumActive: '已啟用一鍵精選',

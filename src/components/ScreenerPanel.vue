@@ -45,49 +45,51 @@
     </div>
 
     <!-- ============================================================
-         2. 戰略提示與微調控制條 (提示文字 + 一鍵精選 + 重設 + 展開按鈕)
+         2. 戰略提示與微調控制條 (提示文字 + 重設 + 展開按鈕)
+            手機端垂直分行【上：模式主訴，下：調整參數】，確保主訴不折行；電腦端維持單行橫排
          ============================================================ -->
-    <div class="flex items-center justify-between min-h-[32px] pt-0.5 px-0.5 gap-2 flex-wrap">
-      <!-- 左側：戰略提示說明 (保持純淨簡明) -->
-      <div class="text-sm text-base-content/80 leading-normal flex items-center gap-1.5 flex-1 min-w-[200px]">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between min-h-[32px] pt-0.5 px-0.5 gap-2">
+      <!-- 模式主訴說明 (手機端佔滿寬度確保單行不折行，電腦端自動彈性伸展) -->
+      <div class="text-sm text-base-content/80 leading-normal flex items-center gap-1.5 w-full sm:w-auto sm:flex-1">
         <span class="inline-block w-1.5 h-1.5 rounded-full bg-primary/80 shrink-0"></span>
         <span v-if="activeMode === 'ALL'">{{ UI_STRINGS.PANEL.allDescription }}</span>
         <span v-else>{{ currentMode?.description }}</span>
       </div>
 
-      <!-- 右側動作：重設自訂 + 展開/收合 (僅策略模式顯示微調按鈕) -->
-      <div class="flex items-center gap-2 shrink-0">
-        <template v-if="activeMode !== 'ALL'">
-          <!-- 重設按鈕 (手動修改參數時出現，統一 rounded-lg 與右側並排) -->
-          <button
-            v-if="isCustomized"
-            type="button"
-            class="btn btn-sm btn-ghost text-sm text-warning/90 hover:text-warning hover:bg-warning/10 font-medium h-8 min-h-0 px-2 rounded-lg cursor-pointer transition-colors shadow-none"
-            :title="UI_STRINGS.SCREENER.resetCustom || '重設自訂'"
-            @click="$emit('reset')"
-          >
-            {{ UI_STRINGS.SCREENER.resetCustom || '重設自訂' }}
-          </button>
+      <!-- 操作動作：重設自訂 + 調整參數 (手機端靠右下排列，僅策略模式顯示微調按鈕) -->
+      <div
+        v-if="activeMode !== 'ALL'"
+        class="flex items-center justify-end gap-2 w-full sm:w-auto shrink-0"
+      >
+        <!-- 重設按鈕 (手動修改參數時出現，統一 rounded-lg 與右側並排) -->
+        <button
+          v-if="isCustomized"
+          type="button"
+          class="btn btn-sm btn-ghost text-sm text-warning/90 hover:text-warning hover:bg-warning/10 font-medium h-8 min-h-0 px-2 rounded-lg cursor-pointer transition-colors shadow-none"
+          :title="UI_STRINGS.SCREENER.resetCustom || '重設自訂'"
+          @click="$emit('reset')"
+        >
+          {{ UI_STRINGS.SCREENER.resetCustom || '重設自訂' }}
+        </button>
 
-          <!-- 調整參數按鈕 (統一 rounded-lg 與 h-8，無陰影) -->
-          <button
-            type="button"
-            class="btn btn-sm btn-neutral gap-1.5 text-sm font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer shadow-none"
-            @click="isCollapsed = !isCollapsed"
+        <!-- 調整參數按鈕 (統一 rounded-lg 與 h-8，無陰影) -->
+        <button
+          type="button"
+          class="btn btn-sm btn-neutral gap-1.5 text-sm font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer shadow-none"
+          @click="isCollapsed = !isCollapsed"
+        >
+          <span>{{ isCollapsed ? UI_STRINGS.PANEL.adjustParams : UI_STRINGS.PANEL.collapseParams }}</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 transition-transform duration-200"
+            :class="{ 'rotate-180': !isCollapsed }"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <span>{{ isCollapsed ? UI_STRINGS.PANEL.adjustParams : UI_STRINGS.PANEL.collapseParams }}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 transition-transform duration-200"
-              :class="{ 'rotate-180': !isCollapsed }"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </template>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
       </div>
     </div>
 
