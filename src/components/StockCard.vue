@@ -13,7 +13,7 @@
         <div class="flex items-baseline gap-2 min-w-0">
           <span class="font-numeric font-bold text-lg text-base-content tracking-wide">{{ stock.code }}</span>
           <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
-          <span v-if="stock.isDisposed" class="font-bold text-sm text-error tracking-tight">
+          <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
             [{{ UI_STRINGS.SCREENER.disposed }}]
           </span>
         </div>
@@ -93,7 +93,7 @@
         <div class="flex items-baseline gap-2 min-w-0">
           <span class="font-numeric font-bold text-lg text-base-content tracking-wide">{{ stock.code }}</span>
           <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
-          <span v-if="stock.isDisposed" class="font-bold text-sm text-error tracking-tight">
+          <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
             [{{ UI_STRINGS.SCREENER.disposed }}]
           </span>
         </div>
@@ -336,7 +336,7 @@
           <div class="flex items-baseline gap-2 min-w-0">
             <span class="font-numeric font-bold text-lg text-base-content">{{ stock.code }}</span>
             <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
-            <span v-if="stock.isDisposed" class="font-bold text-sm text-error">
+            <span v-if="stock.isDisposed" class="font-bold text-sm text-rise">
               [{{ UI_STRINGS.SCREENER.disposed }}]
             </span>
           </div>

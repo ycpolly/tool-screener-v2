@@ -2,24 +2,6 @@
   <div class="time-machine-bar select-none">
     <!-- 攤開式時光膠囊列 (支援開盤即時與歷史真實開盤日) -->
     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 text-sm">
-      <span class="text-base-content/65 font-medium shrink-0 flex items-center gap-1 mr-1">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 text-base-content/60"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <span>{{ UI_STRINGS.TIME_MACHINE.title || '時光機' }}</span>
-      </span>
-
       <!-- 6 大時光膠囊按鈕 (T-0 ~ T-5 全部由真實日 K 提取真實日期，0 日曆誤差) -->
       <button
         v-for="d in timeMachineDates"

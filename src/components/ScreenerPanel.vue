@@ -22,7 +22,7 @@
       >
         <span class="hidden sm:inline leading-tight">{{ UI_STRINGS.PANEL.allTab }}</span>
         <span class="sm:hidden leading-tight">全部</span>
-        <span class="text-xs md:text-sm font-numeric font-medium opacity-80 leading-tight">
+        <span class="text-sm font-numeric font-medium opacity-80 leading-tight">
           ({{ modeCounts?.ALL ?? totalCount ?? 0 }})
         </span>
       </button>
@@ -38,7 +38,7 @@
       >
         <span class="hidden sm:inline leading-tight">{{ mode.label }}</span>
         <span class="sm:hidden leading-tight">{{ getShortModeLabel(mode.id) }}</span>
-        <span class="text-xs md:text-sm font-numeric font-medium opacity-80 leading-tight">
+        <span class="text-sm font-numeric font-medium opacity-80 leading-tight">
           ({{ modeCounts?.[mode.id] ?? 0 }})
         </span>
       </button>

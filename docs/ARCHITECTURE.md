@@ -438,6 +438,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 全市場五大模式選股快照（Screener Snapshot：純前端 5ms 高效批次運算，一鍵複製一般篩選與一鍵精選五大策略純文字清單；支援 iOS Safari / Android 原生 Web Share API 直通 LINE 分享面板與桌機剪貼簿自動自適應降級、自帶複製時間與資料時間雙時間戳記、平盤 `(0、平盤)` 標註、第二級 UI `btn-outline btn-neutral` 按鈕、綠色打勾微動效與 Toast 提示）— 完成 2026-09-05
 - [x] 選股清單顯示模式切換（Display Mode Toggle：SearchBar 右側整合 Icon Toggle 按鈕，支援完整卡片與簡約模式 Compact Mode 流暢切換；簡約模式僅收納首行即時報價與槽位 B 篩選評估理由，卡片內距緊縮為 py-2.5 px-3.5，同時保留槽位 B 就地展開指標診斷功能，同步作用於符合與未符合名單，並以 localStorage 持久化偏好習慣）— 完成 2026-09-05
 - [x] 手機端 UI 精緻化對齊（Mobile UI Polish：ScreenerPanel 頂部 6 大分段切換器在手機端全面改採 `flex-col` 固定兩行排列【上層標籤、下層 (數量)】，徹底根除字元寬度差異導致的參差高低折行，電腦端維持單行橫排；SearchBar 搜尋輸入框與排序/模式按鈕統一調升為 h-10 40px 標準高度，內部 input 填滿 h-full，解決手機端搜尋列視覺過於扁平問題並確保按鈕觸控高度 100% 對齊）— 完成 2026-09-05
+- [x] UI 視覺與層級第二波優化（處置標籤改採低飽和漲價磚紅 `text-rise` 替換刺眼亮紅 `text-error`；移除時光機前綴文字與時鐘圖示釋出全寬；手機端主要字級由 `text-xs` 收斂至 `text-sm` 14px，統一時間戳記、更新按鈕與 Tab 數量顯示）— 完成 2026-09-05
 
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）

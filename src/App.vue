@@ -7,7 +7,7 @@
           {{ UI_STRINGS.APP.title }}
         </h1>
         <span
-          class="text-xs sm:text-sm font-numeric font-normal text-base-content/80 select-none cursor-pointer"
+          class="text-sm font-numeric font-normal text-base-content/80 select-none cursor-pointer"
           title="點擊重新整理頁面"
           @click="reloadPage"
         >
@@ -64,7 +64,7 @@
       <!-- 即時數據脈搏與更新控制列 (Data Pulse & Action Bar) -->
       <div class="flex items-center justify-between px-3 py-2 bg-base-200/60 border border-base-300/60 rounded-xl">
         <!-- 左側：資料時間戳記與連線狀態點 -->
-        <div class="flex items-center gap-2 text-xs sm:text-sm font-numeric text-base-content/80">
+        <div class="flex items-center gap-2 text-sm font-numeric text-base-content/80">
           <span
             class="inline-block w-2 h-2 rounded-full shrink-0"
             :class="quotesLoading ? 'bg-warning animate-ping' : (isPostMarketTime ? 'bg-base-content/40' : (quotesLastUpdated ? 'bg-success shadow-xs' : 'bg-primary/80'))"
@@ -123,7 +123,7 @@
             >
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            <span class="text-xs sm:text-sm">
+            <span class="text-sm font-medium">
               {{ quotesLoading ? UI_STRINGS.REALTIME.fetchingBtn : UI_STRINGS.REALTIME.fetchBtn }}
             </span>
           </button>
@@ -248,7 +248,7 @@
       leave-to-class="opacity-0 translate-y-2"
     >
       <div v-if="showCopiedToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none px-4 max-w-sm w-full">
-        <div class="alert alert-neutral shadow-lg py-2.5 px-4 text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 border border-base-content/10">
+        <div class="alert alert-neutral shadow-lg py-2.5 px-4 text-sm rounded-xl flex items-center justify-center gap-2 border border-base-content/10">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
           </svg>
