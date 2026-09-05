@@ -1238,16 +1238,16 @@ export function buildScreenerSnapshotText({
 } = {}) {
   const strings = UI_STRINGS.SNAPSHOT || {}
 
-  // 1. 複製時間 (格式：MM/DD (週X) HH:mm:ss)
+  // 1. 複製時間 (格式：MM/DD W HH:mm:ss 複製)
   const cM = String(currentTime.getMonth() + 1).padStart(2, '0')
   const cD = String(currentTime.getDate()).padStart(2, '0')
   const cW = SNAPSHOT_WEEKDAYS[currentTime.getDay()]
   const cH = String(currentTime.getHours()).padStart(2, '0')
   const cMin = String(currentTime.getMinutes()).padStart(2, '0')
   const cS = String(currentTime.getSeconds()).padStart(2, '0')
-  const copyTimeStr = `${cM}/${cD} (${cW}) ${cH}:${cMin}:${cS}`
+  const copyTimeStr = `${cM}/${cD} ${cW} ${cH}:${cMin}:${cS}${strings.copyTimeSuffix || ' 複製'}`
 
-  // 2. 資料時間 (格式：MM/DD (週X) HH:mm:ss)
+  // 2. 資料時間 (格式：MM/DD W HH:mm:ss 資料)
   let dataTimeStr = ''
   if (quotesLastUpdated && typeof quotesLastUpdated === 'string') {
     const timeStr = quotesLastUpdated.trim()
@@ -1261,13 +1261,13 @@ export function buildScreenerSnapshotText({
           const dH = String(d.getHours()).padStart(2, '0')
           const dMin = String(d.getMinutes()).padStart(2, '0')
           const dSec = String(d.getSeconds()).padStart(2, '0')
-          dataTimeStr = `${dM}/${dD} (${dW}) ${dH}:${dMin}:${dSec}`
+          dataTimeStr = `${dM}/${dD} ${dW} ${dH}:${dMin}:${dSec}${strings.dataTimeSuffix || ' 資料'}`
         }
       } catch {}
     }
     if (!dataTimeStr) {
       const formattedTime = timeStr.length === 5 ? `${timeStr}:00` : timeStr
-      dataTimeStr = `${cM}/${cD} (${cW}) ${formattedTime}`
+      dataTimeStr = `${cM}/${cD} ${cW} ${formattedTime}${strings.dataTimeSuffix || ' 資料'}`
     }
   } else if (meta?.updatedAt) {
     try {
@@ -1279,67 +1279,82 @@ export function buildScreenerSnapshotText({
         const dH = String(d.getHours()).padStart(2, '0')
         const dMin = String(d.getMinutes()).padStart(2, '0')
         const dSec = String(d.getSeconds()).padStart(2, '0')
-        dataTimeStr = `${dM}/${dD} (${dW}) ${dH}:${dMin}:${dSec}`
+        dataTimeStr = `${dM}/${dD} ${dW} ${dH}:${dMin}:${dSec}${strings.dataTimeSuffix || ' 資料'}`
       }
     } catch {}
   }
 
   if (!dataTimeStr) {
-    dataTimeStr = copyTimeStr
+    dataTimeStr = `${cM}/${cD} ${cW} ${cH}:${cMin}:${cS}${strings.dataTimeSuffix || ' 資料'}`
   }
 
-  // 3. 股票項目格式化：• 2330 台積電 940 (+20、漲 2.17%) / (-10、跌 1.26%) / (0、平盤)
-  function formatStockLine(stock) {
+  // 3. 股票項目格式化：
+  // 第一行：2404 漢唐 1070
+  // 第二行：▲35 (+3.38%) / ▼0.05 (-0.17%) / 0 (0.00%)
+  function formatStockBlock(stock) {
     const code = stock.code || ''
     const name = stock.name || ''
-    const price = stock.price ?? '--'
+    const price = stock.price !== undefined && stock.price !== null ? stock.price : '--'
     const change = typeof stock.change === 'number' ? stock.change : 0
     const changePct = typeof stock.changePct === 'number' ? Math.abs(stock.changePct).toFixed(2) : '0.00'
 
-    let changeStr = ''
+    let changeLine = ''
     if (change > 0) {
-      changeStr = `+${change}、${strings.upPrefix || '漲 '}${changePct}%`
+      changeLine = `▲${change} (+${changePct}%)`
     } else if (change < 0) {
-      changeStr = `${change}、${strings.downPrefix || '跌 '}${changePct}%`
+      changeLine = `▼${Math.abs(change)} (-${changePct}%)`
     } else {
-      changeStr = strings.flat || '0、平盤'
+      changeLine = strings.flat || '0 (0.00%)'
     }
 
-    return `• ${code} ${name} ${price} (${changeStr})`
+    return `${code} ${name} ${price}\n${changeLine}`
   }
 
-  const lines = []
-  lines.push(strings.title || '【豐盛幫手選股快照】')
-  lines.push(`${strings.copyTimePrefix || '複製時間：'}${copyTimeStr}`)
-  lines.push(`${strings.dataTimePrefix || '資料時間：'}${dataTimeStr}`)
-  lines.push('')
+  const sections = []
+
+  // Header 區塊
+  sections.push([
+    strings.title || '豐盛幫手選股快照',
+    copyTimeStr,
+    dataTimeStr,
+  ].join('\n'))
 
   // 4. 一般篩選區段
-  lines.push(strings.standardSection || '一般篩選')
+  const standardBlocks = [strings.standardSection || '【一般篩選】']
   for (const [modeKey, modeObj] of Object.entries(SCREENER_MODES)) {
     const matched = runScreener(stocks, modeObj.defaultParams, modeKey, dayOffset, currentTime)
-    lines.push(`■ ${modeObj.label} (${matched.length})`)
-    for (const s of matched) {
-      lines.push(formatStockLine(s))
-    }
-  }
+    const header = typeof strings.modeHeader === 'function'
+      ? strings.modeHeader(modeObj.label, matched.length)
+      : `＝＝＝ ${modeObj.label} (${matched.length}) ＝＝＝`
 
-  lines.push('')
+    const modeBlockLines = [header]
+    for (const s of matched) {
+      modeBlockLines.push(formatStockBlock(s))
+    }
+    standardBlocks.push(modeBlockLines.join('\n\n'))
+  }
+  sections.push(standardBlocks.join('\n\n'))
 
   // 5. 一鍵精選區段
-  lines.push(strings.premiumSection || '一鍵精選')
+  const premiumBlocks = [strings.premiumSection || '【一鍵精選】']
   for (const [modeKey, modeObj] of Object.entries(SCREENER_MODES)) {
     const premiumParams = {
       ...modeObj.defaultParams,
       ...(modeObj.premiumParams || {}),
     }
     const matched = runScreener(stocks, premiumParams, modeKey, dayOffset, currentTime)
-    lines.push(`■ ${modeObj.label} (${matched.length})`)
-    for (const s of matched) {
-      lines.push(formatStockLine(s))
-    }
-  }
+    const header = typeof strings.modeHeader === 'function'
+      ? strings.modeHeader(modeObj.label, matched.length)
+      : `＝＝＝ ${modeObj.label} (${matched.length}) ＝＝＝`
 
-  return lines.join('\n')
+    const modeBlockLines = [header]
+    for (const s of matched) {
+      modeBlockLines.push(formatStockBlock(s))
+    }
+    premiumBlocks.push(modeBlockLines.join('\n\n'))
+  }
+  sections.push(premiumBlocks.join('\n\n'))
+
+  return sections.join('\n\n')
 }
 
