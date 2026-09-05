@@ -51,7 +51,6 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between min-h-[32px] pt-0.5 px-0.5 gap-2">
       <!-- 模式主訴說明 (手機端佔滿寬度確保單行不折行，電腦端自動彈性伸展) -->
       <div class="text-sm text-base-content/80 leading-normal flex items-center gap-1.5 w-full sm:w-auto sm:flex-1">
-        <span class="inline-block w-1.5 h-1.5 rounded-full bg-primary/80 shrink-0"></span>
         <span v-if="activeMode === 'ALL'">{{ UI_STRINGS.PANEL.allDescription }}</span>
         <span v-else>{{ currentMode?.description }}</span>
       </div>
@@ -65,7 +64,7 @@
         <button
           v-if="isCustomized"
           type="button"
-          class="btn btn-sm btn-ghost text-sm text-warning/90 hover:text-warning hover:bg-warning/10 font-medium h-8 min-h-0 px-2 rounded-lg cursor-pointer transition-colors shadow-none"
+          class="btn btn-sm btn-ghost text-sm font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer shadow-none"
           :title="UI_STRINGS.SCREENER.resetCustom || '重設自訂'"
           @click="$emit('reset')"
         >
