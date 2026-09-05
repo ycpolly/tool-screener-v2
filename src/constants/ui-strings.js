@@ -28,7 +28,7 @@ export const UI_STRINGS = {
     MOMENTUM_BREAKOUT: {
       label: '動能攻擊',
       shortLabel: '動能',
-      description: '剛結束打底、今日帶量出第一根紅棒的發動股（參與 D4）',
+      description: '剛結束打底，今日帶量出第一根紅棒（參與 D4）',
     },
     TREND_PULLBACK: {
       label: '多頭回測',
@@ -52,6 +52,10 @@ export const UI_STRINGS = {
   SCREENER: {
     updateBtn: '更新',
     updatingBtn: '更新中…',
+    premiumToggle: '一鍵精選',
+    premiumActiveText: '精選中',
+    premiumActive: '已啟用一鍵精選',
+    premiumDisabledInAll: '全市場總覽未套用策略',
     resultCount: (n) => `符合 ${n} 檔`,
     noResult: '無符合條件的個股',
     suggestions: {

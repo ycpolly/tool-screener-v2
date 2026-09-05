@@ -440,6 +440,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 手機端 UI 精緻化對齊（Mobile UI Polish：ScreenerPanel 頂部 6 大分段切換器在手機端全面改採 `flex-col` 固定兩行排列【上層標籤、下層 (數量)】，徹底根除字元寬度差異導致的參差高低折行，電腦端維持單行橫排；SearchBar 搜尋輸入框與排序/模式按鈕統一調升為 h-10 40px 標準高度，內部 input 填滿 h-full，解決手機端搜尋列視覺過於扁平問題並確保按鈕觸控高度 100% 對齊）— 完成 2026-09-05
 - [x] UI 視覺與層級第二波優化（處置標籤改採低飽和漲價磚紅 `text-rise` 替換刺眼亮紅 `text-error`；移除時光機前綴文字與時鐘圖示釋出全寬；時光機按鈕日期規格化為補零 `MM/DD 週W (盤後)/(T-N)`；更新時間列格式精簡為 `YY/MM/DD 週W HH:mm`；手機端主要字級由 `text-xs` 收斂至 `text-sm` 14px，統一時間戳記、更新按鈕與 Tab 數量顯示）— 完成 2026-09-05
 - [x] UI 視覺與層級第三波優化（資料時間戳記保留盤前/盤中/收盤/盤後中文前綴，格式為 `盤後 26/09/04 週五 22:34`；五大模式名稱、標籤與戰略說明集中收斂至 `src/constants/ui-strings.js` 之 `UI_STRINGS.SCREENER_MODES`，徹底杜絕分散定義；SearchBar 輸入框修復因父層 `flex-col` 與 `flex-1` 導致手機端高度塌陷為 20.61px 之問題，改採 `w-full md:flex-1 h-10 min-h-10 shrink-0` 徹底鎖定 40px 高度）— 完成 2026-09-05
+- [x] 「一鍵精選」全域控制項提升（Relocate Premium Toggle to Action Bar：由 ScreenerPanel 說明列遷移至頂部更新控制列，與快照、更新按鈕並排；手機端採 32px 方形星芒圖示微按鈕與快照按鈕對稱，電腦端展開顯示「一鍵精選/精選中」，在全部模式時自動停用；同時徹底釋放 ScreenerPanel 戰略提示空間，實現單行飽滿通欄展示）— 完成 2026-09-05
 
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）

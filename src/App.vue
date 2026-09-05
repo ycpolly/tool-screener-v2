@@ -74,8 +74,37 @@
           </span>
         </div>
 
-        <!-- 右側：更新與快照操作按鈕 (統一 rounded-lg h-8，無陰影) -->
+        <!-- 右側：一鍵精選、快照與更新操作按鈕 (統一 rounded-lg h-8，無陰影) -->
         <div class="flex items-center gap-1.5 sm:gap-2">
+          <!-- 一鍵精選按鈕 (深色 Neutral / Outline，手機為 32px 圖示按鈕，電腦端展開顯示文字) -->
+          <button
+            class="btn btn-sm h-8 min-h-0 w-8 p-0 sm:w-auto sm:px-2.5 rounded-lg cursor-pointer shadow-none transition-all flex items-center justify-center gap-1.5"
+            :class="[
+              isPremium
+                ? 'btn-neutral font-bold'
+                : 'btn-outline btn-neutral',
+              activeMode === 'ALL' ? 'opacity-40 cursor-not-allowed' : ''
+            ]"
+            :title="activeMode === 'ALL' ? (UI_STRINGS.SCREENER.premiumDisabledInAll || '全市場模式未套用策略') : (isPremium ? (UI_STRINGS.SCREENER.premiumActive || '已啟用一鍵精選') : (UI_STRINGS.SCREENER.premiumToggle || '一鍵精選'))"
+            :aria-label="isPremium ? (UI_STRINGS.SCREENER.premiumActive || '已啟用一鍵精選') : (UI_STRINGS.SCREENER.premiumToggle || '一鍵精選')"
+            :disabled="activeMode === 'ALL'"
+            @click="togglePremium"
+          >
+            <!-- 俐落簡約 SVG 星芒圖示 -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3.5 w-3.5 shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+            <span class="hidden sm:inline text-xs sm:text-sm font-medium">
+              {{ isPremium ? (UI_STRINGS.SCREENER.premiumActiveText || '精選中') : (UI_STRINGS.SCREENER.premiumToggle || '一鍵精選') }}
+            </span>
+          </button>
+
           <!-- 選股快照按鈕 (第二級 UI: btn-outline btn-neutral，純剪貼簿 SVG) -->
           <button
             class="btn btn-sm btn-outline btn-neutral h-8 w-8 min-h-0 p-0 rounded-lg cursor-pointer shadow-none transition-all flex items-center justify-center"

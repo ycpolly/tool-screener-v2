@@ -55,33 +55,9 @@
         <span v-else>{{ currentMode?.description }}</span>
       </div>
 
-      <!-- 右側動作：一鍵精選 + 重設自訂 + 展開/收合 (僅策略模式顯示微調按鈕) -->
+      <!-- 右側動作：重設自訂 + 展開/收合 (僅策略模式顯示微調按鈕) -->
       <div class="flex items-center gap-2 shrink-0">
         <template v-if="activeMode !== 'ALL'">
-          <!-- 一鍵精選膠囊按鈕 (統一 rounded-lg 與 h-8，無陰影，啟用時顯示「精選中」) -->
-          <button
-            type="button"
-            class="btn btn-sm text-sm font-medium h-8 min-h-0 px-2.5 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shadow-none"
-            :class="isPremium
-              ? 'bg-neutral text-neutral-content border-neutral font-bold'
-              : 'bg-base-100/70 hover:bg-base-300/60 text-base-content/75 hover:text-base-content border border-base-300/80'"
-            :title="isPremium ? (UI_STRINGS.SCREENER.premiumActive || '已啟用一鍵精選') : (UI_STRINGS.SCREENER.premiumToggle || '一鍵精選')"
-            @click="$emit('toggle-premium')"
-          >
-            <!-- 俐落簡約 SVG 星芒圖示 (隨狀態切換色彩) -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-3.5 w-3.5 shrink-0"
-              :class="isPremium ? 'text-neutral-content' : 'text-base-content/60'"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-            </svg>
-            <span>{{ isPremium ? (UI_STRINGS.SCREENER.premiumActiveText || '精選中') : (UI_STRINGS.SCREENER.premiumToggle || '一鍵精選') }}</span>
-          </button>
-
           <!-- 重設按鈕 (手動修改參數時出現，統一 rounded-lg 與右側並排) -->
           <button
             v-if="isCustomized"
