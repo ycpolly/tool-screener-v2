@@ -480,22 +480,29 @@ function reloadPage() {
   window.location.reload()
 }
 
-// 7. 選股快照複製
+// 7. 選股快照複製與行動端原生分享
 const copiedRecently = ref(false)
 const showCopiedToast = ref(false)
 let copyTimer = null
 let toastTimer = null
 
-async function handleCopySnapshot() {
-  if (!activeStocks.value || activeStocks.value.length === 0) return
+function triggerSuccessFeedback() {
+  copiedRecently.value = true
+  showCopiedToast.value = true
 
-  const text = buildScreenerSnapshotText({
-    stocks: activeStocks.value,
-    meta: meta.value,
-    quotesLastUpdated: quotesLastUpdated.value,
-    dayOffset: selectedDayOffset.value,
-  })
+  clearTimeout(copyTimer)
+  clearTimeout(toastTimer)
 
+  copyTimer = setTimeout(() => {
+    copiedRecently.value = false
+  }, 1500)
+
+  toastTimer = setTimeout(() => {
+    showCopiedToast.value = false
+  }, 2000)
+}
+
+async function copyTextToClipboard(text) {
   try {
     if (navigator?.clipboard?.writeText) {
       await navigator.clipboard.writeText(text)
@@ -509,23 +516,45 @@ async function handleCopySnapshot() {
       document.execCommand('copy')
       document.body.removeChild(textarea)
     }
-
-    copiedRecently.value = true
-    showCopiedToast.value = true
-
-    clearTimeout(copyTimer)
-    clearTimeout(toastTimer)
-
-    copyTimer = setTimeout(() => {
-      copiedRecently.value = false
-    }, 1500)
-
-    toastTimer = setTimeout(() => {
-      showCopiedToast.value = false
-    }, 2000)
+    triggerSuccessFeedback()
   } catch (err) {
     console.error('[Snapshot Copy Failed]', err)
   }
+}
+
+async function handleCopySnapshot() {
+  if (!activeStocks.value || activeStocks.value.length === 0) return
+
+  const text = buildScreenerSnapshotText({
+    stocks: activeStocks.value,
+    meta: meta.value,
+    quotesLastUpdated: quotesLastUpdated.value,
+    dayOffset: selectedDayOffset.value,
+  })
+
+  // 1. 行動裝置優先（iOS Safari / Android）：呼叫原生 Web Share API 滑出系統分享面板 (直通 LINE)
+  const isMobile = typeof navigator !== 'undefined' && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '')
+  if (isMobile && typeof navigator.share === 'function') {
+    try {
+      await navigator.share({
+        title: UI_STRINGS.SNAPSHOT?.title || '【豐盛幫手選股快照】',
+        text,
+      })
+      triggerSuccessFeedback()
+      return
+    } catch (err) {
+      // 使用者在 iOS 分享面板按下「取消」時系統會拋出 AbortError，靜默結束即可
+      if (err?.name === 'AbortError') {
+        return
+      }
+      // 其餘異常自動降級至剪貼簿
+      await copyTextToClipboard(text)
+      return
+    }
+  }
+
+  // 2. 電腦桌機端 (PC / Mac) 或不支援原生分享環境：直接複製至剪貼簿
+  await copyTextToClipboard(text)
 }
 
 onMounted(() => {
