@@ -1,11 +1,11 @@
 <template>
   <div class="search-sort-bar flex flex-col md:flex-row md:items-center justify-between gap-2.5 md:gap-3 w-full select-none">
-    <!-- 左側：搜尋輸入框 (統一 h-9 36px 高度與 rounded-lg 方形圓角) -->
+    <!-- 左側：搜尋輸入框 (統一 h-10 40px 高度與 rounded-lg 方形圓角) -->
     <div
-      class="flex items-center flex-1 bg-base-200 border border-base-300 rounded-lg px-3 h-9 transition-all focus-within:border-base-content/40 focus-within:bg-base-100/90"
+      class="flex items-center flex-1 bg-base-200 border border-base-300 rounded-lg px-3.5 h-10 transition-all focus-within:border-base-content/40 focus-within:bg-base-100/90"
     >
       <!-- 左側放大鏡 SVG 圖示 (清晰高辨識度) -->
-      <div class="flex items-center text-base-content/70 shrink-0 mr-2 pointer-events-none">
+      <div class="flex items-center text-base-content/70 shrink-0 mr-2.5 pointer-events-none">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-4 w-4"
@@ -22,13 +22,13 @@
         </svg>
       </div>
 
-      <!-- 核心搜尋輸入框 (無任何亮綠色 focus 框線，最小 text-sm 14px) -->
+      <!-- 核心搜尋輸入框 (高度貼合 h-full，無任何亮綠色 focus 框線，最小 text-sm 14px) -->
       <input
         :value="modelValue"
         type="text"
         inputmode="search"
         :placeholder="UI_STRINGS.SEARCH.placeholder"
-        class="w-full bg-transparent border-none p-0 text-sm text-base-content placeholder:text-base-content/40 placeholder:text-sm font-medium focus:outline-none focus:ring-0"
+        class="w-full h-full bg-transparent border-none p-0 text-sm text-base-content placeholder:text-base-content/40 placeholder:text-sm font-medium focus:outline-none focus:ring-0"
         @input="$emit('update:modelValue', $event.target.value)"
         @keydown.esc="$emit('update:modelValue', '')"
       />
@@ -58,13 +58,13 @@
       </button>
     </div>
 
-    <!-- 右側：攤開式排序按鈕組與檢視模式切換 (統一 h-9 36px 高度與 rounded-lg 方形圓角) -->
+    <!-- 右側：攤開式排序按鈕組與檢視模式切換 (統一 h-10 40px 高度與 rounded-lg 方形圓角) -->
     <div class="flex items-center gap-1.5 shrink-0 overflow-x-auto py-0.5 no-scrollbar">
       <button
         v-for="opt in sortOptions"
         :key="opt.key"
         type="button"
-        class="h-9 px-2.5 rounded-lg text-sm transition-colors flex items-center gap-1 shrink-0 font-numeric cursor-pointer"
+        class="h-10 px-3 rounded-lg text-sm transition-colors flex items-center gap-1 shrink-0 font-numeric cursor-pointer"
         :class="sortKey === opt.key ? 'bg-base-200 border border-base-300 font-bold text-base-content' : 'text-base-content/75 hover:text-base-content hover:bg-base-200/50'"
         @click="handleToggleSort(opt.key)"
       >
@@ -75,12 +75,12 @@
       </button>
 
       <!-- 垂直分隔線 -->
-      <span class="w-px h-5 bg-base-300/80 my-auto shrink-0 mx-0.5"></span>
+      <span class="w-px h-6 bg-base-300/80 my-auto shrink-0 mx-0.5"></span>
 
-      <!-- 顯示模式切換按鈕 (Icon Toggle，高度等高 h-9 w-9) -->
+      <!-- 顯示模式切換按鈕 (Icon Toggle，高度等高 h-10 w-10) -->
       <button
         type="button"
-        class="h-9 w-9 rounded-lg text-sm transition-colors flex items-center justify-center shrink-0 cursor-pointer"
+        class="h-10 w-10 rounded-lg text-sm transition-colors flex items-center justify-center shrink-0 cursor-pointer"
         :class="isCompact ? 'bg-base-200 border border-base-300 text-base-content font-bold' : 'text-base-content/75 hover:text-base-content hover:bg-base-200/50'"
         :title="isCompact ? UI_STRINGS.DISPLAY_MODE.toggleToFull : UI_STRINGS.DISPLAY_MODE.toggleToCompact"
         :aria-label="isCompact ? UI_STRINGS.DISPLAY_MODE.toggleToFull : UI_STRINGS.DISPLAY_MODE.toggleToCompact"

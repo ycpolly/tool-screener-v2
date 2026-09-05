@@ -16,13 +16,13 @@
       <!-- Tab 0: 全部股票 -->
       <button
         type="button"
-        class="py-2 px-1 text-center rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap cursor-pointer"
+        class="py-1.5 px-0.5 sm:py-2 sm:px-1 text-center rounded-lg text-sm font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 cursor-pointer"
         :class="activeMode === 'ALL' ? 'bg-base-100 text-base-content shadow-sm' : 'text-base-content/80 hover:text-base-content'"
         @click="$emit('update:activeMode', 'ALL')"
       >
-        <span class="hidden sm:inline">{{ UI_STRINGS.PANEL.allTab }}</span>
-        <span class="sm:hidden">全部</span>
-        <span class="text-xs md:text-sm font-numeric font-medium opacity-80">
+        <span class="hidden sm:inline leading-tight">{{ UI_STRINGS.PANEL.allTab }}</span>
+        <span class="sm:hidden leading-tight">全部</span>
+        <span class="text-xs md:text-sm font-numeric font-medium opacity-80 leading-tight">
           ({{ modeCounts?.ALL ?? totalCount ?? 0 }})
         </span>
       </button>
@@ -32,13 +32,13 @@
         v-for="mode in Object.values(modes)"
         :key="mode.id"
         type="button"
-        class="py-2 px-1 text-center rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1 flex-wrap cursor-pointer"
+        class="py-1.5 px-0.5 sm:py-2 sm:px-1 text-center rounded-lg text-sm font-bold transition-all flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 cursor-pointer"
         :class="activeMode === mode.id ? 'bg-base-100 text-base-content shadow-sm' : 'text-base-content/80 hover:text-base-content'"
         @click="$emit('update:activeMode', mode.id)"
       >
-        <span class="hidden sm:inline">{{ mode.label }}</span>
-        <span class="sm:hidden">{{ getShortModeLabel(mode.id) }}</span>
-        <span class="text-xs md:text-sm font-numeric font-medium opacity-80">
+        <span class="hidden sm:inline leading-tight">{{ mode.label }}</span>
+        <span class="sm:hidden leading-tight">{{ getShortModeLabel(mode.id) }}</span>
+        <span class="text-xs md:text-sm font-numeric font-medium opacity-80 leading-tight">
           ({{ modeCounts?.[mode.id] ?? 0 }})
         </span>
       </button>
