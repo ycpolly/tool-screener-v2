@@ -6,12 +6,14 @@
  * - 新增模式：在此新增設定物件即可，不需修改核心引擎或 UI 程式碼
  */
 
+import { UI_STRINGS } from './ui-strings.js'
+
 export const SCREENER_MODES = {
   // Mode 1 - 跌深反轉 (Bottom Reversal)
   BOTTOM_REVERSAL: {
     id: 'BOTTOM_REVERSAL',
-    label: '跌深反轉',
-    description: '空頭超賣區爆量收紅，V型反轉發動日',
+    label: UI_STRINGS.SCREENER_MODES.BOTTOM_REVERSAL.label,
+    description: UI_STRINGS.SCREENER_MODES.BOTTOM_REVERSAL.description,
     defaultParams: {
       // 均線位階與乖離
       maAboveMode: 'NONE',            // (預設) 無限制，由乖離區間精準控管
@@ -57,8 +59,8 @@ export const SCREENER_MODES = {
   // Mode 2 - 底部蓄勢 (Bottom Consolidation)
   BOTTOM_CONSOLIDATION: {
     id: 'BOTTOM_CONSOLIDATION',
-    label: '底部蓄勢',
-    description: '尋找籌碼乾淨、極致壓縮股（參與 D1-D3）',
+    label: UI_STRINGS.SCREENER_MODES.BOTTOM_CONSOLIDATION.label,
+    description: UI_STRINGS.SCREENER_MODES.BOTTOM_CONSOLIDATION.description,
     defaultParams: {
       // 均線與位階
       maAboveMode: 'BOTH',            // (嚴) 同時站穩 5MA 與 10MA
@@ -103,8 +105,8 @@ export const SCREENER_MODES = {
   // Mode 3 - 動能攻擊 (Momentum Breakout)
   MOMENTUM_BREAKOUT: {
     id: 'MOMENTUM_BREAKOUT',
-    label: '動能攻擊',
-    description: '剛結束打底、今日帶量出第一根紅棒的發動股（參與 D4）',
+    label: UI_STRINGS.SCREENER_MODES.MOMENTUM_BREAKOUT.label,
+    description: UI_STRINGS.SCREENER_MODES.MOMENTUM_BREAKOUT.description,
     defaultParams: {
       // 均線與糾結
       maAboveMode: 'BOTH',          // (嚴) 同時站穩 5MA 與 10MA
@@ -145,8 +147,8 @@ export const SCREENER_MODES = {
   // Mode 4 - 多頭回測 (Trend Pullback)
   TREND_PULLBACK: {
     id: 'TREND_PULLBACK',
-    label: '多頭回測',
-    description: '多頭趨勢中，量縮拉回找支撐的強勢中繼股',
+    label: UI_STRINGS.SCREENER_MODES.TREND_PULLBACK.label,
+    description: UI_STRINGS.SCREENER_MODES.TREND_PULLBACK.description,
     defaultParams: {
       // 均線與糾結
       maAboveMode: 'ANY',           // (寬) 站穩 5MA 或 10MA
@@ -186,8 +188,8 @@ export const SCREENER_MODES = {
   // Mode 5 - 洗盤起漲 (Washout Ignition)
   WASHOUT_IGNITION: {
     id: 'WASHOUT_IGNITION',
-    label: '洗盤起漲',
-    description: '趨勢多頭、指標降溫後再度帶量攻擊起漲',
+    label: UI_STRINGS.SCREENER_MODES.WASHOUT_IGNITION.label,
+    description: UI_STRINGS.SCREENER_MODES.WASHOUT_IGNITION.description,
     defaultParams: {
       // 均線與位階
       maAboveMode: 'BOTH',            // (嚴) 同時站穩 5MA 與 10MA

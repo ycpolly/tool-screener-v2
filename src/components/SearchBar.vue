@@ -1,8 +1,8 @@
 <template>
   <div class="search-sort-bar flex flex-col md:flex-row md:items-center justify-between gap-2.5 md:gap-3 w-full select-none">
-    <!-- 左側：搜尋輸入框 (統一 h-10 40px 高度與 rounded-lg 方形圓角) -->
+    <!-- 左側：搜尋輸入框 (手機端 w-full h-10 min-h-10 shrink-0，電腦端 md:flex-1 彈性延伸) -->
     <div
-      class="flex items-center flex-1 bg-base-200 border border-base-300 rounded-lg px-3.5 h-10 transition-all focus-within:border-base-content/40 focus-within:bg-base-100/90"
+      class="flex items-center w-full md:flex-1 h-10 min-h-10 shrink-0 bg-base-200 border border-base-300 rounded-lg px-3.5 transition-all focus-within:border-base-content/40 focus-within:bg-base-100/90"
     >
       <!-- 左側放大鏡 SVG 圖示 (清晰高辨識度) -->
       <div class="flex items-center text-base-content/70 shrink-0 mr-2.5 pointer-events-none">

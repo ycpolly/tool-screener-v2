@@ -1147,22 +1147,9 @@ const currentMode = computed(() => {
   return props.modes?.[props.activeMode] || {}
 })
 
-// 手機端精簡標籤 (依生命週期順序)
+// 手機端精簡標籤 (依生命週期順序，統一自 ui-strings.js 取得)
 function getShortModeLabel(modeId) {
-  switch (modeId) {
-    case 'BOTTOM_REVERSAL':
-      return '反轉'
-    case 'BOTTOM_CONSOLIDATION':
-      return '底部'
-    case 'MOMENTUM_BREAKOUT':
-      return '動能'
-    case 'TREND_PULLBACK':
-      return '回測'
-    case 'WASHOUT_IGNITION':
-      return '起漲'
-    default:
-      return modeId
-  }
+  return UI_STRINGS.SCREENER_MODES?.[modeId]?.shortLabel || modeId
 }
 
 

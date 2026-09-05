@@ -352,20 +352,34 @@ const dataTimestampText = computed(() => {
         const dW = WEEKDAYS[d.getDay()]
         const hh = String(d.getHours()).padStart(2, '0')
         const min = String(d.getMinutes()).padStart(2, '0')
-        return `${dY}/${dM}/${dD} 週${dW} ${hh}:${min}`
+
+        const nowHour = now.getHours()
+        const isPreMarket = nowHour < 9 && now.getDay() >= 1 && now.getDay() <= 5
+        const prefix = isPreMarket
+          ? (UI_STRINGS.APP.prefixPreMarket || '盤前 ')
+          : (UI_STRINGS.APP.prefixPostMarket || '盤後 ')
+
+        return `${prefix}${dY}/${dM}/${dD} 週${dW} ${hh}:${min}`
       }
     } catch {}
-    return rawUpdated
+    return `${UI_STRINGS.APP.prefixPostMarket || '盤後 '}${rawUpdated}`
   }
 
   // 2. 09:00 ~ 17:00 之間若有 GCP 即時行情：
   if (quotesLastUpdated.value) {
     const timeStr = quotesLastUpdated.value
+    const nowHour = now.getHours()
+    const nowMin = now.getMinutes()
+    const isClosedIntraday = (nowHour > 13) || (nowHour === 13 && nowMin >= 30)
+    const prefix = isClosedIntraday
+      ? (UI_STRINGS.APP.prefixClosed || '收盤 ')
+      : (UI_STRINGS.APP.prefixIntraday || '盤中 ')
+
     if (timeStr.includes('-') || timeStr.includes('/')) {
-      return timeStr
+      return `${prefix}${timeStr}`
     }
     const cleanTime = timeStr.length > 5 ? timeStr.slice(0, 5) : timeStr
-    return `${yy}/${mm}/${dd} 週${weekDay} ${cleanTime}`
+    return `${prefix}${yy}/${mm}/${dd} 週${weekDay} ${cleanTime}`
   }
 
   // 3. 無即時報價時之 fallback
@@ -379,10 +393,11 @@ const dataTimestampText = computed(() => {
       const dW = WEEKDAYS[d.getDay()]
       const hh = String(d.getHours()).padStart(2, '0')
       const min = String(d.getMinutes()).padStart(2, '0')
-      return `${dY}/${dM}/${dD} 週${dW} ${hh}:${min}`
+      const prefix = UI_STRINGS.APP.prefixPostMarket || '盤後 '
+      return `${prefix}${dY}/${dM}/${dD} 週${dW} ${hh}:${min}`
     }
   } catch {}
-  return rawUpdated
+  return `${UI_STRINGS.APP.prefixPostMarket || '盤後 '}${rawUpdated}`
 })
 
 

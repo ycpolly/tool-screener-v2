@@ -11,6 +11,35 @@ export const UI_STRINGS = {
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
+    prefixPreMarket: '盤前 ',
+  },
+
+  SCREENER_MODES: {
+    BOTTOM_REVERSAL: {
+      label: '跌深反轉',
+      shortLabel: '反轉',
+      description: '空頭超賣區爆量收紅，V型反轉發動日',
+    },
+    BOTTOM_CONSOLIDATION: {
+      label: '底部蓄勢',
+      shortLabel: '底部',
+      description: '尋找籌碼乾淨、極致壓縮股（參與 D1-D3）',
+    },
+    MOMENTUM_BREAKOUT: {
+      label: '動能攻擊',
+      shortLabel: '動能',
+      description: '剛結束打底、今日帶量出第一根紅棒的發動股（參與 D4）',
+    },
+    TREND_PULLBACK: {
+      label: '多頭回測',
+      shortLabel: '回測',
+      description: '多頭趨勢中，量縮拉回找支撐的強勢中繼股',
+    },
+    WASHOUT_IGNITION: {
+      label: '洗盤起漲',
+      shortLabel: '起漲',
+      description: '趨勢多頭、指標降溫後再度帶量攻擊起漲',
+    },
   },
 
 
