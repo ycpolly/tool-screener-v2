@@ -55,7 +55,7 @@
       <!-- 搜尋有結果 -->
       <div v-else class="space-y-4">
         <!-- 1. 搜尋符合策略名單 -->
-        <div v-if="searchMatchedStocks.length > 0" class="space-y-3">
+        <div v-if="searchMatchedStocks.length > 0" :class="isCompact ? 'space-y-2' : 'space-y-3'">
           <div
             v-if="activeMode !== 'ALL' && searchUnmatchedStocks.length > 0"
             class="text-xs font-bold text-base-content/70 px-1"
@@ -67,13 +67,14 @@
             :key="stock.code"
             :stock="stock"
             :active-mode="activeMode"
+            :is-compact="isCompact"
             @select="$emit('select', stock)"
             @open-risk-modal="$emit('openRiskModal', stock)"
           />
         </div>
 
         <!-- 2. 搜尋未符合策略名單 (直接展開顯示淘汰原因，無需大海撈針) -->
-        <div v-if="activeMode !== 'ALL' && searchUnmatchedStocks.length > 0" class="space-y-3">
+        <div v-if="activeMode !== 'ALL' && searchUnmatchedStocks.length > 0" :class="isCompact ? 'space-y-2' : 'space-y-3'">
           <div
             v-if="searchMatchedStocks.length > 0"
             class="text-xs font-bold text-base-content/70 px-1 pt-2 border-t border-base-300/60"
@@ -86,6 +87,7 @@
             :stock="stock"
             :active-mode="activeMode"
             :is-unmatched="true"
+            :is-compact="isCompact"
             @select="$emit('select', stock)"
             @open-risk-modal="$emit('openRiskModal', stock)"
           />
@@ -108,12 +110,13 @@
       </div>
 
       <!-- 符合策略結果清單 (渲染 StockCard) -->
-      <div v-else class="space-y-3">
+      <div v-else :class="isCompact ? 'space-y-2' : 'space-y-3'">
         <StockCard
           v-for="stock in sortedStocks"
           :key="stock.code"
           :stock="stock"
           :active-mode="activeMode"
+          :is-compact="isCompact"
           @select="$emit('select', stock)"
           @open-risk-modal="$emit('openRiskModal', stock)"
         />
@@ -145,13 +148,14 @@
         </div>
 
         <!-- 展開未符合清單 (渲染 StockCard，isUnmatched=true) -->
-        <div v-if="showUnmatched" class="space-y-3 opacity-90">
+        <div v-if="showUnmatched" :class="isCompact ? 'space-y-2 opacity-90' : 'space-y-3 opacity-90'">
           <StockCard
             v-for="stock in sortedUnmatchedStocks"
             :key="stock.code"
             :stock="stock"
             :active-mode="activeMode"
             :is-unmatched="true"
+            :is-compact="isCompact"
             @select="$emit('select', stock)"
             @open-risk-modal="$emit('openRiskModal', stock)"
           />
@@ -198,6 +202,10 @@ const props = defineProps({
   sortDir: {
     type: String,
     default: 'desc',
+  },
+  isCompact: {
+    type: Boolean,
+    default: false,
   },
 })
 

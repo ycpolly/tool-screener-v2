@@ -436,6 +436,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 策略展開診斷清單關鍵風控項補齊（`diagnoseStock` 補齊「長黑避雷 checkAvoidLongBlack」、「當日避雷 excludeSell1D」、「昨日量縮 checkPrevVolContraction」，確保未符合時清單能 100% 精準對應紅字 ✗ 淘汰理由）— 完成 2026-09-03
 - [x] StockCard 未達標摘要與診斷清單體驗優化（未符合外層預覽改為彙整「N 項未達標：未站穩 5MA · 成交量不足」全條件概覽；籌碼集中度正值紅字高亮；展開診斷標籤冒號改全形「：」；移除容器 select-none 徹底釋放滑鼠反藍選取與右鍵複製文字權限；診斷指標項目全面收錄於 `UI_STRINGS.DIAGNOSIS_LABELS` 實現單一來源維護）— 完成 2026-09-03
 - [x] 全市場五大模式選股快照（Screener Snapshot：純前端 5ms 高效批次運算，一鍵複製一般篩選與一鍵精選五大策略純文字清單至剪貼簿，自帶複製時間與資料時間雙時間戳記、平盤 `(0、平盤)` 標註、第二級 UI `btn-outline btn-neutral` 按鈕、綠色打勾微動效與 Toast 提示）— 完成 2026-09-05
+- [x] 選股清單顯示模式切換（Display Mode Toggle：SearchBar 右側整合 h-9 w-9 Icon Toggle 按鈕，支援完整卡片與簡約模式 Compact Mode 流暢切換；簡約模式僅收納首行即時報價與槽位 B 篩選評估理由，卡片內距緊縮為 py-2.5 px-3.5，同時保留槽位 B 就地展開指標診斷功能，同步作用於符合與未符合名單，並以 localStorage 持久化偏好習慣）— 完成 2026-09-05
 
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）

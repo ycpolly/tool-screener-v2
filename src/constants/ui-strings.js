@@ -361,6 +361,13 @@ export const UI_STRINGS = {
     copiedToast: '已複製五大模式選股快照至剪貼簿',
     copyBtnTitle: '複製五大模式選股快照',
   },
+
+  DISPLAY_MODE: {
+    compact: '簡約模式',
+    full: '完整模式',
+    toggleToCompact: '切換為簡約模式',
+    toggleToFull: '切換為完整模式',
+  },
 }
 
 

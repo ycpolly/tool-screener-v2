@@ -155,8 +155,10 @@
           v-model="searchQuery"
           :sort-key="sortKey"
           :sort-dir="sortDir"
+          :is-compact="isCompact"
           @update:sort-key="sortKey = $event"
           @update:sort-dir="sortDir = $event"
+          @toggle-compact="toggleCompact"
         />
 
         <!-- 選股結果列表 (專注展示 StockCard) -->
@@ -169,6 +171,7 @@
           :search-query="searchQuery"
           :sort-key="sortKey"
           :sort-dir="sortDir"
+          :is-compact="isCompact"
           @select="handleSelectStock"
           @open-risk-modal="handleOpenRiskModal"
         />
@@ -275,6 +278,12 @@ const searchQuery = ref('')
 const sortKey     = ref('changePct')
 const sortDir     = ref('desc')
 const isDark      = ref(false)
+const isCompact   = ref(false)
+
+function toggleCompact() {
+  isCompact.value = !isCompact.value
+  localStorage.setItem('tool_display_mode', isCompact.value ? 'compact' : 'full')
+}
 
 function toggleTheme() {
   isDark.value = !isDark.value
@@ -527,6 +536,11 @@ onMounted(() => {
     isDark.value = true
   }
   document.documentElement.setAttribute('data-theme', isDark.value ? 'dracula' : 'cupcake')
+
+  const savedDisplayMode = localStorage.getItem('tool_display_mode')
+  if (savedDisplayMode === 'compact') {
+    isCompact.value = true
+  }
 
   loadPool()
 })

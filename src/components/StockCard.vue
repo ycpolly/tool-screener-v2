@@ -1,11 +1,93 @@
 <template>
   <div
-    class="stock-card bg-base-200 border border-base-300 rounded-xl p-6 transition-all duration-200 hover:shadow-md hover:border-base-content/20 [content-visibility:auto] [contain-intrinsic-size:160px]"
+    class="stock-card bg-base-200 border border-base-300 rounded-xl transition-all duration-200 hover:shadow-md hover:border-base-content/20 [content-visibility:auto]"
+    :class="isCompact ? 'p-3 sm:p-3.5' : 'p-6'"
+    :style="{ containIntrinsicSize: isCompact ? '76px' : '160px' }"
   >
     <!-- ============================================================
-         手機端佈局 (< 1024px)：由上而下 5 層自然排列
+         簡約模式佈局 (Compact Mode)：僅保留首行核心報價與槽位 B 篩選理由
          ============================================================ -->
-    <div class="block lg:hidden space-y-3">
+    <div v-if="isCompact" class="space-y-2">
+      <!-- 首行：核心報價 (代號、名稱、即時現價、漲跌幅) -->
+      <div class="flex items-baseline justify-between gap-2">
+        <div class="flex items-baseline gap-2 min-w-0">
+          <span class="font-numeric font-bold text-lg text-base-content tracking-wide">{{ stock.code }}</span>
+          <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
+          <span v-if="stock.isDisposed" class="font-bold text-sm text-error tracking-tight">
+            [{{ UI_STRINGS.SCREENER.disposed }}]
+          </span>
+        </div>
+        <div class="flex items-baseline gap-1.5 shrink-0 font-numeric">
+          <span class="text-lg font-bold" :class="priceColorClass">
+            {{ formatNumber(stock.price) }}
+          </span>
+          <span class="text-sm font-semibold" :class="changeColorClass">
+            {{ formatChange(stock.change, stock.changePct) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- 槽位 B：篩選判讀純文字結果 (支援點擊向下展開指標診斷清單) -->
+      <div
+        v-if="filterEvaluationText"
+        class="text-sm font-normal leading-normal py-1.5 px-3 rounded-lg border transition-colors mt-1"
+        :class="[
+          isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/75' : 'bg-base-300/50 border-base-300/80 text-base-content',
+          hasEvaluationDetails ? 'cursor-pointer hover:bg-base-300/70' : ''
+        ]"
+        @click="hasEvaluationDetails && (isDetailsExpanded = !isDetailsExpanded)"
+      >
+        <div class="flex items-center justify-between gap-1.5 select-none">
+          <span class="font-medium flex-1">{{ filterEvaluationText }}</span>
+          <span
+            v-if="hasEvaluationDetails"
+            class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0"
+          >
+            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || '收合診斷') : (UI_STRINGS.SCREENER.collapseDetails || '收合細節')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || '展開診斷') : (UI_STRINGS.SCREENER.expandDetails || '展開細節')) }}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3.5 w-3.5 transition-transform duration-200"
+              :class="{ 'rotate-180': isDetailsExpanded }"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+
+        <!-- 展開後的純文字指標通關診斷清單 (允許選取複製文字) -->
+        <div
+          v-if="isDetailsExpanded && hasEvaluationDetails"
+          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-xs font-numeric select-text cursor-auto"
+          @click.stop
+        >
+          <div
+            v-for="(item, idx) in evaluationDetails"
+            :key="idx"
+            class="flex items-start gap-1.5 leading-relaxed"
+          >
+            <span
+              class="shrink-0 font-bold"
+              :class="item.pass ? 'text-success' : 'text-error'"
+            >
+              {{ item.pass ? '✓' : '✗' }}
+            </span>
+            <span class="text-base-content/90">
+              <strong class="text-base-content font-semibold">{{ item.label }}：</strong>{{ item.desc }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         完整模式佈局 (Full Mode)
+         ============================================================ -->
+    <template v-else>
+      <!-- 手機端佈局 (< 1024px)：由上而下 5 層自然排列 -->
+      <div class="block lg:hidden space-y-3">
       <!-- 第 1 層：主焦點 (代號、名稱、即時現價同為 text-lg，漲跌幅為 text-sm) -->
       <div class="flex items-baseline justify-between gap-2">
         <div class="flex items-baseline gap-2 min-w-0">
@@ -454,6 +536,7 @@
         </div>
       </div>
     </div>
+    </template>
   </div>
 </template>
 
@@ -482,6 +565,10 @@ const props = defineProps({
   filterEvaluation: {
     type: Object,
     default: null,
+  },
+  isCompact: {
+    type: Boolean,
+    default: false,
   },
 })
 
