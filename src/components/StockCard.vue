@@ -107,10 +107,25 @@
         </div>
       </div>
 
-      <!-- 第 2 層：標籤純文字 (統一 text-sm font-normal, text-base-content/80) -->
-      <div v-if="categoryLabels.length > 0 || sellWarningText" class="text-sm font-normal text-base-content/80 leading-normal">
-        <span v-if="categoryLabels.length > 0">{{ categoryLabels.join(' · ') }}</span>
-        <span v-if="categoryLabels.length > 0 && sellWarningText" class="text-base-content/40"> · </span>
+      <!-- 第 2 層：標籤 (統一 text-sm font-normal, text-base-content/80，支援官方排行榜外開超連結) -->
+      <div v-if="categoryItems.length > 0 || sellWarningText" class="text-sm font-normal text-base-content/80 leading-normal">
+        <template v-if="categoryItems.length > 0">
+          <template v-for="(item, idx) in categoryItems" :key="item.key">
+            <a
+              v-if="item.url"
+              :href="item.url"
+              target="_blank"
+              rel="noopener"
+              class="hover:underline hover:text-base-content transition-colors"
+              @click.stop
+            >
+              {{ item.label }}
+            </a>
+            <span v-else>{{ item.label }}</span>
+            <span v-if="idx < categoryItems.length - 1" class="text-base-content/40 mx-1">·</span>
+          </template>
+        </template>
+        <span v-if="categoryItems.length > 0 && sellWarningText" class="text-base-content/40 mx-1">·</span>
         <span v-if="sellWarningText" class="inline-flex items-center text-base-content/80">
           <svg class="inline-block w-3.5 h-3.5 shrink-0 align-[-0.12em] mr-1" viewBox="0 0 16 16" fill="none">
             <path d="M7.134 1.5a1 1 0 011.732 0l6.062 10.5A1 1 0 0114.062 13.5H1.938a1 1 0 01-.866-1.5L7.134 1.5z" fill="#F59E0B" />
@@ -346,10 +361,25 @@
           </div>
         </div>
 
-        <!-- 標籤 (統一 text-sm font-normal) -->
-        <div v-if="categoryLabels.length > 0 || sellWarningText" class="text-sm font-normal text-base-content/80 leading-normal">
-          <span v-if="categoryLabels.length > 0">{{ categoryLabels.join(' · ') }}</span>
-          <span v-if="categoryLabels.length > 0 && sellWarningText" class="text-base-content/40"> · </span>
+        <!-- 標籤 (統一 text-sm font-normal，支援官方排行榜外開超連結) -->
+        <div v-if="categoryItems.length > 0 || sellWarningText" class="text-sm font-normal text-base-content/80 leading-normal">
+          <template v-if="categoryItems.length > 0">
+            <template v-for="(item, idx) in categoryItems" :key="item.key">
+              <a
+                v-if="item.url"
+                :href="item.url"
+                target="_blank"
+                rel="noopener"
+                class="hover:underline hover:text-base-content transition-colors"
+                @click.stop
+              >
+                {{ item.label }}
+              </a>
+              <span v-else>{{ item.label }}</span>
+              <span v-if="idx < categoryItems.length - 1" class="text-base-content/40 mx-1">·</span>
+            </template>
+          </template>
+          <span v-if="categoryItems.length > 0 && sellWarningText" class="text-base-content/40 mx-1">·</span>
           <span v-if="sellWarningText" class="inline-flex items-center text-base-content/80">
             <svg class="inline-block w-3.5 h-3.5 shrink-0 align-[-0.12em] mr-1" viewBox="0 0 16 16" fill="none">
               <path d="M7.134 1.5a1 1 0 011.732 0l6.062 10.5A1 1 0 0114.062 13.5H1.938a1 1 0 01-.866-1.5L7.134 1.5z" fill="#F59E0B" />
@@ -543,6 +573,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { UI_STRINGS } from '../constants/ui-strings.js'
+import { getStockCategoryItems } from '../constants/category-urls.js'
 import Sparkline from './Sparkline.vue'
 
 const props = defineProps({
@@ -651,17 +682,7 @@ const bias20ColorClass = computed(() => {
   return bias20.value > 0 ? 'text-rise' : bias20.value < 0 ? 'text-fall' : 'text-base-content/75'
 })
 
-const categoryLabels = computed(() => {
-  const cats = props.stock.categories
-  const tagMap = UI_STRINGS.CATEGORY_TAGS || {}
-  const labels = Array.isArray(cats)
-    ? cats
-        .filter((c) => !c.includes('Sell')) // 排除賣超標籤（已在右側 ⚠️ sellWarningText 警示列統一獨立展示）
-        .map((c) => tagMap[c] || c)
-        .filter(Boolean)
-    : []
-  return Array.from(new Set(labels))
-})
+const categoryItems = computed(() => getStockCategoryItems(props.stock))
 
 const sellWarningText = computed(() => {
   if (!props.stock.sellWarning) return ''
