@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0905.02',
+    version: 'v0905.03',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -388,7 +388,7 @@ export const UI_STRINGS = {
     dataTimeSuffix: ' 資料',
     standardSection: '【一般篩選】',
     premiumSection: '【一鍵精選】',
-    modeHeader: (label, count) => `＝＝＝ ${label} (${count}) ＝＝＝`,
+    modeHeader: (label, count) => `＝＝ ${label} (${count}) ＝＝`,
     flat: '0 (0.00%)',
     copiedToast: '已複製五大模式選股快照至剪貼簿',
     copyBtnTitle: '複製五大模式選股快照',
