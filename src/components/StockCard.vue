@@ -195,21 +195,18 @@
           </span>
         </div>
 
-        <!-- 展開後的三明治價格天梯 (純文字、無彩色、font-numeric) -->
+        <!-- 展開後的三明治價格天梯 (純文字、無彩色、標準字級 text-sm font-numeric) -->
         <div
           v-if="isCeilingExpanded"
-          class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
+          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-sm font-normal leading-normal font-numeric select-text cursor-auto"
           @click.stop
         >
           <!-- 1. 上方天花板 (由高至低排列，最高在最頂) -->
           <div class="space-y-1">
-            <div class="text-base-content/50 font-sans font-medium text-[11px] pb-0.5">
-              [{{ UI_STRINGS.CEILINGS.ceilingHeader }}]
-            </div>
             <div
               v-for="(item, idx) in ladderCeilings"
               :key="`m-c-${idx}`"
-              class="flex items-center justify-between text-base-content/90"
+              class="flex items-center justify-between text-base-content/85"
             >
               <span class="truncate font-sans">{{ item.type }}</span>
               <div class="flex items-baseline gap-3 shrink-0">
@@ -217,14 +214,18 @@
                 <span class="w-16 text-right">{{ formatPercent(item.netProfitPct) }}</span>
               </div>
             </div>
-            <div v-if="ladderCeilings.length === 0" class="text-base-content/60 text-[11px]">
+            <div v-if="ladderCeilings.length === 0" class="text-base-content/60 text-sm">
               {{ UI_STRINGS.CEILINGS.emptyCeilings }}
             </div>
           </div>
 
-          <!-- 2. 中間現價基準線 -->
-          <div class="py-1 text-center border-y border-base-300/60 text-base-content/75 font-medium tracking-wide">
-            ── {{ UI_STRINGS.CEILINGS.currentPricePrefix }}{{ formatNumber(stock.price) }} ──
+          <!-- 2. 中間現價基準線 (同列排版，加上下中等透明度邊框) -->
+          <div class="flex items-center justify-between border-y border-base-content/25 py-1 my-0.5 text-base-content font-medium">
+            <span class="truncate font-sans">{{ UI_STRINGS.STOCK_TABLE.headers.price || '現價' }}</span>
+            <div class="flex items-baseline gap-3 shrink-0">
+              <span class="font-bold">{{ formatNumber(stock.price) }}</span>
+              <span class="w-16 text-right font-bold">0.00%</span>
+            </div>
           </div>
 
           <!-- 3. 下方地板 (由高至低排列，最近支撐在現價下方，最深在最底) -->
@@ -232,7 +233,7 @@
             <div
               v-for="(item, idx) in ladderSupports"
               :key="`m-s-${idx}`"
-              class="flex items-center justify-between text-base-content/90"
+              class="flex items-center justify-between text-base-content/85"
             >
               <span class="truncate font-sans">{{ item.type }}</span>
               <div class="flex items-baseline gap-3 shrink-0">
@@ -240,11 +241,8 @@
                 <span class="w-16 text-right">-{{ Number(item.riskLossPct).toFixed(2) }}%</span>
               </div>
             </div>
-            <div v-if="ladderSupports.length === 0" class="text-base-content/60 text-[11px]">
+            <div v-if="ladderSupports.length === 0" class="text-base-content/60 text-sm">
               {{ UI_STRINGS.CEILINGS.emptySupports }}
-            </div>
-            <div class="text-base-content/50 font-sans font-medium text-[11px] pt-0.5">
-              [{{ UI_STRINGS.CEILINGS.supportHeader }}]
             </div>
           </div>
         </div>
@@ -519,21 +517,18 @@
             </span>
           </div>
 
-          <!-- 展開後的三明治價格天梯 (純文字、無彩色、font-numeric) -->
+          <!-- 展開後的三明治價格天梯 (純文字、無彩色、標準字級 text-sm font-numeric) -->
           <div
             v-if="isCeilingExpanded"
-            class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
+            class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-sm font-normal leading-normal font-numeric select-text cursor-auto"
             @click.stop
           >
             <!-- 1. 上方天花板 (由高至低排列，最高在最頂) -->
             <div class="space-y-1">
-              <div class="text-base-content/50 font-sans font-medium text-[11px] pb-0.5">
-                [{{ UI_STRINGS.CEILINGS.ceilingHeader }}]
-              </div>
               <div
                 v-for="(item, idx) in ladderCeilings"
                 :key="`d-c-${idx}`"
-                class="flex items-center justify-between text-base-content/90"
+                class="flex items-center justify-between text-base-content/85"
               >
                 <span class="truncate font-sans">{{ item.type }}</span>
                 <div class="flex items-baseline gap-3 shrink-0">
@@ -541,14 +536,18 @@
                   <span class="w-16 text-right">{{ formatPercent(item.netProfitPct) }}</span>
                 </div>
               </div>
-              <div v-if="ladderCeilings.length === 0" class="text-base-content/60 text-[11px]">
+              <div v-if="ladderCeilings.length === 0" class="text-base-content/60 text-sm">
                 {{ UI_STRINGS.CEILINGS.emptyCeilings }}
               </div>
             </div>
 
-            <!-- 2. 中間現價基準線 -->
-            <div class="py-1 text-center border-y border-base-300/60 text-base-content/75 font-medium tracking-wide">
-              ── {{ UI_STRINGS.CEILINGS.currentPricePrefix }}{{ formatNumber(stock.price) }} ──
+            <!-- 2. 中間現價基準線 (同列排版，加上下中等透明度邊框) -->
+            <div class="flex items-center justify-between border-y border-base-content/25 py-1 my-0.5 text-base-content font-medium">
+              <span class="truncate font-sans">{{ UI_STRINGS.STOCK_TABLE.headers.price || '現價' }}</span>
+              <div class="flex items-baseline gap-3 shrink-0">
+                <span class="font-bold">{{ formatNumber(stock.price) }}</span>
+                <span class="w-16 text-right font-bold">0.00%</span>
+              </div>
             </div>
 
             <!-- 3. 下方地板 (由高至低排列，最近支撐在現價下方，最深在最底) -->
@@ -556,7 +555,7 @@
               <div
                 v-for="(item, idx) in ladderSupports"
                 :key="`d-s-${idx}`"
-                class="flex items-center justify-between text-base-content/90"
+                class="flex items-center justify-between text-base-content/85"
               >
                 <span class="truncate font-sans">{{ item.type }}</span>
                 <div class="flex items-baseline gap-3 shrink-0">
@@ -564,11 +563,8 @@
                   <span class="w-16 text-right">-{{ Number(item.riskLossPct).toFixed(2) }}%</span>
                 </div>
               </div>
-              <div v-if="ladderSupports.length === 0" class="text-base-content/60 text-[11px]">
+              <div v-if="ladderSupports.length === 0" class="text-base-content/60 text-sm">
                 {{ UI_STRINGS.CEILINGS.emptySupports }}
-              </div>
-              <div class="text-base-content/50 font-sans font-medium text-[11px] pt-0.5">
-                [{{ UI_STRINGS.CEILINGS.supportHeader }}]
               </div>
             </div>
           </div>
