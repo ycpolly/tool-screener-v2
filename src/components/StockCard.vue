@@ -164,21 +164,91 @@
       </div>
 
 
-      <!-- ★ 預留槽位 A：天花板關卡價與預期純利 (暫時註解隱藏) -->
-      <!--
+      <!-- 槽位 A：天花板關卡價與預期純利 (支援就地向下展開天梯清單) -->
       <div
         v-if="ceilingInfo"
-        class="flex items-center justify-between text-sm font-normal leading-normal py-1.5 px-2.5 rounded-lg bg-base-300/40 cursor-pointer hover:bg-base-300/70 transition-colors"
-        @click="$emit('openRiskModal', stock)"
+        class="text-sm font-normal leading-normal py-1.5 px-2.5 rounded-lg border border-base-300/60 bg-base-300/40 text-base-content transition-colors"
       >
-        <span class="text-base-content/80">
-          {{ ceilingInfo.type }} <strong class="font-numeric font-bold text-base-content">{{ formatNumber(ceilingInfo.price) }}</strong>
-        </span>
-        <span class="font-bold" :class="ceilingInfo.netProfitPct >= 0 ? 'text-rise' : 'text-base-content/80'">
-          {{ UI_STRINGS.METRICS.expectedProfit }} {{ ceilingInfo.netProfitPct >= 0 ? '+' : '' }}{{ ceilingInfo.netProfitPct }}% ↗
-        </span>
+        <div
+          class="flex items-center justify-between gap-1.5 select-none cursor-pointer"
+          @click="isCeilingExpanded = !isCeilingExpanded"
+        >
+          <div class="flex items-baseline gap-1.5 truncate">
+            <span class="text-base-content/80">{{ ceilingInfo.type }}</span>
+            <strong class="font-numeric font-bold text-base-content">{{ formatNumber(ceilingInfo.price) }}</strong>
+            <span class="text-base-content/40">·</span>
+            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.expectedProfit }}</span>
+            <strong class="font-numeric font-bold text-base-content">{{ formatPercent(ceilingInfo.netProfitPct) }}</strong>
+          </div>
+          <span class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0">
+            <span>{{ isCeilingExpanded ? UI_STRINGS.CEILINGS.collapseLabel : UI_STRINGS.CEILINGS.expandLabel }}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3.5 w-3.5 transition-transform duration-200"
+              :class="{ 'rotate-180': isCeilingExpanded }"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+
+        <!-- 展開後的三明治價格天梯 (純文字、無彩色、font-numeric) -->
+        <div
+          v-if="isCeilingExpanded"
+          class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
+          @click.stop
+        >
+          <!-- 1. 上方天花板 (由高至低排列，最高在最頂) -->
+          <div class="space-y-1">
+            <div class="text-base-content/50 font-sans font-medium text-[11px] pb-0.5">
+              [{{ UI_STRINGS.CEILINGS.ceilingHeader }}]
+            </div>
+            <div
+              v-for="(item, idx) in ladderCeilings"
+              :key="`m-c-${idx}`"
+              class="flex items-center justify-between text-base-content/90"
+            >
+              <span class="truncate font-sans">{{ item.type }}</span>
+              <div class="flex items-baseline gap-3 shrink-0">
+                <span class="font-medium">{{ formatNumber(item.price) }}</span>
+                <span class="w-16 text-right">{{ formatPercent(item.netProfitPct) }}</span>
+              </div>
+            </div>
+            <div v-if="ladderCeilings.length === 0" class="text-base-content/60 text-[11px]">
+              {{ UI_STRINGS.CEILINGS.emptyCeilings }}
+            </div>
+          </div>
+
+          <!-- 2. 中間現價基準線 -->
+          <div class="py-1 text-center border-y border-base-300/60 text-base-content/75 font-medium tracking-wide">
+            ── {{ UI_STRINGS.CEILINGS.currentPricePrefix }}{{ formatNumber(stock.price) }} ──
+          </div>
+
+          <!-- 3. 下方地板 (由高至低排列，最近支撐在現價下方，最深在最底) -->
+          <div class="space-y-1">
+            <div
+              v-for="(item, idx) in ladderSupports"
+              :key="`m-s-${idx}`"
+              class="flex items-center justify-between text-base-content/90"
+            >
+              <span class="truncate font-sans">{{ item.type }}</span>
+              <div class="flex items-baseline gap-3 shrink-0">
+                <span class="font-medium">{{ formatNumber(item.price) }}</span>
+                <span class="w-16 text-right">-{{ Number(item.riskLossPct).toFixed(2) }}%</span>
+              </div>
+            </div>
+            <div v-if="ladderSupports.length === 0" class="text-base-content/60 text-[11px]">
+              {{ UI_STRINGS.CEILINGS.emptySupports }}
+            </div>
+            <div class="text-base-content/50 font-sans font-medium text-[11px] pt-0.5">
+              [{{ UI_STRINGS.CEILINGS.supportHeader }}]
+            </div>
+          </div>
+        </div>
       </div>
-      -->
 
       <!-- 第 3 層：Sparkline 技術走勢圖 (純淨走勢) -->
       <div class="py-1 flex items-center justify-center">
@@ -418,21 +488,91 @@
         </div>
 
 
-        <!-- ★ 預留槽位 A (電腦端，暫時註解隱藏) -->
-        <!--
+        <!-- 槽位 A (電腦端，支援就地向下展開天梯清單) -->
         <div
           v-if="ceilingInfo"
-          class="flex items-center justify-between text-sm font-normal leading-normal py-1 px-2 rounded bg-base-300/40 cursor-pointer hover:bg-base-300/70 transition-colors"
-          @click="$emit('openRiskModal', stock)"
+          class="text-sm font-normal leading-normal py-1 px-2.5 rounded-lg border border-base-300/60 bg-base-300/40 text-base-content transition-colors"
         >
-          <span class="text-base-content/80">
-            {{ ceilingInfo.type }} <strong class="font-numeric font-bold text-base-content">{{ formatNumber(ceilingInfo.price) }}</strong>
-          </span>
-          <span class="font-bold" :class="ceilingInfo.netProfitPct >= 0 ? 'text-rise' : 'text-base-content/80'">
-            {{ UI_STRINGS.METRICS.expectedProfit }} {{ ceilingInfo.netProfitPct >= 0 ? '+' : '' }}{{ ceilingInfo.netProfitPct }}% ↗
-          </span>
+          <div
+            class="flex items-center justify-between gap-1.5 select-none cursor-pointer"
+            @click="isCeilingExpanded = !isCeilingExpanded"
+          >
+            <div class="flex items-baseline gap-1.5 truncate">
+              <span class="text-base-content/80">{{ ceilingInfo.type }}</span>
+              <strong class="font-numeric font-bold text-base-content">{{ formatNumber(ceilingInfo.price) }}</strong>
+              <span class="text-base-content/40">·</span>
+              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.expectedProfit }}</span>
+              <strong class="font-numeric font-bold text-base-content">{{ formatPercent(ceilingInfo.netProfitPct) }}</strong>
+            </div>
+            <span class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0">
+              <span>{{ isCeilingExpanded ? UI_STRINGS.CEILINGS.collapseLabel : UI_STRINGS.CEILINGS.expandLabel }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-3.5 w-3.5 transition-transform duration-200"
+                :class="{ 'rotate-180': isCeilingExpanded }"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </div>
+
+          <!-- 展開後的三明治價格天梯 (純文字、無彩色、font-numeric) -->
+          <div
+            v-if="isCeilingExpanded"
+            class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
+            @click.stop
+          >
+            <!-- 1. 上方天花板 (由高至低排列，最高在最頂) -->
+            <div class="space-y-1">
+              <div class="text-base-content/50 font-sans font-medium text-[11px] pb-0.5">
+                [{{ UI_STRINGS.CEILINGS.ceilingHeader }}]
+              </div>
+              <div
+                v-for="(item, idx) in ladderCeilings"
+                :key="`d-c-${idx}`"
+                class="flex items-center justify-between text-base-content/90"
+              >
+                <span class="truncate font-sans">{{ item.type }}</span>
+                <div class="flex items-baseline gap-3 shrink-0">
+                  <span class="font-medium">{{ formatNumber(item.price) }}</span>
+                  <span class="w-16 text-right">{{ formatPercent(item.netProfitPct) }}</span>
+                </div>
+              </div>
+              <div v-if="ladderCeilings.length === 0" class="text-base-content/60 text-[11px]">
+                {{ UI_STRINGS.CEILINGS.emptyCeilings }}
+              </div>
+            </div>
+
+            <!-- 2. 中間現價基準線 -->
+            <div class="py-1 text-center border-y border-base-300/60 text-base-content/75 font-medium tracking-wide">
+              ── {{ UI_STRINGS.CEILINGS.currentPricePrefix }}{{ formatNumber(stock.price) }} ──
+            </div>
+
+            <!-- 3. 下方地板 (由高至低排列，最近支撐在現價下方，最深在最底) -->
+            <div class="space-y-1">
+              <div
+                v-for="(item, idx) in ladderSupports"
+                :key="`d-s-${idx}`"
+                class="flex items-center justify-between text-base-content/90"
+              >
+                <span class="truncate font-sans">{{ item.type }}</span>
+                <div class="flex items-baseline gap-3 shrink-0">
+                  <span class="font-medium">{{ formatNumber(item.price) }}</span>
+                  <span class="w-16 text-right">-{{ Number(item.riskLossPct).toFixed(2) }}%</span>
+                </div>
+              </div>
+              <div v-if="ladderSupports.length === 0" class="text-base-content/60 text-[11px]">
+                {{ UI_STRINGS.CEILINGS.emptySupports }}
+              </div>
+              <div class="text-base-content/50 font-sans font-medium text-[11px] pt-0.5">
+                [{{ UI_STRINGS.CEILINGS.supportHeader }}]
+              </div>
+            </div>
+          </div>
         </div>
-        -->
 
         <!-- 快捷操作列 (統一 text-sm font-normal) -->
         <div class="flex items-center gap-2.5 text-sm font-normal text-base-content/80 leading-normal pt-0.5">
@@ -731,8 +871,39 @@ const kdStatusText = computed(() => {
   return UI_STRINGS.KD_STATUS.mid
 })
 
+const isCeilingExpanded = ref(false)
+
+const ladderCeilings = computed(() => {
+  const ceilings = props.stock.allCeilings
+  if (Array.isArray(ceilings) && ceilings.length > 0) {
+    // 天花板由高至低排列（最高在最頂，最近在現價上方）
+    return [...ceilings].sort((a, b) => b.price - a.price)
+  }
+  return []
+})
+
+const ladderSupports = computed(() => {
+  const supports = props.stock.supportLevels
+  if (Array.isArray(supports) && supports.length > 0) {
+    // 地板由高至低排列（最近在現價下方，最深在最底）
+    return [...supports].sort((a, b) => b.price - a.price)
+  }
+  return []
+})
+
+function formatPercent(val) {
+  if (val === null || val === undefined || isNaN(val)) return '--'
+  const sign = val > 0 ? '+' : ''
+  return `${sign}${Number(val).toFixed(2)}%`
+}
+
 const ceilingInfo = computed(() => {
   if (props.ceilingProfit) return props.ceilingProfit
+  if (props.stock.ceilingProfit) return props.stock.ceilingProfit
+  const ceilings = props.stock.allCeilings
+  if (Array.isArray(ceilings) && ceilings.length > 0) {
+    return ceilings[0]
+  }
   // Fallback: 如果 stock 有 high5d，自動算出第一關卡
   if (props.stock.high5d && props.stock.price) {
     const profit = Number((((props.stock.high5d - props.stock.price) / props.stock.price) * 100).toFixed(2))

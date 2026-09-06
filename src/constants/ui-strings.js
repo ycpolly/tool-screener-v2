@@ -433,6 +433,16 @@ export const UI_STRINGS = {
     low10d: '10日最低價',
     low20d: '20日最低價',
   },
+
+  CEILINGS: {
+    expandLabel: '展開關卡',
+    collapseLabel: '收合關卡',
+    ceilingHeader: '上方天花板',
+    supportHeader: '下方地板',
+    currentPricePrefix: '現價 ',
+    emptyCeilings: '已突破所有壓力，無天花板壓力',
+    emptySupports: '無下方支撐參考',
+  },
 }
 
 

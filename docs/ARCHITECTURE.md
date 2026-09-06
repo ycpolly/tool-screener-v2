@@ -507,7 +507,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] StockCard 標籤收斂去重視覺確認（Category Tag Deduplication Visual Verification：驗證 `src/constants/category-urls.js` 智慧收斂外資買、主力買、投信買母標籤機制；經全市場 394 檔個股壓測，標籤最大字元長度由 78 字元大幅精簡至 56 字元，徹底根除重複超連結；在手機端【`< 1024px`】與電腦端【`≥ 1024px`】多行自動折行自然平整，中置點 `·`【`mx-1 text-base-content/40`】與賣超避雷警示【⚠️】銜接完美，視覺極簡沉穩）— 完成 2026-09-06（v0906.03）
 - [x] docs 文檔單一來源整合與 README 導覽入口化（Docs Single Source of Truth & README Portal：在 `ARCHITECTURE.md` 完整收納 30 個富邦 DJ 端點清單、GitHub Actions 兩波流排程表與資料時間狀態機速查表，在 `STOCK_CARD_DICTIONARY.md` 補齊標籤收斂去重規則；`README.md` 全面轉型為輕量簡約之核心文件導讀目錄，落實單一可信來源原則）— 完成 2026-09-06（v0906.03）
 - [x] 壓力天花板、防守支撐與預期純利後端邏輯（calculateCeilingProfit、getAllCeilings、getSupportLevels、calculateRiskReward，整數關卡階梯與時光機動態運算）— 完成 2026-09-06
-- [ ] RiskModal（空間與風控全貌，待 Gemini 前端 UI 實作）
+- [x] 槽位 A：天花板與地板三明治階梯（Slot A Ceiling & Floor Ladder：捨棄彈窗阻斷感，改以手感極佳的就地展開 Accordion 架構實作；呈現【上方天花板關卡 ── 現價基準線 ── 下方地板防守點】三明治價格天梯，價格由高至低自然遞減對齊；純素色中性字體、無彩噪，即時展示關卡名稱、點位與純利/回檔幅度 %；支援手機與電腦端雙向相容）— 完成 2026-09-06
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 
