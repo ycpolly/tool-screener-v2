@@ -43,7 +43,7 @@
             v-if="hasEvaluationDetails"
             class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0"
           >
-            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || '收合診斷') : (UI_STRINGS.SCREENER.collapseDetails || '收合細節')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || '展開診斷') : (UI_STRINGS.SCREENER.expandDetails || '展開細節')) }}</span>
+            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || UI_STRINGS.PANEL.collapseDiagnosis || '收合') : (UI_STRINGS.SCREENER.collapseDetails || UI_STRINGS.PANEL.collapseDetails || '收合')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || UI_STRINGS.PANEL.expandDiagnosis || '展開') : (UI_STRINGS.SCREENER.expandDetails || UI_STRINGS.PANEL.expandDetails || '展開')) }}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-3.5 w-3.5 transition-transform duration-200"
@@ -328,7 +328,7 @@
             v-if="hasEvaluationDetails"
             class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0"
           >
-            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || '收合診斷') : (UI_STRINGS.SCREENER.collapseDetails || '收合細節')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || '展開診斷') : (UI_STRINGS.SCREENER.expandDetails || '展開細節')) }}</span>
+            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || UI_STRINGS.PANEL.collapseDiagnosis || '收合') : (UI_STRINGS.SCREENER.collapseDetails || UI_STRINGS.PANEL.collapseDetails || '收合')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || UI_STRINGS.PANEL.expandDiagnosis || '展開') : (UI_STRINGS.SCREENER.expandDetails || UI_STRINGS.PANEL.expandDetails || '展開')) }}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-3.5 w-3.5 transition-transform duration-200"
@@ -664,7 +664,7 @@
             v-if="hasEvaluationDetails"
             class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0"
           >
-            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || '收合診斷') : (UI_STRINGS.SCREENER.collapseDetails || '收合細節')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || '展開診斷') : (UI_STRINGS.SCREENER.expandDetails || '展開細節')) }}</span>
+            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || UI_STRINGS.PANEL.collapseDiagnosis || '收合') : (UI_STRINGS.SCREENER.collapseDetails || UI_STRINGS.PANEL.collapseDetails || '收合')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || UI_STRINGS.PANEL.expandDiagnosis || '展開') : (UI_STRINGS.SCREENER.expandDetails || UI_STRINGS.PANEL.expandDetails || '展開')) }}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-3.5 w-3.5 transition-transform duration-200"

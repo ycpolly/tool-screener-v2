@@ -32,6 +32,23 @@ html {
 
 body {
   min-height: 100dvh; /* dvh 適配手機底部導覽列 */
+  padding-bottom: env(safe-area-inset-bottom, 0px); /* 支援 iPhone 底部 Home Indicator 安全區域 */
+}
+
+/* ============================================================
+   全站安全區域（iOS Safe Area Inset Support）
+   避免內容或底部浮動元件被 iPhone Home Indicator 遮擋
+   ============================================================ */
+.safe-pb-main {
+  padding-bottom: max(2rem, calc(1.5rem + env(safe-area-inset-bottom, 0px)));
+}
+
+.safe-bottom-toast {
+  bottom: max(1.5rem, calc(1rem + env(safe-area-inset-bottom, 0px)));
+}
+
+.safe-pb-modal {
+  padding-bottom: max(1rem, calc(0.75rem + env(safe-area-inset-bottom, 0px)));
 }
 
 /* ============================================================

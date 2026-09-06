@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0906.04',
+    version: 'v0906.05',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -56,6 +56,10 @@ export const UI_STRINGS = {
     premiumActiveText: '精選中',
     premiumActive: '已啟用一鍵精選',
     premiumDisabledInAll: '全市場總覽未套用策略',
+    expandDetails: '展開',
+    collapseDetails: '收合',
+    expandDiagnosis: '展開',
+    collapseDiagnosis: '收合',
     resultCount: (n) => `符合 ${n} 檔`,
     noResult: '無符合條件的個股',
     suggestions: {

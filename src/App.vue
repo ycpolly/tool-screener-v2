@@ -45,8 +45,8 @@
       </div>
     </header>
 
-    <!-- 主體內容容器 (Mobile-first, max-w-screen-xl) -->
-    <main class="container mx-auto px-3 sm:px-4 py-3 md:py-5 max-w-screen-xl space-y-3.5 flex-1">
+    <!-- 主體內容容器 (Mobile-first, max-w-screen-xl, 支援 iPhone 底部安全區域) -->
+    <main class="container mx-auto px-3 sm:px-4 pt-3 safe-pb-main md:py-5 max-w-screen-xl space-y-3.5 flex-1">
       <!-- 基礎資料池錯誤 -->
       <div v-if="poolError" class="alert alert-error text-sm">
         <span>{{ poolError }}</span>
@@ -285,7 +285,7 @@
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 translate-y-2"
     >
-      <div v-if="toastText" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none px-4 max-w-sm w-full">
+      <div v-if="toastText" class="fixed safe-bottom-toast left-1/2 -translate-x-1/2 z-50 pointer-events-none px-4 max-w-sm w-full">
         <div class="alert alert-neutral shadow-lg py-2.5 px-4 text-sm rounded-xl flex items-center justify-center gap-2 border border-base-content/10">
           <svg
             v-if="toastType === 'success'"

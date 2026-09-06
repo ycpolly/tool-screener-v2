@@ -1,7 +1,7 @@
 <template>
   <dialog :class="{ 'modal-open': isOpen }" class="modal modal-bottom sm:modal-middle select-none z-50">
     <div
-      class="modal-box max-w-4xl w-full bg-base-100 border border-base-300 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xl max-h-[90vh] flex flex-col"
+      class="modal-box max-w-4xl w-full bg-base-100 border border-base-300 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xl max-h-[90vh] flex flex-col safe-pb-modal"
     >
       <!-- Modal Header -->
       <div class="flex items-start justify-between pb-3 border-b border-base-300/80 shrink-0">

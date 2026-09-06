@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-09-06**（完成槽位 A 天花板與地板三明治階梯 Accordion、現價列對齊與間距優化、全卡片字級 text-sm 規範、價格漲跌排版 ▴2.20 (4.06%) 與平盤無色、文案收斂為展開/收合、全市場籌碼集中度資料復原，完成 v0906.04 版號維護）
+> **最後更新：2026-09-06**（修復 stock-pool.json 乾淨 UTF-8 編碼與 JSON parse 解析異常、全站引入 iOS env bottom safe area 避免 iPhone Home Indicator 遮擋底部卡片/彈窗/Toast、徹底收斂 StockCard 與 SCREENER 展開/收合文案，完成 v0906.05 版號維護）
 
 ---
 
@@ -508,6 +508,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] docs 文檔單一來源整合與 README 導覽入口化（Docs Single Source of Truth & README Portal：在 `ARCHITECTURE.md` 完整收納 30 個富邦 DJ 端點清單、GitHub Actions 兩波流排程表與資料時間狀態機速查表，在 `STOCK_CARD_DICTIONARY.md` 補齊標籤收斂去重規則；`README.md` 全面轉型為輕量簡約之核心文件導讀目錄，落實單一可信來源原則）— 完成 2026-09-06（v0906.03）
 - [x] 壓力天花板、防守支撐與預期純利後端邏輯（calculateCeilingProfit、getAllCeilings、getSupportLevels、calculateRiskReward，整數關卡階梯與時光機動態運算）— 完成 2026-09-06（v0906.04）
 - [x] 槽位 A：天花板與地板三明治階梯與價格排版優化（Slot A Ceiling & Floor Ladder & Price Format Polish：捨棄彈窗阻斷感，改以手感極佳的就地展開 Accordion 架構實作；呈現【上方天花板關卡 ── 現價基準線 ── 下方地板防守點】三明治價格天梯，價格由高至低自然遞減對齊；現價列以中等透明度上下 border 精準同列對齊；全卡片字級維持收斂標準 text-sm；價格漲跌改為「56.40 ▴2.20 (4.06%)」，平盤不上色不帶三角；展開/收合文案精簡為「展開」「收合」；復原全市場盤後籌碼集中度與短沖名單）— 完成 2026-09-06（v0906.04）
+- [x] 全站 iOS 安全區域適配與 JSON 解析修復（iOS Safe Area Inset & JSON Encoding Fix：徹底根除 PowerShell 轉發導致之 UTF-16 LE BOM 異常，確保 `stock-pool.json` 為標準 UTF-8 無 BOM 格式；全站引入 iOS `env(safe-area-inset-bottom)` 支援，解決底部卡片、Modal 動作列及 Toast 遭 iPhone 底部 Home Indicator 橫條遮擋問題；全面補齊 `UI_STRINGS.SCREENER` 之 `expandDetails`/`collapseDetails` 定義與 StockCard 備援 fallback，實現全站按鈕「展開」「收合」文案 100% 簡潔一致）— 完成 2026-09-06（v0906.05）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 
