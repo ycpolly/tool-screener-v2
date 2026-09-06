@@ -770,7 +770,7 @@ function handleCopy() {
 
 function formatNumber(num) {
   if (num === null || num === undefined || isNaN(num)) return '--'
-  return Number(num).toFixed(2).replace(/\.00$/, '')
+  return Number(num).toFixed(2)
 }
 
 function formatChange(change, changePct) {
