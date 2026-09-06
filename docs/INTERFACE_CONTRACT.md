@@ -71,6 +71,33 @@ interface Stock {
   // Sparkline
   sparkline:  number[]      // 近10日收盤價陣列
   history10d: DayBar[]      // 近10日完整日K（含 ma5/ma10/kd）
+
+  // 壓力天花板、防守支撐與風報比（邏輯層自動注入）
+  ceilingProfit?: {
+    type: string            // 最近第一關卡名稱，如 "5日最高價"
+    price: number           // 關卡價格
+    ceilingType: string     // 別名，同 type
+    ceilingPrice: number    // 別名，同 price
+    grossMarginPct: number  // 預估毛利率 %
+    netProfitPct: number    // 扣除 0.58% 稅費後預期純利率 %
+    passed: boolean         // 純利是否為正 (> 0)
+  } | null
+  allCeilings?: Array<{
+    type: string            // 關卡名稱，如 "5日最高價"、"整數關卡價"、"季線 (60MA)"
+    price: number           // 關卡價位
+    grossMarginPct: number  // 預估毛利率 %
+    netProfitPct: number    // 扣除 0.58% 稅費後純利率 %
+  }>
+  supportLevels?: Array<{
+    type: string            // 支撐名稱，如 "5日最低價"、"20日線 (20MA)"
+    price: number           // 支撐價位
+    riskLossPct: number     // 跌至該支撐之預估虧損幅度 %
+  }>
+  riskReward?: {
+    rewardPct: number       // 第一道天花板預期純利 %
+    riskPct: number         // 最近有效防守支撐虧損 % (保底 5%)
+    rrRatio: number | null  // 預期風報比 (rewardPct / riskPct)
+  }
 }
 
 
@@ -382,6 +409,43 @@ emits: {
   'toggle': () => void
 }
 ```
+
+---
+
+#### `RiskModal.vue`（空間與風控全貌 Modal）
+
+> 點擊 `StockCard` 的天花板純利槽位展開，展示該個股的「上方目標空間 (天花板)」、「下方防守支撐點」與「預估風報比 (Reward/Risk)」
+
+**Props：**
+```typescript
+props: {
+  isOpen: boolean,
+  stock:  Stock | null,
+}
+```
+
+**Events：**
+```typescript
+emits: {
+  'close': () => void
+}
+```
+
+**視覺規格：**
+- DaisyUI Modal 結構 (`dialog.modal`, `:class="{ 'modal-open': isOpen }"`)
+- 標題列：`UI_STRINGS.RISK_MODAL.title` ("空間與風控全貌") + 股票代號名稱 + 現價
+- 風報比摘要卡：
+  - 預期純利 (`stock.riskReward.rewardPct%`) vs 預估虧損 (`stock.riskReward.riskPct%`)
+  - 核心風報比 `stock.riskReward.rrRatio`（加粗顯著）
+- 上方壓力天花板列表 (`stock.allCeilings`)：
+  - 標題 `UI_STRINGS.RISK_MODAL.ceilingTitle`
+  - 第一道最靠近關卡附帶 `UI_STRINGS.RISK_MODAL.closestBadge`
+  - 欄位：關卡名稱、關卡價格、預估毛利、扣除 0.58% 稅費後純利率（正純利以 `text-rise` 加粗呈現）
+- 下方防守支撐點列表 (`stock.supportLevels`)：
+  - 標題 `UI_STRINGS.RISK_MODAL.supportTitle`
+  - 欄位：支撐名稱、支撐價格、跌破風險虧損 % (`text-fall`)
+- 底部提示：`UI_STRINGS.RISK_MODAL.taxDeductionNote`（中性微小字）
+- 關閉按鈕與背景遮罩點擊關閉
 
 ---
 

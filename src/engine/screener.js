@@ -1211,10 +1211,19 @@ export function runScreener(stocks = [], params = {}, activeMode = '', dayOffset
       ? stock.bias20
       : (ma20 > 0 ? round2(((price - ma20) / ma20) * 100) : 0)
 
+    const ceilingProfit = calculateFirstCeiling(stock)
+    const allCeilings   = getAllCeilings(stock)
+    const supportLevels = getSupportLevels(stock)
+    const riskReward    = calculateRiskReward(stock)
+
     const enrichedStock = {
       ...stock,
       bias5,
       bias20,
+      ceilingProfit,
+      allCeilings,
+      supportLevels,
+      riskReward,
     }
 
     const evalResult = evaluateStock(enrichedStock, params, activeMode)
@@ -1369,4 +1378,264 @@ export function buildScreenerSnapshotText({
 
   return sections.join('\n\n')
 }
+
+
+// ── 壓力天花板、防守支撐與預期純利演算法 ───────────────────────────
+
+/**
+ * 計算整數心理關卡 Resistance（移植自第一代實戰級距階梯與緩衝演算法）
+ * @param {number} price - 現價
+ * @returns {number} 整數關卡價格
+ */
+export function calculateIntegerResistance(price) {
+  if (!price || price <= 0) return 10
+
+  let step = 10.0
+  let target = price
+  let candidate = price
+
+  if (price < 10) {
+    step = 0.5
+    target = price * 1.01
+    candidate = Math.ceil(target / step) * step
+  } else if (price < 100) {       // 10 ~ 100元: 5元大關 (如 台塑 58.9 -> 60; 佳凌 37.55 -> 40)
+    step = 5.0
+    target = price + 0.01
+    candidate = Math.ceil(target / step) * step
+  } else if (price < 500) {       // 100 ~ 500元: 10元大關 + 5%/2.5% 門檻 (華邦電 176 -> 190; 台勝科 369 -> 380)
+    step = 10.0
+    target = price < 200 ? price * 1.05 : price * 1.025
+    candidate = Math.ceil(target / step) * step
+  } else if (price < 1000) {      // 500 ~ 1000元: 50元大關
+    step = 50.0
+    target = price * 1.025
+    candidate = Math.ceil(target / step) * step
+  } else if (price < 2000) {      // 1000 ~ 2000元: 50元/100元大關 (高力 1175 -> 1250; 萬潤 1260 -> 1400)
+    if (price >= 1200) {
+      step = 100.0
+      target = price * 1.05
+      candidate = Math.ceil(target / step) * step
+    } else {
+      step = 50.0
+      target = price * 1.025
+      candidate = Math.ceil(target / step) * step
+    }
+  } else {                        // 2000元以上高價股: 50元/100元關卡
+    if (price >= 6400) {
+      step = 50.0
+      target = price * 1.035
+      candidate = Math.ceil(target / step) * step
+    } else if (price >= 6000) {
+      step = 100.0
+      target = price * 1.025
+      candidate = Math.ceil(target / step) * step
+    } else {
+      step = 50.0
+      target = price * 1.025
+      candidate = Math.ceil(target / step) * step
+    }
+  }
+
+  return round2(candidate)
+}
+
+/**
+ * 取得高於當前現價的所有上方壓力天花板關卡清單
+ * @param {Object} stock - 個股物件
+ * @param {number} [feeTaxRate=0.58] - 手續費與證交稅摩擦成本 % (預設 0.58%)
+ * @returns {Array<{ type: string, price: number, grossMarginPct: number, netProfitPct: number }>}
+ */
+export function getAllCeilings(stock, feeTaxRate = 0.58) {
+  if (!stock || !stock.price || stock.price <= 0) return []
+  const price = stock.price
+  const C = UI_STRINGS.CEILING_TYPES || {}
+
+  const rawList = []
+
+  // 1. 解套壓力高點系列 (5日高 / 10日高 / 20日高)
+  if (stock.high5d && stock.high5d > price) {
+    rawList.push({ type: C.high5d || '5日最高價', price: stock.high5d })
+  }
+  if (stock.high10d && stock.high10d > price) {
+    rawList.push({ type: C.high10d || '10日最高價', price: stock.high10d })
+  }
+  if (stock.high20d && stock.high20d > price) {
+    rawList.push({ type: C.high20d || '20日最高價', price: stock.high20d })
+  }
+
+  // 2. 均線反壓系列 (5MA / 10MA / 20MA / 60MA)
+  if (stock.ma5 && stock.ma5 > price) {
+    rawList.push({ type: C.ma5 || '5日線 (5MA)', price: stock.ma5 })
+  }
+  if (stock.ma10 && stock.ma10 > price) {
+    rawList.push({ type: C.ma10 || '10日線 (10MA)', price: stock.ma10 })
+  }
+  if (stock.ma20 && stock.ma20 > price) {
+    rawList.push({ type: C.ma20 || '20日線 (20MA)', price: stock.ma20 })
+  }
+  if (stock.ma60 && stock.ma60 > price) {
+    rawList.push({ type: C.ma60 || '季線 (60MA)', price: stock.ma60 })
+  }
+
+  // 3. 整數心理關卡
+  const intRes = calculateIntegerResistance(price)
+  if (intRes && intRes > price) {
+    rawList.push({ type: C.integer || '整數關卡價', price: intRes })
+  }
+
+  // 排序：由近到遠（價格由小到大）
+  rawList.sort((a, b) => a.price - b.price)
+
+  // 去重處理
+  const seen = new Set()
+  const validList = []
+  for (const r of rawList) {
+    const cPrice = round2(r.price)
+    const key = `${r.type}_${cPrice}`
+    if (seen.has(key)) continue
+    seen.add(key)
+
+    const grossMarginPct = round2(((cPrice - price) / price) * 100)
+    const netProfitPct = round2(grossMarginPct - feeTaxRate)
+    validList.push({
+      type: r.type,
+      price: cPrice,
+      grossMarginPct,
+      netProfitPct,
+    })
+  }
+
+  // 4. 若上方完全無任何壓力關卡（創歷史新高/20日高），Fallback 為漲停板 +10%
+  if (validList.length === 0) {
+    const limitUpPrice = round2(price * 1.10)
+    const grossMarginPct = 10.0
+    const netProfitPct = round2(10.0 - feeTaxRate)
+    validList.push({
+      type: C.limitUp || '漲停價天花板',
+      price: limitUpPrice,
+      grossMarginPct,
+      netProfitPct,
+    })
+  }
+
+  return validList
+}
+
+/**
+ * 計算第一道最靠近現價的天花板關卡及預期純利率
+ * @param {Object} stock - 個股物件
+ * @param {number} [feeTaxRate=0.58] - 交易摩擦成本 %
+ * @returns {{ ceilingType: string, ceilingPrice: number, grossMarginPct: number, netProfitPct: number, passed: boolean } | null}
+ */
+export function calculateFirstCeiling(stock, feeTaxRate = 0.58) {
+  if (!stock || !stock.price || stock.price <= 0) return null
+  const ceilings = getAllCeilings(stock, feeTaxRate)
+  if (!ceilings || ceilings.length === 0) return null
+
+  // 第一道最近的天花板（已排序，取第 0 筆）
+  const first = ceilings[0]
+  return {
+    type: first.type,
+    price: first.price,
+    ceilingType: first.type,
+    ceilingPrice: first.price,
+    grossMarginPct: first.grossMarginPct,
+    netProfitPct: first.netProfitPct,
+    passed: first.netProfitPct > 0,
+  }
+}
+
+/**
+ * 取得低於當前現價的所有下方防守支撐點位
+ * @param {Object} stock - 個股物件
+ * @returns {Array<{ type: string, price: number, riskLossPct: number }>}
+ */
+export function getSupportLevels(stock) {
+  if (!stock || !stock.price || stock.price <= 0) return []
+  const price = stock.price
+  const C = UI_STRINGS.CEILING_TYPES || {}
+
+  const rawList = []
+
+  // 1. 防守低點系列 (5日低 / 10日低 / 20日低)
+  if (stock.low5d && stock.low5d <= price) {
+    rawList.push({ type: C.low5d || '5日最低價', price: stock.low5d })
+  }
+  if (stock.low10d && stock.low10d <= price) {
+    rawList.push({ type: C.low10d || '10日最低價', price: stock.low10d })
+  }
+  if (stock.low20d && stock.low20d <= price) {
+    rawList.push({ type: C.low20d || '20日最低價', price: stock.low20d })
+  }
+
+  // 2. 均線支撐系列 (5MA / 10MA / 20MA / 60MA)
+  if (stock.ma5 && stock.ma5 <= price) {
+    rawList.push({ type: C.ma5 || '5日線 (5MA)', price: stock.ma5 })
+  }
+  if (stock.ma10 && stock.ma10 <= price) {
+    rawList.push({ type: C.ma10 || '10日線 (10MA)', price: stock.ma10 })
+  }
+  if (stock.ma20 && stock.ma20 <= price) {
+    rawList.push({ type: C.ma20 || '20日線 (20MA)', price: stock.ma20 })
+  }
+  if (stock.ma60 && stock.ma60 <= price) {
+    rawList.push({ type: C.ma60 || '季線 (60MA)', price: stock.ma60 })
+  }
+
+  // 排序：由近到遠（價格由大到小）
+  rawList.sort((a, b) => b.price - a.price)
+
+  // 去重處理
+  const seen = new Set()
+  const validList = []
+  for (const r of rawList) {
+    const sPrice = round2(r.price)
+    const key = `${r.type}_${sPrice}`
+    if (seen.has(key)) continue
+    seen.add(key)
+
+    const riskLossPct = round2(((price - sPrice) / price) * 100)
+    validList.push({
+      type: r.type,
+      price: sPrice,
+      riskLossPct,
+    })
+  }
+
+  return validList
+}
+
+/**
+ * 計算預期風報比 (Reward / Risk Ratio)
+ * @param {Object} stock - 個股物件
+ * @param {number} [feeTaxRate=0.58] - 交易摩擦成本 %
+ * @returns {{ rewardPct: number, riskPct: number, rrRatio: number | null }}
+ */
+export function calculateRiskReward(stock, feeTaxRate = 0.58) {
+  if (!stock || !stock.price || stock.price <= 0) {
+    return { rewardPct: 0, riskPct: 0, rrRatio: null }
+  }
+
+  const firstCeiling = calculateFirstCeiling(stock, feeTaxRate)
+  const supports = getSupportLevels(stock)
+
+  const rewardPct = firstCeiling ? Math.max(0, firstCeiling.netProfitPct) : 0
+  let riskPct = 0
+  if (supports.length > 0) {
+    const effectiveSupport = supports.find(s => s.riskLossPct > 0) || supports[0]
+    riskPct = effectiveSupport.riskLossPct
+  }
+  if (riskPct <= 0) {
+    riskPct = 5.0 // 預設 5% 停損防護安全底線
+  }
+
+  const rrRatio = riskPct > 0 ? round2(rewardPct / riskPct) : null
+
+  return {
+    rewardPct,
+    riskPct,
+    rrRatio,
+  }
+}
+
 

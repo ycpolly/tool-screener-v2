@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-09-06**（標籤母子智慧收斂去重、建立 docs 單一來源並重整 README 導讀目錄，完成 v0906.03 版號維護）
+> **最後更新：2026-09-06**（完成壓力天花板、整數關卡、防守支撐與風報比後端演算法實作，對齊 v1 階梯計算並支援時光機回測）
 
 ---
 
@@ -406,6 +406,29 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 
 - **防護機制**：非即時開盤時段（盤前與休市）一律嚴格保護底層資料庫，禁止 0 成交量或未撮合試撮價沖銷既有選股名單。
 
+### 壓力天花板、防守支撐與風報比演算法 (`screener.js`)
+
+為確保交易者在進場前有清晰的「目標獲利空間」與「潛在下檔風險」，引擎內建多維關卡與風控計算：
+
+1. **整數心理關卡演算法 (`calculateIntegerResistance`)**：
+   - 100% 移植自第一代實戰級距階梯與緩衝門檻：
+     - `< 10 元`：0.5 元階梯（`* 1.01` 緩衝）
+     - `10 ~ 100 元`：5.0 元大關（`+ 0.01` 門檻）
+     - `100 ~ 500 元`：10.0 元大關（`< 200` 採 5% 緩衝，`>= 200` 採 2.5% 緩衝）
+     - `500 ~ 1000 元`：50.0 元大關（`* 1.025` 緩衝）
+     - `1000 ~ 2000 元`：`>= 1200` 採 100 元關卡（5% 緩衝），`< 1200` 採 50 元關卡（2.5% 緩衝）
+     - `>= 2000 元`：高價股 50/100 元大關
+2. **上方壓力天花板 (`getAllCeilings` / `calculateFirstCeiling`)**：
+   - 聚合「解套壓力 (5日高/10日高/20日高)」、「均線反壓 (5MA/10MA/20MA/60MA)」與「整數關卡價」，過濾 `> price` 之關卡由近到遠升冪排序。
+   - 自動去重並預扣 **0.58%** 標準交易摩擦成本 (`grossMarginPct - 0.58`) 計算 `netProfitPct`。
+   - 若股價創歷史高點上方無反壓，Fallback 為 `漲停價天花板 (+10%)`。
+3. **下方防守支撐點 (`getSupportLevels`)**：
+   - 聚合「防守低點 (5日低/10日低/20日低)」與「均線支撐 (5MA/10MA/20MA/60MA)」，過濾 `<= price` 之支撐由近到遠降冪排序，計算跌至該點位的預估虧損幅度 % (`riskLossPct`)。
+4. **預期風報比 (`calculateRiskReward`)**：
+   - 結合第一道天花板預期純利 (`rewardPct`) 與最近有效防守支撐虧損 (`riskPct`，保底 5.0%)，推算 `rrRatio = rewardPct / riskPct`。
+5. **時光機歷史回測支援**：
+   - 透過 `sliceStockAt` 動態切片推算歷史 `high5d/10d/20d`、`low5d/10d/20d` 與歷史均線，完全相容於 T-1 至 T-5 歷史回測。
+
 ---
 
 ## 七、建構階段規劃（Phase）
@@ -483,10 +506,10 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] README.md 使用者定義速查手冊重構（User-facing Cheat Sheet in README：根目錄由 Vite 預設範本替換為極簡高雅、手機與網頁好讀之核心速查手冊；收錄【盤前/盤中/收盤/盤後】時間狀態機判定邏輯與「更新」按鈕防呆攔截機制、GitHub Actions 16:38 與 18:42 兩波流雲端資料排程、18 大選股來源標籤官方對照速查，並導流至 STOCK_CARD_DICTIONARY.md）— 完成 2026-09-06（v0906.02）
 - [x] StockCard 標籤收斂去重視覺確認（Category Tag Deduplication Visual Verification：驗證 `src/constants/category-urls.js` 智慧收斂外資買、主力買、投信買母標籤機制；經全市場 394 檔個股壓測，標籤最大字元長度由 78 字元大幅精簡至 56 字元，徹底根除重複超連結；在手機端【`< 1024px`】與電腦端【`≥ 1024px`】多行自動折行自然平整，中置點 `·`【`mx-1 text-base-content/40`】與賣超避雷警示【⚠️】銜接完美，視覺極簡沉穩）— 完成 2026-09-06（v0906.03）
 - [x] docs 文檔單一來源整合與 README 導覽入口化（Docs Single Source of Truth & README Portal：在 `ARCHITECTURE.md` 完整收納 30 個富邦 DJ 端點清單、GitHub Actions 兩波流排程表與資料時間狀態機速查表，在 `STOCK_CARD_DICTIONARY.md` 補齊標籤收斂去重規則；`README.md` 全面轉型為輕量簡約之核心文件導讀目錄，落實單一可信來源原則）— 完成 2026-09-06（v0906.03）
-- [ ] RiskModal（空間與風控全貌）
+- [x] 壓力天花板、防守支撐與預期純利後端邏輯（calculateCeilingProfit、getAllCeilings、getSupportLevels、calculateRiskReward，整數關卡階梯與時光機動態運算）— 完成 2026-09-06
+- [ ] RiskModal（空間與風控全貌，待 Gemini 前端 UI 實作）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
-- [ ] 壓力天花板與扣除稅費預期純利（calculateCeilingProfit）
 
 
 ### 待辦與後端修正清單（Claude 負責）

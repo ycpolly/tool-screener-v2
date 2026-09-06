@@ -403,6 +403,36 @@ export const UI_STRINGS = {
     toggleToCompact: '切換為簡約模式',
     toggleToFull: '切換為完整模式',
   },
+
+  RISK_MODAL: {
+    title: '空間與風控全貌',
+    currentPrice: '現價',
+    ceilingTitle: '上方壓力天花板 (目標獲利空間)',
+    supportTitle: '下方防守支撐點 (停損風險空間)',
+    closestBadge: '最近第一關',
+    netProfitLabel: '預期純利',
+    riskLossLabel: '預估虧損',
+    rewardRiskRatio: '預估風報比',
+    taxDeductionNote: '純利已預先扣除 0.58% 手續費與證交稅摩擦成本',
+    closeBtn: '關閉',
+    emptyCeiling: '已突破所有歷史高點與均線反壓，無天花板壓力',
+    emptySupport: '無支撐參考點',
+  },
+
+  CEILING_TYPES: {
+    high5d: '5日最高價',
+    high10d: '10日最高價',
+    high20d: '20日最高價',
+    ma5: '5日線 (5MA)',
+    ma10: '10日線 (10MA)',
+    ma20: '20日線 (20MA)',
+    ma60: '季線 (60MA)',
+    integer: '整數關卡價',
+    limitUp: '漲停價天花板',
+    low5d: '5日最低價',
+    low10d: '10日最低價',
+    low20d: '20日最低價',
+  },
 }
 
 

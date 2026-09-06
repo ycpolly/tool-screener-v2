@@ -1,5 +1,13 @@
 import { ref, computed, readonly } from 'vue'
-import { runScreener, evaluateStock, sliceStockPoolAt } from '../engine/screener.js'
+import {
+  runScreener,
+  evaluateStock,
+  sliceStockPoolAt,
+  calculateFirstCeiling,
+  getAllCeilings,
+  getSupportLevels,
+  calculateRiskReward,
+} from '../engine/screener.js'
 import { SCREENER_MODES, DEFAULT_MODE } from '../constants/screener-modes.js'
 
 /**
@@ -92,10 +100,19 @@ export function useScreener(stocks) {
         ? stock.bias20
         : (ma20 > 0 ? Math.round((((price - ma20) / ma20) * 100 + Number.EPSILON) * 100) / 100 : 0)
 
+      const ceilingProfit = calculateFirstCeiling(stock)
+      const allCeilings   = getAllCeilings(stock)
+      const supportLevels = getSupportLevels(stock)
+      const riskReward    = calculateRiskReward(stock)
+
       const enrichedStock = {
         ...stock,
         bias5,
         bias20,
+        ceilingProfit,
+        allCeilings,
+        supportLevels,
+        riskReward,
       }
 
       if (activeMode.value === 'ALL') {

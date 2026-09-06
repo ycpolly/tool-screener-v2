@@ -267,6 +267,15 @@
       @select-stock="handleSelectStockFromPool"
     />
 
+    <!-- 空間與風控全貌 Modal (Gemini 完成 RiskModal.vue 後引入掛載) -->
+    <!--
+    <RiskModal
+      :is-open="showRiskModal"
+      :stock="selectedRiskStock"
+      @close="handleCloseRiskModal"
+    />
+    -->
+
     <!-- 輕量 Toast 提示 (快照複製、盤前與休市提示) -->
     <transition
       enter-active-class="transition duration-200 ease-out"
@@ -470,9 +479,6 @@ function handleSelectStock(stock) {
 }
 
 
-function handleOpenRiskModal(stock) {
-  console.log('[Open Risk Modal]', stock.code, stock.name)
-}
 
 // 5. 選股池來源總覽 Modal
 const showPoolModal = ref(false)
@@ -490,7 +496,21 @@ function handleSelectStockFromPool(stock) {
   closePoolModal()
 }
 
-// 6. 即時更新與 API 設定 Modal
+// 6. 空間與風控全貌 Modal 狀態 (選股卡點擊關卡純利槽位觸發)
+const showRiskModal = ref(false)
+const selectedRiskStock = ref(null)
+
+function handleOpenRiskModal(stock) {
+  selectedRiskStock.value = stock
+  showRiskModal.value = true
+}
+
+function handleCloseRiskModal() {
+  showRiskModal.value = false
+  selectedRiskStock.value = null
+}
+
+// 7. 即時更新與 API 設定 Modal
 const showApiModal = ref(false)
 const inputUrl     = ref('')
 
