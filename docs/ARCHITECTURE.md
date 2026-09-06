@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-09-06**（完成壓力天花板、整數關卡、防守支撐與風報比後端演算法實作，對齊 v1 階梯計算並支援時光機回測）
+> **最後更新：2026-09-06**（完成槽位 A 天花板與地板三明治階梯 Accordion、現價列對齊與間距優化、全卡片字級 text-sm 規範、價格漲跌排版 ▴2.20 (4.06%) 與平盤無色、文案收斂為展開/收合、全市場籌碼集中度資料復原，完成 v0906.04 版號維護）
 
 ---
 
@@ -506,8 +506,8 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] README.md 使用者定義速查手冊重構（User-facing Cheat Sheet in README：根目錄由 Vite 預設範本替換為極簡高雅、手機與網頁好讀之核心速查手冊；收錄【盤前/盤中/收盤/盤後】時間狀態機判定邏輯與「更新」按鈕防呆攔截機制、GitHub Actions 16:38 與 18:42 兩波流雲端資料排程、18 大選股來源標籤官方對照速查，並導流至 STOCK_CARD_DICTIONARY.md）— 完成 2026-09-06（v0906.02）
 - [x] StockCard 標籤收斂去重視覺確認（Category Tag Deduplication Visual Verification：驗證 `src/constants/category-urls.js` 智慧收斂外資買、主力買、投信買母標籤機制；經全市場 394 檔個股壓測，標籤最大字元長度由 78 字元大幅精簡至 56 字元，徹底根除重複超連結；在手機端【`< 1024px`】與電腦端【`≥ 1024px`】多行自動折行自然平整，中置點 `·`【`mx-1 text-base-content/40`】與賣超避雷警示【⚠️】銜接完美，視覺極簡沉穩）— 完成 2026-09-06（v0906.03）
 - [x] docs 文檔單一來源整合與 README 導覽入口化（Docs Single Source of Truth & README Portal：在 `ARCHITECTURE.md` 完整收納 30 個富邦 DJ 端點清單、GitHub Actions 兩波流排程表與資料時間狀態機速查表，在 `STOCK_CARD_DICTIONARY.md` 補齊標籤收斂去重規則；`README.md` 全面轉型為輕量簡約之核心文件導讀目錄，落實單一可信來源原則）— 完成 2026-09-06（v0906.03）
-- [x] 壓力天花板、防守支撐與預期純利後端邏輯（calculateCeilingProfit、getAllCeilings、getSupportLevels、calculateRiskReward，整數關卡階梯與時光機動態運算）— 完成 2026-09-06
-- [x] 槽位 A：天花板與地板三明治階梯（Slot A Ceiling & Floor Ladder：捨棄彈窗阻斷感，改以手感極佳的就地展開 Accordion 架構實作；呈現【上方天花板關卡 ── 現價基準線 ── 下方地板防守點】三明治價格天梯，價格由高至低自然遞減對齊；純素色中性字體、無彩噪，即時展示關卡名稱、點位與純利/回檔幅度 %；支援手機與電腦端雙向相容）— 完成 2026-09-06
+- [x] 壓力天花板、防守支撐與預期純利後端邏輯（calculateCeilingProfit、getAllCeilings、getSupportLevels、calculateRiskReward，整數關卡階梯與時光機動態運算）— 完成 2026-09-06（v0906.04）
+- [x] 槽位 A：天花板與地板三明治階梯與價格排版優化（Slot A Ceiling & Floor Ladder & Price Format Polish：捨棄彈窗阻斷感，改以手感極佳的就地展開 Accordion 架構實作；呈現【上方天花板關卡 ── 現價基準線 ── 下方地板防守點】三明治價格天梯，價格由高至低自然遞減對齊；現價列以中等透明度上下 border 精準同列對齊；全卡片字級維持收斂標準 text-sm；價格漲跌改為「56.40 ▴2.20 (4.06%)」，平盤不上色不帶三角；展開/收合文案精簡為「展開」「收合」；復原全市場盤後籌碼集中度與短沖名單）— 完成 2026-09-06（v0906.04）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

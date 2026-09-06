@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0906.03',
+    version: 'v0906.04',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -266,10 +266,10 @@ export const UI_STRINGS = {
     premiumActive: '已啟用一鍵精選',
     premiumActiveText: '精選中',
     resetCustom: '重設自訂',
-    expandDetails: '展開細節',
-    collapseDetails: '收合細節',
-    expandDiagnosis: '展開診斷',
-    collapseDiagnosis: '收合診斷',
+    expandDetails: '展開',
+    collapseDetails: '收合',
+    expandDiagnosis: '展開',
+    collapseDiagnosis: '收合',
     to: '至',
   },
 
@@ -435,8 +435,8 @@ export const UI_STRINGS = {
   },
 
   CEILINGS: {
-    expandLabel: '展開關卡',
-    collapseLabel: '收合關卡',
+    expandLabel: '展開',
+    collapseLabel: '收合',
     ceilingHeader: '上方天花板',
     supportHeader: '下方地板',
     currentPricePrefix: '現價 ',
