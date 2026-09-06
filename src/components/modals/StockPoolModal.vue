@@ -555,7 +555,7 @@ const SOURCES_CONFIG = [
     },
     metricColor: () => 'text-base-content font-medium',
     urls: [
-      { label: 'MoneyDJ 0050', endpoint: 'Basic0004', url: 'https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=0050.TW' },
+      { label: '元大 0050', endpoint: 'ratio', url: 'https://www.yuantaetfs.com/product/detail/0050/ratio' },
     ],
   },
   {

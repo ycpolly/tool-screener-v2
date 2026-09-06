@@ -323,7 +323,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, shallowRef, onMounted } from 'vue'
 import { UI_STRINGS } from './constants/ui-strings.js'
 import { useStockPool } from './composables/useStockPool.js'
 import { useScreener } from './composables/useScreener.js'
@@ -345,7 +345,7 @@ const isDark      = ref(false)
 const isCompact   = ref(false)
 
 const showPriceCalcModal = ref(false)
-const selectedCalcStock = ref(null)
+const selectedCalcStock = shallowRef(null)
 
 function handleOpenPriceCalc(stock) {
   selectedCalcStock.value = stock

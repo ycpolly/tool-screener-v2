@@ -65,12 +65,13 @@
           <StockCard
             v-for="stock in searchMatchedStocks"
             :key="stock.code"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-compact="isCompact"
-            @select="$emit('select', stock)"
-            @open-risk-modal="$emit('openRiskModal', stock)"
-            @open-price-calc="$emit('openPriceCalc', stock)"
+            @select="onCardSelect"
+            @open-risk-modal="onCardOpenRiskModal"
+            @open-price-calc="onCardOpenPriceCalc"
           />
         </div>
 
@@ -85,13 +86,14 @@
           <StockCard
             v-for="stock in searchUnmatchedStocks"
             :key="stock.code"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, true, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-unmatched="true"
             :is-compact="isCompact"
-            @select="$emit('select', stock)"
-            @open-risk-modal="$emit('openRiskModal', stock)"
-            @open-price-calc="$emit('openPriceCalc', stock)"
+            @select="onCardSelect"
+            @open-risk-modal="onCardOpenRiskModal"
+            @open-price-calc="onCardOpenPriceCalc"
           />
         </div>
       </div>
@@ -116,12 +118,13 @@
         <StockCard
           v-for="stock in sortedStocks"
           :key="stock.code"
+          v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, activeMode]"
           :stock="stock"
           :active-mode="activeMode"
           :is-compact="isCompact"
-          @select="$emit('select', stock)"
-          @open-risk-modal="$emit('openRiskModal', stock)"
-          @open-price-calc="$emit('openPriceCalc', stock)"
+          @select="onCardSelect"
+          @open-risk-modal="onCardOpenRiskModal"
+          @open-price-calc="onCardOpenPriceCalc"
         />
       </div>
 
@@ -155,13 +158,14 @@
           <StockCard
             v-for="stock in sortedUnmatchedStocks"
             :key="stock.code"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, true, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-unmatched="true"
             :is-compact="isCompact"
-            @select="$emit('select', stock)"
-            @open-risk-modal="$emit('openRiskModal', stock)"
-            @open-price-calc="$emit('openPriceCalc', stock)"
+            @select="onCardSelect"
+            @open-risk-modal="onCardOpenRiskModal"
+            @open-price-calc="onCardOpenPriceCalc"
           />
         </div>
       </div>
@@ -213,7 +217,19 @@ const props = defineProps({
   },
 })
 
-defineEmits(['select', 'sort', 'openRiskModal', 'openPriceCalc'])
+const emit = defineEmits(['select', 'sort', 'openRiskModal', 'openPriceCalc'])
+
+function onCardSelect(stock) {
+  emit('select', stock)
+}
+
+function onCardOpenRiskModal(stock) {
+  emit('openRiskModal', stock)
+}
+
+function onCardOpenPriceCalc(stock) {
+  emit('openPriceCalc', stock)
+}
 
 const showUnmatched = ref(false)
 

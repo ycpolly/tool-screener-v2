@@ -18,7 +18,7 @@
           </span>
         </div>
         <div
-          class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:scale-95 transition-all select-none"
+          class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
           :title="UI_STRINGS.QUICK_CALC.openTooltip"
           @click.stop="$emit('openPriceCalc', stock)"
         >
@@ -102,7 +102,7 @@
           </span>
         </div>
         <div
-          class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:scale-95 transition-all select-none"
+          class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
           :title="UI_STRINGS.QUICK_CALC.openTooltip"
           @click.stop="$emit('openPriceCalc', stock)"
         >
@@ -432,7 +432,7 @@
             </span>
           </div>
           <div
-            class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:scale-95 transition-all select-none"
+            class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
             :title="UI_STRINGS.QUICK_CALC.openTooltip"
             @click.stop="$emit('openPriceCalc', stock)"
           >

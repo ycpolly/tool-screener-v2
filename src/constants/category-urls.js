@@ -134,8 +134,8 @@ export const CATEGORY_URL_MAP = {
   // ── 指數成分股與產業 ────────────────────────
   '0050': {
     label: '0050',
-    tse: 'https://www.twse.com.tw/zh/indices/taiex/ftse-tw-series.html',
-    otc: 'https://www.twse.com.tw/zh/indices/taiex/ftse-tw-series.html',
+    tse: 'https://www.yuantaetfs.com/product/detail/0050/ratio',
+    otc: 'https://www.yuantaetfs.com/product/detail/0050/ratio',
   },
   '0051': {
     label: '0051',

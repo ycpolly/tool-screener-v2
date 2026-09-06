@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-09-06**（新增「預期純利」全域排序維度、個股價格速算 Bottom Sheet Modal、台股 6 大升降單位 Tick Size 自動對齊運算模組 tick-size.js、關卡價格與整數階梯 .00 小數對齊優化，完成 v0906.06 版號維護）
+> **最後更新：2026-09-06**（全市場 464 檔卡片 v-memo 虛擬 DOM 快取與速算 Modal 瞬開效能深層優化、0050 官方成分股比例網址修復更新，完成 v0906.07 版號維護）
 
 ---
 
@@ -515,6 +515,8 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 個股價格速算 Bottom Sheet（Price Quick Calc Bottom Sheet & Tick Size Engine：點擊個股卡片現價喚起極簡 Bottom Sheet；純前端高效運算，`src/engine/tick-size.js` 實作台股法定 6 大級距升降單位精準對齊，避免無效小數委託退單；呈顯「基於現價 (現價)」與「基於昨收 (昨收)」雙欄並列對照，由高至低排 +10% 至 +1% 目標價格；昨收 10% 依證交所漲停無條件捨去規則嚴謹計算；零冗餘字樣、無備註每股差價、純幅度和目標價極簡沉穩排版）— 完成 2026-09-06（v0906.06）
 - [x] 選股清單新增「預期純利」排序維度（Expected Net Profit Sorting：在 SearchBar 排序按鈕組新增「預期純利」選項【位於漲跌幅旁】，支援 desc / asc 雙向切換；排序優先級依 `stock.ceilingProfit.netProfitPct` 由高至低精確排定，並以股票代碼升冪為平手穩定鍵；全市場總覽與各大策略模式皆無縫支援）— 完成 2026-09-06（v0906.06）
 - [x] 關卡天梯整數數值小數位切齊優化（Price Decimals & Tabular Alignment：移除 `formatNumber` 之消除 `.00` 邏輯，全面統一維持 2 位小數標準格式；整數關卡、5日最高等數值皆完整呈現 `.00`，使價格天梯欄位與小數點 100% 垂直對齊）— 完成 2026-09-06（v0906.06）
+- [x] 全市場模式（ALL 464 檔）價格速算與卡片渲染效能優化（Large List Performance Optimization & Virtual DOM Caching：針對全市場模式 464 檔卡片同時存在於 DOM 時點擊價格喚起速算 Modal 延遲問題進行深層重構；1. App.vue `selectedCalcStock` 改為 `shallowRef`，消除 464 筆複雜巢狀資料深度 Proxy 劫持開銷；2. StockTable.vue 引入 Vue 3 `v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, isUnmatched, activeMode]"` 快取，配合外提穩定事件處理常式，Modal 開關時完全跳過 464 檔卡片之 Virtual DOM 比對與重繪，渲染耗時由數百毫秒驟降至 1 毫秒內；3. StockCard.vue 移除 `transition-all active:scale-95` 造成的重排重繪，加入 `touch-manipulation` 消除手機端 300ms 點擊延遲；4. PriceCalcModal 採用 `<Teleport to="body">` 與 `v-if="isOpen"` 延遲計算，達成舊款手機點擊速算毫秒級零卡頓瞬開體驗）— 完成 2026-09-06（v0906.07）
+- [x] 0050 標籤官方連結更新（0050 Official URL Update：將 `src/constants/category-urls.js` 及 `StockPoolModal.vue` 之 0050 標籤外開連結統一更新為元大官方成分股比例端點 `https://www.yuantaetfs.com/product/detail/0050/ratio`，修正原證交所 FTSE 頁面失效之問題）— 完成 2026-09-06（v0906.07）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

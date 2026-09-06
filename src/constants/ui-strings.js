@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0906.06',
+    version: 'v0906.07',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -459,8 +459,8 @@ export const UI_STRINGS = {
   },
 
   SORT_OPTIONS: {
-    changePct: '漲跌幅',
-    expectedProfit: '預期純利',
+    changePct: '漲跌',
+    expectedProfit: '純利',
     volume: '成交量',
     bias20: '月乖離',
     code: '代號',
