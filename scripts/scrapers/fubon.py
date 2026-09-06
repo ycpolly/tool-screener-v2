@@ -3,7 +3,7 @@ scrapers/fubon.py
 從富邦 DJ 抓取各類排行榜資料
 
 來源：https://fubon-ebrokerdj.fbs.com.tw/
-共 28 個 URL（14 種排行 × 上市/上櫃各一）
+共 30 個 URL（15 種排行 × 上市/上櫃各一）
 
 職責：只負責 HTTP 連線與 HTML 解析，不做任何指標計算
 """
@@ -28,7 +28,7 @@ _HEADERS = {
 
 _BASE = 'https://fubon-ebrokerdj.fbs.com.tw'
 
-# ── 28 個 URL 清單 ───────────────────────────────────────────
+# ── 30 個 URL 清單 ───────────────────────────────────────────
 FUBON_ENDPOINTS = {
     # 量大排行
     'top100Volume_tse':    f'{_BASE}/z/zg/zg_BE_0_1.djhtm',
@@ -36,6 +36,9 @@ FUBON_ENDPOINTS = {
     # 值大排行
     'valueTop_tse':        f'{_BASE}/Z/ZG/ZG_CD.djhtm',
     'valueTop_otc':        f'{_BASE}/z/zg/zg_CD_1.djhtm',
+    # 值增幅排行
+    'valueGrowth_tse':     f'{_BASE}/z/zg/zg_CB_0_0.djhtm',
+    'valueGrowth_otc':     f'{_BASE}/z/zg/zg_CB_1_0.djhtm',
     # 週轉率
     'turnoverRate_tse':    f'{_BASE}/Z/ZG/ZG_BD.djhtm',
     'turnoverRate_otc':    f'{_BASE}/z/zg/zg_BD_1_0.djhtm',
@@ -197,16 +200,44 @@ def _parse_turnover_rank(html: str, market: str) -> List[Dict]:
     return stocks
 
 
+def _parse_value_growth_rank(html: str, market: str) -> List[Dict]:
+    """值增幅排行：取第 6 欄為成交值（千元），第 8 欄為增減幅（%）"""
+    stocks = []
+    for row in re.findall(r'<tr[^>]*>(.*?)</tr>', html, re.DOTALL):
+        cols = re.findall(r'<td[^>]*>(.*?)</td>', row, re.DOTALL)
+        if len(cols) < 8:
+            continue
+        m = re.search(r"Link2Stk\('([^']+)'\)", cols[1])
+        if not m:
+            continue
+        code = m.group(1).strip()
+        raw  = re.sub(r'<[^>]+>', '', cols[1]).replace('&nbsp;', '').strip()
+        name = re.sub(rf'^{re.escape(code)}\s*', '', raw).strip() or code
+        val_str = re.sub(r'<[^>]+>', '', cols[5]).replace('&nbsp;', '').replace(',', '').strip()
+        try:
+            val = int(val_str)
+        except Exception:
+            val = 0
+        growth_str = re.sub(r'<[^>]+>', '', cols[7]).replace('&nbsp;', '').replace(',', '').replace('%', '').strip()
+        try:
+            growth = float(growth_str)
+        except Exception:
+            growth = 0.0
+        stocks.append({'code': code, 'name': name, 'growthRate': growth, 'amount': val, 'market': market})
+    return stocks
+
+
 # ── 公開 API ─────────────────────────────────────────────────
 
 def fetch_all_rankings() -> Dict:
     """
-    抓取全部 28 個富邦 DJ 排行榜，回傳合併後的結構
+    抓取全部 30 個富邦 DJ 排行榜，回傳合併後的結構
 
     Returns:
         {
           "top100Volume":  {"date": "08/26", "stocks": [...], "sourceUrl": "..."},
           "valueTop":      {...},
+          "valueGrowth":   {...},
           "turnoverRate":  {...},
           "sitcaBuy3D":    {...},
           "sitcaBuy5D":    {...},
@@ -237,22 +268,23 @@ def fetch_all_rankings() -> Dict:
         }
         print(f'    tse={len(stocks_t)}, otc={len(stocks_o)}')
 
-    print('[fubon] 開始抓取 28 個排行榜...')
+    print('[fubon] 開始抓取 30 個排行榜...')
 
-    _fetch_pair('top100Volume_tse',  'top100Volume_otc',  _parse_volume_rank,   'top100Volume')
-    _fetch_pair('valueTop_tse',      'valueTop_otc',      _parse_value_rank,    'valueTop')
-    _fetch_pair('turnoverRate_tse',  'turnoverRate_otc',  _parse_turnover_rank, 'turnoverRate')
-    _fetch_pair('sitcaBuy3D_tse',    'sitcaBuy3D_otc',    _parse_buy_sell_rank, 'sitcaBuy3D')
-    _fetch_pair('sitcaBuy5D_tse',    'sitcaBuy5D_otc',    _parse_buy_sell_rank, 'sitcaBuy5D')
-    _fetch_pair('foreignBuy1D_tse',  'foreignBuy1D_otc',  _parse_buy_sell_rank, 'foreignBuy1D')
-    _fetch_pair('foreignBuy3D_tse',  'foreignBuy3D_otc',  _parse_buy_sell_rank, 'foreignBuy3D')
-    _fetch_pair('majorBuy1D_tse',    'majorBuy1D_otc',    _parse_buy_sell_rank, 'majorBuy1D')
-    _fetch_pair('majorBuy3D_tse',    'majorBuy3D_otc',    _parse_buy_sell_rank, 'majorBuy3D')
-    _fetch_pair('foreignSell1D_tse', 'foreignSell1D_otc', _parse_buy_sell_rank, 'foreignSell1D')
-    _fetch_pair('foreignSell3D_tse', 'foreignSell3D_otc', _parse_buy_sell_rank, 'foreignSell3D')
-    _fetch_pair('majorSell1D_tse',   'majorSell1D_otc',   _parse_buy_sell_rank, 'majorSell1D')
-    _fetch_pair('majorSell3D_tse',   'majorSell3D_otc',   _parse_buy_sell_rank, 'majorSell3D')
-    _fetch_pair('sitcaSell3D_tse',   'sitcaSell3D_otc',   _parse_buy_sell_rank, 'sitcaSell3D')
+    _fetch_pair('top100Volume_tse',  'top100Volume_otc',  _parse_volume_rank,       'top100Volume')
+    _fetch_pair('valueTop_tse',      'valueTop_otc',      _parse_value_rank,        'valueTop')
+    _fetch_pair('valueGrowth_tse',   'valueGrowth_otc',   _parse_value_growth_rank, 'valueGrowth')
+    _fetch_pair('turnoverRate_tse',  'turnoverRate_otc',  _parse_turnover_rank,     'turnoverRate')
+    _fetch_pair('sitcaBuy3D_tse',    'sitcaBuy3D_otc',    _parse_buy_sell_rank,     'sitcaBuy3D')
+    _fetch_pair('sitcaBuy5D_tse',    'sitcaBuy5D_otc',    _parse_buy_sell_rank,     'sitcaBuy5D')
+    _fetch_pair('foreignBuy1D_tse',  'foreignBuy1D_otc',  _parse_buy_sell_rank,     'foreignBuy1D')
+    _fetch_pair('foreignBuy3D_tse',  'foreignBuy3D_otc',  _parse_buy_sell_rank,     'foreignBuy3D')
+    _fetch_pair('majorBuy1D_tse',    'majorBuy1D_otc',    _parse_buy_sell_rank,     'majorBuy1D')
+    _fetch_pair('majorBuy3D_tse',    'majorBuy3D_otc',    _parse_buy_sell_rank,     'majorBuy3D')
+    _fetch_pair('foreignSell1D_tse', 'foreignSell1D_otc', _parse_buy_sell_rank,     'foreignSell1D')
+    _fetch_pair('foreignSell3D_tse', 'foreignSell3D_otc', _parse_buy_sell_rank,     'foreignSell3D')
+    _fetch_pair('majorSell1D_tse',   'majorSell1D_otc',   _parse_buy_sell_rank,     'majorSell1D')
+    _fetch_pair('majorSell3D_tse',   'majorSell3D_otc',   _parse_buy_sell_rank,     'majorSell3D')
+    _fetch_pair('sitcaSell3D_tse',   'sitcaSell3D_otc',   _parse_buy_sell_rank,     'sitcaSell3D')
 
     print(f'[fubon] 全部抓取完成，共 {len(result)} 組排行榜')
     return result

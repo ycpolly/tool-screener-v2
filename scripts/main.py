@@ -67,7 +67,7 @@ def collect(verbose: bool = True) -> dict:
         },
     }
 
-    # 富邦 DJ 28 個排行榜
+    # 富邦 DJ 30 個排行榜
     rankings = fetch_all_rankings()
 
     # 大盤資料

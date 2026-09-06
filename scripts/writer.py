@@ -35,6 +35,7 @@ _RANKING_TO_CATEGORY = {
     'holdings0051':  '0051',
     'top100Volume':  'Top100',
     'valueTop':      'ValueTop',
+    'valueGrowth':   'ValueGrowth',
     'sitcaBuy3D':    'SitcaBuy3D',
     'sitcaBuy5D':    'SitcaBuy5D',
     'foreignBuy1D':  'ForeignBuy1D',
@@ -126,7 +127,7 @@ def build_stock_pool(
         yahoo_results:  每檔個股計算好的指標物件
         disposed_codes: 即時處置股代碼集合
         etf_holdings:   0050/0051 成分股
-        rankings:       14 種富邦 DJ 排行榜
+        rankings:       15 種富邦 DJ 排行榜
         market_data:    大盤指數與燈號
 
     Returns:

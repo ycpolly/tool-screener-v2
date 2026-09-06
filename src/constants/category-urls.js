@@ -2,7 +2,7 @@
  * category-urls.js — 個股標籤官方排行榜 URL 智慧對照表
  *
  * 職責：
- * - 提供 17 大選股來源標籤對應之富邦 DJ / 證交所官方排行榜網址
+ * - 提供 18 大選股來源標籤對應之富邦 DJ / 證交所官方排行榜網址
  * - 支援個股市場別（上市 tse / 上櫃 otc）智慧分流（上市 _0_ / 上櫃 _1_）
  * - 供 StockCard.vue 標籤點擊開新分頁查閱
  */
@@ -30,6 +30,11 @@ export const CATEGORY_URL_MAP = {
     label: '值大',
     tse: `${BASE_FUBON}/Z/ZG/ZG_CD.djhtm`,
     otc: `${BASE_FUBON}/z/zg/zg_CD_1.djhtm`,
+  },
+  'ValueGrowth': {
+    label: '值增',
+    tse: `${BASE_FUBON}/z/zg/zg_CB_0_0.djhtm`,
+    otc: `${BASE_FUBON}/z/zg/zg_CB_1_0.djhtm`,
   },
   'TurnoverRate': {
     label: '週轉',
