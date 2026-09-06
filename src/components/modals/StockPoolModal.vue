@@ -256,7 +256,7 @@ const isCopied = ref(false)
 
 const BASE_FUBON = 'https://fubon-ebrokerdj.fbs.com.tw'
 
-// 17 大資料來源定義表 (對齊富邦 DJ / MoneyDJ / 證交所)
+// 18 大資料來源定義表 (對齊富邦 DJ / MoneyDJ / 證交所)
 const SOURCES_CONFIG = [
   // ── 熱門排行 ────────────────────────
   {
@@ -294,6 +294,30 @@ const SOURCES_CONFIG = [
     urls: [
       { label: '上市', endpoint: 'ZG_CD', url: `${BASE_FUBON}/Z/ZG/ZG_CD.djhtm` },
       { label: '上櫃', endpoint: 'zg_CD_1', url: `${BASE_FUBON}/z/zg/zg_CD_1.djhtm` },
+    ],
+  },
+  {
+    id: 'ValueGrowth',
+    name: '值增幅排行',
+    group: 'RANK',
+    rankingKey: 'valueGrowth',
+    metricHeader: '增加金額 (增幅%)',
+    categoryTag: 'ValueGrowth',
+    formatMetric: (item) => {
+      const amt = item.amount ?? 0
+      const growth = item.growthRate ?? 0
+      let amtStr = ''
+      if (amt >= 10000) {
+        amtStr = `${(amt / 10000).toFixed(1)} 億`
+      } else {
+        amtStr = `${Number(amt).toLocaleString()} 萬`
+      }
+      return `${amtStr} (+${Number(growth).toFixed(1)}%)`
+    },
+    metricColor: () => 'text-rise font-semibold',
+    urls: [
+      { label: '上市', endpoint: 'zg_CB_0_0', url: `${BASE_FUBON}/z/zg/zg_CB_0_0.djhtm` },
+      { label: '上櫃', endpoint: 'zg_CB_1_0', url: `${BASE_FUBON}/z/zg/zg_CB_1_0.djhtm` },
     ],
   },
   {
@@ -623,6 +647,7 @@ function getSourceRawList(src) {
         volume: item.volume,
         netVol: item.netVol,
         turnoverRate: item.turnoverRate,
+        growthRate: item.growthRate,
         weight: item.weight,
         rawIndex: idx + 1,
       }
