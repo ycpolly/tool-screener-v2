@@ -455,6 +455,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 選股池新增「值增幅排行」（Value Growth Ranking Backend & URL Mapping：爬蟲 `scripts/scrapers/fubon.py` 新增上市 `zg_CB_0_0.djhtm` 與上櫃 `zg_CB_1_0.djhtm` 共 30 個排行榜抓取；`scripts/writer.py` 納入 `valueGrowth` → `ValueGrowth` 標籤對應與股票池建置；`src/constants/ui-strings.js` 擴充 `ValueGrowth: '值增'` 與版號更新至 `v0906.01`；`src/constants/category-urls.js` 擴充 18 大標籤官方網址分流）— 完成 2026-09-06（v0906.01）
 - [x] 全站核心互動控制項觸控高度升級至 36px（Touch Target Height Upgrade to h-9：頂部操作列【快照、一鍵精選、更新】、頂部 Navbar 工具列【選股池來源、API 設定、主題切換】、策略微調操作列【重設自訂、調整參數】及時光機膠囊列全面由 32px `h-8` 升級為 36px `h-9`；觸控面積提升約 26%，大幅優化手機單手點擊體驗，同時搜尋列與排序按鈕組維持寬裕的 40px `h-10`，兼顧手感與版面平衡；於 `style.css` 註冊 `--control-h-mobile: 2.25rem` 全域設計 Token）— 完成 2026-09-06（v0906.02）
 - [x] StockPoolModal.vue UI 新增「值增幅排行」來源卡片與官方端點展示（Value Growth Ranking Modal UI：在「熱門排行」群組新增第 4 張來源卡片，展示上市 `zg_CB_0_0` 與上櫃 `zg_CB_1_0` 官方端點超連結；榜單表格展示增加金額與增幅%量化指標；同步支援代號搜尋、一鍵複製與點擊標的即時定位篩選）— 完成 2026-09-06（v0906.02）
+- [x] README.md 使用者定義速查手冊重構（User-facing Cheat Sheet in README：根目錄由 Vite 預設範本替換為極簡高雅、手機與網頁好讀之核心速查手冊；收錄【盤前/盤中/收盤/盤後】時間狀態機判定邏輯與「更新」按鈕防呆攔截機制、GitHub Actions 16:38 與 18:42 兩波流雲端資料排程、18 大選股來源標籤官方對照速查，並導流至 STOCK_CARD_DICTIONARY.md）— 完成 2026-09-06（v0906.02）
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
