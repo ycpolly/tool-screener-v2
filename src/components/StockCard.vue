@@ -202,7 +202,7 @@
           @click.stop
         >
           <!-- 1. 上方天花板 (由高至低排列，最高在最頂) -->
-          <div class="space-y-1">
+          <div class="space-y-2.5">
             <div
               v-for="(item, idx) in ladderCeilings"
               :key="`m-c-${idx}`"
@@ -220,7 +220,7 @@
           </div>
 
           <!-- 2. 中間現價基準線 (同列排版，加上下中等透明度邊框) -->
-          <div class="flex items-center justify-between border-y border-base-content/25 py-1 my-0.5 text-base-content font-medium">
+          <div class="flex items-center justify-between border-y border-base-content/20 py-1.5 my-2.5 text-base-content font-medium">
             <span class="truncate font-sans">{{ UI_STRINGS.STOCK_TABLE.headers.price || '現價' }}</span>
             <div class="flex items-baseline gap-3 shrink-0">
               <span class="font-bold">{{ formatNumber(stock.price) }}</span>
@@ -229,7 +229,7 @@
           </div>
 
           <!-- 3. 下方地板 (由高至低排列，最近支撐在現價下方，最深在最底) -->
-          <div class="space-y-1">
+          <div class="space-y-2.5">
             <div
               v-for="(item, idx) in ladderSupports"
               :key="`m-s-${idx}`"
@@ -524,7 +524,7 @@
             @click.stop
           >
             <!-- 1. 上方天花板 (由高至低排列，最高在最頂) -->
-            <div class="space-y-1">
+            <div class="space-y-2.5">
               <div
                 v-for="(item, idx) in ladderCeilings"
                 :key="`d-c-${idx}`"
@@ -542,7 +542,7 @@
             </div>
 
             <!-- 2. 中間現價基準線 (同列排版，加上下中等透明度邊框) -->
-            <div class="flex items-center justify-between border-y border-base-content/25 py-1 my-0.5 text-base-content font-medium">
+            <div class="flex items-center justify-between border-y border-base-content/20 py-1.5 my-2.5 text-base-content font-medium">
               <span class="truncate font-sans">{{ UI_STRINGS.STOCK_TABLE.headers.price || '現價' }}</span>
               <div class="flex items-baseline gap-3 shrink-0">
                 <span class="font-bold">{{ formatNumber(stock.price) }}</span>
@@ -551,7 +551,7 @@
             </div>
 
             <!-- 3. 下方地板 (由高至低排列，最近支撐在現價下方，最深在最底) -->
-            <div class="space-y-1">
+            <div class="space-y-2.5">
               <div
                 v-for="(item, idx) in ladderSupports"
                 :key="`d-s-${idx}`"
