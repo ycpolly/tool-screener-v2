@@ -47,6 +47,11 @@
 ```
 tool-screener-v2/
 │
+├── docs/                       ← 架構規範與核心字典
+│   ├── ARCHITECTURE.md         ← 系統總覽與進度清單
+│   ├── INTERFACE_CONTRACT.md   ← 前後端分工合約與 TypeScript 型別
+│   └── STOCK_CARD_DICTIONARY.md ← StockCard 標籤與視覺指標完整字典
+│
 ├── .github/workflows/
 │   ├── update-stock-pool.yml   ← 爬蟲機器人（平日 15:30 / 18:30 / 23:00）
 │   └── deploy.yml              ← npm run build → GitHub Pages 部署
