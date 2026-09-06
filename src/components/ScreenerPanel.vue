@@ -64,17 +64,17 @@
         <button
           v-if="isCustomized"
           type="button"
-          class="btn btn-sm btn-ghost text-sm font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer shadow-none"
+          class="btn btn-sm btn-ghost text-sm font-medium h-9 min-h-0 px-3 rounded-lg cursor-pointer shadow-none"
           :title="UI_STRINGS.SCREENER.resetCustom || '重設自訂'"
           @click="$emit('reset')"
         >
           {{ UI_STRINGS.SCREENER.resetCustom || '重設自訂' }}
         </button>
 
-        <!-- 調整參數按鈕 (統一 rounded-lg 與 h-8，無陰影) -->
+        <!-- 調整參數按鈕 (統一 rounded-lg 與 h-9，無陰影) -->
         <button
           type="button"
-          class="btn btn-sm btn-neutral gap-1.5 text-sm font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer shadow-none"
+          class="btn btn-sm btn-neutral gap-1.5 text-sm font-medium h-9 min-h-0 px-3 rounded-lg cursor-pointer shadow-none"
           @click="isCollapsed = !isCollapsed"
         >
           <span>{{ isCollapsed ? UI_STRINGS.PANEL.adjustParams : UI_STRINGS.PANEL.collapseParams }}</span>

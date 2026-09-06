@@ -448,6 +448,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 個股標籤官方排行榜 URL 智慧對照模組（`src/constants/category-urls.js`：收錄 18 大選股來源標籤對應之富邦 DJ / 證交所官方排行榜完整端點；自動依據個股 `market` 屬性判定上市 `_0_` 或上櫃 `_1_` 智慧派發專屬網址，如 3624 光頡自動匹配上櫃 `zg_D_1_1.djhtm`、2330 台積電自動匹配上市 `zg_D_0_1.djhtm`；提供 `getStockCategoryItems` 格式化陣列供卡片超連結渲染）— 完成 2026-09-05（v0905.05）
 - [x] StockCard 標籤官方排行榜超連結（Clickable Category Tags in StockCard：引入 `src/constants/category-urls.js` 之 `getStockCategoryItems(props.stock)`，將手機端與電腦端第 2層分類標籤由純文字改為外開富邦 DJ / 證交所官方排行之 `<a>` 超連結【`target="_blank" rel="noopener"`、`@click.stop` 防冒泡、`hover:underline` 純粹底線微動效】；維持原汁原味 `text-sm font-normal text-base-content/80` 沉穩排版與 `·` 點分隔號，保持樣式極簡高雅）— 完成 2026-09-05（v0905.05）
 - [x] 選股池新增「值增幅排行」（Value Growth Ranking Backend & URL Mapping：爬蟲 `scripts/scrapers/fubon.py` 新增上市 `zg_CB_0_0.djhtm` 與上櫃 `zg_CB_1_0.djhtm` 共 30 個排行榜抓取；`scripts/writer.py` 納入 `valueGrowth` → `ValueGrowth` 標籤對應與股票池建置；`src/constants/ui-strings.js` 擴充 `ValueGrowth: '值增'` 與版號更新至 `v0906.01`；`src/constants/category-urls.js` 擴充 18 大標籤官方網址分流）— 完成 2026-09-06（v0906.01）
+- [x] 全站核心互動控制項觸控高度升級至 36px（Touch Target Height Upgrade to h-9：頂部操作列【快照、一鍵精選、更新】、頂部 Navbar 工具列【選股池來源、API 設定、主題切換】、策略微調操作列【重設自訂、調整參數】及時光機膠囊列全面由 32px `h-8` 升級為 36px `h-9`；觸控面積提升約 26%，大幅優化手機單手點擊體驗，同時搜尋列與排序按鈕組維持寬裕的 40px `h-10`，兼顧手感與版面平衡；於 `style.css` 註冊 `--control-h-mobile: 2.25rem` 全域設計 Token）— 完成 2026-09-06
 - [ ] StockPoolModal.vue UI 新增值增幅排行卡片與端點展示（由 Gemini 前端負責實作）
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）

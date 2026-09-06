@@ -7,7 +7,7 @@
         v-for="d in timeMachineDates"
         :key="d.offset"
         type="button"
-        class="px-2.5 py-1.5 rounded-lg text-sm transition-all shrink-0 font-numeric cursor-pointer"
+        class="h-9 px-3 rounded-lg text-sm transition-all shrink-0 font-numeric cursor-pointer flex items-center justify-center"
         :class="dayOffset === d.offset
           ? 'bg-base-100 text-base-content font-bold shadow-xs border border-base-300'
           : 'text-base-content/75 hover:text-base-content hover:bg-base-300/40'"

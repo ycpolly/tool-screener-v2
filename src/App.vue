@@ -16,9 +16,9 @@
       </div>
 
       <div class="ml-auto flex items-center gap-1.5 sm:gap-2">
-        <!-- 選股池來源總覽按鈕 (與 API 設定一致的 rounded-lg h-8 w-8) -->
+        <!-- 選股池來源總覽按鈕 (與 API 設定一致的 rounded-lg h-9 w-9) -->
         <button
-          class="btn btn-sm btn-ghost h-8 w-8 min-h-0 p-0 rounded-lg text-base-content/80 hover:text-base-content transition-colors cursor-pointer flex items-center justify-center"
+          class="btn btn-sm btn-ghost h-9 w-9 min-h-0 p-0 rounded-lg text-base-content/80 hover:text-base-content transition-colors cursor-pointer flex items-center justify-center"
           :title="UI_STRINGS.STOCK_POOL_MODAL.title"
           :aria-label="UI_STRINGS.STOCK_POOL_MODAL.title"
           @click="openPoolModal"
@@ -28,9 +28,9 @@
           </svg>
         </button>
 
-        <!-- 行情 API 設定按鈕 (與主題切換一致的 rounded-lg h-8 w-8) -->
+        <!-- 行情 API 設定按鈕 (與主題切換一致的 rounded-lg h-9 w-9) -->
         <button
-          class="btn btn-sm btn-ghost h-8 w-8 min-h-0 p-0 rounded-lg text-base-content/80 hover:text-base-content transition-colors cursor-pointer flex items-center justify-center"
+          class="btn btn-sm btn-ghost h-9 w-9 min-h-0 p-0 rounded-lg text-base-content/80 hover:text-base-content transition-colors cursor-pointer flex items-center justify-center"
           :title="UI_STRINGS.API_SETTINGS.modalTitle"
           :aria-label="UI_STRINGS.API_SETTINGS.modalTitle"
           @click="openApiModal"
@@ -74,11 +74,11 @@
           </span>
         </div>
 
-        <!-- 右側：一鍵精選、快照與更新操作按鈕 (統一 rounded-lg h-8，無陰影) -->
+        <!-- 右側：一鍵精選、快照與更新操作按鈕 (統一 rounded-lg h-9，無陰影) -->
         <div class="flex items-center gap-1.5 sm:gap-2">
           <!-- 選股快照按鈕 (第二級 UI: btn-outline btn-neutral，純剪貼簿 SVG) -->
           <button
-            class="btn btn-sm btn-outline btn-neutral h-8 w-8 min-h-0 p-0 rounded-lg cursor-pointer shadow-none transition-all flex items-center justify-center"
+            class="btn btn-sm btn-outline btn-neutral h-9 w-9 min-h-0 p-0 rounded-lg cursor-pointer shadow-none transition-all flex items-center justify-center"
             :title="UI_STRINGS.SNAPSHOT.copyBtnTitle"
             :aria-label="UI_STRINGS.SNAPSHOT.copyBtnTitle"
             :disabled="poolLoading || activeStocks.length === 0"
@@ -108,9 +108,9 @@
             </svg>
           </button>
 
-          <!-- 一鍵精選按鈕 (深色 Neutral / Outline，手機為 32px 圖示按鈕，電腦端展開顯示文字) -->
+          <!-- 一鍵精選按鈕 (深色 Neutral / Outline，手機為 36px 圖示按鈕，電腦端展開顯示文字) -->
           <button
-            class="btn btn-sm h-8 min-h-0 w-8 p-0 sm:w-auto sm:px-2.5 rounded-lg cursor-pointer shadow-none transition-all flex items-center justify-center gap-1.5"
+            class="btn btn-sm h-9 min-h-0 w-9 p-0 sm:w-auto sm:px-3 rounded-lg cursor-pointer shadow-none transition-all flex items-center justify-center gap-1.5"
             :class="[
               isPremium
                 ? 'btn-neutral font-bold'
@@ -138,7 +138,7 @@
           </button>
 
           <button
-            class="btn btn-sm btn-neutral gap-1.5 font-medium h-8 min-h-0 px-2.5 rounded-lg cursor-pointer shadow-none"
+            class="btn btn-sm btn-neutral gap-1.5 font-medium h-9 min-h-0 px-3 rounded-lg cursor-pointer shadow-none"
             :disabled="poolLoading || quotesLoading"
             @click="handleFetchRealtime"
           >
