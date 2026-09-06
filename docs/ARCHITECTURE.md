@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-09-06**（新增價格速算 Bottom Sheet Modal、台股升降單位 Tick Size 自動對齊運算模組 tick-size.js、雙欄由高至低排 +10% 至 +1% 目標價、點擊現價微動效叫起抽屜；完成 iOS 安全區域與 UTF-8 編碼修復）
+> **最後更新：2026-09-06**（新增「預期純利」全域排序維度，支援依各股第一道關卡純利率高低排序；新增價格速算 Bottom Sheet Modal、台股升降單位 Tick Size 自動對齊運算模組 tick-size.js、雙欄由高至低排 +10% 至 +1% 目標價、點擊現價微動效叫起抽屜；完成 iOS 安全區域與 UTF-8 編碼修復）
 
 ---
 
@@ -513,6 +513,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 槽位 A：天花板與地板三明治階梯與價格排版優化（Slot A Ceiling & Floor Ladder & Price Format Polish：捨棄彈窗阻斷感，改以手感極佳的就地展開 Accordion 架構實作；呈現【上方天花板關卡 ── 現價基準線 ── 下方地板防守點】三明治價格天梯，價格由高至低自然遞減對齊；現價列以中等透明度上下 border 精準同列對齊；全卡片字級維持收斂標準 text-sm；價格漲跌改為「56.40 ▴2.20 (4.06%)」，平盤不上色不帶三角；展開/收合文案精簡為「展開」「收合」；復原全市場盤後籌碼集中度與短沖名單）— 完成 2026-09-06（v0906.04）
 - [x] 全站 iOS 安全區域適配與 JSON 解析修復（iOS Safe Area Inset & JSON Encoding Fix：徹底根除 PowerShell 轉發導致之 UTF-16 LE BOM 異常，確保 `stock-pool.json` 為標準 UTF-8 無 BOM 格式；全站引入 iOS `env(safe-area-inset-bottom)` 支援，解決底部卡片、Modal 動作列及 Toast 遭 iPhone 底部 Home Indicator 橫條遮擋問題；全面補齊 `UI_STRINGS.SCREENER` 之 `expandDetails`/`collapseDetails` 定義與 StockCard 備援 fallback，實現全站按鈕「展開」「收合」文案 100% 簡潔一致）— 完成 2026-09-06（v0906.05）
 - [x] 個股價格速算 Bottom Sheet（Price Quick Calc Bottom Sheet & Tick Size Engine：點擊個股卡片現價喚起極簡 Bottom Sheet；純前端高效運算，`src/engine/tick-size.js` 實作台股法定 6 大級距升降單位精準對齊，避免無效小數委託退單；呈顯「基於現價 (現價)」與「基於昨收 (昨收)」雙欄並列對照，由高至低排 +10% 至 +1% 目標價格；昨收 10% 依證交所漲停無條件捨去規則嚴謹計算；零冗餘字樣、無備註每股差價、純幅度和目標價極簡沉穩排版）— 完成 2026-09-06
+- [x] 選股清單新增「預期純利」排序維度（Expected Net Profit Sorting：在 SearchBar 排序按鈕組新增「預期純利」選項【位於漲跌幅旁】，支援 desc / asc 雙向切換；排序優先級依 `stock.ceilingProfit.netProfitPct` 由高至低精確排定，並以股票代碼升冪為平手穩定鍵；全市場總覽與各大策略模式皆無縫支援）— 完成 2026-09-06
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

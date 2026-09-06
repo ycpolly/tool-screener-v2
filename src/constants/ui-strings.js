@@ -427,10 +427,10 @@ export const UI_STRINGS = {
     high5d: '5日最高價',
     high10d: '10日最高價',
     high20d: '20日最高價',
-    ma5: '5日線 (5MA)',
-    ma10: '10日線 (10MA)',
-    ma20: '20日線 (20MA)',
-    ma60: '季線 (60MA)',
+    ma5: '5日均線',
+    ma10: '10日均線',
+    ma20: '20日均線',
+    ma60: '季線',
     integer: '整數關卡價',
     limitUp: '漲停價天花板',
     low5d: '5日最低價',
@@ -456,6 +456,14 @@ export const UI_STRINGS = {
     colPrice: '價格',
     openTooltip: '點擊開啟價格速算',
     closeBtn: '關閉',
+  },
+
+  SORT_OPTIONS: {
+    changePct: '漲跌幅',
+    expectedProfit: '預期純利',
+    volume: '成交量',
+    bias20: '月乖離',
+    code: '代號',
   },
 }
 

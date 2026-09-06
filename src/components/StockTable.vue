@@ -275,6 +275,20 @@ const sortedUnmatchedStocks = computed(() => {
   return sortList(list, props.sortKey, props.sortDir)
 })
 
+function getStockExpectedProfit(stock) {
+  if (!stock) return -999
+  if (typeof stock.ceilingProfit?.netProfitPct === 'number') {
+    return stock.ceilingProfit.netProfitPct
+  }
+  if (Array.isArray(stock.allCeilings) && stock.allCeilings.length > 0 && typeof stock.allCeilings[0].netProfitPct === 'number') {
+    return stock.allCeilings[0].netProfitPct
+  }
+  if (stock.high5d && stock.price && stock.price > 0) {
+    return Number((((stock.high5d - stock.price) / stock.price) * 100).toFixed(2)) - 0.58
+  }
+  return -999
+}
+
 function sortList(list, key, dirStr) {
   const dir = dirStr === 'desc' ? -1 : 1
   return list.sort((a, b) => {
@@ -284,6 +298,9 @@ function sortList(list, key, dirStr) {
     if (key === 'bias20') {
       valA = a.price && a.ma20 ? (a.price - a.ma20) / a.ma20 : -999
       valB = b.price && b.ma20 ? (b.price - b.ma20) / b.ma20 : -999
+    } else if (key === 'expectedProfit') {
+      valA = getStockExpectedProfit(a)
+      valB = getStockExpectedProfit(b)
     }
 
     if (valA === undefined || valA === null) return 1
@@ -292,7 +309,9 @@ function sortList(list, key, dirStr) {
     if (typeof valA === 'string') {
       return valA.localeCompare(valB) * dir
     }
-    return (valA - valB) * dir
+    const diff = (valA - valB) * dir
+    if (diff !== 0) return diff
+    return String(a.code || '').localeCompare(String(b.code || ''))
   })
 }
 </script>

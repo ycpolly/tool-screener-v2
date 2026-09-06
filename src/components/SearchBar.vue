@@ -138,10 +138,11 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'update:sortKey', 'update:sortDir', 'toggle-compact'])
 
 const sortOptions = [
-  { key: 'changePct', label: UI_STRINGS.STOCK_TABLE.headers.changePct || '漲跌幅' },
-  { key: 'volume', label: UI_STRINGS.STOCK_TABLE.headers.volume || '成交量' },
-  { key: 'bias20', label: UI_STRINGS.STOCK_TABLE.headers.bias20 || '月乖離' },
-  { key: 'code', label: UI_STRINGS.STOCK_TABLE.headers.code || '代號' },
+  { key: 'changePct', label: UI_STRINGS.SORT_OPTIONS?.changePct || '漲跌幅' },
+  { key: 'expectedProfit', label: UI_STRINGS.SORT_OPTIONS?.expectedProfit || '預期純利' },
+  { key: 'volume', label: UI_STRINGS.SORT_OPTIONS?.volume || '成交量' },
+  { key: 'bias20', label: UI_STRINGS.SORT_OPTIONS?.bias20 || '月乖離' },
+  { key: 'code', label: UI_STRINGS.SORT_OPTIONS?.code || '代號' },
 ]
 
 function handleToggleSort(key) {
