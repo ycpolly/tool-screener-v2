@@ -763,9 +763,23 @@ function formatNumber(num) {
 
 function formatChange(change, changePct) {
   if (changePct === null || changePct === undefined || isNaN(changePct)) return '--'
-  const sign = changePct > 0 ? '+' : ''
-  const chg = change !== undefined && change !== null ? ` (${sign}${formatNumber(change)})` : ''
-  return `${sign}${Number(changePct).toFixed(2)}%${chg}`
+  const absPct = Math.abs(Number(changePct)).toFixed(2)
+  let chgVal = change
+  if ((chgVal === undefined || chgVal === null || isNaN(chgVal)) && props.stock?.price) {
+    chgVal = Number((props.stock.price * (changePct / 100) / (1 + changePct / 100)).toFixed(2))
+  }
+  const absChg = chgVal !== undefined && chgVal !== null && !isNaN(chgVal)
+    ? Number(Math.abs(Number(chgVal))).toFixed(2)
+    : '0.00'
+
+  if (changePct > 0) {
+    return `▴${absChg} (${absPct}%)`
+  }
+  if (changePct < 0) {
+    return `▾${absChg} (${absPct}%)`
+  }
+  // 平盤不上色，也不用三角
+  return `${absChg} (${absPct}%)`
 }
 
 function formatBias(bias) {
@@ -784,14 +798,14 @@ const priceColorClass = computed(() => {
   }
   if (pct > 0) return 'text-rise'
   if (pct < 0) return 'text-fall'
-  return 'text-flat'
+  return 'text-base-content'
 })
 
 const changeColorClass = computed(() => {
   const pct = props.stock.changePct ?? 0
   if (pct > 0) return 'text-rise'
   if (pct < 0) return 'text-fall'
-  return 'text-flat'
+  return 'text-base-content/80'
 })
 
 
