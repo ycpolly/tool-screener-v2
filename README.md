@@ -1,7 +1,4 @@
-# 豐盛幫手 (tool-screener-v2)
-
-> 台股波段選股工具 · 盤中即時行情與尾盤策略快照  
-> 線上網址：[ycpolly.github.io/tool-screener-v2](https://ycpolly.github.io/tool-screener-v2/)
+# tool-screener-v2
 
 ---
 

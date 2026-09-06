@@ -183,9 +183,19 @@ export function getStockCategoryItems(stock) {
   const seenLabels = new Set()
   const items = []
 
+  const cats = stock.categories
+  const hasForeignSub = cats.includes('ForeignBuy1D') || cats.includes('ForeignBuy3D')
+  const hasMajorSub = cats.includes('MajorBuy1D') || cats.includes('MajorBuy3D')
+  const hasSitcaSub = cats.includes('SitcaBuy3D') || cats.includes('SitcaBuy5D')
+
   for (const cat of stock.categories) {
     // 排除賣超標籤（賣超已於右側 sellWarningText 警示列獨立呈現）
     if (cat.includes('Sell')) continue
+
+    // 傘形母標籤收斂：已有明確天數子標籤時，不重複顯示粗略母標籤
+    if (cat === 'ForeignBuy' && hasForeignSub) continue
+    if (cat === 'MajorBuy' && hasMajorSub) continue
+    if (cat === 'SitcaBuy' && hasSitcaSub) continue
 
     const label = tagMap[cat] || cat
     if (!label || seenLabels.has(label)) continue
