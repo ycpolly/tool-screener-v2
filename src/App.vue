@@ -203,6 +203,7 @@
           :is-compact="isCompact"
           @select="handleSelectStock"
           @open-risk-modal="handleOpenRiskModal"
+          @open-price-calc="handleOpenPriceCalc"
         />
       </template>
     </main>
@@ -267,6 +268,13 @@
       @select-stock="handleSelectStockFromPool"
     />
 
+    <!-- 價格速算 Bottom Sheet Modal -->
+    <PriceCalcModal
+      :is-open="showPriceCalcModal"
+      :stock="selectedCalcStock"
+      @close="closePriceCalcModal"
+    />
+
     <!-- 空間與風控全貌 Modal (Gemini 完成 RiskModal.vue 後引入掛載) -->
     <!--
     <RiskModal
@@ -328,12 +336,26 @@ import ScreenerPanel from './components/ScreenerPanel.vue'
 import SearchBar from './components/SearchBar.vue'
 import StockTable from './components/StockTable.vue'
 import StockPoolModal from './components/modals/StockPoolModal.vue'
+import PriceCalcModal from './components/modals/PriceCalcModal.vue'
 
 const searchQuery = ref('')
 const sortKey     = ref('changePct')
 const sortDir     = ref('desc')
 const isDark      = ref(false)
 const isCompact   = ref(false)
+
+const showPriceCalcModal = ref(false)
+const selectedCalcStock = ref(null)
+
+function handleOpenPriceCalc(stock) {
+  selectedCalcStock.value = stock
+  showPriceCalcModal.value = true
+}
+
+function closePriceCalcModal() {
+  showPriceCalcModal.value = false
+  selectedCalcStock.value = null
+}
 
 function toggleCompact() {
   isCompact.value = !isCompact.value

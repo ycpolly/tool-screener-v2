@@ -17,7 +17,11 @@
             [{{ UI_STRINGS.SCREENER.disposed }}]
           </span>
         </div>
-        <div class="flex items-baseline gap-1.5 shrink-0 font-numeric">
+        <div
+          class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:scale-95 transition-all select-none"
+          :title="UI_STRINGS.QUICK_CALC.openTooltip"
+          @click.stop="$emit('openPriceCalc', stock)"
+        >
           <span class="text-lg font-bold" :class="priceColorClass">
             {{ formatNumber(stock.price) }}
           </span>
@@ -97,7 +101,11 @@
             [{{ UI_STRINGS.SCREENER.disposed }}]
           </span>
         </div>
-        <div class="flex items-baseline gap-1.5 shrink-0 font-numeric">
+        <div
+          class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:scale-95 transition-all select-none"
+          :title="UI_STRINGS.QUICK_CALC.openTooltip"
+          @click.stop="$emit('openPriceCalc', stock)"
+        >
           <span class="text-lg font-bold" :class="priceColorClass">
             {{ formatNumber(stock.price) }}
           </span>
@@ -423,7 +431,11 @@
               [{{ UI_STRINGS.SCREENER.disposed }}]
             </span>
           </div>
-          <div class="flex items-baseline gap-1.5 shrink-0 font-numeric">
+          <div
+            class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:scale-95 transition-all select-none"
+            :title="UI_STRINGS.QUICK_CALC.openTooltip"
+            @click.stop="$emit('openPriceCalc', stock)"
+          >
             <span class="text-lg font-bold" :class="priceColorClass">{{ formatNumber(stock.price) }}</span>
             <span class="text-sm font-semibold" :class="changeColorClass">{{ formatChange(stock.change, stock.changePct) }}</span>
           </div>
@@ -739,7 +751,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['select', 'openRiskModal'])
+defineEmits(['select', 'openRiskModal', 'openPriceCalc'])
 
 const copied = ref(false)
 let copyTimer = null

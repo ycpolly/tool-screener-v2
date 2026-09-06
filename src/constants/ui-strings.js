@@ -447,6 +447,16 @@ export const UI_STRINGS = {
     emptyCeilings: '已突破所有壓力，無天花板壓力',
     emptySupports: '無下方支撐參考',
   },
+
+  QUICK_CALC: {
+    titleSuffix: '· 速算',
+    basedOnCurrent: (price) => `基於現價 (${price})`,
+    basedOnPrevClose: (price) => `基於昨收 (${price})`,
+    colGain: '漲幅',
+    colPrice: '價格',
+    openTooltip: '點擊開啟價格速算',
+    closeBtn: '關閉',
+  },
 }
 
 

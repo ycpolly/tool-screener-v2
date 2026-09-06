@@ -70,6 +70,7 @@
             :is-compact="isCompact"
             @select="$emit('select', stock)"
             @open-risk-modal="$emit('openRiskModal', stock)"
+            @open-price-calc="$emit('openPriceCalc', stock)"
           />
         </div>
 
@@ -90,6 +91,7 @@
             :is-compact="isCompact"
             @select="$emit('select', stock)"
             @open-risk-modal="$emit('openRiskModal', stock)"
+            @open-price-calc="$emit('openPriceCalc', stock)"
           />
         </div>
       </div>
@@ -119,6 +121,7 @@
           :is-compact="isCompact"
           @select="$emit('select', stock)"
           @open-risk-modal="$emit('openRiskModal', stock)"
+          @open-price-calc="$emit('openPriceCalc', stock)"
         />
       </div>
 
@@ -158,6 +161,7 @@
             :is-compact="isCompact"
             @select="$emit('select', stock)"
             @open-risk-modal="$emit('openRiskModal', stock)"
+            @open-price-calc="$emit('openPriceCalc', stock)"
           />
         </div>
       </div>
@@ -209,6 +213,8 @@ const props = defineProps({
   },
 })
 
+defineEmits(['select', 'sort', 'openRiskModal', 'openPriceCalc'])
+
 const showUnmatched = ref(false)
 
 // 搜尋文字比對工具
@@ -255,7 +261,7 @@ const modeSuggestionText = computed(() => {
   return ''
 })
 
-defineEmits(['select', 'sort', 'openRiskModal'])
+
 
 // 符合股票排序
 const sortedStocks = computed(() => {
