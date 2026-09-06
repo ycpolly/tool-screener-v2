@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-09-06**（整合值增幅排行 UI 卡片與 36px 觸控高度升級，完成 v0906.02 版號維護）
+> **最後更新：2026-09-06**（標籤母子智慧收斂去重、建立 docs 單一來源並重整 README 導讀目錄，完成 v0906.03 版號維護）
 
 ---
 
@@ -481,7 +481,8 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 全站核心互動控制項觸控高度升級至 36px（Touch Target Height Upgrade to h-9：頂部操作列【快照、一鍵精選、更新】、頂部 Navbar 工具列【選股池來源、API 設定、主題切換】、策略微調操作列【重設自訂、調整參數】及時光機膠囊列全面由 32px `h-8` 升級為 36px `h-9`；觸控面積提升約 26%，大幅優化手機單手點擊體驗，同時搜尋列與排序按鈕組維持寬裕的 40px `h-10`，兼顧手感與版面平衡；於 `style.css` 註冊 `--control-h-mobile: 2.25rem` 全域設計 Token）— 完成 2026-09-06（v0906.02）
 - [x] StockPoolModal.vue UI 新增「值增幅排行」來源卡片與官方端點展示（Value Growth Ranking Modal UI：在「熱門排行」群組新增第 4 張來源卡片，展示上市 `zg_CB_0_0` 與上櫃 `zg_CB_1_0` 官方端點超連結；榜單表格展示增加金額與增幅%量化指標；同步支援代號搜尋、一鍵複製與點擊標的即時定位篩選）— 完成 2026-09-06（v0906.02）
 - [x] README.md 使用者定義速查手冊重構（User-facing Cheat Sheet in README：根目錄由 Vite 預設範本替換為極簡高雅、手機與網頁好讀之核心速查手冊；收錄【盤前/盤中/收盤/盤後】時間狀態機判定邏輯與「更新」按鈕防呆攔截機制、GitHub Actions 16:38 與 18:42 兩波流雲端資料排程、18 大選股來源標籤官方對照速查，並導流至 STOCK_CARD_DICTIONARY.md）— 完成 2026-09-06（v0906.02）
-- [x] StockCard 標籤收斂去重視覺確認（Category Tag Deduplication Visual Verification：驗證 `src/constants/category-urls.js` 智慧收斂外資買、主力買、投信買母標籤機制；經全市場 394 檔個股壓測，標籤最大字元長度由 78 字元大幅精簡至 56 字元，徹底根除重複超連結；在手機端【`< 1024px`】與電腦端【`≥ 1024px`】多行自動折行自然平整，中置點 `·`【`mx-1 text-base-content/40`】與賣超避雷警示【⚠️】銜接完美，視覺極簡沉穩）— 完成 2026-09-06
+- [x] StockCard 標籤收斂去重視覺確認（Category Tag Deduplication Visual Verification：驗證 `src/constants/category-urls.js` 智慧收斂外資買、主力買、投信買母標籤機制；經全市場 394 檔個股壓測，標籤最大字元長度由 78 字元大幅精簡至 56 字元，徹底根除重複超連結；在手機端【`< 1024px`】與電腦端【`≥ 1024px`】多行自動折行自然平整，中置點 `·`【`mx-1 text-base-content/40`】與賣超避雷警示【⚠️】銜接完美，視覺極簡沉穩）— 完成 2026-09-06（v0906.03）
+- [x] docs 文檔單一來源整合與 README 導覽入口化（Docs Single Source of Truth & README Portal：在 `ARCHITECTURE.md` 完整收納 30 個富邦 DJ 端點清單、GitHub Actions 兩波流排程表與資料時間狀態機速查表，在 `STOCK_CARD_DICTIONARY.md` 補齊標籤收斂去重規則；`README.md` 全面轉型為輕量簡約之核心文件導讀目錄，落實單一可信來源原則）— 完成 2026-09-06（v0906.03）
 - [ ] RiskModal（空間與風控全貌）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
