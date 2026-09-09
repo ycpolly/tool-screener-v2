@@ -67,7 +67,7 @@
         <div class="flex items-center gap-2 text-sm font-numeric text-base-content/80">
           <span
             class="inline-block w-2 h-2 rounded-full shrink-0"
-            :class="quotesLoading ? 'bg-warning animate-ping' : (isPostMarketTime ? 'bg-base-content/40' : (quotesLastUpdated ? 'bg-success shadow-xs' : 'bg-primary/80'))"
+            :class="(poolLoading || quotesLoading) ? 'bg-warning animate-ping' : (isPostMarketTime ? 'bg-base-content/40' : (quotesLastUpdated ? 'bg-success shadow-xs' : 'bg-primary/80'))"
           ></span>
           <span class="font-medium tracking-wide">
             {{ dataTimestampText || '資料載入中…' }}
@@ -145,7 +145,7 @@
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-3.5 w-3.5"
-              :class="{ 'animate-spin': quotesLoading }"
+              :class="{ 'animate-spin': poolLoading || quotesLoading }"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -153,7 +153,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
             <span class="text-sm font-medium">
-              {{ quotesLoading ? UI_STRINGS.REALTIME.fetchingBtn : UI_STRINGS.REALTIME.fetchBtn }}
+              {{ (poolLoading || quotesLoading) ? UI_STRINGS.REALTIME.fetchingBtn : UI_STRINGS.REALTIME.fetchBtn }}
             </span>
           </button>
         </div>
@@ -381,6 +381,7 @@ const {
   isConfigured,
   saveGcpUrl,
   clearGcpUrl,
+  clearError: clearQuotesError,
   fetchQuotes,
 } = useRealtimeQuotes()
 
@@ -401,12 +402,29 @@ const activeMeta   = computed(() => {
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
+function formatFriendlyTime(isoString) {
+  if (!isoString) return ''
+  try {
+    const d = new Date(isoString)
+    if (isNaN(d.getTime())) return ''
+    const mm = String(d.getMonth() + 1).padStart(2, '0')
+    const dd = String(d.getDate()).padStart(2, '0')
+    const hh = String(d.getHours()).padStart(2, '0')
+    const min = String(d.getMinutes()).padStart(2, '0')
+    return `${mm}/${dd} ${hh}:${min}`
+  } catch {
+    return ''
+  }
+}
+
 // 頂部導覽列資料時間戳記文字（包含 年/月/日、星期 與 撮合時間，三階段區分：盤中/收盤/盤後）
 const isPostMarketTime = computed(() => {
   const now = new Date()
   const nowHour = now.getHours()
-  // 17:00 之後 或 隔日開盤前 (00:00 ~ 08:59)：以盤後爬蟲資料庫為準
-  return nowHour >= 17 || nowHour < 9
+  const nowMin = now.getMinutes()
+  const timeInMinutes = nowHour * 60 + nowMin
+  // 19:16 (1156分) 之後 或 隔日開盤前 (00:00 ~ 08:59)：以盤後爬蟲資料庫為準
+  return timeInMinutes >= 1156 || nowHour < 9
 })
 
 const dataTimestampText = computed(() => {
@@ -418,7 +436,7 @@ const dataTimestampText = computed(() => {
 
   const rawUpdated = meta.value?.updatedAt
 
-  // 1. 傍晚 17:00 後 / 隔日清晨 09:00 前：以盤後爬蟲資料庫為準
+  // 1. 晚間 19:16 後 / 隔日清晨 09:00 前：以盤後爬蟲資料庫為準
   if (isPostMarketTime.value && rawUpdated) {
     try {
       const d = new Date(rawUpdated)
@@ -442,7 +460,7 @@ const dataTimestampText = computed(() => {
     return `${UI_STRINGS.APP.prefixPostMarket || '盤後 '}${rawUpdated}`
   }
 
-  // 2. 09:00 ~ 17:00 之間若有 GCP 即時行情：
+  // 2. 09:00 ~ 19:16 之間若有 GCP 即時行情：
   if (quotesLastUpdated.value) {
     const timeStr = quotesLastUpdated.value
     const nowHour = now.getHours()
@@ -559,29 +577,51 @@ function handleClearApi() {
   showApiModal.value = false
 }
 
-function handleFetchRealtime() {
+async function handleFetchRealtime() {
   const now = new Date()
   const day = now.getDay()
-  const hour = now.getHours()
   const isWeekend = day === 0 || day === 6
-  const isPreMarket = !isWeekend && hour < 9
+  const hour = now.getHours()
+  const min = now.getMinutes()
+  const timeInMinutes = hour * 60 + min
 
-  if (isPreMarket) {
-    triggerToast(UI_STRINGS.REALTIME.preMarketNotice, 'info')
-    return
-  }
-  if (isWeekend) {
-    triggerToast(UI_STRINGS.REALTIME.weekendNotice, 'info')
-    return
+  // 09:00 (540分) ~ 19:16 (1156分) 之間為交易與收盤過渡期（含機器人備援重疊區間）
+  const isMarketOrTransitionTime = !isWeekend && timeInMinutes >= 540 && timeInMinutes <= 1156
+
+  const oldUpdatedAt = meta.value?.updatedAt
+
+  // 1. 無論任何時段，皆強制向雲端重新請求 stock-pool.json（以動態時間戳記穿透瀏覽器快取）
+  const newPoolData = await loadPool()
+  const currentUpdatedAt = newPoolData?.meta?.updatedAt || meta.value?.updatedAt
+  const friendlyTime = formatFriendlyTime(currentUpdatedAt) || '最新'
+
+  // 2. 若在 09:00 ~ 19:16 交易與收盤過渡期，且已設定 GCP：同時抓取即時/收盤報價
+  if (isMarketOrTransitionTime) {
+    if (!isConfigured.value) {
+      openApiModal()
+      return
+    }
+
+    if (baseStocks.value && baseStocks.value.length > 0) {
+      const codes = baseStocks.value.map(s => s.code)
+      // 18:00 之後若 MIS 撮合伺服器陸續離線，啟用靜默降級，不跳刺眼黃色警告
+      const quotesResult = await fetchQuotes(codes, { silentIfOffline: hour >= 18 })
+      if (quotesResult && Object.keys(quotesResult).length > 0) {
+        triggerToast(UI_STRINGS.REALTIME.syncRealtimeSuccess(Object.keys(quotesResult).length, friendlyTime), 'success')
+        return
+      }
+    }
   }
 
-  if (!isConfigured.value) {
-    openApiModal()
-    return
+  // 3. 盤後時段（19:16 後、清晨、週末）或 GCP 靜默回退：
+  // 清除即時行情錯誤，避免黃色警告殘留，給予最讓人安心的確定回饋
+  clearQuotesError()
+
+  if (oldUpdatedAt && currentUpdatedAt && oldUpdatedAt !== currentUpdatedAt) {
+    triggerToast(UI_STRINGS.REALTIME.poolUpdatedNew(friendlyTime), 'success')
+  } else {
+    triggerToast(UI_STRINGS.REALTIME.poolAlreadyLatest(friendlyTime), 'info')
   }
-  if (!baseStocks.value || baseStocks.value.length === 0) return
-  const codes = baseStocks.value.map(s => s.code)
-  fetchQuotes(codes)
 }
 
 function reloadPage() {

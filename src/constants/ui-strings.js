@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0906.07',
+    version: 'v0909.01',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -356,6 +356,11 @@ export const UI_STRINGS = {
     lastUpdated: (t) => `即時更新於 ${t}`,
     preMarketNotice: '尚未開盤（09:00 正式開盤），維持盤後選股結果',
     weekendNotice: '週末休市，維持週五盤後選股結果',
+    // 雙軌全時段智慧更新提示（無阻擋、消除焦慮設計）
+    syncRealtimeSuccess: (count, timeStr) => `已同步即時行情（${count} 檔）與盤後資料庫（${timeStr}）`,
+    poolUpdatedNew: (timeStr) => `已成功載入最新盤後資料庫（資料時間：${timeStr}）`,
+    poolAlreadyLatest: (timeStr) => `已連線確認：目前已是最新盤後資料（資料時間：${timeStr}）`,
+    poolFetchFailed: '連線資料庫失敗，請檢查網路連線狀態',
   },
 
   CHIPS: {

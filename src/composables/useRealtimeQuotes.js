@@ -157,105 +157,122 @@ export function useRealtimeQuotes() {
     saveGcpUrl('')
   }
 
-  /**
-   * 批次拉取即時行情（個股 + t00 加權 + o00 櫃買）
-   * @param {string[]} codes - 個股代碼陣列
-   * @returns {Promise<Object|null>} - 回傳即時報價 Map 或 null
-   */
-  async function fetchQuotes(codes = []) {
-    const baseUrl = _gcpUrl.value
-    if (!baseUrl) {
-      _error.value = UI_STRINGS.API_SETTINGS.emptyNotice
-      console.warn('[useRealtimeQuotes] 未設定 GCP API 網址')
-      return null
+    /**
+     * 批次拉取即時行情（個股 + t00 加權 + o00 櫃買）
+     * @param {string[]} codes - 個股代碼陣列
+     * @param {Object} [options] - 設定選項
+     * @param {boolean} [options.silentIfOffline=false] - 若伺服器或撮合系統離線時是否靜默（不噴全域警示）
+     * @returns {Promise<Object|null>} - 回傳即時報價 Map 或 null
+     */
+    async function fetchQuotes(codes = [], { silentIfOffline = false } = {}) {
+      const baseUrl = _gcpUrl.value
+      if (!baseUrl) {
+        if (!silentIfOffline) {
+          _error.value = UI_STRINGS.API_SETTINGS.emptyNotice
+        }
+        console.warn('[useRealtimeQuotes] 未設定 GCP API 網址')
+        return null
+      }
+
+      if (!codes || codes.length === 0) return null
+
+      // 整合個股代碼與大盤加權 (t00)、櫃買 (o00)
+      const targetCodes = Array.from(new Set([...codes, 't00', 'o00']))
+      const symbolsParam = encodeURIComponent(targetCodes.join(','))
+      const requestUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}symbols=${symbolsParam}`
+
+      _loading.value = true
+      _error.value = null
+      _missing.value = []
+
+      try {
+        const res = await fetch(requestUrl, {
+          method: 'GET',
+          cache: 'no-store',
+        })
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`)
+        }
+
+        const json = await res.json()
+
+        if (!json || !json.success || !json.data) {
+          throw new Error('API 回傳格式無效')
+        }
+
+        const returnedData = json.data
+        const missingList = []
+
+        // 嚴格資料正確性檢查：比對所有請求的代碼
+        for (const code of targetCodes) {
+          const item = returnedData[code]
+          if (!item || typeof item.price !== 'number' || item.price <= 0) {
+            missingList.push(code)
+          }
+        }
+
+        if (missingList.length > 0) {
+          _missing.value = missingList
+          console.warn(`[useRealtimeQuotes] 即時行情回傳不完整，共遺漏 ${missingList.length} 筆:`, missingList)
+          if (!silentIfOffline) {
+            _error.value = UI_STRINGS.REALTIME.missingWarning(missingList.length)
+          }
+        }
+
+        // 只採納本次正式回傳且具有有效價格的資料（嚴禁使用舊快取補洞）
+        const validQuotes = {}
+        for (const [code, item] of Object.entries(returnedData)) {
+          if (item && typeof item.price === 'number' && item.price > 0) {
+            validQuotes[code] = item
+          }
+        }
+
+        _quotes.value = validQuotes
+        _lastUpdated.value = extractExchangeTime(json, returnedData)
+
+        return validQuotes
+      } catch (err) {
+        console.error('[useRealtimeQuotes] 連線行情 API 失敗:', err)
+        if (!silentIfOffline) {
+          _error.value = UI_STRINGS.REALTIME.fetchFailed
+        }
+        return null
+      } finally {
+        _loading.value = false
+      }
     }
 
-    if (!codes || codes.length === 0) return null
 
-    // 整合個股代碼與大盤加權 (t00)、櫃買 (o00)
-    const targetCodes = Array.from(new Set([...codes, 't00', 'o00']))
-    const symbolsParam = encodeURIComponent(targetCodes.join(','))
-    const requestUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}symbols=${symbolsParam}`
+    /**
+     * 清除行情錯誤訊息與缺漏狀態
+     */
+    function clearError() {
+      _error.value = null
+      _missing.value = []
+    }
 
-    _loading.value = true
-    _error.value = null
-    _missing.value = []
+    /**
+     * 取得單一個股的即時報價
+     * @param {string} code
+     * @returns {Object|null}
+     */
+    function getQuote(code) {
+      return _quotes.value[code] ?? null
+    }
 
-    try {
-      const res = await fetch(requestUrl, {
-        method: 'GET',
-        cache: 'no-store',
-      })
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`)
-      }
-
-      const json = await res.json()
-
-      if (!json || !json.success || !json.data) {
-        throw new Error('API 回傳格式無效')
-      }
-
-      const returnedData = json.data
-      const missingList = []
-
-      // 嚴格資料正確性檢查：比對所有請求的代碼
-      for (const code of targetCodes) {
-        const item = returnedData[code]
-        if (!item || typeof item.price !== 'number' || item.price <= 0) {
-          missingList.push(code)
-        }
-      }
-
-      if (missingList.length > 0) {
-        _missing.value = missingList
-        console.warn(`[useRealtimeQuotes] ⚠️ 即時行情回傳不完整，共遺漏 ${missingList.length} 筆:`, missingList)
-        _error.value = UI_STRINGS.REALTIME.missingWarning(missingList.length)
-      }
-
-      // 只採納本次正式回傳且具有有效價格的資料（嚴禁使用舊快取補洞）
-      const validQuotes = {}
-      for (const [code, item] of Object.entries(returnedData)) {
-        if (item && typeof item.price === 'number' && item.price > 0) {
-          validQuotes[code] = item
-        }
-      }
-
-      _quotes.value = validQuotes
-      _lastUpdated.value = extractExchangeTime(json, returnedData)
-
-      return validQuotes
-    } catch (err) {
-      console.error('[useRealtimeQuotes] 連線行情 API 失敗:', err)
-      _error.value = UI_STRINGS.REALTIME.fetchFailed
-      return null
-    } finally {
-      _loading.value = false
+    return {
+      gcpUrl:       readonly(_gcpUrl),
+      quotes:       readonly(_quotes),
+      loading:      readonly(_loading),
+      lastUpdated:  readonly(_lastUpdated),
+      error:        readonly(_error),
+      missingCodes: readonly(_missing),
+      isConfigured,
+      saveGcpUrl,
+      clearGcpUrl,
+      clearError,
+      fetchQuotes,
+      getQuote,
     }
   }
-
-
-  /**
-   * 取得單一個股的即時報價
-   * @param {string} code
-   * @returns {Object|null}
-   */
-  function getQuote(code) {
-    return _quotes.value[code] ?? null
-  }
-
-  return {
-    gcpUrl:       readonly(_gcpUrl),
-    quotes:       readonly(_quotes),
-    loading:      readonly(_loading),
-    lastUpdated:  readonly(_lastUpdated),
-    error:        readonly(_error),
-    missingCodes: readonly(_missing),
-    isConfigured,
-    saveGcpUrl,
-    clearGcpUrl,
-    fetchQuotes,
-    getQuote,
-  }
-}

@@ -89,9 +89,11 @@ export function useStockPool() {
       _market.value   = data.market   ?? null
       _meta.value     = data.meta     ?? null
 
+      return data
     } catch (err) {
       _error.value = err.message
       console.error('[useStockPool] 載入失敗:', err)
+      return null
     } finally {
       _loading.value = false
     }
