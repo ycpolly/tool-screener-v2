@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0909.01',
+    version: 'v0909.02',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -119,7 +119,7 @@ export const UI_STRINGS = {
 
   TIME_MACHINE: {
     title: '時光機',
-    subtitle: '時光倒流至近 5 個交易日，驗證各策略歷史選股表現',
+    subtitle: '時光倒流至近 7 個交易日，驗證各策略歷史選股表現',
     intraday: '盤中',
     closed: '收盤',
     postMarket: '盤後',
@@ -130,7 +130,9 @@ export const UI_STRINGS = {
     day3Ago: '3天前 (T-3)',
     day4Ago: '4天前 (T-4)',
     day5Ago: '5天前 (T-5)',
-    activeNotice: (n) => `⏳ 時光倒流中：正在回測 ${n} 個交易日前之全市場歷史數據`,
+    day6Ago: '6天前 (T-6)',
+    day7Ago: '7天前 (T-7)',
+    activeNotice: (n) => `時光倒流中：正在回測 ${n} 個交易日前之全市場歷史數據`,
   },
 
 

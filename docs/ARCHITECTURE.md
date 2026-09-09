@@ -448,7 +448,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 4. **預期風報比 (`calculateRiskReward`)**：
    - 結合第一道天花板預期純利 (`rewardPct`) 與最近有效防守支撐虧損 (`riskPct`，保底 5.0%)，推算 `rrRatio = rewardPct / riskPct`。
 5. **時光機歷史回測支援**：
-   - 透過 `sliceStockAt` 動態切片推算歷史 `high5d/10d/20d`、`low5d/10d/20d` 與歷史均線，完全相容於 T-1 至 T-5 歷史回測。
+   - 透過 `sliceStockAt` 動態切片推算歷史 `high5d/10d/20d`、`low5d/10d/20d` 與歷史均線，完全相容於 T-1 至 T-7 歷史回測。
 
 ---
 
@@ -474,7 +474,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 
 ### Phase 2（UI + 核心 UX）— 由 Gemini 完成（2026-08-27 優化）
 - [x] MarketBanner.vue（大盤風控橫幅，支援 SAFE/CAUTION/DANGER 色彩適配與加權/櫃買數據）
-- [x] TimeMachineBar.vue（全市場時光機切換列：方案 1 攤開式時光膠囊，自動推算近 5 個真實交易日日期【今日/8月28日/8月27日...】，點擊 1 步切換歷史回測，支援倒流中琥珀色警示橫幅與一鍵重設回到最新）
+- [x] TimeMachineBar.vue（全市場時光機切換列：方案 1 攤開式時光膠囊，自動推算近 7 個真實交易日日期【今日/T-1/T-2...T-7】，點擊 1 步切換歷史回測，支援倒流中琥珀色警示橫幅與一鍵重設回到最新）
 - [x] ScreenerPanel.vue（選股模式與微調面板：內嵌頂部 TimeMachineBar 時光機、方案 A 頂部 4 大分段 Tabs「全部 + 3 大策略」內建即時檔數 Badge、常駐戰略提示與摘要列、兩大業務模組【均線與位階】與【量能與流動性】、標準 36px 等高行系統、180ms 數字防抖、Neutral 質感自訂標記與一鍵重設、手機單欄/電腦雙欄響應式佈局）
 - [x] StockCard.vue（自適應個股卡片：字體全面導入 Open Sans + tabular-nums、代號/名稱/現價統一 18px、標籤區純文字呈現屬性與 ⚠️ 法人/主力賣超警示標籤、均線乖離加粗、KD 與走勢圖水平置中、均線/量能網格加大間距 gap-6、電腦端走勢圖置左、無彩噪、快捷列複製反饋、槽位 A 關卡與槽位 B 方案 1 策略命中/淘汰原因摘要條）
 - [x] SearchBar.vue（即時個股搜尋與排序工具列：位於 ScreenerPanel 與 StockTable 之間，左側支援代號/名稱雙向模糊搜尋與一鍵清除，右側整合方案 A 攤開式膠囊排序按鈕組【漲跌幅/成交量/月乖離/代號】雙向升降切換，電腦端左右並排、手機端上下排列）

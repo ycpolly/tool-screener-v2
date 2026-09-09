@@ -2,7 +2,7 @@
   <div class="time-machine-bar select-none">
     <!-- 攤開式時光膠囊列 (支援開盤即時與歷史真實開盤日) -->
     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 text-sm">
-      <!-- 6 大時光膠囊按鈕 (T-0 ~ T-5 全部由真實日 K 提取真實日期，0 日曆誤差) -->
+      <!-- 8 大時光膠囊按鈕 (T-0 ~ T-7 全部由真實日 K 提取真實日期，0 日曆誤差) -->
       <button
         v-for="d in timeMachineDates"
         :key="d.offset"
@@ -59,7 +59,7 @@ function formatTimeMachineDate(dateStr) {
 const timeMachineDates = computed(() => {
   const sample = stocks.value?.[0]?.history10d || []
   if (sample.length === 0) {
-    return [0, 1, 2, 3, 4, 5].map(i => ({
+    return [0, 1, 2, 3, 4, 5, 6, 7].map(i => ({
       offset: i,
       label: i === 0 ? '最新' : `T-${i}`,
       shortLabel: i === 0 ? '最新' : `T-${i}`,
@@ -91,8 +91,8 @@ const timeMachineDates = computed(() => {
       date: `${now.getFullYear()}-${mm}-${dd}`,
     })
 
-    // Offset 1 ~ 5: 往前回溯歷史已收盤交易日 (T-1 為 sample[len - 1] 上個交易日)
-    for (let offset = 1; offset <= Math.min(5, len); offset++) {
+    // Offset 1 ~ 7: 往前回溯歷史已收盤交易日 (T-1 為 sample[len - 1] 上個交易日)
+    for (let offset = 1; offset <= Math.min(7, len); offset++) {
       const targetIdx = len - offset
       const bar = sample[targetIdx]
       const dateStr = bar?.date
@@ -118,7 +118,7 @@ const timeMachineDates = computed(() => {
     }
   } else {
     // 週末休市或盤後已由 Python 更新當日日K (顯示「盤後」)
-    for (let offset = 0; offset <= Math.min(5, len - 1); offset++) {
+    for (let offset = 0; offset <= Math.min(7, len - 1); offset++) {
       const targetIdx = len - 1 - offset
       const bar = sample[targetIdx]
       const dateStr = bar?.date

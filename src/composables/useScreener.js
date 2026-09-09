@@ -68,9 +68,9 @@ export function useScreener(stocks) {
     }
   }
 
-  // 切換時光機回測天數 (0 ~ 5)
+  // 切換時光機回測天數 (0 ~ 7)
   function setDayOffset(offset = 0) {
-    selectedDayOffset.value = Math.max(0, Math.min(5, Number(offset) || 0))
+    selectedDayOffset.value = Math.max(0, Math.min(7, Number(offset) || 0))
   }
 
 
