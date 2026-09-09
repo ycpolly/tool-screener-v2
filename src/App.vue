@@ -635,7 +635,7 @@ const toastType = ref('success')
 let copyTimer = null
 let toastTimer = null
 
-function triggerToast(text, type = 'info', duration = 2200) {
+function triggerToast(text, type = 'info', duration = 5000) {
   toastText.value = text
   toastType.value = type
   clearTimeout(toastTimer)

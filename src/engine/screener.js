@@ -1184,6 +1184,65 @@ export function sliceStockPoolAt(stocks = [], dayOffset = 0, currentTime = new D
 }
 
 /**
+ * 計算單一個股近 N 個歷史交易日之「策略生命週期歷程」
+ * 依序推算 T-0 至 T-N 各日的價量指標、均線狀態與五大選股模式符合情況
+ *
+ * @param {Object} stock             - 個股物件（含完整 history10d）
+ * @param {number} [maxDays=7]       - 回溯天數（預設 7 天）
+ * @param {Date}   [currentTime]     - 當前時間（預設 new Date()）
+ * @returns {Object[]}               - 歷史時間軸陣列（由近到遠 T-0 到 T-N）
+ */
+export function getStockLifecycle(stock, maxDays = 7, currentTime = new Date()) {
+  if (!stock || !Array.isArray(stock.history10d)) return []
+  const len = stock.history10d.length
+  if (len === 0) return []
+
+  const maxOffset = Math.min(maxDays, len - 1)
+  const results = []
+
+  for (let offset = 0; offset <= maxOffset; offset++) {
+    const sliced = offset === 0 ? stock : sliceStockAt(stock, offset, currentTime)
+    const matchedModes = []
+
+    for (const [modeKey, modeObj] of Object.entries(SCREENER_MODES)) {
+      const evalResult = evaluateStock(sliced, modeObj.defaultParams, modeKey)
+      if (evalResult.isMatch) {
+        matchedModes.push({
+          id: modeKey,
+          label: modeObj.label,
+          shortLabel: modeObj.shortLabel,
+        })
+      }
+    }
+
+    const lastBar = sliced.history10d?.slice(-1)[0]
+    const dateStr = lastBar?.date || ''
+    const hasChips = !!(sliced.chips && (sliced.chips.concentration1d != null || sliced.chips.dayTradersPct != null))
+
+    results.push({
+      offset,
+      date: dateStr,
+      price: sliced.price,
+      change: sliced.change,
+      changePct: sliced.changePct,
+      volume: sliced.volume,
+      bias5: sliced.bias5,
+      bias20: sliced.bias20,
+      ma5: sliced.ma5,
+      ma20: sliced.ma20,
+      ma60: sliced.ma60,
+      kd: sliced.kd,
+      chips: sliced.chips,
+      hasChips,
+      sellWarning: sliced.sellWarning,
+      matchedModes,
+    })
+  }
+
+  return results
+}
+
+/**
  * 執行選股篩選（支援歷史時光機回測）
  * @param {Object[]} stocks          - 完整個股陣列（已合體即時行情）
  * @param {Object}   params          - 篩選條件參數

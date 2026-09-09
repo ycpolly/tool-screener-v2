@@ -170,6 +170,15 @@
           </span>
         </div>
       </div>
+      <!-- 籌碼無資料或未建檔時之貼心提醒，避免空白疑慮 -->
+      <div
+        v-else-if="chipsNoticeText"
+        class="pt-1.5 pb-1 border-t border-base-300/40 text-xs text-base-content/50 flex items-center gap-1.5"
+      >
+        <span class="font-medium text-base-content/60">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
+        <span class="text-base-content/30">·</span>
+        <span>{{ chipsNoticeText }}</span>
+      </div>
 
 
       <!-- 槽位 A：天花板關卡價與預期純利 (支援就地向下展開天梯清單) -->
@@ -495,6 +504,15 @@
               <span v-if="dayTradersInfo.branchesText"> ({{ dayTradersInfo.branchesText }})</span>
             </span>
           </div>
+        </div>
+        <!-- 籌碼無資料或未建檔時之貼心提醒，避免空白疑慮 -->
+        <div
+          v-else-if="chipsNoticeText"
+          class="pt-1 pb-1 border-t border-b border-base-300/40 text-xs text-base-content/50 flex items-center gap-1.5"
+        >
+          <span class="font-medium text-base-content/60">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
+          <span class="text-base-content/30">·</span>
+          <span>{{ chipsNoticeText }}</span>
         </div>
 
 
@@ -877,6 +895,23 @@ const dayTradersInfo = computed(() => {
 
 const hasChipsSection = computed(() => {
   return chipsConcentrationItems.value.length > 0 || !!dayTradersInfo.value
+})
+
+const chipsNoticeText = computed(() => {
+  if (hasChipsSection.value) return ''
+  // 1. 若處於時光機歷史模式 (dayOffset > 0)
+  if (props.stock.dayOffset && props.stock.dayOffset > 0) {
+    return UI_STRINGS.CHIPS.missingHistorical || '該歷史日未入選追蹤池（無分點籌碼記錄）'
+  }
+  // 2. 若為今日且處於 17:46 ~ 19:16 第一波跑完、第二波籌碼結算前
+  const now = new Date()
+  const nowHour = now.getHours()
+  const nowMin = now.getMinutes()
+  const timeInMinutes = nowHour * 60 + nowMin
+  if (now.getDay() >= 1 && now.getDay() <= 5 && timeInMinutes >= 1066 && timeInMinutes < 1156) {
+    return UI_STRINGS.CHIPS.pendingSettlement || '今日分點籌碼結算中（預計 19:16 發布）'
+  }
+  return UI_STRINGS.CHIPS.noRecord || '無分點籌碼記錄'
 })
 
 

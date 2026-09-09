@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v0909.02',
+    version: 'v0909.03',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -373,6 +373,19 @@ export const UI_STRINGS = {
     concentrationSummary: (d1, d3, d5) => `籌碼集中度 1D ${d1 >= 0 ? '+' : ''}${d1}% · 3D ${d3 >= 0 ? '+' : ''}${d3}% · 5D ${d5 >= 0 ? '+' : ''}${d5}%`,
     dayTradersPrefix: '短沖佔 ',
     dayTradersRisk: (pct, branches) => `短沖佔 ${pct}% (${branches.join(' · ')})`,
+    missingHistorical: '該歷史日未入選追蹤池（無分點籌碼記錄）',
+    pendingSettlement: '今日分點籌碼結算中（預計 19:16 發布）',
+    noRecord: '無分點籌碼記錄',
+  },
+
+  LIFECYCLE: {
+    title: '7 日策略生命週期',
+    btnTitle: '查看 7 日策略軌跡',
+    expandLabel: '7日軌跡',
+    collapseLabel: '收合軌跡',
+    noMatchOnDay: '未符合特定策略',
+    chipsUntracked: '未入選籌碼池',
+    chipsPending: '籌碼結算中',
   },
 
   STOCK_POOL_MODAL: {

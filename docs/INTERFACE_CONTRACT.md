@@ -592,3 +592,45 @@ font-numeric               /* 等寬數字，對齊小數點 */
 1. `results` 是 computed，stocks 或 params 改了會自動重算，不需手動呼叫
 2. `loadPool()` 只需在 `App.vue` 的 `onMounted` 呼叫一次
 3. `params` 是可寫的 ref，`ScreenerPanel` 可以直接 `v-model:params`
+
+---
+
+## 七、個股策略生命週期契約（Stock Lifecycle Contract）
+
+供 Gemini 實作「個股專屬時光機 / 7 日策略生命週期」UI 之資料介面：
+
+### 核心演算法：`getStockLifecycle(stock: Stock, maxDays: number = 7): StockLifecycleItem[]`
+
+在 `src/engine/screener.js` 匯出之純函式，無 DOM、計算速度 < 0.1ms。
+
+```typescript
+interface StockLifecycleItem {
+  offset:       number       // 倒流天數（0: 今日, 1: 昨日, ... 7: 7天前）
+  date:         string       // 該歷史日 ISO 日期字串，e.g. "2026-09-09"
+  price:        number       // 該歷史日收盤價
+  change:       number       // 該歷史日漲跌價差
+  changePct:    number       // 該歷史日漲跌幅 %
+  volume:       number       // 該歷史日成交量（張）
+  bias5:        number       // 該歷史日 5MA 乖離率 %
+  bias20:       number       // 該歷史日 20MA 乖離率 %
+  ma5:          number       // 該歷史日 5MA
+  ma20:         number       // 該歷史日 20MA
+  ma60:         number       // 該歷史日 60MA
+  kd:           { k: number, d: number, prevK: number, prevD: number }
+  chips:        Chips|null   // 該歷史日券商分點籌碼（若當日未入選排行則為 null）
+  hasChips:     boolean      // 該歷史日是否有分點籌碼紀錄
+  sellWarning:  string|null  // 該歷史日法人/主力賣超警示
+  matchedModes: Array<{      // 該歷史日符合之五大選股模式清單
+    id:         string       // e.g. "BOTTOM_CONSOLIDATION"
+    label:      string       // e.g. "底部蓄勢"
+    shortLabel: string       // e.g. "底部"
+  }>
+}
+```
+
+### 籌碼缺漏狀態 UI 規範（Gemini 遵循）：
+- 當 `chips == null` 時，不得直接隱藏空白：
+  - 歷史模式下（`dayOffset > 0`）：顯示 `UI_STRINGS.CHIPS.missingHistorical`（「該歷史日未入選追蹤池（無分點籌碼記錄）」）
+  - 今日結算過渡期（17:46 ~ 19:16）：顯示 `UI_STRINGS.CHIPS.pendingSettlement`（「今日分點籌碼結算中（預計 19:16 發布）」）
+  - 平時若無分點紀錄：顯示 `UI_STRINGS.CHIPS.noRecord`（「無分點籌碼記錄」）
+

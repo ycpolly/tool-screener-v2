@@ -449,6 +449,8 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
    - 結合第一道天花板預期純利 (`rewardPct`) 與最近有效防守支撐虧損 (`riskPct`，保底 5.0%)，推算 `rrRatio = rewardPct / riskPct`。
 5. **時光機歷史回測支援**：
    - 透過 `sliceStockAt` 動態切片推算歷史 `high5d/10d/20d`、`low5d/10d/20d` 與歷史均線，完全相容於 T-1 至 T-7 歷史回測。
+6. **個股策略生命週期歷程 (`getStockLifecycle`)**：
+   - 透過 `sliceStockAt` 依序運算單一股票 T-0 至 T-7 每日指標與五大策略命中清單，耗時 < 0.1ms，供卡片端視覺化時間軸與生命週期回溯。
 
 ---
 
