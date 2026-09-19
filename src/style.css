@@ -83,3 +83,21 @@ body {
   padding: 0.15rem 0.4rem;
   border-radius: 0.25rem;
 }
+
+/* ============================================================
+   效能優化：阻斷 DaisyUI 5 彈窗引發全域 :root Reflow 重排風暴
+   DaisyUI 在 :root:has(.modal.modal-open) 會強制將 :root 的 overflow 改為 hidden，
+   在數百檔個股（數萬個 DOM 節點）的行動端頁面上，會迫使瀏覽器對全頁進行完整重排（Reflow），
+   造成 2~4 秒的主執行緒嚴重卡死。
+   在此將其覆寫維持初始狀態，徹底杜絕重排，實現毫秒級彈窗瞬開。
+   ============================================================ */
+:root:has(.modal.modal-open),
+:root:has(.modal[open]) {
+  --page-scroll-lock: initial !important;
+  --page-overflow: visible !important;
+}
+
+:root:not(span) {
+  overflow-x: hidden;
+  overflow-y: auto !important;
+}

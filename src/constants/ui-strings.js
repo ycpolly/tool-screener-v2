@@ -62,6 +62,7 @@ export const UI_STRINGS = {
     collapseDiagnosis: '收合',
     resultCount: (n) => `符合 ${n} 檔`,
     noResult: '無符合條件的個股',
+    loadMore: (loaded, total) => `載入更多 (${loaded} / ${total})`,
     suggestions: {
       BOTTOM_REVERSAL: '可嘗試將【月線乖離率】上限放寬至 0%，或將【當日成交量】調降至 500 張，以探索更多潛力標的。',
       BOTTOM_CONSOLIDATION: '可嘗試取消勾選【量縮洗盤】或將【當日三線價差】上調到 5%，以探索更多潛力標的。',

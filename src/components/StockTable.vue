@@ -63,7 +63,7 @@
             {{ UI_STRINGS.SEARCH.matchedGroupTitle }} ({{ searchMatchedStocks.length }})
           </div>
           <StockCard
-            v-for="stock in searchMatchedStocks"
+            v-for="stock in visibleSearchMatchedStocks"
             :key="stock.code"
             v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, activeMode]"
             :stock="stock"
@@ -74,6 +74,16 @@
             @open-price-calc="onCardOpenPriceCalc"
             @open-lifecycle="onCardOpenLifecycle"
           />
+
+          <!-- 搜尋符合清單批次載入哨兵 -->
+          <div
+            v-if="hasMoreSearchMatched"
+            ref="loadMoreSearchMatchedRef"
+            class="py-3 flex items-center justify-center text-xs text-base-content/50 font-numeric select-none"
+          >
+            <span class="loading loading-spinner loading-xs text-base-content/40 mr-1.5"></span>
+            <span>{{ UI_STRINGS.SCREENER.loadMore(visibleSearchMatchedStocks.length, searchMatchedStocks.length) }}</span>
+          </div>
         </div>
 
         <!-- 2. 搜尋未符合策略名單 (直接展開顯示淘汰原因，無需大海撈針) -->
@@ -85,7 +95,7 @@
             {{ UI_STRINGS.SEARCH.unmatchedGroupTitle }} ({{ searchUnmatchedStocks.length }})
           </div>
           <StockCard
-            v-for="stock in searchUnmatchedStocks"
+            v-for="stock in visibleSearchUnmatchedStocks"
             :key="stock.code"
             v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, true, activeMode]"
             :stock="stock"
@@ -97,6 +107,16 @@
             @open-price-calc="onCardOpenPriceCalc"
             @open-lifecycle="onCardOpenLifecycle"
           />
+
+          <!-- 搜尋未符合清單批次載入哨兵 -->
+          <div
+            v-if="hasMoreSearchUnmatched"
+            ref="loadMoreSearchUnmatchedRef"
+            class="py-3 flex items-center justify-center text-xs text-base-content/50 font-numeric select-none"
+          >
+            <span class="loading loading-spinner loading-xs text-base-content/40 mr-1.5"></span>
+            <span>{{ UI_STRINGS.SCREENER.loadMore(visibleSearchUnmatchedStocks.length, searchUnmatchedStocks.length) }}</span>
+          </div>
         </div>
       </div>
     </template>
@@ -115,10 +135,10 @@
         </div>
       </div>
 
-      <!-- 符合策略結果清單 (渲染 StockCard) -->
+      <!-- 符合策略結果清單 (漸進式批次渲染 StockCard) -->
       <div v-else :class="isCompact ? 'space-y-2' : 'space-y-3'">
         <StockCard
-          v-for="stock in sortedStocks"
+          v-for="stock in visibleSortedStocks"
           :key="stock.code"
           v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, activeMode]"
           :stock="stock"
@@ -129,6 +149,16 @@
           @open-price-calc="onCardOpenPriceCalc"
           @open-lifecycle="onCardOpenLifecycle"
         />
+
+        <!-- 漸進式批次載入哨兵 (向下滑動 400px 提前無感自動加載) -->
+        <div
+          v-if="hasMoreStocks"
+          ref="loadMoreTriggerRef"
+          class="py-3 flex items-center justify-center text-xs text-base-content/50 font-numeric select-none"
+        >
+          <span class="loading loading-spinner loading-xs text-base-content/40 mr-1.5"></span>
+          <span>{{ UI_STRINGS.SCREENER.loadMore(visibleSortedStocks.length, sortedStocks.length) }}</span>
+        </div>
       </div>
 
       <!-- 未符合個股折疊清單 (僅在策略模式且有未符合個股時顯示) -->
@@ -159,7 +189,7 @@
         <!-- 展開未符合清單 (渲染 StockCard，isUnmatched=true) -->
         <div v-if="showUnmatched" :class="isCompact ? 'space-y-2 opacity-90' : 'space-y-3 opacity-90'">
           <StockCard
-            v-for="stock in sortedUnmatchedStocks"
+            v-for="stock in visibleSortedUnmatchedStocks"
             :key="stock.code"
             v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, true, activeMode]"
             :stock="stock"
@@ -171,6 +201,16 @@
             @open-price-calc="onCardOpenPriceCalc"
             @open-lifecycle="onCardOpenLifecycle"
           />
+
+          <!-- 未符合清單批次載入哨兵 -->
+          <div
+            v-if="hasMoreUnmatchedStocks"
+            ref="loadMoreUnmatchedTriggerRef"
+            class="py-3 flex items-center justify-center text-xs text-base-content/50 font-numeric select-none"
+          >
+            <span class="loading loading-spinner loading-xs text-base-content/40 mr-1.5"></span>
+            <span>{{ UI_STRINGS.SCREENER.loadMore(visibleSortedUnmatchedStocks.length, sortedUnmatchedStocks.length) }}</span>
+          </div>
         </div>
       </div>
     </template>
@@ -178,7 +218,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { UI_STRINGS } from '../constants/ui-strings.js'
 import StockCard from './StockCard.vue'
 
@@ -298,6 +338,152 @@ const sortedUnmatchedStocks = computed(() => {
   const list = [...props.unmatchedStocks]
   return sortList(list, props.sortKey, props.sortDir)
 })
+
+// ============================================================
+// 漸進式批次載入機制（首屏 30 檔，大幅縮減 DOM 與記憶體，消除行動端彈窗卡頓）
+// ============================================================
+const BATCH_SIZE = 30
+const displayCount = ref(BATCH_SIZE)
+const unmatchedDisplayCount = ref(BATCH_SIZE)
+const loadMoreTriggerRef = ref(null)
+const loadMoreUnmatchedTriggerRef = ref(null)
+const loadMoreSearchMatchedRef = ref(null)
+const loadMoreSearchUnmatchedRef = ref(null)
+
+// 條件或模式變更時，立即重設批次載入數量
+watch(
+  [() => props.activeMode, () => props.searchQuery, () => props.sortKey, () => props.sortDir],
+  () => {
+    displayCount.value = BATCH_SIZE
+    unmatchedDisplayCount.value = BATCH_SIZE
+  }
+)
+
+const visibleSortedStocks = computed(() => {
+  return sortedStocks.value.slice(0, displayCount.value)
+})
+
+const visibleSearchMatchedStocks = computed(() => {
+  return searchMatchedStocks.value.slice(0, displayCount.value)
+})
+
+const visibleSearchUnmatchedStocks = computed(() => {
+  return searchUnmatchedStocks.value.slice(0, unmatchedDisplayCount.value)
+})
+
+const visibleSortedUnmatchedStocks = computed(() => {
+  return sortedUnmatchedStocks.value.slice(0, unmatchedDisplayCount.value)
+})
+
+const hasMoreStocks = computed(() => {
+  return visibleSortedStocks.value.length < sortedStocks.value.length
+})
+
+const hasMoreSearchMatched = computed(() => {
+  return visibleSearchMatchedStocks.value.length < searchMatchedStocks.value.length
+})
+
+const hasMoreSearchUnmatched = computed(() => {
+  return visibleSearchUnmatchedStocks.value.length < searchUnmatchedStocks.value.length
+})
+
+const hasMoreUnmatchedStocks = computed(() => {
+  return visibleSortedUnmatchedStocks.value.length < sortedUnmatchedStocks.value.length
+})
+
+function loadMore() {
+  const total = isSearching.value ? searchMatchedStocks.value.length : sortedStocks.value.length
+  if (displayCount.value < total) {
+    displayCount.value = Math.min(total, displayCount.value + BATCH_SIZE)
+  }
+}
+
+function loadMoreUnmatched() {
+  const total = isSearching.value ? searchUnmatchedStocks.value.length : sortedUnmatchedStocks.value.length
+  if (unmatchedDisplayCount.value < total) {
+    unmatchedDisplayCount.value = Math.min(total, unmatchedDisplayCount.value + BATCH_SIZE)
+  }
+}
+
+let observer = null
+
+function setupObservers() {
+  if (observer) {
+    observer.disconnect()
+    observer = null
+  }
+  if (typeof window === 'undefined' || !window.IntersectionObserver) return
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          if (entry.target === loadMoreTriggerRef.value || entry.target === loadMoreSearchMatchedRef.value) {
+            loadMore()
+          } else if (entry.target === loadMoreUnmatchedTriggerRef.value || entry.target === loadMoreSearchUnmatchedRef.value) {
+            loadMoreUnmatched()
+          }
+        }
+      }
+    },
+    { rootMargin: '400px' }
+  )
+
+  if (loadMoreTriggerRef.value) observer.observe(loadMoreTriggerRef.value)
+  if (loadMoreSearchMatchedRef.value) observer.observe(loadMoreSearchMatchedRef.value)
+  if (loadMoreUnmatchedTriggerRef.value) observer.observe(loadMoreUnmatchedTriggerRef.value)
+  if (loadMoreSearchUnmatchedRef.value) observer.observe(loadMoreSearchUnmatchedRef.value)
+}
+
+function handleWindowScroll() {
+  const threshold = window.innerHeight + 500
+  if (hasMoreStocks.value && loadMoreTriggerRef.value) {
+    if (loadMoreTriggerRef.value.getBoundingClientRect().top <= threshold) loadMore()
+  }
+  if (hasMoreSearchMatched.value && loadMoreSearchMatchedRef.value) {
+    if (loadMoreSearchMatchedRef.value.getBoundingClientRect().top <= threshold) loadMore()
+  }
+  if (hasMoreUnmatchedStocks.value && loadMoreUnmatchedTriggerRef.value) {
+    if (loadMoreUnmatchedTriggerRef.value.getBoundingClientRect().top <= threshold) loadMoreUnmatched()
+  }
+  if (hasMoreSearchUnmatched.value && loadMoreSearchUnmatchedRef.value) {
+    if (loadMoreSearchUnmatchedRef.value.getBoundingClientRect().top <= threshold) loadMoreUnmatched()
+  }
+}
+
+onMounted(() => {
+  setupObservers()
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', handleWindowScroll, { passive: true })
+  }
+})
+
+onBeforeUnmount(() => {
+  if (observer) {
+    observer.disconnect()
+    observer = null
+  }
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('scroll', handleWindowScroll)
+  }
+})
+
+watch(
+  [
+    loadMoreTriggerRef,
+    loadMoreSearchMatchedRef,
+    loadMoreUnmatchedTriggerRef,
+    loadMoreSearchUnmatchedRef,
+    hasMoreStocks,
+    hasMoreSearchMatched,
+    hasMoreUnmatchedStocks,
+    hasMoreSearchUnmatched,
+    showUnmatched,
+  ],
+  () => {
+    nextTick(setupObservers)
+  }
+)
 
 function getStockExpectedProfit(stock) {
   if (!stock) return -999
