@@ -67,8 +67,28 @@
         fill="var(--color-ma5)"
       />
 
+      <!-- 選取日垂直導引虛線 (貫穿 K 棒、成交量與 KD) -->
+      <line
+        v-if="hasActiveHighlight && highlightedCx !== null"
+        :x1="highlightedCx"
+        y1="6"
+        :x2="highlightedCx"
+        y2="134"
+        stroke="currentColor"
+        class="text-base-content/40"
+        stroke-width="1"
+        stroke-dasharray="2 2"
+      />
+
       <!-- 10 根 K 棒 (影線與實體) -->
-      <g v-for="(candle, idx) in chartData.candles" :key="`candle-${idx}`">
+      <g
+        v-for="(candle, idx) in chartData.candles"
+        :key="`candle-${idx}`"
+        :class="{
+          'opacity-20': hasActiveHighlight && !isSameDate(candle.date, highlightDate)
+        }"
+        class="transition-opacity duration-200"
+      >
         <!-- 上下影線 -->
         <line
           :x1="candle.cx"
@@ -143,7 +163,14 @@
       </text>
 
       <!-- 10 根成交量柱 -->
-      <g v-for="(vol, idx) in chartData.volumeBars" :key="`vol-${idx}`">
+      <g
+        v-for="(vol, idx) in chartData.volumeBars"
+        :key="`vol-${idx}`"
+        :class="{
+          'opacity-20': hasActiveHighlight && !isSameDate(vol.date, highlightDate)
+        }"
+        class="transition-opacity duration-200"
+      >
         <rect
           :x="vol.bodyLeft"
           :y="vol.barY"
@@ -286,6 +313,10 @@ const props = defineProps({
     default: () => ({}),
   },
   stockCode: {
+    type: String,
+    default: '',
+  },
+  highlightDate: {
     type: String,
     default: '',
   },
@@ -440,6 +471,7 @@ const chartData = computed(() => {
     const bodyLeft = Number((cx - bodyWidth / 2).toFixed(1))
 
     return {
+      date: day.date,
       cx,
       yHigh,
       yLow,
@@ -511,6 +543,7 @@ const chartData = computed(() => {
     const arrowY = Number(Math.max(65, barY - 1).toFixed(1))
 
     return {
+      date: day.date,
       cx,
       bodyLeft,
       barY,
@@ -567,6 +600,22 @@ const chartData = computed(() => {
     labelYK: Number(labelYK.toFixed(1)),
     labelYD: Number(labelYD.toFixed(1)),
   }
+})
+
+function isSameDate(d1, d2) {
+  if (!d1 || !d2) return false
+  return String(d1).replace(/\//g, '-').slice(0, 10) === String(d2).replace(/\//g, '-').slice(0, 10)
+}
+
+const hasActiveHighlight = computed(() => {
+  if (!props.highlightDate) return false
+  return chartData.value.candles.some((c) => isSameDate(c.date, props.highlightDate))
+})
+
+const highlightedCx = computed(() => {
+  if (!hasActiveHighlight.value) return null
+  const target = chartData.value.candles.find((c) => isSameDate(c.date, props.highlightDate))
+  return target ? target.cx : null
 })
 
 // 折線 Points 計算

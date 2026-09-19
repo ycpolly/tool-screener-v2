@@ -68,6 +68,7 @@
               :history="stock.history10d"
               :stock="stock"
               :stock-code="stock.code"
+              :highlight-date="selectedDate"
             />
           </div>
 
@@ -79,10 +80,15 @@
             <div
               v-for="row in timelineRows"
               :key="row.offset"
-              class="w-[104px] sm:w-[96px] shrink-0 border rounded-xl p-2.5 flex flex-col items-center justify-between text-center space-y-1.5 font-numeric select-none transition-colors"
-              :class="row.offset === 0
-                ? 'bg-base-200/90 border-base-content/25 shadow-xs'
-                : 'bg-base-200/40 border-base-300/70'"
+              class="w-[104px] sm:w-[96px] shrink-0 border rounded-xl p-2.5 flex flex-col items-center justify-between text-center space-y-1.5 font-numeric select-none transition-all cursor-pointer"
+              :class="[
+                selectedDate && isSameDate(selectedDate, row.date)
+                  ? 'border-primary ring-2 ring-primary/40 bg-base-100 shadow-sm'
+                  : row.offset === 0
+                    ? 'bg-base-200/90 border-base-content/25 shadow-xs hover:border-base-content/40'
+                    : 'bg-base-200/40 border-base-300/70 hover:border-base-content/30'
+              ]"
+              @click="toggleDate(row.date)"
             >
               <!-- 1. 日期 -->
               <div class="text-xs text-base-content/75 font-medium whitespace-nowrap">
@@ -100,7 +106,7 @@
               </div>
 
               <!-- 3. 符合策略模式標籤 (單行居中，未符合顯示 '--') -->
-              <div class="text-xs font-sans w-full truncate pt-1 border-t border-base-300/60">
+              <div class="text-xs font-sans w-full truncate pt-1.5 border-t border-base-300/60">
                 <span
                   v-if="row.matchedModes && row.matchedModes.length > 0"
                   class="font-medium text-base-content inline-block max-w-full truncate"
@@ -197,6 +203,20 @@ defineEmits(['close'])
 
 const viewMode = ref('timeline')
 const carouselRef = ref(null)
+const selectedDate = ref('')
+
+function isSameDate(d1, d2) {
+  if (!d1 || !d2) return false
+  return String(d1).replace(/\//g, '-').slice(0, 10) === String(d2).replace(/\//g, '-').slice(0, 10)
+}
+
+function toggleDate(dateStr) {
+  if (isSameDate(selectedDate.value, dateStr)) {
+    selectedDate.value = ''
+  } else {
+    selectedDate.value = dateStr
+  }
+}
 
 const rows = computed(() => {
   if (!props.isOpen || !props.stock) return []
@@ -216,7 +236,10 @@ function scrollToLatest() {
   })
 }
 
-watch([() => props.isOpen, viewMode], ([open, mode]) => {
+watch([() => props.isOpen, () => props.stock?.code, viewMode], ([open, code, mode]) => {
+  if (!open) {
+    selectedDate.value = ''
+  }
   if (open && mode === 'timeline') {
     setTimeout(scrollToLatest, 60)
   }
@@ -256,10 +279,10 @@ function formatRowChange(change, changePct, price) {
     : '0.00'
 
   if (changePct > 0) {
-    return `▲${absChg} (${absPct}%)`
+    return `▴${absChg} (${absPct}%)`
   }
   if (changePct < 0) {
-    return `▼${absChg} (${absPct}%)`
+    return `▾${absChg} (${absPct}%)`
   }
   return `0.00 (0.00%)`
 }
