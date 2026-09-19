@@ -303,26 +303,6 @@
     >
       <div v-if="toastText" class="fixed safe-bottom-toast left-1/2 -translate-x-1/2 z-50 pointer-events-none px-4 max-w-sm w-full">
         <div class="alert alert-neutral shadow-lg py-2.5 px-4 text-sm rounded-xl flex items-center justify-center gap-2 border border-base-content/10">
-          <svg
-            v-if="toastType === 'success'"
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 text-success shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-          </svg>
-          <svg
-            v-else
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 text-info shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
           <span class="font-medium">{{ toastText }}</span>
         </div>
       </div>

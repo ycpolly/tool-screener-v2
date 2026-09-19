@@ -83,7 +83,7 @@
               class="w-[104px] sm:w-[96px] shrink-0 rounded-xl p-2.5 flex flex-col items-center justify-between text-center space-y-1.5 font-numeric select-none transition-all cursor-pointer"
               :class="[
                 selectedDate && isSameDate(selectedDate, row.date)
-                  ? 'border-2 border-base-content'
+                  ? 'border-2 border-base-content/50'
                   : 'border ' + (row.offset === 0 ? 'border-base-content/25 shadow-xs hover:border-base-content/40' : 'border-base-300/70 hover:border-base-content/30'),
                 row.offset === 0 ? 'bg-base-200/90' : 'bg-base-200/40'
               ]"
