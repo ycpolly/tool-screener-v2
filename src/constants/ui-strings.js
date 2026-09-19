@@ -381,6 +381,8 @@ export const UI_STRINGS = {
   LIFECYCLE: {
     title: '7 日策略生命週期',
     titleSuffix: '近日表現',
+    viewTimeline: '時間軸',
+    viewTable: '表格',
     openTooltip: '查看近日表現',
     colDate: '日期',
     colPrice: '收盤 (漲跌)',
