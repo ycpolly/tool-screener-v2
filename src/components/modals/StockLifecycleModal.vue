@@ -79,7 +79,7 @@
             <div
               v-for="row in timelineRows"
               :key="row.offset"
-              class="w-[88px] sm:w-[96px] shrink-0 border rounded-xl p-2.5 flex flex-col items-center justify-between text-center space-y-1.5 font-numeric select-none transition-colors"
+              class="w-[104px] sm:w-[96px] shrink-0 border rounded-xl p-2.5 flex flex-col items-center justify-between text-center space-y-1.5 font-numeric select-none transition-colors"
               :class="row.offset === 0
                 ? 'bg-base-200/90 border-base-content/25 shadow-xs'
                 : 'bg-base-200/40 border-base-300/70'"
@@ -94,7 +94,7 @@
                 <div class="text-sm sm:text-base font-bold">
                   {{ formatPrice(row.price) }}
                 </div>
-                <div class="text-xs font-semibold">
+                <div class="text-[10px] font-semibold">
                   {{ formatRowChange(row.change, row.changePct, row.price) }}
                 </div>
               </div>
