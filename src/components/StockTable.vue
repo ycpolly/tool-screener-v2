@@ -72,6 +72,7 @@
             @select="onCardSelect"
             @open-risk-modal="onCardOpenRiskModal"
             @open-price-calc="onCardOpenPriceCalc"
+            @open-lifecycle="onCardOpenLifecycle"
           />
         </div>
 
@@ -94,6 +95,7 @@
             @select="onCardSelect"
             @open-risk-modal="onCardOpenRiskModal"
             @open-price-calc="onCardOpenPriceCalc"
+            @open-lifecycle="onCardOpenLifecycle"
           />
         </div>
       </div>
@@ -125,6 +127,7 @@
           @select="onCardSelect"
           @open-risk-modal="onCardOpenRiskModal"
           @open-price-calc="onCardOpenPriceCalc"
+          @open-lifecycle="onCardOpenLifecycle"
         />
       </div>
 
@@ -166,6 +169,7 @@
             @select="onCardSelect"
             @open-risk-modal="onCardOpenRiskModal"
             @open-price-calc="onCardOpenPriceCalc"
+            @open-lifecycle="onCardOpenLifecycle"
           />
         </div>
       </div>
@@ -217,7 +221,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['select', 'sort', 'openRiskModal', 'openPriceCalc'])
+const emit = defineEmits(['select', 'sort', 'openRiskModal', 'openPriceCalc', 'openLifecycle'])
 
 function onCardSelect(stock) {
   emit('select', stock)
@@ -229,6 +233,10 @@ function onCardOpenRiskModal(stock) {
 
 function onCardOpenPriceCalc(stock) {
   emit('openPriceCalc', stock)
+}
+
+function onCardOpenLifecycle(stock) {
+  emit('openLifecycle', stock)
 }
 
 const showUnmatched = ref(false)

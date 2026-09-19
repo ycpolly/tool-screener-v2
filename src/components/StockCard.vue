@@ -265,8 +265,12 @@
         </div>
       </div>
 
-      <!-- 第 3 層：Sparkline 技術走勢圖 (純淨走勢) -->
-      <div class="py-1 flex items-center justify-center">
+      <!-- 第 3 層：Sparkline 技術走勢圖 (純淨走勢，點擊查看近日表現) -->
+      <div
+        class="py-1 flex items-center justify-center cursor-pointer select-none"
+        :title="UI_STRINGS.LIFECYCLE.openTooltip"
+        @click.stop="$emit('openLifecycle', stock)"
+      >
         <Sparkline
           :history="stock.history10d"
           :stock="stock"
@@ -420,8 +424,12 @@
          電腦端佈局 (>= 1024px)：水平 3 欄式寬扁卡片 (左 3/12: 走勢KD | 中 5/12: 報價操作與籌碼 | 右 4/12: 均線量能)
          ============================================================ -->
     <div class="hidden lg:grid lg:grid-cols-12 lg:gap-5 lg:items-end">
-      <!-- 左欄 (3/12)：走勢圖 (純淨走勢，靠左微收) -->
-      <div class="lg:col-span-3 pr-2 flex items-center justify-center">
+      <!-- 左欄 (3/12)：走勢圖 (純淨走勢，靠左微收，點擊查看近日表現) -->
+      <div
+        class="lg:col-span-3 pr-2 flex items-center justify-center cursor-pointer select-none"
+        :title="UI_STRINGS.LIFECYCLE.openTooltip"
+        @click.stop="$emit('openLifecycle', stock)"
+      >
         <Sparkline
           :history="stock.history10d"
           :stock="stock"
@@ -769,7 +777,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['select', 'openRiskModal', 'openPriceCalc'])
+defineEmits(['select', 'openRiskModal', 'openPriceCalc', 'openLifecycle'])
 
 const copied = ref(false)
 let copyTimer = null

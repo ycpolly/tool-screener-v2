@@ -204,6 +204,7 @@
           @select="handleSelectStock"
           @open-risk-modal="handleOpenRiskModal"
           @open-price-calc="handleOpenPriceCalc"
+          @open-lifecycle="handleOpenLifecycle"
         />
       </template>
     </main>
@@ -275,6 +276,13 @@
       @close="closePriceCalcModal"
     />
 
+    <!-- 近日表現 (7 日策略生命週期) Bottom Sheet Modal -->
+    <StockLifecycleModal
+      :is-open="showLifecycleModal"
+      :stock="selectedLifecycleStock"
+      @close="closeLifecycleModal"
+    />
+
     <!-- 空間與風控全貌 Modal (Gemini 完成 RiskModal.vue 後引入掛載) -->
     <!--
     <RiskModal
@@ -337,6 +345,7 @@ import SearchBar from './components/SearchBar.vue'
 import StockTable from './components/StockTable.vue'
 import StockPoolModal from './components/modals/StockPoolModal.vue'
 import PriceCalcModal from './components/modals/PriceCalcModal.vue'
+import StockLifecycleModal from './components/modals/StockLifecycleModal.vue'
 
 const searchQuery = ref('')
 const sortKey     = ref('changePct')
@@ -355,6 +364,19 @@ function handleOpenPriceCalc(stock) {
 function closePriceCalcModal() {
   showPriceCalcModal.value = false
   selectedCalcStock.value = null
+}
+
+const showLifecycleModal = ref(false)
+const selectedLifecycleStock = shallowRef(null)
+
+function handleOpenLifecycle(stock) {
+  selectedLifecycleStock.value = stock
+  showLifecycleModal.value = true
+}
+
+function closeLifecycleModal() {
+  showLifecycleModal.value = false
+  selectedLifecycleStock.value = null
 }
 
 function toggleCompact() {

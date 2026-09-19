@@ -380,6 +380,14 @@ export const UI_STRINGS = {
 
   LIFECYCLE: {
     title: '7 日策略生命週期',
+    titleSuffix: '近日表現',
+    openTooltip: '查看近日表現',
+    colDate: '日期',
+    colPrice: '收盤 (漲跌)',
+    colModes: '符合模式',
+    noMatch: '--',
+    noData: '暫無歷史日 K 資料',
+    closeBtn: '關閉近日表現彈窗',
     btnTitle: '查看 7 日策略軌跡',
     expandLabel: '7日軌跡',
     collapseLabel: '收合軌跡',

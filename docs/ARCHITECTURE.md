@@ -88,6 +88,7 @@ tool-screener-v2/
 │   │   └── modals/
 │   │       ├── StockPoolModal.vue ← 股票池來源總覽與排行榜名單
 │   │       ├── PriceCalcModal.vue ← 價格速算 Bottom Sheet（基於現價 vs 基於昨收雙欄階梯）
+│   │       ├── StockLifecycleModal.vue ← 近日表現 Bottom Sheet（7日價量變化與策略命中歷程）
 │   │       ├── RiskModal.vue   ← 空間與風控全貌（天花板/支撐/風報比）
 │   │       └── AvoidModal.vue  ← 避雷區（法人/主力/投信 賣超）
 │   ├── composables/
@@ -537,6 +538,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 關卡天梯整數數值小數位切齊優化（Price Decimals & Tabular Alignment：移除 `formatNumber` 之消除 `.00` 邏輯，全面統一維持 2 位小數標準格式；整數關卡、5日最高等數值皆完整呈現 `.00`，使價格天梯欄位與小數點 100% 垂直對齊）— 完成 2026-09-06（v0906.06）
 - [x] 全市場模式（ALL 464 檔）價格速算與卡片渲染效能優化（Large List Performance Optimization & Virtual DOM Caching：針對全市場模式 464 檔卡片同時存在於 DOM 時點擊價格喚起速算 Modal 延遲問題進行深層重構；1. App.vue `selectedCalcStock` 改為 `shallowRef`，消除 464 筆複雜巢狀資料深度 Proxy 劫持開銷；2. StockTable.vue 引入 Vue 3 `v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, isUnmatched, activeMode]"` 快取，配合外提穩定事件處理常式，Modal 開關時完全跳過 464 檔卡片之 Virtual DOM 比對與重繪，渲染耗時由數百毫秒驟降至 1 毫秒內；3. StockCard.vue 移除 `transition-all active:scale-95` 造成的重排重繪，加入 `touch-manipulation` 消除手機端 300ms 點擊延遲；4. PriceCalcModal 採用 `<Teleport to="body">` 與 `v-if="isOpen"` 延遲計算，達成舊款手機點擊速算毫秒級零卡頓瞬開體驗）— 完成 2026-09-06（v0906.07）
 - [x] 0050 標籤官方連結更新（0050 Official URL Update：將 `src/constants/category-urls.js` 及 `StockPoolModal.vue` 之 0050 標籤外開連結統一更新為元大官方成分股比例端點 `https://www.yuantaetfs.com/product/detail/0050/ratio`，修正原證交所 FTSE 頁面失效之問題）— 完成 2026-09-06（v0906.07）
+- [x] 個股近日表現 Bottom Sheet（Stock Lifecycle Bottom Sheet：點擊 Sparkline 走勢圖喚起；俐落三欄式極簡排版【日期 ── 收盤 (漲跌) ── 符合模式】，由近到遠回溯近 7 個歷史交易日 T-0 至 T-7；收盤價漲跌省略正負符號改以 ▴ / ▾ 標示，未符合策略顯示 '--'；採用 `<Teleport to="body">` 與 `v-if="isOpen"` 延遲計算，達成毫秒級瞬開體驗）— 完成 2026-09-19
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 
