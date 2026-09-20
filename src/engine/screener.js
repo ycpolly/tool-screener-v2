@@ -538,9 +538,14 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
   }
 
 
-  // 13. 當日帶量攻擊 (checkVolExpansion: 當日成交量 > 5日量均)
-  if (params.checkVolExpansion && vMa5 > 0 && volume <= vMa5) {
-    return fail(strings.volExpansionFailed || '未達帶量攻擊標準 (成交量 ≤ 5日量均)')
+  // 13. 當日帶量攻擊 (checkVolExpansion: 當日成交量 >= 5日量均 * ratio)
+  if (params.checkVolExpansion && vMa5 > 0) {
+    const ratio = typeof params.minVolExpansionRatio === 'number'
+      ? params.minVolExpansionRatio : 1.0
+    if (volume < vMa5 * ratio) {
+      return fail(strings.volExpansionFailed ||
+        `未達帶量攻擊標準 (成交量 < 5日量均 × ${ratio})`)
+    }
   }
 
   // 14. 實體攻擊紅 K (checkRedCandle: 收 > 開 且 漲幅 >= minRedCandleChangePct)
@@ -582,13 +587,13 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     }
   }
 
-  // 16. 排除長上影線避雷針 (checkAvoidLongUpperShadow: 上影線長度 > 實體紅 K 一半則排除)
+  // 16. 排除長上影線避雷針 (checkAvoidLongUpperShadow: 上影線長度 > 實體紅 K 0.3 倍則排除)
   if (params.checkAvoidLongUpperShadow && close > open) {
     const high = stock.high ?? price
     const upperShadow = high - close
     const body = close - open
 
-    if (upperShadow > body * 0.5) {
+    if (upperShadow > body * 0.3) {
       return fail(strings.avoidUpperShadowFailed || '觸發避雷針型態')
     }
   }
@@ -632,6 +637,19 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
       return fail(strings.excludeSell3DFailed
         ? strings.excludeSell3DFailed(trigStr)
         : `觸發連續 3 日賣超避雷 (${trigStr})`)
+    }
+  }
+
+  // 18.5 籌碼確認 (requireAnyBuy: 需屬於至少一個法人買超分類)
+  if (params.requireAnyBuy) {
+    const cats = stock.categories || []
+    const hasBuySupport = cats.some(c =>
+      ['SitcaBuy', 'SitcaBuy3D', 'SitcaBuy5D',
+       'ForeignBuy', 'ForeignBuy1D', 'ForeignBuy3D',
+       'MajorBuy', 'MajorBuy1D', 'MajorBuy3D'].includes(c)
+    )
+    if (!hasBuySupport) {
+      return fail('無法人買超支撐（外資/主力/投信均無買進）')
     }
   }
 
@@ -815,13 +833,14 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
 
   // 8. 帶量攻擊
   if (params.checkVolExpansion && vMa5 > 0) {
-    const pass = volume > vMa5
+    const ratio = typeof params.minVolExpansionRatio === 'number' ? params.minVolExpansionRatio : 1.0
+    const pass = volume >= vMa5 * ratio
     details.push({
       label: dLabels.volExpansion || '量能攻擊',
       pass,
       desc: pass
-        ? `帶量攻擊 (當日量 ${volume.toLocaleString()} 張 > 5日均量 ${vMa5.toLocaleString()} 張)`
-        : `未達帶量 (當日量 ${volume.toLocaleString()} 張 ≤ 5日均量 ${vMa5.toLocaleString()} 張)`,
+        ? `帶量攻擊 (當日量 ${volume.toLocaleString()} 張 ≥ 5日均量 ${Math.round(vMa5 * ratio).toLocaleString()} 張${ratio !== 1.0 ? ` [${ratio}x]` : ''})`
+        : `未達帶量 (當日量 ${volume.toLocaleString()} 張 < 5日均量 ${Math.round(vMa5 * ratio).toLocaleString()} 張${ratio !== 1.0 ? ` [${ratio}x]` : ''})`,
     })
   }
 
@@ -911,11 +930,11 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     const high = stock.high ?? price
     const upperShadow = high - close
     const body = close - open
-    const pass = upperShadow <= body * 0.5
+    const pass = upperShadow <= body * 0.3
     details.push({
       label: dLabels.upperShadow || '上影線',
       pass,
-      desc: pass ? '上影線短 (≤ 實體紅 K 一半，無避雷針)' : '上影線過長 (觸發避雷針賣壓)',
+      desc: pass ? '上影線短 (≤ 實體紅 K 0.3 倍，無避雷針)' : '上影線過長 (觸發避雷針賣壓)',
     })
   }
 
@@ -979,6 +998,21 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
       label: dLabels.chipsSell3D || '籌碼避雷',
       pass,
       desc: pass ? '通過 (無外資/主力/投信連續 3 日賣超)' : '未通過 (觸發連續 3 日賣超)',
+    })
+  }
+
+  // 15.2 籌碼確認 (requireAnyBuy: 需屬於至少一個法人買超分類)
+  if (params.requireAnyBuy) {
+    const cats = stock.categories || []
+    const hasBuySupport = cats.some(c =>
+      ['SitcaBuy', 'SitcaBuy3D', 'SitcaBuy5D',
+       'ForeignBuy', 'ForeignBuy1D', 'ForeignBuy3D',
+       'MajorBuy', 'MajorBuy1D', 'MajorBuy3D'].includes(c)
+    )
+    details.push({
+      label: '法人買超',
+      pass: hasBuySupport,
+      desc: hasBuySupport ? '通過 (獲外資/主力/投信買超支撐)' : '未通過 (外資/主力/投信均無買進)',
     })
   }
 

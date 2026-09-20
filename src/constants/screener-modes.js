@@ -66,7 +66,7 @@ export const SCREENER_MODES = {
       maAboveMode: 'BOTH',            // (嚴) 同時站穩 5MA 與 10MA
       requireAboveMa60: true,         // [新增] 站穩季線防身 (收盤價 >= 60MA)
       checkConvergence: true,         // 當日三線價差開關
-      convergenceMax: 3.0,            // 當日三線價差 <= 3%
+      convergenceMax: 5.0,            // 當日三線價差 <= 5% (放寬門檻以提升實戰候選池)
       bias5Min: -2.0,                 // 5MA 乖離率下限 (%)
       bias5Max: 3.0,                  // 5MA 乖離率上限 (%)
       bias20Min: 0.0,                 // 20MA 乖離率下限 (%)
@@ -83,21 +83,22 @@ export const SCREENER_MODES = {
       volContractionRatio: 1.0,       // [更新] 當日成交量 <= 5日均量 * 1.0
       checkTightConsolidation: true,  // [新增] 狹幅震盪打底
       tightChgMin: -1.5,              // [新增] 當日漲跌幅下限 -1.5%
-      tightChgMax: 1.5,               // [新增] 當日漲跌幅上限 +1.5% (排除噴出假蓄勢)
+      tightChgMax: 2.0,               // [調整] 當日漲跌幅上限 +2.0% (涵蓋蓄勢末端初步表態)
       excludeSell3D: true,            // 隱藏外資 / 主力 / 投信賣超 3D (含 0050 豁免)
       excludeSell1D: false,           // 隱藏外資 / 主力賣超 1D
+      requireAnyBuy: true,            // 需屬於 SitcaBuy 或 ForeignBuy 或 MajorBuy 任一分類 (確認法人籌碼方向)
 
       checkAvoidLongBlack: true,      // 排除長黑倒貨
       blackCandleRatioMax: 0.20,
       checkKd: true,                  // KD 脫離超賣區
       kdKMin: 20,                     // 20 <= K <= 60
       kdKMax: 60,
-      kdRequireCross: true,           // K > D 黃金交叉
+      kdRequireCross: false,          // 蓄勢期免除強制黃金交叉，避免漏掉初期標的
     },
     premiumParams: {
-      convergenceMax: 2.0,            // 三線價差壓縮至 2% 以內
-      tightChgMin: -1.0,              // 振幅限制在正負 1% 內
-      tightChgMax: 1.0,
+      convergenceMax: 3.0,            // 三線價差緊縮至 3% 以內
+      tightChgMin: -1.0,              // 振幅限制在正負 1% ~ 1.5% 內
+      tightChgMax: 1.5,
       bias20Max: 5.0,                 // 月線乖離上限壓低至 5%
     },
   },
@@ -126,7 +127,8 @@ export const SCREENER_MODES = {
       checkMinVolume: true,
       checkPrevVolContraction: true,// 昨日成交量 < 昨日 5 日量均 (MV5)
       checkNotDisposed: true,       // 排除處置股
-      checkVolExpansion: true,      // 當日帶量攻擊 (當日量 > 5日量均)
+      checkVolExpansion: true,      // 當日帶量攻擊 (當日量 >= 5日量均 * ratio)
+      minVolExpansionRatio: 1.5,    // 當日量需 >= 5MA量 × 1.5 (排除微幅帶量之假突破)
       excludeSell3D: true,          // 隱藏外資 / 主力 / 投信賣超 3D (含 0050 豁免)
       excludeSell1D: true,           // 隱藏外資 / 主力賣超 1D (發動日嚴禁當日倒貨)
       checkRedCandle: true,         // 實體攻擊紅 K (收 > 開 且 漲幅 >= 1.5%)
@@ -164,7 +166,7 @@ export const SCREENER_MODES = {
       requireMa20Rising: true,      // [底層靈魂條件] 當日 20MA > 前一日 20MA
 
       // 量能與流動性
-      minVolume: 500,               // 當日成交量 >= 500 張
+      minVolume: 800,                // 當日成交量 >= 800 張 (提高門檻保障流動性，過濾假回測)
       checkMinVolume: true,
       checkNotDisposed: true,       // 排除處置股
       checkVolPullback: true,       // 量縮回踩 (當日量 < 5日量均 或 < 昨日量)
@@ -196,8 +198,8 @@ export const SCREENER_MODES = {
       requireAboveMa60: false,
       bias5Min: 0.0,                  // 5MA 乖離率 0% ~ +8% (發動日必站上短均)
       bias5Max: 8.0,
-      bias20Min: 2.0,                 // 20MA 乖離率 +2% ~ +20% (強迫股價在月線之上)
-      bias20Max: 20.0,
+      bias20Min: 2.0,                 // 20MA 乖離率 +2% ~ +13% (上限收緊至 13%，避免過熱追高)
+      bias20Max: 13.0,
       requireMa20Rising: true,        // 今日 20MA > 昨日 20MA (月線斜率向上)
       checkConvergence: false,        // 不啟用當日糾結 (洗盤剛結束，均線通常有開口)
       convergenceMax: 8.0,
@@ -219,8 +221,8 @@ export const SCREENER_MODES = {
 
       // KD 動能輔助
       checkKd: true,                  // KD 輔助
-      kdKMin: 30,                     // 中檔降溫區 (K 介於 30 ~ 65)
-      kdKMax: 65,
+      kdKMin: 30,                     // 中檔降溫區 (K 介於 30 ~ 58，上限下修確保充分降溫)
+      kdKMax: 58,
       kdRequireCross: true,           // KD 多頭排列 (K > D)
     },
     premiumParams: {
