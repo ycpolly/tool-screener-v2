@@ -344,37 +344,37 @@ GCP 即時行情    ─→  useRealtimeQuotes.js ← 即時更新層
 模式採設定物件方式定義，新增模式不需修改核心引擎：
 
 ```javascript
-// src/constants/screener-modes.js
+// src/constants/screener-modes.js (2026-09-20 量化回測參數優化版)
 export const SCREENER_MODES = {
   BOTTOM_REVERSAL: {
     id: 'BOTTOM_REVERSAL',
     label: '跌深反轉',
-    description: '空頭超賣區爆量收紅，V型反轉發動日',
+    description: '急行軍型（預期 2 ~ 5 天發酵）。負乖離過大急彈靠攏月線，前 2 ~ 3 天速度極快，遇月線解套賣壓即下車，屬快進快出。',
     defaultParams: { maAboveMode: 'NONE', bias5Min: -5.0, bias5Max: 5.0, bias20Min: -30.0, bias20Max: -2.0, requireAboveMa60: false, requireMa20Rising: false, minVolume: 1000, checkVolExpansion: true, checkRedCandle: true, minRedCandleChangePct: 2.0, checkAvoidLongUpperShadow: true, checkKd: true, kdKMin: 10, kdKMax: 40, kdRequireCross: true }
   },
   BOTTOM_CONSOLIDATION: {
     id: 'BOTTOM_CONSOLIDATION',
     label: '底部蓄勢',
-    description: '尋找籌碼乾淨、極致壓縮股（參與 D1-D3）',
-    defaultParams: { maAboveMode: 'BOTH', checkConvergence: true, convergenceMax: 3.0, bias5Min: -2.0, bias5Max: 3.0, bias20Min: 0.0, bias20Max: 8.0, requireAboveMa60: true }
+    description: '長跑潛伏型（預期 5 ~ 15 天發酵）。三線糾結極致壓縮，主力縮量整理尚未表態，洗盤需 1 ~ 2 週耐心；跌破下緣即停損，表態賺大底起漲波。',
+    defaultParams: { maAboveMode: 'BOTH', checkConvergence: true, convergenceMax: 5.0, bias5Min: -2.0, bias5Max: 3.0, bias20Min: 0.0, bias20Max: 8.0, requireAboveMa60: true, tightChgMin: -1.5, tightChgMax: 2.0, kdRequireCross: false, requireAnyBuy: true }
   },
   MOMENTUM_BREAKOUT: {
     id: 'MOMENTUM_BREAKOUT',
     label: '動能攻擊',
-    description: '剛結束打底、今日帶量出第一根紅棒的發動股（參與 D4）',
-    defaultParams: { maAboveMode: 'BOTH', checkConvergence: true, convergenceMax: 8.0, checkPrevConvergence: true, prevConvergenceMax: 3.0, bias5Min: 0.0, bias5Max: 8.0, bias20Min: 0.0, bias20Max: 12.0 }
+    description: '短跑突破型（預期 1 ~ 3 天發酵）。結束打底帶量突破，進場後 3 天內必須見紅 K 續強；若軟掉跌回突破口代表假突破，須迅速停損。',
+    defaultParams: { maAboveMode: 'BOTH', checkConvergence: true, convergenceMax: 8.0, checkPrevConvergence: true, prevConvergenceMax: 3.0, bias5Min: 0.0, bias5Max: 8.0, bias20Min: 0.0, bias20Max: 12.0, minVolExpansionRatio: 1.5, checkAvoidLongUpperShadow: true }
   },
   TREND_PULLBACK: {
     id: 'TREND_PULLBACK',
     label: '多頭回測',
-    description: '多頭趨勢中，量縮拉回找支撐的強勢中繼股',
-    defaultParams: { maAboveMode: 'ANY', checkConvergence: true, convergenceMax: 8.0, bias5Min: -3.0, bias5Max: 2.0, bias20Min: 2.0, bias20Max: 12.0, requireMa20Rising: true }
+    description: '防守反擊型（預期 3 ~ 7 天發酵）。多頭趨勢量縮回測 5MA / 10MA 支撐，測量縮不破後啟動下一波攻擊，第 4 ~ 6 天最易發動。',
+    defaultParams: { maAboveMode: 'ANY', checkConvergence: true, convergenceMax: 8.0, bias5Min: -3.0, bias5Max: 2.0, bias20Min: 2.0, bias20Max: 12.0, requireMa20Rising: true, minVolume: 800 }
   },
   WASHOUT_IGNITION: {
     id: 'WASHOUT_IGNITION',
     label: '洗盤起漲',
-    description: '趨勢多頭、指標降溫後再度帶量攻擊起漲',
-    defaultParams: { maAboveMode: 'BOTH', bias5Min: 0.0, bias5Max: 8.0, bias20Min: 2.0, bias20Max: 20.0, requireMa20Rising: true, minVolume: 1000, checkVolExpansion: true, checkRedCandle: true, minRedCandleChangePct: 2.0, checkAvoidLongUpperShadow: true, checkKd: true, kdKMin: 30, kdKMax: 65, kdRequireCross: true }
+    description: '波段接力型（預期 2 ~ 5 天發酵）。月線向上且昨日量縮洗盤，今日表態放量攻擊；主力洗淨浮額，3 ~ 5 天易順暢拉開 5% ~ 10% 空間。',
+    defaultParams: { maAboveMode: 'BOTH', bias5Min: 0.0, bias5Max: 8.0, bias20Min: 2.0, bias20Max: 13.0, requireMa20Rising: true, minVolume: 1000, checkVolExpansion: true, checkRedCandle: true, minRedCandleChangePct: 2.0, checkAvoidLongUpperShadow: true, checkKd: true, kdKMin: 30, kdKMax: 58, kdRequireCross: true }
   }
 }
 

@@ -649,7 +649,7 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
        'MajorBuy', 'MajorBuy1D', 'MajorBuy3D'].includes(c)
     )
     if (!hasBuySupport) {
-      return fail('無法人買超支撐（外資/主力/投信均無買進）')
+      return fail(strings.requireAnyBuyFailed || '無法人買超支撐 (外資 / 主力 / 投信均無買進)')
     }
   }
 
@@ -1010,7 +1010,7 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
        'MajorBuy', 'MajorBuy1D', 'MajorBuy3D'].includes(c)
     )
     details.push({
-      label: '法人買超',
+      label: dLabels.requireAnyBuy || '法人買超',
       pass: hasBuySupport,
       desc: hasBuySupport ? '通過 (獲外資/主力/投信買超支撐)' : '未通過 (外資/主力/投信均無買進)',
     })
