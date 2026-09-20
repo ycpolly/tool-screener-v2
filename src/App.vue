@@ -205,6 +205,7 @@
           @open-risk-modal="handleOpenRiskModal"
           @open-price-calc="handleOpenPriceCalc"
           @open-lifecycle="handleOpenLifecycle"
+          @search-code="handleSearchCode"
         />
       </template>
     </main>
@@ -274,6 +275,7 @@
       :is-open="showPriceCalcModal"
       :stock="selectedCalcStock"
       @close="closePriceCalcModal"
+      @search-code="handleSearchCode"
     />
 
     <!-- 近日表現 (7 日策略生命週期) Bottom Sheet Modal -->
@@ -281,6 +283,7 @@
       :is-open="showLifecycleModal"
       :stock="selectedLifecycleStock"
       @close="closeLifecycleModal"
+      @search-code="handleSearchCode"
     />
 
     <!-- 空間與風控全貌 Modal (Gemini 完成 RiskModal.vue 後引入掛載) -->
@@ -357,6 +360,17 @@ function handleOpenLifecycle(stock) {
 function closeLifecycleModal() {
   showLifecycleModal.value = false
   selectedLifecycleStock.value = null
+}
+
+function handleSearchCode(code) {
+  if (!code) return
+  searchQuery.value = String(code)
+  if (showLifecycleModal.value) closeLifecycleModal()
+  if (showPriceCalcModal.value) closePriceCalcModal()
+  triggerToast(UI_STRINGS.SEARCH?.searchCodeToast ? UI_STRINGS.SEARCH.searchCodeToast(code) : `已代入搜尋 ${code}`, 'info', 2000)
+  if (typeof window !== 'undefined') {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 }
 
 function toggleCompact() {
@@ -534,7 +548,9 @@ function closePoolModal() {
 }
 
 function handleSelectStockFromPool(stock) {
-  searchQuery.value = stock.code
+  if (stock?.code) {
+    handleSearchCode(stock.code)
+  }
   closePoolModal()
 }
 

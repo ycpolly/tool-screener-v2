@@ -73,6 +73,7 @@
             @open-risk-modal="onCardOpenRiskModal"
             @open-price-calc="onCardOpenPriceCalc"
             @open-lifecycle="onCardOpenLifecycle"
+            @search-code="onCardSearchCode"
           />
 
           <!-- 搜尋符合清單批次載入哨兵 -->
@@ -106,6 +107,7 @@
             @open-risk-modal="onCardOpenRiskModal"
             @open-price-calc="onCardOpenPriceCalc"
             @open-lifecycle="onCardOpenLifecycle"
+            @search-code="onCardSearchCode"
           />
 
           <!-- 搜尋未符合清單批次載入哨兵 -->
@@ -148,6 +150,7 @@
           @open-risk-modal="onCardOpenRiskModal"
           @open-price-calc="onCardOpenPriceCalc"
           @open-lifecycle="onCardOpenLifecycle"
+          @search-code="onCardSearchCode"
         />
 
         <!-- 漸進式批次載入哨兵 (向下滑動 400px 提前無感自動加載) -->
@@ -200,6 +203,7 @@
             @open-risk-modal="onCardOpenRiskModal"
             @open-price-calc="onCardOpenPriceCalc"
             @open-lifecycle="onCardOpenLifecycle"
+            @search-code="onCardSearchCode"
           />
 
           <!-- 未符合清單批次載入哨兵 -->
@@ -261,7 +265,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['select', 'sort', 'openRiskModal', 'openPriceCalc', 'openLifecycle'])
+const emit = defineEmits(['select', 'sort', 'openRiskModal', 'openPriceCalc', 'openLifecycle', 'searchCode'])
 
 function onCardSelect(stock) {
   emit('select', stock)
@@ -277,6 +281,10 @@ function onCardOpenPriceCalc(stock) {
 
 function onCardOpenLifecycle(stock) {
   emit('openLifecycle', stock)
+}
+
+function onCardSearchCode(code) {
+  emit('searchCode', code)
 }
 
 const showUnmatched = ref(false)

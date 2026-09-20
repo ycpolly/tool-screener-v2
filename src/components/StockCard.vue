@@ -11,7 +11,13 @@
       <!-- 首行：核心報價 (代號、名稱、即時現價、漲跌幅) -->
       <div class="flex items-baseline justify-between gap-2">
         <div class="flex items-baseline gap-2 min-w-0">
-          <span class="font-numeric font-bold text-lg text-base-content tracking-wide">{{ stock.code }}</span>
+          <span
+            class="font-numeric font-bold text-lg text-base-content tracking-wide cursor-pointer hover:underline hover:text-primary transition-colors select-none touch-manipulation"
+            :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
+            @click.stop="$emit('searchCode', stock.code)"
+          >
+            {{ stock.code }}
+          </span>
           <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
           <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
             [{{ UI_STRINGS.SCREENER.disposed }}]
@@ -95,7 +101,13 @@
       <!-- 第 1 層：主焦點 (代號、名稱、即時現價同為 text-lg，漲跌幅為 text-sm) -->
       <div class="flex items-baseline justify-between gap-2">
         <div class="flex items-baseline gap-2 min-w-0">
-          <span class="font-numeric font-bold text-lg text-base-content tracking-wide">{{ stock.code }}</span>
+          <span
+            class="font-numeric font-bold text-lg text-base-content tracking-wide cursor-pointer hover:underline hover:text-primary transition-colors select-none touch-manipulation"
+            :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
+            @click.stop="$emit('searchCode', stock.code)"
+          >
+            {{ stock.code }}
+          </span>
           <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
           <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
             [{{ UI_STRINGS.SCREENER.disposed }}]
@@ -442,7 +454,13 @@
         <!-- 核心報價 (代號、名稱、即時現價同為 text-lg，漲跌幅為 text-sm) -->
         <div class="flex items-baseline justify-between gap-2">
           <div class="flex items-baseline gap-2 min-w-0">
-            <span class="font-numeric font-bold text-lg text-base-content">{{ stock.code }}</span>
+            <span
+              class="font-numeric font-bold text-lg text-base-content cursor-pointer hover:underline hover:text-primary transition-colors select-none touch-manipulation"
+              :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
+              @click.stop="$emit('searchCode', stock.code)"
+            >
+              {{ stock.code }}
+            </span>
             <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
             <span v-if="stock.isDisposed" class="font-bold text-sm text-rise">
               [{{ UI_STRINGS.SCREENER.disposed }}]
@@ -777,7 +795,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['select', 'openRiskModal', 'openPriceCalc', 'openLifecycle'])
+defineEmits(['select', 'openRiskModal', 'openPriceCalc', 'openLifecycle', 'searchCode'])
 
 const copied = ref(false)
 let copyTimer = null

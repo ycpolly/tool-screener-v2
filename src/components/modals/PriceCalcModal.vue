@@ -12,7 +12,13 @@
         <div class="flex items-center justify-between pb-2.5 border-b border-base-300/80 shrink-0">
           <div class="flex items-center gap-2">
             <h3 class="text-base sm:text-lg font-bold text-base-content flex items-center gap-1.5">
-              <span class="font-numeric">{{ stock?.code }}</span>
+              <span
+                class="font-numeric cursor-pointer hover:underline hover:text-primary transition-colors touch-manipulation"
+                :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
+                @click="$emit('searchCode', stock?.code)"
+              >
+                {{ stock?.code }}
+              </span>
               <span>{{ stock?.name }}</span>
               <span class="text-base-content/80 font-medium text-sm sm:text-base">{{ UI_STRINGS.QUICK_CALC.titleSuffix }}</span>
             </h3>
@@ -109,7 +115,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['close'])
+defineEmits(['close', 'searchCode'])
 
 const rows = computed(() => {
   if (!props.isOpen || !props.stock) return []

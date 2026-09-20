@@ -18,27 +18,27 @@ export const UI_STRINGS = {
     BOTTOM_REVERSAL: {
       label: '跌深反轉',
       shortLabel: '反轉',
-      description: '空頭超賣區爆量收紅，V型反轉發動日',
+      description: '急行軍型（預期 2 ~ 5 天發酵）。負乖離過大急彈靠攏月線，前 2 ~ 3 天速度極快，遇月線解套賣壓即下車，屬快進快出。',
     },
     BOTTOM_CONSOLIDATION: {
       label: '底部蓄勢',
       shortLabel: '底部',
-      description: '尋找籌碼乾淨、極致壓縮股（參與 D1-D3）',
+      description: '長跑潛伏型（預期 5 ~ 15 天發酵）。三線糾結極致壓縮，主力縮量整理尚未表態，洗盤需 1 ~ 2 週耐心；跌破下緣即停損，表態賺大底起漲波。',
     },
     MOMENTUM_BREAKOUT: {
       label: '動能攻擊',
       shortLabel: '動能',
-      description: '剛結束打底，今日帶量出第一根紅棒（參與 D4）',
+      description: '短跑突破型（預期 1 ~ 3 天發酵）。結束打底帶量突破，進場後 3 天內必須見紅 K 續強；若軟掉跌回突破口代表假突破，須迅速停損。',
     },
     TREND_PULLBACK: {
       label: '多頭回測',
       shortLabel: '回測',
-      description: '多頭趨勢中，量縮拉回找支撐的強勢中繼股',
+      description: '防守反擊型（預期 3 ~ 7 天發酵）。多頭趨勢量縮回測 5MA / 10MA 支撐，測量縮不破後啟動下一波攻擊，第 4 ~ 6 天最易發動。',
     },
     WASHOUT_IGNITION: {
       label: '洗盤起漲',
       shortLabel: '起漲',
-      description: '趨勢多頭、指標降溫後再度帶量攻擊起漲',
+      description: '波段接力型（預期 2 ~ 5 天發酵）。月線向上且昨日量縮洗盤，今日表態放量攻擊；主力洗淨浮額，3 ~ 5 天易順暢拉開 5% ~ 10% 空間。',
     },
   },
 
@@ -116,6 +116,8 @@ export const UI_STRINGS = {
     searchNoResult: '查無符合代號或名稱的個股',
     matchedGroupTitle: '符合策略個股',
     unmatchedGroupTitle: '未符合本策略（含淘汰原因）',
+    searchCodeTooltip: '點擊快速代入搜尋',
+    searchCodeToast: (code) => `已代入搜尋 ${code}`,
   },
 
   TIME_MACHINE: {
