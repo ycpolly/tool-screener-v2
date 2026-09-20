@@ -371,7 +371,7 @@
                 :checked="params.checkRedCandle"
                 @change="updateField('checkRedCandle', $event.target.checked)"
               />
-              <span>{{ UI_STRINGS.PANEL.redCandleReversal || '實體反轉紅 K (收盤 > 開盤 且 漲幅 ≥ 2%)' }}</span>
+              <span>{{ redCandleReversalLabel }}</span>
             </label>
           </div>
 
@@ -525,7 +525,7 @@
                 :checked="params.checkTightConsolidation"
                 @change="updateField('checkTightConsolidation', $event.target.checked)"
               />
-              <span>{{ UI_STRINGS.PANEL.tightConsolidation }}</span>
+              <span>{{ tightConsolidationLabel }}</span>
             </label>
           </div>
 
@@ -718,7 +718,7 @@
                 :checked="params.checkRedCandle"
                 @change="updateField('checkRedCandle', $event.target.checked)"
               />
-              <span>{{ UI_STRINGS.PANEL.redCandle }}</span>
+              <span>{{ redCandleMomentumLabel }}</span>
             </label>
           </div>
 
@@ -859,7 +859,7 @@
                 :checked="params.checkVolPullback"
                 @change="updateField('checkVolPullback', $event.target.checked)"
               />
-              <span>{{ UI_STRINGS.PANEL.volPullback }}</span>
+              <span>{{ volPullbackLabel }}</span>
             </label>
           </div>
 
@@ -1001,7 +1001,7 @@
                 :checked="params.checkRedCandle"
                 @change="updateField('checkRedCandle', $event.target.checked)"
               />
-              <span>{{ UI_STRINGS.PANEL.redCandle2Pct || '實體攻擊紅 K (收盤 > 開盤 且 漲幅 ≥ 2%)' }}</span>
+              <span>{{ redCandleWashoutLabel }}</span>
             </label>
           </div>
 
@@ -1173,6 +1173,47 @@ const isCustomized = computed(() => {
     }
   }
   return false
+})
+
+// 動態條件標籤（隨一鍵精選或自訂參數即時反映最新區間與數值）
+const tightConsolidationLabel = computed(() => {
+  const min = props.params?.tightChgMin ?? -1.5
+  const max = props.params?.tightChgMax ?? 2.0
+  if (typeof UI_STRINGS.PANEL.tightConsolidationRange === 'function') {
+    return UI_STRINGS.PANEL.tightConsolidationRange(min, max)
+  }
+  return UI_STRINGS.PANEL.tightConsolidation
+})
+
+const redCandleReversalLabel = computed(() => {
+  const pct = props.params?.minRedCandleChangePct ?? 2.0
+  if (typeof UI_STRINGS.PANEL.redCandleReversalWithPct === 'function') {
+    return UI_STRINGS.PANEL.redCandleReversalWithPct(pct)
+  }
+  return UI_STRINGS.PANEL.redCandleReversal
+})
+
+const redCandleMomentumLabel = computed(() => {
+  const pct = props.params?.minRedCandleChangePct ?? 1.5
+  if (typeof UI_STRINGS.PANEL.redCandleWithPct === 'function') {
+    return UI_STRINGS.PANEL.redCandleWithPct(pct)
+  }
+  return UI_STRINGS.PANEL.redCandle
+})
+
+const redCandleWashoutLabel = computed(() => {
+  const pct = props.params?.minRedCandleChangePct ?? 2.0
+  if (typeof UI_STRINGS.PANEL.redCandleWithPct === 'function') {
+    return UI_STRINGS.PANEL.redCandleWithPct(pct)
+  }
+  return UI_STRINGS.PANEL.redCandle2Pct
+})
+
+const volPullbackLabel = computed(() => {
+  if (props.params?.checkVolPullbackStrict) {
+    return UI_STRINGS.PANEL.volPullbackStrict || '量縮回踩 (量 < 5日均量 且 < 昨日量)'
+  }
+  return UI_STRINGS.PANEL.volPullback
 })
 
 // 180ms 輕量防抖處理數字輸入，避免快速打字時頻繁重算卡頓

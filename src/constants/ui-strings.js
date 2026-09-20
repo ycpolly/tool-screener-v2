@@ -256,7 +256,12 @@ export const UI_STRINGS = {
     aboveMa60: '站穩季線防身 (收盤價 ≥ 60MA)',
     volContraction: '量縮洗盤 (量 < 5日均量)',
     tightConsolidation: '狹幅震盪打底 (漲跌幅 -1.5% ~ +2.0%)',
+    tightConsolidationRange: (min, max) => {
+      const fmt = (n) => `${n > 0 ? '+' : ''}${Number(n).toFixed(1)}%`
+      return `狹幅震盪打底 (漲跌幅 ${fmt(min)} ~ ${fmt(max)})`
+    },
     volPullback: '量縮回踩 (量 < 5日量均 或 < 昨日量)',
+    volPullbackStrict: '量縮回踩 (量 < 5日量均 且 < 昨日量)',
     prevVolContraction: '昨日成交量 < 昨日 5 日均量 (MV5)',
     volExpansion: '當日帶量攻擊 (當日量 > 5日量均)',
     volExpansionPullback: '洗盤後帶量攻擊 (當日量 > 5日量均)',
@@ -264,6 +269,8 @@ export const UI_STRINGS = {
     redCandle: '實體攻擊紅 K (收盤 > 開盤 且 漲幅 ≥ 1.5%)',
     redCandle2Pct: '實體攻擊紅 K (收盤 > 開盤 且 漲幅 ≥ 2%)',
     redCandleReversal: '實體反轉紅 K (收盤 > 開盤 且 漲幅 ≥ 2%)',
+    redCandleWithPct: (pct) => `實體攻擊紅 K (收盤 > 開盤 且 漲幅 ≥ ${pct}%)`,
+    redCandleReversalWithPct: (pct) => `實體反轉紅 K (收盤 > 開盤 且 漲幅 ≥ ${pct}%)`,
     avoidLongBlack: '排除長黑倒貨',
     avoidUpperShadow: '排除長上影線避雷針 (上影線 ≤ 實體紅 K 0.3 倍)',
     kdFilter: 'KD 動能區過濾',
