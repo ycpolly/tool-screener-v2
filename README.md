@@ -22,3 +22,9 @@
 
 3. **[介面分工與模組契約 (docs/INTERFACE_CONTRACT.md)](docs/INTERFACE_CONTRACT.md)**
    - Claude（後端 / 邏輯 / Constants）與 Gemini（前端 / UI 元件）職責邊界與 Props / Events 契約
+
+4. **[量化回測與策略發酵白皮書 (docs/QUANTITATIVE_BACKTEST.md)](docs/QUANTITATIVE_BACKTEST.md)**
+   - **前向持有期回測成果**：五大模式之 5 日觸及 +5% 機會率、MFE/MAE、先跌破 -3% 停損率先觸發率
+   - **實戰案例覆盤**：3443 創意（洗盤起漲 +14.9%）vs 3260 威剛（底部蓄勢 -7.1%）路徑解析
+   - **策略發酵手冊**：五大模式之發酵天數階梯（1 ~ 3 天至 5 ~ 15 天）與實戰停損停利準則
+

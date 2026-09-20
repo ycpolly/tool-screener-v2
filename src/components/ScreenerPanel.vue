@@ -48,7 +48,7 @@
          2. 戰略提示與微調控制條 (提示文字 + 重設 + 展開按鈕)
             手機端垂直分行【上：模式主訴，下：調整參數】，確保主訴不折行；電腦端維持單行橫排
          ============================================================ -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between min-h-[32px] pt-0.5 px-0.5 gap-2">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between min-h-[32px] pt-0.5 px-0.5 gap-4">
       <!-- 模式主訴說明 (手機端佔滿寬度確保單行不折行，電腦端自動彈性伸展) -->
       <div class="text-sm text-base-content/80 leading-normal flex items-center gap-1.5 w-full sm:w-auto sm:flex-1">
         <span v-if="activeMode === 'ALL'">{{ UI_STRINGS.PANEL.allDescription }}</span>

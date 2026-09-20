@@ -13,7 +13,7 @@
           <div class="flex items-center gap-2">
             <h3 class="text-base sm:text-lg font-bold text-base-content flex items-center gap-1.5">
               <span
-                class="font-numeric cursor-pointer hover:underline hover:text-primary transition-colors touch-manipulation"
+                class="font-numeric cursor-pointer hover:underline touch-manipulation"
                 :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
                 @click="$emit('searchCode', stock?.code)"
               >

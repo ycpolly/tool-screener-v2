@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "backtest": "node scripts/backtest.js"
   },
   "dependencies": {
     "vue": "^3.5.41"

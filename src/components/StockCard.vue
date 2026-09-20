@@ -12,7 +12,7 @@
       <div class="flex items-baseline justify-between gap-2">
         <div class="flex items-baseline gap-2 min-w-0">
           <span
-            class="font-numeric font-bold text-lg text-base-content tracking-wide cursor-pointer hover:underline hover:text-primary transition-colors select-none touch-manipulation"
+            class="font-numeric font-bold text-lg text-base-content tracking-wide cursor-pointer hover:underline select-none touch-manipulation"
             :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
             @click.stop="$emit('searchCode', stock.code)"
           >
@@ -102,7 +102,7 @@
       <div class="flex items-baseline justify-between gap-2">
         <div class="flex items-baseline gap-2 min-w-0">
           <span
-            class="font-numeric font-bold text-lg text-base-content tracking-wide cursor-pointer hover:underline hover:text-primary transition-colors select-none touch-manipulation"
+            class="font-numeric font-bold text-lg text-base-content tracking-wide cursor-pointer hover:underline select-none touch-manipulation"
             :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
             @click.stop="$emit('searchCode', stock.code)"
           >
@@ -455,7 +455,7 @@
         <div class="flex items-baseline justify-between gap-2">
           <div class="flex items-baseline gap-2 min-w-0">
             <span
-              class="font-numeric font-bold text-lg text-base-content cursor-pointer hover:underline hover:text-primary transition-colors select-none touch-manipulation"
+              class="font-numeric font-bold text-lg text-base-content cursor-pointer hover:underline select-none touch-manipulation"
               :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
               @click.stop="$emit('searchCode', stock.code)"
             >

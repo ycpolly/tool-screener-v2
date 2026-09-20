@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-09-20**（建置五大模式前向歷史量化回測引擎 scripts/backtest.js，驗證 T+1~T+10 觸及目標價率與 MFE/MAE，提供 npm run backtest 執行入口）
+> **最後更新：2026-09-20**（點擊個股代號快速代入搜尋列、建置五大模式歷史量化回測引擎，完成 v0920.01 版號維護）
 
 ---
 
@@ -543,7 +543,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 0050 標籤官方連結更新（0050 Official URL Update：將 `src/constants/category-urls.js` 及 `StockPoolModal.vue` 之 0050 標籤外開連結統一更新為元大官方成分股比例端點 `https://www.yuantaetfs.com/product/detail/0050/ratio`，修正原證交所 FTSE 頁面失效之問題）— 完成 2026-09-06（v0906.07）
 - [x] 個股近日表現 Bottom Sheet（Stock Lifecycle Bottom Sheet：點擊 Sparkline 走勢圖喚起；支援【時間軸】與【表格】雙模式 AB 測試即時切換；時間軸模式採上半部通欄 Sparkline + 下半部橫向時間軸 Carousel，由左至右過去 T-7 至最新 T-0 與走勢圖同向，卡片垂直整齊呈現日期、收盤價、幾何箭頭漲跌幅與策略模式標籤；表格模式採俐落三欄式排版；支援時間軸卡片與上方 Sparkline 走勢圖聯動互動凸顯，點擊特定日期卡片時其餘日之 K 棒與成交量柱自動透明至 0.2，折線維持原色，貫穿垂直虛線輔助對齊；採用 `<Teleport to="body">` 與 `v-if="isOpen"` 延遲計算，達成毫秒級瞬開體驗）— 完成 2026-09-19（v0919.02）
 - [x] 五大模式前向歷史量化回測引擎（Quantitative Backtest Engine：於 `scripts/backtest.js` 實作正統前向回測【Forward Backtesting】；以 `public/data/stock-pool.json` 464 檔全個股歷史為資料庫，模擬每日收盤由 `src/engine/screener.js` 執行各模式選股；追蹤 T+1~T+10 真實價位路徑，產出「5日觸及+5%機會率、平均最高獲利 MFE、平均最深拉回 MAE、先跌破-3%停損率、T+3/T+5/T+10 勝率」；支援 `--detail` 與 `--mode=ID`，並於 `package.json` 註冊 `npm run backtest`）— 完成 2026-09-20
-- [x] 點擊個股代號快速代入搜尋列（Quick Search by Clicking Stock Code：在 StockCard 簡約/完整模式首行、PriceCalcModal 與 StockLifecycleModal 標題列之股票代號加入可點擊互動；點擊後自動將該代號填入搜尋列 searchQuery、關閉所有開啟中之 Modal、平滑滾動至頂部搜尋列並觸發 Toast 提示；免除手動打字查詢個股在歷史日或特定模式未被選中之淘汰原因）— 完成 2026-09-20
+- [x] 點擊個股代號快速代入搜尋列（Quick Search by Clicking Stock Code：在 StockCard 簡約/完整模式首行、PriceCalcModal 與 StockLifecycleModal 標題列之股票代號加入可點擊互動；點擊後自動將該代號填入搜尋列 searchQuery、關閉所有開啟中之 Modal、平滑滾動至頂部搜尋列並觸發 Toast 提示；免除手動打字查詢個股在歷史日或特定模式未被選中之淘汰原因）— 完成 2026-09-20（v0920.01）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 
