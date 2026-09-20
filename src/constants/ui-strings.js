@@ -281,6 +281,7 @@ export const UI_STRINGS = {
     expandDiagnosis: '展開',
     collapseDiagnosis: '收合',
     to: '至',
+    unitTimes: '倍',
   },
 
   DIAGNOSIS_LABELS: {

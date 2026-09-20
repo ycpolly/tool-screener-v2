@@ -602,7 +602,7 @@
           </div>
 
           <!-- 9. 排除當日賣超 1D -->
-          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+          <div class="flex items-center justify-between min-h-[38px] py-1 border-b border-base-300/30 text-sm">
             <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
               <input
                 type="checkbox"
@@ -611,6 +611,19 @@
                 @change="updateField('excludeSell1D', $event.target.checked)"
               />
               <span>{{ UI_STRINGS.PANEL.excludeSell1D }}</span>
+            </label>
+          </div>
+
+          <!-- 10. 法人買超確認 (需獲外資 / 主力 / 投信買超支撐) -->
+          <div class="flex items-center justify-between min-h-[38px] py-1 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-base-content/85">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm rounded"
+                :checked="params.requireAnyBuy !== false"
+                @change="updateField('requireAnyBuy', $event.target.checked)"
+              />
+              <span>{{ UI_STRINGS.PANEL.requireAnyBuy }}</span>
             </label>
           </div>
         </template>
@@ -681,6 +694,19 @@
               />
               <span>{{ UI_STRINGS.PANEL.volExpansion }}</span>
             </label>
+            <div class="flex items-center gap-1.5 font-numeric text-sm">
+              <span class="text-base-content/80">≥</span>
+              <input
+                type="number"
+                step="0.1"
+                min="1.0"
+                inputmode="decimal"
+                :value="params.minVolExpansionRatio ?? 1.5"
+                class="input input-bordered input-sm h-7 w-16 bg-base-100 text-center font-bold text-sm"
+                @input="updateDebouncedNumericField('minVolExpansionRatio', $event.target.value)"
+              />
+              <span class="text-base-content/80">{{ UI_STRINGS.PANEL.unitTimes }}</span>
+            </div>
           </div>
 
           <!-- 5. 實體攻擊紅 K (收盤 > 開盤，且當日漲幅 >= 1.5%) -->
