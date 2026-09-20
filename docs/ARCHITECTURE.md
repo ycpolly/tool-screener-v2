@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-09-20**（完成五大模式量化參數優化兩批次、抽屜 UI 新增法人買超與爆量倍數微調控制項，完成 v0920.02 版號維護）
+> **最後更新：2026-09-20**（微調抽屜標籤全面升級為動態 Computed 機制，精準同步一鍵精選覆蓋參數，完成 v0920.03 版號維護）
 
 ---
 
@@ -545,6 +545,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 五大模式前向歷史量化回測引擎（Quantitative Backtest Engine：於 `scripts/backtest.js` 實作正統前向回測【Forward Backtesting】；以 `public/data/stock-pool.json` 464 檔全個股歷史為資料庫，模擬每日收盤由 `src/engine/screener.js` 執行各模式選股；追蹤 T+1~T+10 真實價位路徑，產出「5日觸及+5%機會率、平均最高獲利 MFE、平均最深拉回 MAE、先跌破-3%停損率、T+3/T+5/T+10 勝率」；支援 `--detail` 與 `--mode=ID`，並於 `package.json` 註冊 `npm run backtest`）— 完成 2026-09-20
 - [x] 點擊個股代號快速代入搜尋列（Quick Search by Clicking Stock Code：在 StockCard 簡約/完整模式首行、PriceCalcModal 與 StockLifecycleModal 標題列之股票代號加入可點擊互動；點擊後自動將該代號填入搜尋列 searchQuery、關閉所有開啟中之 Modal、平滑滾動至頂部搜尋列並觸發 Toast 提示；免除手動打字查詢個股在歷史日或特定模式未被選中之淘汰原因）— 完成 2026-09-20（v0920.01）
 - [x] 五大選股模式參數優化第一批與第二批（Screener Modes Optimization Batches 1 & 2：依據量化回測任務書完成兩階段優化；1. 多頭回測提高成交量門檻至 800 張、洗盤起漲收緊月線乖離至 13% 與 KD 上限至 58、底部蓄勢放寬糾結度至 5% 與振幅至 2.0%；2. 動能攻擊嚴化長上影線至 0.3 倍並新增 1.5 倍爆量參數 `minVolExpansionRatio`、底部蓄勢新增法人籌碼確認 `requireAnyBuy`；動能攻擊 5 日達 +5% 率由 16.7% 暴增至 26.7%，洗盤起漲由 42.2% 提升至 50.0% 且先跌破 -3% 率由 44.4% 驟降至 30.8%；ScreenerPanel 微調抽屜同步補齊對應控制項）— 完成 2026-09-20（v0920.02）
+- [x] 抽屜微調標籤動態 Computed 反映機制（Dynamic Parameter Labels in ScreenerPanel：根除過去一鍵精選啟用時標籤固定顯示預設區間之文字落差；底部蓄勢狹幅打底標籤隨一鍵精選自動由 -1.5% ~ +2.0% 切換為 -1.0% ~ +1.5%，並同步連動各模式紅 K 漲幅與多頭回測雙重量縮文字；抽屜標籤 100% 精準反映底層生效參數）— 完成 2026-09-20（v0920.03）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 
