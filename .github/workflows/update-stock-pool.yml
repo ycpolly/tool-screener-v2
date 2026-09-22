@@ -78,13 +78,26 @@ jobs:
       - name: Run stock pool update
         if: steps.time_check.outputs.skip != 'true'
         run: |
-          if [ "${{ github.event.inputs.with_chips }}" = "false" ]; then
+          # 檢查當前時間：若為台灣時間 18:30 之後 (UTC 10:30 之後)，券商分點已結算完畢，一律啟用 --with-chips 抓取籌碼
+          UTC_HOUR=$(date -u +%H)
+          UTC_MIN=$(date -u +%M)
+          CURRENT_MINUTES=$(( 10#$UTC_HOUR * 60 + 10#$UTC_MIN ))
+
+          # UTC 10:30 = 630 分鐘 (對應台灣時間 18:30)
+          if [ "${{ github.event.inputs.with_chips }}" = "false" ] && [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.force }}" = "true" ]; then
+            # 僅在手動 workflow_dispatch 明確勾選 force 且指定 false 時，才允許手動跳過籌碼
+            echo "[workflow] 手動強制指定無籌碼更新模式"
             python -m scripts.main
-          elif [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%H)" = "09" ]; then
-            # 第一波 17:46 (09:46 UTC)：快速更新三大法人與五大模式名單
+          elif [ "$CURRENT_MINUTES" -ge 630 ] || [ "${{ github.event.inputs.with_chips }}" = "true" ]; then
+            # 晚上 18:30 以後 (含 19:16 第二波) 或明確指定 with_chips: 自動帶籌碼
+            echo "[workflow] 觸發第二波完整更新模式（含 1D/3D/5D 籌碼集中度與短沖避雷）"
+            python -m scripts.main --with-chips
+          elif [ "$UTC_HOUR" = "09" ] || [ "${{ github.event.inputs.with_chips }}" = "false" ]; then
+            # 第一波 17:46 (09:46 UTC)：券商分點尚未出爐，快速更新五大模式名單
+            echo "[workflow] 觸發第一波快速更新模式（不含券商分點籌碼）"
             python -m scripts.main
           else
-            # 第二波 19:16 (11:16 UTC)：券商分點出爐，完整更新 1D/3D/5D 籌碼集中度與短沖避雷
+            echo "[workflow] 預設更新模式（含籌碼）"
             python -m scripts.main --with-chips
           fi
 

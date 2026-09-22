@@ -207,14 +207,24 @@ def build_stock_pool(
         # 組合/延續 chipsHistory（自動維護近 10 個歷史交易日）
         chips_hist = dict(existing_chips_history.get(code, {}))
         if today_bar_date:
+            # 防覆蓋：若本次為無籌碼快速更新 (current_chips is None)，但既有快照中該日已有籌碼，則保留既有籌碼，絕不覆蓋為 None
+            effective_chips = current_chips
+            if effective_chips is None and today_bar_date in chips_hist and chips_hist[today_bar_date].get('chips') is not None:
+                effective_chips = chips_hist[today_bar_date]['chips']
+
             chips_hist[today_bar_date] = {
                 'categories': cats,
-                'chips': current_chips,
+                'chips': effective_chips,
             }
         # 限制最多保留近 10 天歷史快照
         if len(chips_hist) > 10:
             sorted_dates = sorted(chips_hist.keys())
             chips_hist = {d: chips_hist[d] for d in sorted_dates[-10:]}
+
+        # 若本次為無籌碼模式，但今日快照有既有籌碼，stock['chips'] 同步繼承既有籌碼
+        effective_stock_chips = current_chips
+        if effective_stock_chips is None and today_bar_date in chips_hist:
+            effective_stock_chips = chips_hist[today_bar_date].get('chips')
 
         stock = {
             'code':      code,
@@ -259,7 +269,7 @@ def build_stock_pool(
             'history10d': data.get('history10d', []),
 
             # 籌碼集中度與短沖分點（當日最新與歷史快照）
-            'chips':        current_chips,
+            'chips':        effective_stock_chips,
             'chipsHistory': chips_hist,
         }
         stocks.append(stock)
