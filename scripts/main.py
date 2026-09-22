@@ -197,7 +197,7 @@ def enrich(raw: dict, with_chips: bool = False, verbose: bool = True) -> dict:
     }
 
 
-def write(enriched: dict, verbose: bool = True) -> None:
+def write(enriched: dict, allow_regression: bool = False, verbose: bool = True) -> None:
     """
     階段三：組裝並寫入 JSON
     """
@@ -214,7 +214,7 @@ def write(enriched: dict, verbose: bool = True) -> None:
         market_data    = enriched['market_data'],
         chips_data     = enriched.get('chips_data'),
     )
-    write_json(pool)
+    write_json(pool, allow_regression=allow_regression)
 
     if verbose:
         print('[main] WRITE 完成')
@@ -222,15 +222,18 @@ def write(enriched: dict, verbose: bool = True) -> None:
 
 def main():
     with_chips = '--with-chips' in sys.argv
+    allow_regression = '--allow-regression' in sys.argv
     start = time.time()
     print(f'\n{"=" * 60}')
     print(f'tool-screener-v2 資料更新 {"(含 1D/3D/5D 籌碼集中度與短沖避雷)" if with_chips else "(第一批選股名單更新)"}')
+    if allow_regression:
+        print('[main] ⚠️ 已啟用 --allow-regression（允許日期倒退覆蓋）')
     print(f'開始時間：{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
     print(f'{"=" * 60}\n')
 
     raw      = collect()
     enriched = enrich(raw, with_chips=with_chips)
-    write(enriched)
+    write(enriched, allow_regression=allow_regression)
 
     elapsed = time.time() - start
     print(f'\n[main] 全部完成，總耗時 {elapsed:.1f}s')

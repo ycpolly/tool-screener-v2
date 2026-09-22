@@ -13,6 +13,11 @@ on:
         required: false
         type: boolean
         default: true
+      force:
+        description: '是否強制執行（忽略深夜換日清算時段保護）'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -34,12 +39,44 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Check execution time window (防幽靈排程時段攔截)
+        id: time_check
+        run: |
+          # 盤後安全執行時段為台灣時間 16:30 ~ 22:30 (即 UTC 08:30 ~ 14:30)
+          UTC_HOUR=$(date -u +%H)
+          IS_SCHEDULE="${{ github.event_name == 'schedule' }}"
+          IS_FORCE="${{ github.event.inputs.force == 'true' }}"
+
+          echo "Current UTC Hour: $UTC_HOUR"
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Force: $IS_FORCE"
+
+          if [ "$IS_SCHEDULE" = "true" ]; then
+            # schedule 排程若因 GitHub 隊列延遲拖到 UTC 15:00 ~ 08:00 (即台灣時間 23:00 ~ 16:00 次日)
+            # 視為無效幽靈排程，為防止半夜 Yahoo Finance 換日清算空值污染資料庫，自動跳過本次執行
+            if [ "$UTC_HOUR" -ge 15 ] || [ "$UTC_HOUR" -lt 8 ]; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "::warning title=Ghost Schedule Blocked::偵測到 GitHub Actions 隊列嚴重延遲之幽靈排程 (UTC: $(date -u +%H:%M))，落在非盤後安全窗口 (台灣時間 23:00 ~ 16:00)。自動跳過本次執行以確保資料庫安全！"
+              exit 0
+            fi
+          elif [ "$IS_FORCE" != "true" ]; then
+            # 手動或外部觸發若落在深夜 Yahoo 換日維護清算高風險期 (台灣時間 23:30 ~ 02:30，即 UTC 15:30 ~ 18:30)
+            if [ "$UTC_HOUR" -ge 16 ] && [ "$UTC_HOUR" -le 18 ]; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "::warning title=Midnight Maintenance Risk::當前為深夜 Yahoo Finance 跨日清算高風險期 (UTC: $(date -u +%H:%M))，若需強制執行請於 workflow_dispatch 勾選 force: true。本次略過執行。"
+              exit 0
+            fi
+          fi
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
       - name: Set up Python
+        if: steps.time_check.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Run stock pool update
+        if: steps.time_check.outputs.skip != 'true'
         run: |
           if [ "${{ github.event.inputs.with_chips }}" = "false" ]; then
             python -m scripts.main
@@ -52,32 +89,38 @@ jobs:
           fi
 
       - name: Commit and push updated stock-pool.json
+        if: steps.time_check.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add public/data/stock-pool.json
           if ! git diff --cached --quiet; then
-            git commit -m "data: update stock-pool.json [$(date +'%Y-%m-%d %H:%M') CST]"
+            git commit -m "data: update stock-pool.json [$(TZ='Asia/Taipei' date +'%Y-%m-%d %H:%M') CST]"
             git push origin main
           fi
 
       - name: Setup Node.js
+        if: steps.time_check.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
+        if: steps.time_check.outputs.skip != 'true'
         run: npm ci
 
       - name: Build Web App
+        if: steps.time_check.outputs.skip != 'true'
         run: npm run build
 
       - name: Upload artifact
+        if: steps.time_check.outputs.skip != 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
       - name: Deploy to GitHub Pages
+        if: steps.time_check.outputs.skip != 'true'
         id: deployment
         uses: actions/deploy-pages@v4

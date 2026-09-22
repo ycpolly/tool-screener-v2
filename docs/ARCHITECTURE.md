@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-09-20**（微調抽屜標籤全面升級為動態 Computed 機制，精準同步一鍵精選覆蓋參數，完成 v0920.03 版號維護）
+> **最後更新：2026-09-22**（實作 CI/CD 幽靈排程時段攔截 Time-Window Guard 與資料庫 Anti-Regression Guard，徹底防禦 Yahoo 換日清算與隊列延遲跳號問題，完成 v0922.01 版號維護）
 
 ---
 
@@ -299,7 +299,15 @@ collect  →  enrich  →  write
   - 由於 GitHub Actions 免費 cron 排程在傍晚尖峰易遭遇 3~5 小時排隊延遲，系統採用 GCP Cloud Scheduler（永久免費）於 17:46 與 19:16 發送 HTTP POST 請求至 GitHub 的 `workflow_dispatch` API。
   - 機器人接獲請求後會在 **10 秒內直接插隊啟動**，約 1~2 分鐘內自動完成運算並發布至 GitHub Pages，徹底消除伺服器排隊空窗。
 - **手動觸發備援**：
-  - 若遇特殊盤面或需盤中立即重爬，可至 GitHub Actions 選擇 `Update Stock Pool` 點擊 `Run workflow` 手動執行。
+  - 若遇特殊盤面或需盤中立即重爬，可至 GitHub Actions 選擇 `Update Stock Pool` 點擊 `Run workflow` 手動執行（支援 `with_chips` 與 `force` 選項）。
+- **防幽靈排程時段攔截（Time-Window Guard，防護一）**：
+  - 針對 GitHub Actions 免費 runner 傍晚尖峰排隊延遲（可能延後數小時至半夜啟動），Workflow 頂層內建時段安全檢驗：
+    - 若 `schedule` 排程因隊列塞車延誤至台灣時間 23:00 ~ 16:00 次日（非盤後安全時段），直接跳過本次執行（輸出 Warning），絕不執行爬蟲、不 Commit、不 Deploy，徹底終結半夜幽靈排程。
+    - 若手動或外部 `workflow_dispatch` 觸發於台灣時間 23:30 ~ 02:30（Yahoo Finance 跨日清算維護期），除非在 inputs 明確勾選 `force: true`，否則自動攔截跳過。
+- **資料庫防倒退保護機制（Anti-Regression Guard，防護二）**：
+  - 實作於 `scripts/writer.py` 的 `write_json()` 函式。
+  - 寫入前自動統計並比對「既有資料庫最新交易日」vs「本次爬蟲最新交易日」（以各股 `history10d` 最新日期之眾數 Mode 判定）。
+  - 若新資料最新交易日早於既有資料庫最新交易日（例如 9/18 < 9/21），程式判定為上游 API 換日維護異常或過期快取，**強制拋出 `RuntimeError` 終止寫入**，阻斷任何污染線上資料庫的可能性（可透過 `--allow-regression` 參數手動覆蓋）。
 
 ### 前端雙軌全時段智慧更新機制（Dual-track Refresh Architecture）
 
@@ -546,6 +554,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 點擊個股代號快速代入搜尋列（Quick Search by Clicking Stock Code：在 StockCard 簡約/完整模式首行、PriceCalcModal 與 StockLifecycleModal 標題列之股票代號加入可點擊互動；點擊後自動將該代號填入搜尋列 searchQuery、關閉所有開啟中之 Modal、平滑滾動至頂部搜尋列並觸發 Toast 提示；免除手動打字查詢個股在歷史日或特定模式未被選中之淘汰原因）— 完成 2026-09-20（v0920.01）
 - [x] 五大選股模式參數優化第一批與第二批（Screener Modes Optimization Batches 1 & 2：依據量化回測任務書完成兩階段優化；1. 多頭回測提高成交量門檻至 800 張、洗盤起漲收緊月線乖離至 13% 與 KD 上限至 58、底部蓄勢放寬糾結度至 5% 與振幅至 2.0%；2. 動能攻擊嚴化長上影線至 0.3 倍並新增 1.5 倍爆量參數 `minVolExpansionRatio`、底部蓄勢新增法人籌碼確認 `requireAnyBuy`；動能攻擊 5 日達 +5% 率由 16.7% 暴增至 26.7%，洗盤起漲由 42.2% 提升至 50.0% 且先跌破 -3% 率由 44.4% 驟降至 30.8%；ScreenerPanel 微調抽屜同步補齊對應控制項）— 完成 2026-09-20（v0920.02）
 - [x] 抽屜微調標籤動態 Computed 反映機制（Dynamic Parameter Labels in ScreenerPanel：根除過去一鍵精選啟用時標籤固定顯示預設區間之文字落差；底部蓄勢狹幅打底標籤隨一鍵精選自動由 -1.5% ~ +2.0% 切換為 -1.0% ~ +1.5%，並同步連動各模式紅 K 漲幅與多頭回測雙重量縮文字；抽屜標籤 100% 精準反映底層生效參數）— 完成 2026-09-20（v0920.03）
+- [x] 雲端排程防幽靈時段攔截與資料庫防倒退保護機制（Time-Window Guard & Anti-Regression Guard：在 update-stock-pool.yml 頂層攔截半夜延遲之 Scheduled 幽靈排程；在 scripts/writer.py 加入最新交易日防倒退比對，若上游 API 因換日清算回傳較舊日期則強制終止寫入；徹底解決時光機跳過特定交易日之重大隱患）— 完成 2026-09-22（v0922.01）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

@@ -8,6 +8,8 @@ writer.py
 
 import json
 import os
+import sys
+from collections import Counter
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import List, Dict, Optional, Set
@@ -281,12 +283,57 @@ def build_stock_pool(
     }
 
 
-def write_json(pool: Dict) -> None:
+def get_pool_latest_trading_date(pool: Dict) -> Optional[str]:
+    """
+    從 pool 物件中統計所有個股 history10d 最後一筆的日期，
+    取出現頻率最高的日期（眾數 Mode），避免少數異常或停牌個股干擾。
+    """
+    if not pool or not isinstance(pool.get('stocks'), list):
+        return None
+    dates = [
+        s['history10d'][-1]['date']
+        for s in pool['stocks']
+        if s.get('history10d') and isinstance(s['history10d'], list) and len(s['history10d']) > 0 and s['history10d'][-1].get('date')
+    ]
+    if not dates:
+        return None
+    most_common = Counter(dates).most_common(1)
+    return most_common[0][0] if most_common else None
+
+
+def write_json(pool: Dict, allow_regression: bool = False) -> None:
     """
     將 pool 物件寫入 public/data/stock-pool.json
 
-    注意：歷史 history10d 較大，若未來效能有問題可拆成獨立 JSON
+    安全規範：
+      內建 Anti-Regression Guard（防倒退保護機制）。
+      若新資料最新交易日小於既有資料庫最新交易日，嚴禁覆蓋！
+      避免 Yahoo Finance 換日清算空值或過期快取破壞時光機。
     """
+    # ── 防倒退安全防護 (Anti-Regression Guard) ──────────────
+    if OUTPUT_PATH.exists() and not allow_regression:
+        try:
+            with open(OUTPUT_PATH, 'r', encoding='utf-8') as f:
+                old_pool = json.load(f)
+            old_date = get_pool_latest_trading_date(old_pool)
+            new_date = get_pool_latest_trading_date(pool)
+            if old_date and new_date and new_date < old_date:
+                error_msg = (
+                    f"\n{'=' * 70}\n"
+                    f"[writer] 🚨 嚴重警告：觸發資料倒退防護 (Anti-Regression Guard)！\n"
+                    f"  現有資料庫最新交易日 : {old_date}\n"
+                    f"  本次爬蟲最新交易日   : {new_date}\n"
+                    f"  原因分析：上游 API (Yahoo Finance) 可能正值換日維護清算期，或回傳過期快取。\n"
+                    f"  安全處置：為保障產品時光機與歷史資料正確性，嚴禁覆蓋！終止寫入。\n"
+                    f"{'=' * 70}\n"
+                )
+                print(error_msg, file=sys.stderr)
+                raise RuntimeError(
+                    f"Data regression detected: incoming date ({new_date}) < existing date ({old_date}). Write aborted."
+                )
+        except json.JSONDecodeError:
+            pass  # 若舊檔毀損或為空則允許寫入修復
+
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = OUTPUT_PATH.with_suffix('.tmp.json')
 
