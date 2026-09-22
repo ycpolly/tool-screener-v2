@@ -307,6 +307,44 @@
           <span>{{ UI_STRINGS.PANEL.moduleVol }}</span>
         </div>
 
+        <!-- 尾盤快選 toggle（所有模式共用，置於量能模組最頂端） -->
+        <div
+          class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 min-h-[38px] py-1.5 px-2 rounded-lg border transition-colors text-sm"
+          :class="params.intradayMode ? 'bg-warning/10 border-warning/40 shadow-xs' : 'border-b border-base-300/30'"
+        >
+          <div class="flex items-center gap-2">
+            <label class="flex items-center gap-2 cursor-pointer select-none shrink-0">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-sm checkbox-warning rounded"
+                :checked="Boolean(params.intradayMode)"
+                @change="updateField('intradayMode', $event.target.checked)"
+              />
+              <span class="font-bold text-sm" :class="params.intradayMode ? 'text-warning' : 'text-base-content/90'">
+                {{ UI_STRINGS.PANEL.intradayMode }}
+              </span>
+            </label>
+            <span class="text-xs text-base-content/60 hidden sm:inline">
+              {{ UI_STRINGS.PANEL.intradayModeDesc }}
+            </span>
+          </div>
+          <div class="flex items-center">
+            <span
+              v-if="params.intradayMode"
+              class="text-xs px-2 py-0.5 rounded font-medium bg-warning/20 text-warning border border-warning/30 flex items-center gap-1.5 shrink-0"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-warning animate-pulse"></span>
+              <span>{{ UI_STRINGS.PANEL.intradayModeWarning }}</span>
+            </span>
+            <span
+              v-else
+              class="text-xs text-base-content/50 sm:hidden"
+            >
+              {{ UI_STRINGS.PANEL.intradayModeDesc }}
+            </span>
+          </div>
+        </div>
+
         <!-- ==========================================
              Case 1: 跌深反轉 (Mode: BOTTOM_REVERSAL) 專屬順序
              ========================================== -->
