@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-09-22**（回補 9/21 與 9/22 全市場券商分點籌碼，升級第二波排程為 18:30 後自動帶 chips 執行，修復 writer.py 歷史籌碼防覆蓋機制，完成 v0922.02 版號維護）
+> **最後更新：2026-09-22**（後端完成五大模式尾盤快選 intradayMode 引擎邏輯與參數支援，於 13:30~14:30 零股下單時段略過 excludeSell1D 檢查並保留 3D 趨勢；回補 9/21 與 9/22 全市場券商分點籌碼）
 
 ---
 
@@ -556,6 +556,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 抽屜微調標籤動態 Computed 反映機制（Dynamic Parameter Labels in ScreenerPanel：根除過去一鍵精選啟用時標籤固定顯示預設區間之文字落差；底部蓄勢狹幅打底標籤隨一鍵精選自動由 -1.5% ~ +2.0% 切換為 -1.0% ~ +1.5%，並同步連動各模式紅 K 漲幅與多頭回測雙重量縮文字；抽屜標籤 100% 精準反映底層生效參數）— 完成 2026-09-20（v0920.03）
 - [x] 雲端排程防幽靈時段攔截與資料庫防倒退保護機制（Time-Window Guard & Anti-Regression Guard：在 update-stock-pool.yml 頂層攔截半夜延遲之 Scheduled 幽靈排程；在 scripts/writer.py 加入最新交易日防倒退比對，若上游 API 因換日清算回傳較舊日期則強制終止寫入；徹底解決時光機跳過特定交易日之重大隱患）— 完成 2026-09-22（v0922.01）
 - [x] 全市場 9/21 與 9/22 券商分點籌碼雙日回補與第二波自動化升級（Chips Auto-Detection & Dual-Day Backfill：全面修復 GCP Cloud Scheduler 誤傳 with_chips: false 導致第二波 19:16 未抓籌碼之缺陷；workflow 升級為凡在 18:30 之後執行自動強制啟用 `--with-chips`；writer.py 加入既有歷史籌碼繼承保護，避免快速更新覆蓋為 None；同時成功回補全市場 454 檔在 9/21 與 9/22 之 1D/3D/5D 籌碼集中度與短沖名單）— 完成 2026-09-22（v0922.02）
+- [x] 尾盤快選開關後端支援（Intraday Quick Select Engine Support：在 `src/constants/screener-modes.js` 為全部五大模式新增 `intradayMode: false` 預設參數；在 `src/engine/screener.js` 實作 `intradayMode` 啟用時略過 `excludeSell1D` 檢查，保留前日 3D 籌碼趨勢過濾；同步更新 `diagnoseStock` 診斷邏輯使通關明細一致，因應 13:30~14:30 零股下單時段當日 1D 籌碼尚未出爐之情境）— 完成 2026-09-22
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

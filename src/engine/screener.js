@@ -653,8 +653,8 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     }
   }
 
-  // 19. 排除當日賣超 1D (excludeSell1D: 外資賣1D / 主力賣1D)
-  if (params.excludeSell1D) {
+  // 19. 排除當日賣超 1D (excludeSell1D: 外資賣1D / 主力賣1D；尾盤快選模式下略過當日 1D 籌碼條件)
+  if (params.excludeSell1D && !params.intradayMode) {
     const cats = stock.categories || []
     const warn = stock.sellWarning || ''
     const isForeignSell1D = cats.includes('ForeignSell1D') || warn.includes('外資賣1D')
@@ -1016,8 +1016,8 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
     })
   }
 
-  // 15.5 當日避雷 (1D)
-  if (params.excludeSell1D) {
+  // 15.5 當日避雷 (1D；尾盤快選模式下略過)
+  if (params.excludeSell1D && !params.intradayMode) {
     const cats = stock.categories || []
     const warn = stock.sellWarning || ''
     const isForeignSell1D = cats.includes('ForeignSell1D') || warn.includes('外資賣1D')

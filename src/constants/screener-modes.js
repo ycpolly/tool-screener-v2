@@ -48,6 +48,7 @@ export const SCREENER_MODES = {
       kdKMin: 10,                     // 低檔超賣區轉折 (K 介於 10 ~ 40)
       kdKMax: 40,
       kdRequireCross: true,           // KD 黃金交叉 (K > D)
+      intradayMode: false,            // 尾盤快選開關（預設關閉；true = 略過 excludeSell1D 檢查，改用 3D 籌碼趨勢判斷）
     },
     premiumParams: {
       minVolume: 2000,                // 流動性拉高至 2000 張
@@ -94,6 +95,7 @@ export const SCREENER_MODES = {
       kdKMin: 20,                     // 20 <= K <= 60
       kdKMax: 60,
       kdRequireCross: false,          // 蓄勢期免除強制黃金交叉，避免漏掉初期標的
+      intradayMode: false,            // 尾盤快選開關（預設關閉；true = 略過 excludeSell1D 檢查，改用 3D 籌碼趨勢判斷）
     },
     premiumParams: {
       convergenceMax: 3.0,            // 三線價差緊縮至 3% 以內
@@ -138,6 +140,7 @@ export const SCREENER_MODES = {
       kdKMin: 50,                   // K > 50
       kdKMax: 100,
       kdRequireCross: true,         // K > D 黃金交叉
+      intradayMode: false,          // 尾盤快選開關（預設關閉；true = 略過 excludeSell1D 檢查，改用 3D 籌碼趨勢判斷）
     },
     premiumParams: {
       minVolume: 2000,              // 門檻拉高至 2000 張
@@ -179,6 +182,7 @@ export const SCREENER_MODES = {
       kdKMin: 40,                   // 40 <= K <= 75
       kdKMax: 75,
       kdRequireCross: false,
+      intradayMode: false,          // 尾盤快選開關（預設關閉；true = 略過 excludeSell1D 檢查，改用 3D 籌碼趨勢判斷）
     },
     premiumParams: {
       bias5Min: -1.5,               // 緊貼 5MA (-1.5% ~ +1.5%)
@@ -224,6 +228,7 @@ export const SCREENER_MODES = {
       kdKMin: 30,                     // 中檔降溫區 (K 介於 30 ~ 58，上限下修確保充分降溫)
       kdKMax: 58,
       kdRequireCross: true,           // KD 多頭排列 (K > D)
+      intradayMode: false,            // 尾盤快選開關（預設關閉；true = 略過 excludeSell1D 檢查，改用 3D 籌碼趨勢判斷）
     },
     premiumParams: {
       minVolume: 2000,                // 門檻拉高至 2000 張

@@ -186,6 +186,7 @@ interface ScreenerParams {
   excludeSell3D?:            boolean         // 隱藏外資 / 主力 / 投信賣超 3D (含 0050 土洋對作豁免)
   excludeSell1D?:            boolean         // 隱藏外資 / 主力當日賣超 1D
   requireAnyBuy?:            boolean         // 法人買超確認 (需獲外資 / 主力 / 投信買超支撐)
+  intradayMode?:             boolean         // 尾盤快選開關（true: 略過 excludeSell1D 檢查，改用 3D 籌碼趨勢）
 }
 
 
