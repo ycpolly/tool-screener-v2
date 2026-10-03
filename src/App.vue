@@ -445,9 +445,6 @@ const isPostMarketTime = computed(() => {
 
 const dataTimestampText = computed(() => {
   const now = new Date()
-  const yy = String(now.getFullYear()).slice(-2)
-  const mm = String(now.getMonth() + 1).padStart(2, '0')
-  const dd = String(now.getDate()).padStart(2, '0')
   const weekDay = WEEKDAYS[now.getDay()]
 
   const rawUpdated = meta.value?.updatedAt
@@ -457,23 +454,22 @@ const dataTimestampText = computed(() => {
     try {
       const d = new Date(rawUpdated)
       if (!isNaN(d.getTime())) {
-        const dY = String(d.getFullYear()).slice(-2)
-        const dM = String(d.getMonth() + 1).padStart(2, '0')
-        const dD = String(d.getDate()).padStart(2, '0')
+        const dM = d.getMonth() + 1
+        const dD = d.getDate()
         const dW = WEEKDAYS[d.getDay()]
         const hh = String(d.getHours()).padStart(2, '0')
         const min = String(d.getMinutes()).padStart(2, '0')
 
         const nowHour = now.getHours()
         const isPreMarket = nowHour < 9 && now.getDay() >= 1 && now.getDay() <= 5
-        const prefix = isPreMarket
-          ? (UI_STRINGS.APP.prefixPreMarket || '盤前 ')
-          : (UI_STRINGS.APP.prefixPostMarket || '盤後 ')
+        const status = isPreMarket
+          ? (UI_STRINGS.APP.statusPreMarket || '盤前')
+          : (UI_STRINGS.APP.statusPostMarket || '盤後')
 
-        return `${prefix}${dY}/${dM}/${dD} 週${dW} ${hh}:${min}`
+        return `${dM}/${dD} ${dW} ${hh}:${min} (${status})`
       }
     } catch {}
-    return `${UI_STRINGS.APP.prefixPostMarket || '盤後 '}${rawUpdated}`
+    return `${rawUpdated}`
   }
 
   // 2. 09:00 ~ 19:16 之間若有 GCP 即時行情：
@@ -482,15 +478,17 @@ const dataTimestampText = computed(() => {
     const nowHour = now.getHours()
     const nowMin = now.getMinutes()
     const isClosedIntraday = (nowHour > 13) || (nowHour === 13 && nowMin >= 30)
-    const prefix = isClosedIntraday
-      ? (UI_STRINGS.APP.prefixClosed || '收盤 ')
-      : (UI_STRINGS.APP.prefixIntraday || '盤中 ')
+    const status = isClosedIntraday
+      ? (UI_STRINGS.APP.statusClosed || '收盤')
+      : (UI_STRINGS.APP.statusIntraday || '盤中')
 
     if (timeStr.includes('-') || timeStr.includes('/')) {
-      return `${prefix}${timeStr}`
+      return `${timeStr} (${status})`
     }
     const cleanTime = timeStr.length > 5 ? timeStr.slice(0, 5) : timeStr
-    return `${prefix}${yy}/${mm}/${dd} 週${weekDay} ${cleanTime}`
+    const m = now.getMonth() + 1
+    const d = now.getDate()
+    return `${m}/${d} ${weekDay} ${cleanTime} (${status})`
   }
 
   // 3. 無即時報價時之 fallback
@@ -498,17 +496,16 @@ const dataTimestampText = computed(() => {
   try {
     const d = new Date(rawUpdated)
     if (!isNaN(d.getTime())) {
-      const dY = String(d.getFullYear()).slice(-2)
-      const dM = String(d.getMonth() + 1).padStart(2, '0')
-      const dD = String(d.getDate()).padStart(2, '0')
+      const dM = d.getMonth() + 1
+      const dD = d.getDate()
       const dW = WEEKDAYS[d.getDay()]
       const hh = String(d.getHours()).padStart(2, '0')
       const min = String(d.getMinutes()).padStart(2, '0')
-      const prefix = UI_STRINGS.APP.prefixPostMarket || '盤後 '
-      return `${prefix}${dY}/${dM}/${dD} 週${dW} ${hh}:${min}`
+      const status = UI_STRINGS.APP.statusPostMarket || '盤後'
+      return `${dM}/${dD} ${dW} ${hh}:${min} (${status})`
     }
   } catch {}
-  return `${UI_STRINGS.APP.prefixPostMarket || '盤後 '}${rawUpdated}`
+  return `${rawUpdated}`
 })
 
 

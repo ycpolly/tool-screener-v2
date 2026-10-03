@@ -705,19 +705,23 @@ const displayedTableRows = computed(() => {
   })
 })
 
+const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
+
 const updatedAtText = computed(() => {
   if (!props.updatedAt) return ''
+  const suffix = UI_STRINGS.STOCK_POOL_MODAL.updateSuffix || '更新'
   try {
     const d = new Date(props.updatedAt)
     if (!isNaN(d.getTime())) {
-      const mm = String(d.getMonth() + 1).padStart(2, '0')
-      const dd = String(d.getDate()).padStart(2, '0')
+      const m = d.getMonth() + 1
+      const day = d.getDate()
+      const w = WEEKDAYS[d.getDay()] || ''
       const hh = String(d.getHours()).padStart(2, '0')
       const min = String(d.getMinutes()).padStart(2, '0')
-      return `資料更新：${mm}/${dd} ${hh}:${min}`
+      return `${m}/${day} ${w} ${hh}:${min} ${suffix}`
     }
   } catch {}
-  return `資料更新：${props.updatedAt}`
+  return `${props.updatedAt} ${suffix}`
 })
 
 function handleStockClick(row) {

@@ -12,6 +12,10 @@ export const UI_STRINGS = {
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
     prefixPreMarket: '盤前 ',
+    statusIntraday: '盤中',
+    statusClosed: '收盤',
+    statusPostMarket: '盤後',
+    statusPreMarket: '盤前',
   },
 
   SCREENER_MODES: {
@@ -420,7 +424,7 @@ export const UI_STRINGS = {
     desc: '展示系統每日定時從富邦 DJ、MoneyDJ 與證交所爬取納入監控的原始資料來源與個股對照。',
     totalStocks: (n) => `總計納入 ${n} 檔個股`,
     sourceCount: (n) => `共 ${n} 個資料來源`,
-    sourceUrlLabel: '原始資料來源',
+    sourceUrlLabel: '資料源',
     stockListLabel: '包含個股名單',
     copyCodesBtn: '複製所有代號',
     copiedCodesBtn: '已複製代號',
@@ -428,6 +432,7 @@ export const UI_STRINGS = {
     searchInPoolPlaceholder: '在當前來源中搜尋股票…',
     noStockInSource: '此來源目前無符合個股',
     closeBtn: '關閉',
+    updateSuffix: '更新',
     colIndex: '編號',
     colCode: '股票代號',
     colName: '股票名稱',
