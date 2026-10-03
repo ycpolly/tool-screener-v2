@@ -46,10 +46,16 @@
       class="pt-2 mt-2 border-t border-base-300/40 space-y-2 text-sm font-numeric select-text cursor-auto leading-normal"
       @click.stop
     >
-      <!-- 進場基準列 (例如：09/17 四 (基準)) -->
-      <div class="flex items-center justify-between text-base-content/75 pb-1.5 border-b border-base-300/30">
-        <span class="font-medium">{{ formatTimelineDate(forwardVal.entryDate) }} ({{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark || '基準' }})</span>
-        <span class="font-bold text-base-content">{{ formatNumber(forwardVal.entryPrice) }}</span>
+      <!-- 進場基準列 (例如：09/17 四 (基準)，價格與下方收盤價完全同欄對齊) -->
+      <div class="flex items-center justify-between text-base-content/85 py-0.5">
+        <div class="flex items-center gap-1.5">
+          <span class="font-medium text-base-content/75">{{ formatTimelineDate(forwardVal.entryDate) }} ({{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark || '基準' }})</span>
+        </div>
+        <div class="flex items-baseline gap-2.5">
+          <span class="font-bold text-base-content">{{ formatNumber(forwardVal.entryPrice) }}</span>
+          <span class="text-right w-16 text-base-content/40 font-normal">--</span>
+          <span class="text-right w-16 text-base-content/40 font-normal">0.00%</span>
+        </div>
       </div>
 
       <!-- T+1 ~ T+N 逐日明細 (例如：09/18 五 (T+1)) -->
@@ -63,14 +69,16 @@
         </div>
         <div class="flex items-baseline gap-2.5">
           <span class="font-bold text-base-content">{{ formatNumber(rec.close) }}</span>
+          <!-- 當日漲跌（次要資訊：正常字重、微淡色 text-base-content/70） -->
           <span
-            class="font-semibold text-right w-16"
-            :class="rec.dayChangePct > 0 ? 'text-rise' : (rec.dayChangePct < 0 ? 'text-fall' : 'text-base-content/70')"
+            class="text-right w-16 font-normal"
+            :class="rec.dayChangePct > 0 ? 'text-rise/80' : (rec.dayChangePct < 0 ? 'text-fall/80' : 'text-base-content/50')"
           >
             {{ rec.dayChangePct > 0 ? '▴' : (rec.dayChangePct < 0 ? '▾' : '') }}{{ Math.abs(rec.dayChangePct ?? 0).toFixed(2) }}%
           </span>
+          <!-- 累計漲跌（覆盤核心：加粗 font-bold、飽和色階 text-rise / text-fall） -->
           <span
-            class="text-right w-16"
+            class="text-right w-16 font-bold"
             :class="rec.cumChangePct > 0 ? 'text-rise' : (rec.cumChangePct < 0 ? 'text-fall' : 'text-base-content/70')"
           >
             {{ rec.cumChangePct > 0 ? '+' : '' }}{{ rec.cumChangePct }}%
