@@ -1162,6 +1162,56 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date()) {
     slicedSellWarning = tags.length > 0 ? tags.join(' · ') : null
   }
 
+  // 計算時光機基準日之後的真實後續交易日表現（供覆盤驗證使用）
+  const subsequentBars = stock.history10d.slice(targetIndex + 1)
+  let forwardValidation = null
+  if (subsequentBars.length > 0) {
+    const entryPrice = bar.close ?? 0
+    const finalBar = subsequentBars[subsequentBars.length - 1]
+    const finalPrice = finalBar.close ?? 0
+    const finalChange = round2(finalPrice - entryPrice)
+    const totalGainPct = entryPrice > 0 ? round2(((finalPrice - entryPrice) / entryPrice) * 100) : 0
+
+    const maxHigh = Math.max(...subsequentBars.map(b => b.high ?? b.close ?? entryPrice))
+    const maxGainPct = entryPrice > 0 ? round2(((maxHigh - entryPrice) / entryPrice) * 100) : 0
+
+    const minLow = Math.min(...subsequentBars.map(b => b.low ?? b.close ?? entryPrice))
+    const maxDrawdownPct = entryPrice > 0 ? round2(((minLow - entryPrice) / entryPrice) * 100) : 0
+
+    const dailyRecords = subsequentBars.map((b, idx) => {
+      const prevC = idx === 0 ? entryPrice : (subsequentBars[idx - 1].close ?? entryPrice)
+      const dayChange = round2(b.close - prevC)
+      const dayChangePct = prevC > 0 ? round2((dayChange / prevC) * 100) : 0
+      const cumChange = round2(b.close - entryPrice)
+      const cumChangePct = entryPrice > 0 ? round2((cumChange / entryPrice) * 100) : 0
+      return {
+        tDay: idx + 1,
+        date: b.date,
+        open: b.open,
+        high: b.high,
+        low: b.low,
+        close: b.close,
+        volume: b.volume,
+        dayChange,
+        dayChangePct,
+        cumChange,
+        cumChangePct,
+      }
+    })
+
+    forwardValidation = {
+      daysCount: subsequentBars.length,
+      entryDate: bar.date,
+      entryPrice,
+      finalPrice,
+      finalChange,
+      totalGainPct,
+      maxGainPct,
+      maxDrawdownPct,
+      dailyRecords,
+    }
+  }
+
   return {
     ...stock,
     price: bar.close,
@@ -1198,6 +1248,7 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date()) {
       prevK: prevBar ? prevBar.k : bar.k,
       prevD: prevBar ? prevBar.d : bar.d,
     },
+    forwardValidation,
     // 截斷未來資料，確保前一日糾結與斜率判斷完全基於當時歷史視角
     history10d: stock.history10d.slice(0, targetIndex + 1),
     sparkline: stock.history10d.slice(Math.max(0, targetIndex - 9), targetIndex + 1).map(b => b.close),

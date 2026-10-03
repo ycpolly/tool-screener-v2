@@ -512,6 +512,19 @@ export const UI_STRINGS = {
     bias20: '月乖離',
     code: '代號',
   },
+
+  FORWARD_VALIDATION: {
+    titlePrefix: '後續驗證',
+    titleWithDays: (days) => `後續驗證 T+${days}`,
+    cumulative: '累計',
+    maxProfit: '最高',
+    maxDrawdown: '最深',
+    entryBenchmark: '選出基準',
+    latestClose: '最新收盤',
+    expand: '展開',
+    collapse: '收合',
+    empty: '最新交易日（尚無後續交易資料）',
+  },
 }
 
 

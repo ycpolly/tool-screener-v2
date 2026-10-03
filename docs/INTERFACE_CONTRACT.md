@@ -98,6 +98,31 @@ interface Stock {
     riskPct: number         // 最近有效防守支撐虧損 % (保底 5%)
     rrRatio: number | null  // 預期風報比 (rewardPct / riskPct)
   }
+
+  // 時光機覆盤：後續交易日表現驗證（dayOffset > 0 且有後續交易日時自動注入）
+  forwardValidation?: {
+    daysCount: number             // 後續天數（1 代表 T+1, 2 代表 T+2...）
+    entryDate: string             // 選出進場基準日 (YYYY-MM-DD)
+    entryPrice: number            // 選出進場基準收盤價
+    finalPrice: number            // 最新收盤價 (T+N 收盤價)
+    finalChange: number           // 累計漲跌點數
+    totalGainPct: number          // 累計漲跌幅 %
+    maxGainPct: number            // 後續波段最高漲幅 % (MFE)
+    maxDrawdownPct: number        // 後續最大拉回跌幅 % (MAE)
+    dailyRecords: Array<{
+      tDay: number                // 1, 2, 3... 對應 T+1, T+2...
+      date: string                // 該日日期 (YYYY-MM-DD)
+      open: number
+      high: number
+      low: number
+      close: number
+      volume: number
+      dayChange: number           // 當日漲跌點數 (相對於前一日)
+      dayChangePct: number        // 當日漲跌幅 % (相對於前一日)
+      cumChange: number           // 累計漲跌點數 (相對於基準日)
+      cumChangePct: number        // 累計漲跌幅 % (相對於基準日)
+    }>
+  } | null
 }
 
 
