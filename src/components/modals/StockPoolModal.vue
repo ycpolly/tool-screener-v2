@@ -1,7 +1,7 @@
 <template>
   <dialog :class="{ 'modal-open': isOpen }" class="modal modal-bottom sm:modal-middle select-none z-50">
     <div
-      class="modal-box max-w-4xl w-full bg-base-100 border border-base-300 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xl max-h-[90vh] flex flex-col safe-pb-modal"
+      class="modal-box max-w-4xl w-full bg-base-100 border border-base-300 rounded-2xl p-3.5 sm:p-6 space-y-3 sm:space-y-4 shadow-xl max-h-[90vh] flex flex-col safe-pb-modal"
     >
       <!-- Modal Header -->
       <div class="flex items-start justify-between pb-3 border-b border-base-300/80 shrink-0">
@@ -79,17 +79,17 @@
       <!-- 3. 選中來源詳情面板 (Content Panel) -->
       <div v-if="currentSource" class="flex-1 overflow-y-auto space-y-3 pr-1">
         <!-- 來源資訊與原始連結卡片 (方便肉眼對照爬蟲端點) -->
-        <div class="p-3 bg-base-200/50 border border-base-300/70 rounded-xl space-y-2">
+        <div class="p-2.5 sm:p-3 bg-base-200/50 border border-base-300/70 rounded-xl space-y-2">
           <div class="flex items-center justify-between flex-wrap gap-2">
             <div class="flex items-baseline gap-2">
               <span class="font-bold text-sm sm:text-base text-base-content">{{ currentSource.name }}</span>
               <span class="text-xs text-base-content/70 font-numeric">
-                (共 {{ currentSourceRawStocks.length }} 筆)
+                ({{ UI_STRINGS.STOCK_POOL_MODAL.countUnit?.(currentSourceRawStocks.length) || `共 ${currentSourceRawStocks.length} 筆` }})
               </span>
             </div>
 
             <!-- 原始 URL 連結按鈕組 (開新分頁看富邦/MoneyDJ/證交所原始網頁) -->
-            <div class="flex items-center gap-2 flex-wrap text-xs">
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap text-xs">
               <span class="text-base-content/60">{{ UI_STRINGS.STOCK_POOL_MODAL.sourceUrlLabel }}：</span>
               <a
                 v-for="link in currentSource.urls"
@@ -97,7 +97,7 @@
                 :href="link.url"
                 target="_blank"
                 rel="noopener"
-                class="inline-flex items-center gap-1 px-2.5 py-1 bg-base-100 hover:bg-base-300/60 border border-base-300 rounded-lg text-base-content/80 hover:text-base-content transition-colors font-medium"
+                class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-base-100 hover:bg-base-300/60 border border-base-300 rounded-lg text-base-content/80 hover:text-base-content transition-colors font-medium text-[11px] sm:text-xs"
                 :title="link.url"
               >
                 <span>{{ link.label }}</span>
@@ -111,8 +111,8 @@
         </div>
 
         <!-- 搜尋過濾與複製代號列 -->
-        <div class="flex items-center justify-between gap-2 flex-wrap">
-          <div class="relative flex-1 max-w-xs">
+        <div class="flex items-center justify-between gap-2">
+          <div class="relative flex-1">
             <input
               v-model="innerSearchQuery"
               type="text"
@@ -131,13 +131,13 @@
 
           <button
             type="button"
-            class="btn btn-sm btn-ghost gap-1 text-xs text-base-content/75 hover:text-base-content h-8 min-h-0 px-2.5 rounded-lg transition-colors cursor-pointer shadow-none"
+            class="btn btn-sm btn-ghost shrink-0 gap-1 text-xs text-base-content/75 hover:text-base-content h-8 min-h-0 px-2.5 rounded-lg transition-colors cursor-pointer shadow-none"
             @click="handleCopyAllCodes"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
-            <span>{{ isCopied ? '已複製代號' : UI_STRINGS.STOCK_POOL_MODAL.copyCodesBtn }}</span>
+            <span>{{ isCopied ? (UI_STRINGS.STOCK_POOL_MODAL.copiedCodesBtn || '已複製代號') : UI_STRINGS.STOCK_POOL_MODAL.copyCodesBtn }}</span>
           </button>
         </div>
 
@@ -147,12 +147,20 @@
             <!-- Table Header -->
             <thead class="bg-base-200/70 text-base-content/70 text-xs border-b border-base-300/80">
               <tr>
-                <th class="w-14 py-2.5 px-3 text-left font-semibold">編號</th>
-                <th class="w-28 py-2.5 px-3 text-left font-semibold">股票代號</th>
-                <th class="py-2.5 px-3 text-left font-semibold">股票名稱</th>
-                <th class="w-20 py-2.5 px-3 text-left font-semibold">市場</th>
-                <th class="py-2.5 px-3 text-right font-semibold">
-                  {{ currentSource.metricHeader || '數值' }}
+                <th class="w-12 sm:w-14 py-2.5 px-3 text-left font-semibold">
+                  {{ UI_STRINGS.STOCK_POOL_MODAL.colIndex || '編號' }}
+                </th>
+                <th class="w-20 sm:w-28 py-2.5 px-3 text-left font-semibold">
+                  {{ UI_STRINGS.STOCK_POOL_MODAL.colCode || '股票代號' }}
+                </th>
+                <th class="py-2.5 px-3 text-left font-semibold">
+                  {{ UI_STRINGS.STOCK_POOL_MODAL.colName || '股票名稱' }}
+                </th>
+                <th class="w-20 py-2.5 px-3 text-left font-semibold hidden sm:table-cell">
+                  {{ UI_STRINGS.STOCK_POOL_MODAL.colMarket || '市場' }}
+                </th>
+                <th class="py-2.5 px-3 text-right font-semibold hidden sm:table-cell">
+                  {{ currentSource.metricHeader || UI_STRINGS.STOCK_POOL_MODAL.colDefaultMetric || '數值' }}
                 </th>
               </tr>
             </thead>
@@ -163,36 +171,36 @@
                 v-for="(row, idx) in displayedTableRows"
                 :key="row.code + '_' + idx"
                 class="hover:bg-base-200/70 transition-colors cursor-pointer"
-                :title="`點擊在主畫面搜尋 ${row.name} (${row.code})`"
+                :title="UI_STRINGS.STOCK_POOL_MODAL.searchTitle?.(row.name, row.code) || `點擊在主畫面搜尋 ${row.name} (${row.code})`"
                 @click="handleStockClick(row)"
               >
                 <!-- 編號 (#1, #2, #3...) -->
-                <td class="py-2 px-3 text-base-content/40 font-medium text-xs">
+                <td class="py-2 px-3 text-base-content/40 font-medium text-xs whitespace-nowrap">
                   #{{ row.rawIndex ?? (idx + 1) }}
                 </td>
 
                 <!-- 股票代號 -->
-                <td class="py-2 px-3 font-bold text-base-content">
+                <td class="py-2 px-3 font-bold text-base-content whitespace-nowrap">
                   {{ row.code }}
                 </td>
 
                 <!-- 股票名稱 -->
-                <td class="py-2 px-3 font-medium text-base-content/90 truncate max-w-[180px]">
+                <td class="py-2 px-3 font-medium text-base-content/90 truncate max-w-[160px] sm:max-w-none">
                   {{ row.name }}
                 </td>
 
-                <!-- 市場 (上市 / 上櫃 藍底徽章) -->
-                <td class="py-2 px-3">
+                <!-- 市場 (上市 / 上櫃 藍底徽章，手機隱藏) -->
+                <td class="py-2 px-3 hidden sm:table-cell whitespace-nowrap">
                   <span
                     class="px-2 py-0.5 rounded text-xs font-medium"
                     :class="row.market === 'otc' ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20' : 'bg-info/10 text-info border border-info/20'"
                   >
-                    {{ row.market === 'otc' ? '上櫃' : '上市' }}
+                    {{ row.market === 'otc' ? (UI_STRINGS.STOCK_POOL_MODAL.marketOtc || '上櫃') : (UI_STRINGS.STOCK_POOL_MODAL.marketTse || '上市') }}
                   </span>
                 </td>
 
-                <!-- 數值 / 買超張數 / 成交量 / 週轉率 / 權重 -->
-                <td class="py-2 px-3 text-right">
+                <!-- 數值 / 買超張數 / 成交量 / 週轉率 / 權重，手機隱藏 -->
+                <td class="py-2 px-3 text-right hidden sm:table-cell whitespace-nowrap">
                   <span :class="row.metricColorClass" class="font-semibold">
                     {{ row.metricValue }}
                   </span>
