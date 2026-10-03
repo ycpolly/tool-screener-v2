@@ -67,7 +67,7 @@
             class="font-semibold text-right w-16"
             :class="rec.dayChangePct > 0 ? 'text-rise' : (rec.dayChangePct < 0 ? 'text-fall' : 'text-base-content/70')"
           >
-            {{ rec.dayChangePct > 0 ? '▲' : (rec.dayChangePct < 0 ? '▼' : '') }}{{ Math.abs(rec.dayChangePct ?? 0).toFixed(2) }}%
+            {{ rec.dayChangePct > 0 ? '▴' : (rec.dayChangePct < 0 ? '▾' : '') }}{{ Math.abs(rec.dayChangePct ?? 0).toFixed(2) }}%
           </span>
           <span
             class="text-right w-16 text-xs"

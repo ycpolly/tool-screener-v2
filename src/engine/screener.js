@@ -1455,7 +1455,7 @@ export function buildScreenerSnapshotText({
 
   // 3. 股票項目格式化：
   // 第一行：2404 漢唐 1070
-  // 第二行：▲35 (+3.38%) / ▼0.05 (-0.17%) / 0 (0.00%)
+  // 第二行：▴35 (+3.38%) / ▾0.05 (-0.17%) / 0 (0.00%)
   function formatStockBlock(stock) {
     const code = stock.code || ''
     const name = stock.name || ''
@@ -1465,9 +1465,9 @@ export function buildScreenerSnapshotText({
 
     let changeLine = ''
     if (change > 0) {
-      changeLine = `▲${change} (+${changePct}%)`
+      changeLine = `▴${change} (+${changePct}%)`
     } else if (change < 0) {
-      changeLine = `▼${Math.abs(change)} (-${changePct}%)`
+      changeLine = `▾${Math.abs(change)} (-${changePct}%)`
     } else {
       changeLine = strings.flat || '0 (0.00%)'
     }

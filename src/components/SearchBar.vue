@@ -70,7 +70,7 @@
       >
         <span>{{ opt.label }}</span>
         <span v-if="sortKey === opt.key" class="text-xs font-bold font-numeric text-base-content">
-          {{ sortDir === 'desc' ? '▼' : '▲' }}
+          {{ sortDir === 'desc' ? '▾' : '▴' }}
         </span>
       </button>
 
