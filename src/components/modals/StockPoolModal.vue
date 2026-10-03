@@ -711,6 +711,7 @@ function getSourceRawList(src) {
     return rankData.stocks.map((item, idx) => {
       const existing = stockMap.value.get(item.code)
       return {
+        ...item,
         code: item.code,
         name: item.name || existing?.name || item.code,
         market: item.market || existing?.market || 'tse',
@@ -719,6 +720,8 @@ function getSourceRawList(src) {
         netVol: item.netVol,
         turnoverRate: item.turnoverRate,
         growthRate: item.growthRate,
+        growthVol: item.growthVol,
+        gainPct: item.gainPct,
         weight: item.weight,
         rawIndex: idx + 1,
       }
