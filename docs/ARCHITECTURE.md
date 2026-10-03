@@ -568,6 +568,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 個股卡片深度模組化大重構（StockCard Deep Refactoring & Modularization：將高達 1,093 行之 `StockCard.vue` 抽離出 4 大獨立子元件——`StockEvaluationSlot.vue` 篩選理由與指標通關診斷清單、`StockCeilingLadder.vue` 槽位 A 關卡價與三明治價格天梯、`StockChipsSection.vue` 籌碼集中度與短沖避雷、`StockCardActions.vue` 快捷操作列與外部連結；全元件代碼量驟降至 506 行，消除重複代碼並大幅優化 Vite HMR 與維護彈性）— 完成 2026-10-03（v1003.01）
 - [x] 頂部時光膠囊日期排版精簡（TimeMachineBar Date Simplification：橫向時光膠囊列無須維持兩位數固定寬度對齊，日期由 `10/02` 簡化為不補零 `10/2`，星期由 `週五` 簡化為 `五`，騰出橫向空間提升手機端滑動與閱讀體驗）— 完成 2026-10-03（v1003.01）
 - [x] 修復 stock-pool.json 籌碼覆蓋異常（Fix Chips Overwrite Bug：修復 10/3 本地 commit 意外將帶有空籌碼的本地 stock-pool.json 覆蓋遠端完整資料之問題；徹底恢復至 10/2 19:20 包含 472 檔真實 1D/3D/5D 籌碼集中度與短沖主力名單之正式資料庫，確保全市場卡片籌碼透視區塊正常渲染）— 完成 2026-10-03（v1003.02）
+- [x] 手機端籌碼提醒與驗證膠囊字級對齊（Mobile Font Size Polish：將 StockChipsSection 籌碼未建檔提示與 ForwardValidationBar 膠囊列字級統一調整為標準 text-sm 14px，消弭手機端過小字級閱讀疲勞，保持全卡片字級層級沉穩一致）— 完成 2026-10-03（v1003.02）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 
