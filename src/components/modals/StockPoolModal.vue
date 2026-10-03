@@ -254,7 +254,7 @@ const isCopied = ref(false)
 
 const BASE_FUBON = 'https://fubon-ebrokerdj.fbs.com.tw'
 
-// 18 大資料來源定義表 (對齊富邦 DJ / MoneyDJ / 證交所)
+// 22 大資料來源定義表 (對齊富邦 DJ / MoneyDJ / 證交所)
 const SOURCES_CONFIG = [
   // ── 熱門排行 ────────────────────────
   {
@@ -319,6 +319,61 @@ const SOURCES_CONFIG = [
     ],
   },
   {
+    id: 'VolGrowthPct',
+    name: '量增幅排行',
+    group: 'RANK',
+    rankingKey: 'volGrowthPct',
+    metricHeader: '量增幅',
+    categoryTag: 'VolGrowthPct',
+    formatMetric: (item, stockObj) => {
+      const gr = item.growthRate ?? 0
+      const vol = item.volume ?? stockObj?.volume ?? 0
+      const volStr = vol ? ` (${Number(vol).toLocaleString()} 張)` : ''
+      return `+${Number(gr).toFixed(1)}%${volStr}`
+    },
+    metricColor: () => 'text-rise font-semibold',
+    urls: [
+      { label: '上市', endpoint: 'zg_BB_0_0', url: `${BASE_FUBON}/z/zg/zg_BB_0_0.djhtm` },
+      { label: '上櫃', endpoint: 'zg_BB_1_0', url: `${BASE_FUBON}/z/zg/zg_BB_1_0.djhtm` },
+    ],
+  },
+  {
+    id: 'VolGrowth',
+    name: '量增排行',
+    group: 'RANK',
+    rankingKey: 'volGrowth',
+    metricHeader: '量增張數',
+    categoryTag: 'VolGrowth',
+    formatMetric: (item) => {
+      const gv = item.growthVol ?? 0
+      return `+${Number(gv).toLocaleString()} 張`
+    },
+    metricColor: () => 'text-rise font-semibold',
+    urls: [
+      { label: '上市', endpoint: 'zg_B_0_0', url: `${BASE_FUBON}/z/zg/zg_B_0_0.djhtm` },
+      { label: '上櫃', endpoint: 'zg_B_1_0', url: `${BASE_FUBON}/z/zg/zg_B_1_0.djhtm` },
+    ],
+  },
+  {
+    id: 'PriceGain',
+    name: '漲幅排行',
+    group: 'RANK',
+    rankingKey: 'priceGain',
+    metricHeader: '漲幅',
+    categoryTag: 'PriceGain',
+    formatMetric: (item, stockObj) => {
+      const gp = item.gainPct ?? 0
+      const vol = item.volume ?? stockObj?.volume ?? 0
+      const volStr = vol ? ` (${Number(vol).toLocaleString()} 張)` : ''
+      return `+${Number(gp).toFixed(2)}%${volStr}`
+    },
+    metricColor: () => 'text-rise font-semibold',
+    urls: [
+      { label: '上市', endpoint: 'zg_A_0_1', url: `${BASE_FUBON}/z/zg/zg_A_0_1.djhtm` },
+      { label: '上櫃', endpoint: 'zg_A_1_1', url: `${BASE_FUBON}/z/zg/zg_A_1_1.djhtm` },
+    ],
+  },
+  {
     id: 'TurnoverRate',
     name: '週轉率',
     group: 'RANK',
@@ -337,6 +392,24 @@ const SOURCES_CONFIG = [
   },
 
   // ── 法人與主力買超 ────────────────────────
+  {
+    id: 'DealerBuy1D',
+    name: '自營商買超 1D',
+    group: 'BUY',
+    rankingKey: 'dealerBuy1D',
+    metricHeader: '買超張數',
+    categoryTag: 'DealerBuy1D',
+    formatMetric: (item) => {
+      const val = item.netVol ?? item.amount ?? item.volume ?? 0
+      const sign = val > 0 ? '+' : ''
+      return `${sign}${Number(val).toLocaleString()} 張`
+    },
+    metricColor: () => 'text-emerald-700 dark:text-emerald-400 font-semibold',
+    urls: [
+      { label: '上市', endpoint: 'zg_DB_0_1', url: `${BASE_FUBON}/z/zg/zg_DB_0_1.djhtm` },
+      { label: '上櫃', endpoint: 'zg_DB_1_1', url: `${BASE_FUBON}/z/zg/zg_DB_1_1.djhtm` },
+    ],
+  },
   {
     id: 'ForeignBuy1D',
     name: '外資買超 1D',

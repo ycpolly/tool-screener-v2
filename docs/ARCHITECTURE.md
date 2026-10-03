@@ -61,7 +61,7 @@ tool-screener-v2/
 │   ├── scrapers/
 │   │   ├── __init__.py
 │   │   ├── moneydj.py          ← 0050 / 0051 成分股（MoneyDJ）
-│   │   ├── fubon.py            ← 富邦 DJ 全部 30 個 URL（含值增幅排行）
+│   │   ├── fubon.py            ← 富邦 DJ 全部 38 個 URL（19 組上市/上櫃）
 │   │   ├── disposed.py         ← TWSE / TPEx 處置股官方 API
 │   │   └── yahoo.py            ← Yahoo Finance 3個月日K 原始抓取
 │   ├── engine/
@@ -179,10 +179,14 @@ Python 輸出 → `public/data/stock-pool.json`
     "top100Volume":  { "date": "08/25", "sourceUrl": "...", "stocks": [] },
     "valueTop":      { "date": "08/25", "sourceUrl": "...", "stocks": [] },
     "valueGrowth":   { "date": "08/25", "sourceUrl": "...", "stocks": [] },
+    "volGrowthPct":  { "date": "10/02", "sourceUrl": "...", "stocks": [] },
+    "volGrowth":     { "date": "10/02", "sourceUrl": "...", "stocks": [] },
+    "priceGain":     { "date": "10/02", "sourceUrl": "...", "stocks": [] },
     "sitcaBuy3D":    { "date": "08/25", "sourceUrl": "...", "stocks": [] },
     "sitcaBuy5D":    { "date": "08/25", "sourceUrl": "...", "stocks": [] },
     "foreignBuy1D":  { "date": "08/25", "sourceUrl": "...", "stocks": [] },
     "foreignBuy3D":  { "date": "08/25", "sourceUrl": "...", "stocks": [] },
+    "dealerBuy1D":   { "date": "10/02", "sourceUrl": "...", "stocks": [] },
     "majorBuy1D":    { "date": "08/25", "sourceUrl": "...", "stocks": [] },
     "majorBuy3D":    { "date": "08/25", "sourceUrl": "...", "stocks": [] },
     "turnoverRate":  { "date": "08/25", "sourceUrl": "...", "stocks": [] },
@@ -271,18 +275,22 @@ collect  →  enrich  →  write
 - `fetch_market_indices()` + `evaluate_regime()`
 - `is_valid_stock_code()` / `decode_fubon_html()`
 
-### 富邦 DJ 30 個 URL 清單（15 組排行榜）
+### 富邦 DJ 38 個 URL 清單（19 組排行榜）
 
 | 分類 | 上市 endpoint | 上櫃 endpoint |
 | :--- | :--- | :--- |
 | 量大排行 | `zg_BE_0_1` | `zg_BE_1_1` |
 | 值大排行 | `ZG_CD` | `zg_CD_1` |
 | 值增幅排行 | `zg_CB_0_0` | `zg_CB_1_0` |
+| 量增幅排行 | `zg_BB_0_0` | `zg_BB_1_0` |
+| 量增排行 | `zg_B_0_0` | `zg_B_1_0` |
+| 漲幅排行 | `zg_A_0_1` | `zg_A_1_1` |
 | 週轉率 | `ZG_BD` | `zg_BD_1_0` |
 | 投信買超 3D | `zg_DD_0_3` | `zg_DD_1_3` |
 | 投信買超 5D | `zg_DD_0_5` | `zg_DD_1_5` |
 | 外資買超 1D | `zg_D_0_1` | `zg_D_1_1` |
 | 外資買超 3D | `zg_D_0_3` | `zg_D_1_3` |
+| 自營商買超 1D | `zg_DB_0_1` | `zg_DB_1_1` |
 | 主力買超 1D | `zg_F_0_1` | `zg_F_1_1` |
 | 主力買超 3D | `zg_F_0_3` | `zg_F_1_3` |
 | 外資賣超 1D | `zg_DA_0_1` | `zg_DA_1_1` |
@@ -573,6 +581,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 選股池來源總覽手機版排版優化（StockPoolModal Mobile Polish：手機端（< sm）實施純名單模式，隱藏「市場」徽章與「數值/成交量」欄位，徹底解決「上/市」垂直折行與數值被截斷問題；將釋出之寬度全數給予股票名稱，長代號與長 ETF 名稱皆能完整平整展示；電腦端（≥ sm）維持完整 5 欄直式對帳；搜尋輸入框與一鍵複製代號列彈性並列對齊，所有表格標題與操作文字集中收納至 ui-strings.js）— 完成 2026-10-03
 - [x] 全站日期時間戳記排版精簡（Timestamp Format Simplification：全站資料時間戳記全面改為『M/D W HH:mm (狀態)』無贅字規範；頂部狀態列改為『10/2 五 19:20 (盤後)』，去除前綴與西元年號；選股池來源總覽改為『總計納入 472 檔個股 · 10/2 五 19:20 更新』，維持全站精簡一致）— 完成 2026-10-03
 - [x] 選股池來源彈窗高度上限收斂與底欄簡化（StockPoolModal Height & Footer Polish：將彈窗最大高度由 90vh 收斂至 80vh（`max-h-[80vh]`），杜絕手機端頂部 Header 被瀏覽器網址列或安全區頂出視野之問題；右上角既有 X 叉叉與遮罩點擊關閉，徹底移除底部冗餘的「關閉」按鈕欄位，垂直高度節省約 50px 全數釋出給名單清單）— 完成 2026-10-03
+- [x] 選股池擴充 4 大官方來源排行（4 New Official Rankings & 38 Endpoints Expansion：後端爬蟲 `scripts/scrapers/fubon.py` 新增量增幅、量增、漲幅、自營商買超 1D 共 8 個富邦 DJ 端點與專屬解析器，排行榜擴增至 19 組 38 個 URL；`scripts/writer.py` 加入 VolGrowthPct、VolGrowth、PriceGain、DealerBuy1D 標籤映射與 DealerBuy 傘形收斂；`src/constants/category-urls.js` 與 `ui-strings.js` 建立官方外開跳轉與縮寫字典；`StockPoolModal.vue` 擴充 22 大來源面板卡片）— 完成 2026-10-03
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

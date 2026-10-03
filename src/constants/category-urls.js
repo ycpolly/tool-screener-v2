@@ -36,6 +36,21 @@ export const CATEGORY_URL_MAP = {
     tse: `${BASE_FUBON}/z/zg/zg_CB_0_0.djhtm`,
     otc: `${BASE_FUBON}/z/zg/zg_CB_1_0.djhtm`,
   },
+  'VolGrowthPct': {
+    label: '量增幅',
+    tse: `${BASE_FUBON}/z/zg/zg_BB_0_0.djhtm`,
+    otc: `${BASE_FUBON}/z/zg/zg_BB_1_0.djhtm`,
+  },
+  'VolGrowth': {
+    label: '量增',
+    tse: `${BASE_FUBON}/z/zg/zg_B_0_0.djhtm`,
+    otc: `${BASE_FUBON}/z/zg/zg_B_1_0.djhtm`,
+  },
+  'PriceGain': {
+    label: '漲幅',
+    tse: `${BASE_FUBON}/z/zg/zg_A_0_1.djhtm`,
+    otc: `${BASE_FUBON}/z/zg/zg_A_1_1.djhtm`,
+  },
   'TurnoverRate': {
     label: '週轉',
     tse: `${BASE_FUBON}/Z/ZG/ZG_BD.djhtm`,
@@ -43,6 +58,16 @@ export const CATEGORY_URL_MAP = {
   },
 
   // ── 法人與主力買超 ────────────────────────
+  'DealerBuy': {
+    label: '自營買',
+    tse: `${BASE_FUBON}/z/zg/zg_DB_0_1.djhtm`,
+    otc: `${BASE_FUBON}/z/zg/zg_DB_1_1.djhtm`,
+  },
+  'DealerBuy1D': {
+    label: '自營1D',
+    tse: `${BASE_FUBON}/z/zg/zg_DB_0_1.djhtm`,
+    otc: `${BASE_FUBON}/z/zg/zg_DB_1_1.djhtm`,
+  },
   'ForeignBuy': {
     label: '外資買',
     tse: `${BASE_FUBON}/z/zg/zg_D_0_1.djhtm`,
@@ -187,6 +212,7 @@ export function getStockCategoryItems(stock) {
   const hasForeignSub = cats.includes('ForeignBuy1D') || cats.includes('ForeignBuy3D')
   const hasMajorSub = cats.includes('MajorBuy1D') || cats.includes('MajorBuy3D')
   const hasSitcaSub = cats.includes('SitcaBuy3D') || cats.includes('SitcaBuy5D')
+  const hasDealerSub = cats.includes('DealerBuy1D')
 
   for (const cat of stock.categories) {
     // 排除賣超標籤（賣超已於右側 sellWarningText 警示列獨立呈現）
@@ -196,6 +222,7 @@ export function getStockCategoryItems(stock) {
     if (cat === 'ForeignBuy' && hasForeignSub) continue
     if (cat === 'MajorBuy' && hasMajorSub) continue
     if (cat === 'SitcaBuy' && hasSitcaSub) continue
+    if (cat === 'DealerBuy' && hasDealerSub) continue
 
     const label = tagMap[cat] || cat
     if (!label || seenLabels.has(label)) continue

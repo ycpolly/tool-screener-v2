@@ -19,7 +19,7 @@ interface Stock {
   code:        string       // 股票代號，e.g. "2330"
   name:        string       // 股票名稱，e.g. "台積電"
   market:      'tse'|'otc' // 上市 = tse，上櫃 = otc
-  categories:  string[]    // 來源標籤，e.g. ["0050","ForeignBuy1D"]
+  categories:  string[]    // 來源標籤，e.g. ["0050","ForeignBuy1D","VolGrowthPct","VolGrowth","PriceGain","DealerBuy1D"]
   isDisposed:  boolean      // 是否為處置股
 
   // 即時行情（盤中更新）
