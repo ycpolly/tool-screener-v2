@@ -519,7 +519,7 @@ export const UI_STRINGS = {
     cumulative: '累計',
     maxProfit: '最高',
     maxDrawdown: '最深',
-    entryBenchmark: '選出基準',
+    entryBenchmark: '基準',
     latestClose: '最新收盤',
     expand: '展開',
     collapse: '收合',

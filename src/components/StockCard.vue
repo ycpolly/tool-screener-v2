@@ -8,36 +8,7 @@
          簡約模式佈局 (Compact Mode)：僅保留首行核心報價與槽位 B 篩選理由
          ============================================================ -->
     <div v-if="isCompact" class="space-y-2">
-      <!-- 首行：核心報價 (代號、名稱、即時現價、漲跌幅) -->
-      <div class="flex items-baseline justify-between gap-2">
-        <div class="flex items-baseline gap-2 min-w-0">
-          <span
-            class="font-numeric font-bold text-lg text-base-content tracking-wide cursor-pointer hover:underline select-none touch-manipulation"
-            :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
-            @click.stop="$emit('searchCode', stock.code)"
-          >
-            {{ stock.code }}
-          </span>
-          <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
-          <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
-            [{{ UI_STRINGS.SCREENER.disposed }}]
-          </span>
-        </div>
-        <div
-          class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
-          :title="UI_STRINGS.QUICK_CALC.openTooltip"
-          @click.stop="$emit('openPriceCalc', stock)"
-        >
-          <span class="text-lg font-bold" :class="priceColorClass">
-            {{ formatNumber(stock.price) }}
-          </span>
-          <span class="text-sm font-semibold" :class="changeColorClass">
-            {{ formatChange(stock.change, stock.changePct) }}
-          </span>
-        </div>
-      </div>
-
-      <!-- 時光機覆盤：後續交易日驗證膠囊條 (簡約模式) -->
+      <!-- 時光機覆盤：後續交易日驗證膠囊條 (簡約模式：置頂於個股名稱與報價上方) -->
       <div
         v-if="stock.forwardValidation"
         class="my-1.5 py-1 px-2.5 rounded-lg border border-base-300/60 bg-base-300/35 text-xs sm:text-sm transition-colors"
@@ -85,20 +56,20 @@
           class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
           @click.stop
         >
-          <!-- 進場基準列 -->
+          <!-- 進場基準列 (例如：09/17 四 (基準)) -->
           <div class="flex items-center justify-between text-base-content/70 pb-1 border-b border-base-300/30">
-            <span>{{ stock.forwardValidation.entryDate }} {{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark }}</span>
+            <span class="font-medium text-base-content/75">{{ formatTimelineDate(stock.forwardValidation.entryDate) }} ({{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark || '基準' }})</span>
             <span class="font-bold text-base-content">{{ formatNumber(stock.forwardValidation.entryPrice) }}</span>
           </div>
 
-          <!-- T+1 ~ T+N 逐日明細 -->
+          <!-- T+1 ~ T+N 逐日明細 (例如：09/18 五 (T+1)) -->
           <div
             v-for="rec in stock.forwardValidation.dailyRecords"
             :key="rec.tDay"
             class="flex items-center justify-between text-base-content/85"
           >
             <div class="flex items-center gap-1.5">
-              <span class="font-medium text-base-content/70">T+{{ rec.tDay }} ({{ rec.date ? rec.date.slice(5) : '' }})</span>
+              <span class="font-medium text-base-content/75">{{ formatTimelineDate(rec.date) }} (T+{{ rec.tDay }})</span>
             </div>
             <div class="flex items-baseline gap-2.5">
               <span class="font-bold text-base-content">{{ formatNumber(rec.close) }}</span>
@@ -116,6 +87,35 @@
               </span>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- 首行：核心報價 (代號、名稱、即時現價、漲跌幅) -->
+      <div class="flex items-baseline justify-between gap-2">
+        <div class="flex items-baseline gap-2 min-w-0">
+          <span
+            class="font-numeric font-bold text-lg text-base-content tracking-wide cursor-pointer hover:underline select-none touch-manipulation"
+            :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
+            @click.stop="$emit('searchCode', stock.code)"
+          >
+            {{ stock.code }}
+          </span>
+          <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
+          <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
+            [{{ UI_STRINGS.SCREENER.disposed }}]
+          </span>
+        </div>
+        <div
+          class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
+          :title="UI_STRINGS.QUICK_CALC.openTooltip"
+          @click.stop="$emit('openPriceCalc', stock)"
+        >
+          <span class="text-lg font-bold" :class="priceColorClass">
+            {{ formatNumber(stock.price) }}
+          </span>
+          <span class="text-sm font-semibold" :class="changeColorClass">
+            {{ formatChange(stock.change, stock.changePct) }}
+          </span>
         </div>
       </div>
 
@@ -180,116 +180,116 @@
     <template v-else>
       <!-- 手機端佈局 (< 1024px)：由上而下 5 層自然排列 -->
       <div class="block lg:hidden space-y-3">
-      <!-- 第 1 層：主焦點 (代號、名稱、即時現價同為 text-lg，漲跌幅為 text-sm) -->
-      <div class="flex items-baseline justify-between gap-2">
-        <div class="flex items-baseline gap-2 min-w-0">
-          <span
-            class="font-numeric font-bold text-lg text-base-content tracking-wide cursor-pointer hover:underline select-none touch-manipulation"
-            :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
-            @click.stop="$emit('searchCode', stock.code)"
-          >
-            {{ stock.code }}
-          </span>
-          <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
-          <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
-            [{{ UI_STRINGS.SCREENER.disposed }}]
-          </span>
-        </div>
+        <!-- 時光機覆盤：後續交易日驗證膠囊條 (手機端：置頂於主焦點代號與名稱上方) -->
         <div
-          class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
-          :title="UI_STRINGS.QUICK_CALC.openTooltip"
-          @click.stop="$emit('openPriceCalc', stock)"
+          v-if="stock.forwardValidation"
+          class="my-1.5 py-1 px-2.5 rounded-lg border border-base-300/60 bg-base-300/35 text-xs sm:text-sm transition-colors"
         >
-          <span class="text-lg font-bold" :class="priceColorClass">
-            {{ formatNumber(stock.price) }}
-          </span>
-          <span class="text-sm font-semibold" :class="changeColorClass">
-            {{ formatChange(stock.change, stock.changePct) }}
-          </span>
-        </div>
-      </div>
-
-      <!-- 時光機覆盤：後續交易日驗證膠囊條 (手機端) -->
-      <div
-        v-if="stock.forwardValidation"
-        class="my-1.5 py-1 px-2.5 rounded-lg border border-base-300/60 bg-base-300/35 text-xs sm:text-sm transition-colors"
-      >
-        <div
-          class="flex items-center justify-between gap-1.5 select-none cursor-pointer"
-          @click="isForwardExpanded = !isForwardExpanded"
-        >
-          <div class="flex items-baseline gap-1.5 truncate">
-            <span class="font-medium text-base-content/80">
-              {{ UI_STRINGS.FORWARD_VALIDATION?.titleWithDays(stock.forwardValidation.daysCount) }}
-            </span>
-            <span class="text-base-content/40">·</span>
-            <span class="text-base-content/75">{{ UI_STRINGS.FORWARD_VALIDATION?.cumulative }}</span>
-            <strong
-              class="font-numeric font-bold"
-              :class="stock.forwardValidation.totalGainPct > 0 ? 'text-rise' : (stock.forwardValidation.totalGainPct < 0 ? 'text-fall' : 'text-base-content')"
-            >
-              {{ stock.forwardValidation.totalGainPct > 0 ? '+' : '' }}{{ stock.forwardValidation.totalGainPct }}%
-            </strong>
-            <span class="text-base-content/60 text-xs hidden sm:inline">
-              ({{ UI_STRINGS.FORWARD_VALIDATION?.maxProfit }} {{ stock.forwardValidation.maxGainPct > 0 ? '+' : '' }}{{ stock.forwardValidation.maxGainPct }}% · {{ UI_STRINGS.FORWARD_VALIDATION?.maxDrawdown }} {{ stock.forwardValidation.maxDrawdownPct > 0 ? '+' : '' }}{{ stock.forwardValidation.maxDrawdownPct }}%)
-            </span>
-          </div>
-
-          <!-- 展開/收合按鈕 -->
-          <span class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0">
-            <span>{{ isForwardExpanded ? UI_STRINGS.FORWARD_VALIDATION?.collapse : UI_STRINGS.FORWARD_VALIDATION?.expand }}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-3.5 w-3.5 transition-transform duration-200"
-              :class="{ 'rotate-180': isForwardExpanded }"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-            </svg>
-          </span>
-        </div>
-
-        <!-- 展開後的迷你逐日時間軸歷程 -->
-        <div
-          v-if="isForwardExpanded"
-          class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
-          @click.stop
-        >
-          <!-- 進場基準列 -->
-          <div class="flex items-center justify-between text-base-content/70 pb-1 border-b border-base-300/30">
-            <span>{{ stock.forwardValidation.entryDate }} {{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark }}</span>
-            <span class="font-bold text-base-content">{{ formatNumber(stock.forwardValidation.entryPrice) }}</span>
-          </div>
-
-          <!-- T+1 ~ T+N 逐日明細 -->
           <div
-            v-for="rec in stock.forwardValidation.dailyRecords"
-            :key="rec.tDay"
-            class="flex items-center justify-between text-base-content/85"
+            class="flex items-center justify-between gap-1.5 select-none cursor-pointer"
+            @click="isForwardExpanded = !isForwardExpanded"
           >
-            <div class="flex items-center gap-1.5">
-              <span class="font-medium text-base-content/70">T+{{ rec.tDay }} ({{ rec.date ? rec.date.slice(5) : '' }})</span>
+            <div class="flex items-baseline gap-1.5 truncate">
+              <span class="font-medium text-base-content/80">
+                {{ UI_STRINGS.FORWARD_VALIDATION?.titleWithDays(stock.forwardValidation.daysCount) }}
+              </span>
+              <span class="text-base-content/40">·</span>
+              <span class="text-base-content/75">{{ UI_STRINGS.FORWARD_VALIDATION?.cumulative }}</span>
+              <strong
+                class="font-numeric font-bold"
+                :class="stock.forwardValidation.totalGainPct > 0 ? 'text-rise' : (stock.forwardValidation.totalGainPct < 0 ? 'text-fall' : 'text-base-content')"
+              >
+                {{ stock.forwardValidation.totalGainPct > 0 ? '+' : '' }}{{ stock.forwardValidation.totalGainPct }}%
+              </strong>
+              <span class="text-base-content/60 text-xs hidden sm:inline">
+                ({{ UI_STRINGS.FORWARD_VALIDATION?.maxProfit }} {{ stock.forwardValidation.maxGainPct > 0 ? '+' : '' }}{{ stock.forwardValidation.maxGainPct }}% · {{ UI_STRINGS.FORWARD_VALIDATION?.maxDrawdown }} {{ stock.forwardValidation.maxDrawdownPct > 0 ? '+' : '' }}{{ stock.forwardValidation.maxDrawdownPct }}%)
+              </span>
             </div>
-            <div class="flex items-baseline gap-2.5">
-              <span class="font-bold text-base-content">{{ formatNumber(rec.close) }}</span>
-              <span
-                class="font-semibold text-right w-16"
-                :class="rec.dayChangePct > 0 ? 'text-rise' : (rec.dayChangePct < 0 ? 'text-fall' : 'text-base-content/70')"
+
+            <!-- 展開/收合按鈕 -->
+            <span class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0">
+              <span>{{ isForwardExpanded ? UI_STRINGS.FORWARD_VALIDATION?.collapse : UI_STRINGS.FORWARD_VALIDATION?.expand }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-3.5 w-3.5 transition-transform duration-200"
+                :class="{ 'rotate-180': isForwardExpanded }"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                {{ rec.dayChangePct > 0 ? '▲' : (rec.dayChangePct < 0 ? '▼' : '') }}{{ Math.abs(rec.dayChangePct ?? 0).toFixed(2) }}%
-              </span>
-              <span
-                class="text-right w-16 text-xs"
-                :class="rec.cumChangePct > 0 ? 'text-rise' : (rec.cumChangePct < 0 ? 'text-fall' : 'text-base-content/60')"
-              >
-                {{ rec.cumChangePct > 0 ? '+' : '' }}{{ rec.cumChangePct }}%
-              </span>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </div>
+
+          <!-- 展開後的迷你逐日時間軸歷程 -->
+          <div
+            v-if="isForwardExpanded"
+            class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
+            @click.stop
+          >
+            <!-- 進場基準列 (例如：09/17 四 (基準)) -->
+            <div class="flex items-center justify-between text-base-content/70 pb-1 border-b border-base-300/30">
+              <span class="font-medium text-base-content/75">{{ formatTimelineDate(stock.forwardValidation.entryDate) }} ({{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark || '基準' }})</span>
+              <span class="font-bold text-base-content">{{ formatNumber(stock.forwardValidation.entryPrice) }}</span>
+            </div>
+
+            <!-- T+1 ~ T+N 逐日明細 (例如：09/18 五 (T+1)) -->
+            <div
+              v-for="rec in stock.forwardValidation.dailyRecords"
+              :key="rec.tDay"
+              class="flex items-center justify-between text-base-content/85"
+            >
+              <div class="flex items-center gap-1.5">
+                <span class="font-medium text-base-content/75">{{ formatTimelineDate(rec.date) }} (T+{{ rec.tDay }})</span>
+              </div>
+              <div class="flex items-baseline gap-2.5">
+                <span class="font-bold text-base-content">{{ formatNumber(rec.close) }}</span>
+                <span
+                  class="font-semibold text-right w-16"
+                  :class="rec.dayChangePct > 0 ? 'text-rise' : (rec.dayChangePct < 0 ? 'text-fall' : 'text-base-content/70')"
+                >
+                  {{ rec.dayChangePct > 0 ? '▲' : (rec.dayChangePct < 0 ? '▼' : '') }}{{ Math.abs(rec.dayChangePct ?? 0).toFixed(2) }}%
+                </span>
+                <span
+                  class="text-right w-16 text-xs"
+                  :class="rec.cumChangePct > 0 ? 'text-rise' : (rec.cumChangePct < 0 ? 'text-fall' : 'text-base-content/60')"
+                >
+                  {{ rec.cumChangePct > 0 ? '+' : '' }}{{ rec.cumChangePct }}%
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+
+        <!-- 第 1 層：主焦點 (代號、名稱、即時現價同為 text-lg，漲跌幅為 text-sm) -->
+        <div class="flex items-baseline justify-between gap-2">
+          <div class="flex items-baseline gap-2 min-w-0">
+            <span
+              class="font-numeric font-bold text-lg text-base-content tracking-wide cursor-pointer hover:underline select-none touch-manipulation"
+              :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
+              @click.stop="$emit('searchCode', stock.code)"
+            >
+              {{ stock.code }}
+            </span>
+            <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
+            <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
+              [{{ UI_STRINGS.SCREENER.disposed }}]
+            </span>
+          </div>
+          <div
+            class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
+            :title="UI_STRINGS.QUICK_CALC.openTooltip"
+            @click.stop="$emit('openPriceCalc', stock)"
+          >
+            <span class="text-lg font-bold" :class="priceColorClass">
+              {{ formatNumber(stock.price) }}
+            </span>
+            <span class="text-sm font-semibold" :class="changeColorClass">
+              {{ formatChange(stock.change, stock.changePct) }}
+            </span>
+          </div>
+        </div>
 
       <!-- 第 2 層：標籤 (統一 text-sm font-normal, text-base-content/80，支援官方排行榜外開超連結) -->
       <div v-if="categoryItems.length > 0 || sellWarningText" class="text-sm font-normal text-base-content/80 leading-normal">
@@ -615,32 +615,7 @@
 
       <!-- 中欄 (5/12)：代號、名稱、報價、標籤與快捷操作 (加大水平空間，餘裕飽滿) -->
       <div class="lg:col-span-5 space-y-2 px-3 border-l border-r border-base-300/60">
-        <!-- 核心報價 (代號、名稱、即時現價同為 text-lg，漲跌幅為 text-sm) -->
-        <div class="flex items-baseline justify-between gap-2">
-          <div class="flex items-baseline gap-2 min-w-0">
-            <span
-              class="font-numeric font-bold text-lg text-base-content cursor-pointer hover:underline select-none touch-manipulation"
-              :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
-              @click.stop="$emit('searchCode', stock.code)"
-            >
-              {{ stock.code }}
-            </span>
-            <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
-            <span v-if="stock.isDisposed" class="font-bold text-sm text-rise">
-              [{{ UI_STRINGS.SCREENER.disposed }}]
-            </span>
-          </div>
-          <div
-            class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
-            :title="UI_STRINGS.QUICK_CALC.openTooltip"
-            @click.stop="$emit('openPriceCalc', stock)"
-          >
-            <span class="text-lg font-bold" :class="priceColorClass">{{ formatNumber(stock.price) }}</span>
-            <span class="text-sm font-semibold" :class="changeColorClass">{{ formatChange(stock.change, stock.changePct) }}</span>
-          </div>
-        </div>
-
-        <!-- 時光機覆盤：後續交易日驗證膠囊條 (電腦端) -->
+        <!-- 時光機覆盤：後續交易日驗證膠囊條 (電腦端：置頂於核心報價代號與名稱上方) -->
         <div
           v-if="stock.forwardValidation"
           class="my-1.5 py-1 px-2.5 rounded-lg border border-base-300/60 bg-base-300/35 text-xs sm:text-sm transition-colors"
@@ -688,20 +663,20 @@
             class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
             @click.stop
           >
-            <!-- 進場基準列 -->
+            <!-- 進場基準列 (例如：09/17 四 (基準)) -->
             <div class="flex items-center justify-between text-base-content/70 pb-1 border-b border-base-300/30">
-              <span>{{ stock.forwardValidation.entryDate }} {{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark }}</span>
+              <span class="font-medium text-base-content/75">{{ formatTimelineDate(stock.forwardValidation.entryDate) }} ({{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark || '基準' }})</span>
               <span class="font-bold text-base-content">{{ formatNumber(stock.forwardValidation.entryPrice) }}</span>
             </div>
 
-            <!-- T+1 ~ T+N 逐日明細 -->
+            <!-- T+1 ~ T+N 逐日明細 (例如：09/18 五 (T+1)) -->
             <div
               v-for="rec in stock.forwardValidation.dailyRecords"
               :key="rec.tDay"
               class="flex items-center justify-between text-base-content/85"
             >
               <div class="flex items-center gap-1.5">
-                <span class="font-medium text-base-content/70">T+{{ rec.tDay }} ({{ rec.date ? rec.date.slice(5) : '' }})</span>
+                <span class="font-medium text-base-content/75">{{ formatTimelineDate(rec.date) }} (T+{{ rec.tDay }})</span>
               </div>
               <div class="flex items-baseline gap-2.5">
                 <span class="font-bold text-base-content">{{ formatNumber(rec.close) }}</span>
@@ -719,6 +694,31 @@
                 </span>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- 核心報價 (代號、名稱、即時現價同為 text-lg，漲跌幅為 text-sm) -->
+        <div class="flex items-baseline justify-between gap-2">
+          <div class="flex items-baseline gap-2 min-w-0">
+            <span
+              class="font-numeric font-bold text-lg text-base-content cursor-pointer hover:underline select-none touch-manipulation"
+              :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
+              @click.stop="$emit('searchCode', stock.code)"
+            >
+              {{ stock.code }}
+            </span>
+            <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
+            <span v-if="stock.isDisposed" class="font-bold text-sm text-rise">
+              [{{ UI_STRINGS.SCREENER.disposed }}]
+            </span>
+          </div>
+          <div
+            class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
+            :title="UI_STRINGS.QUICK_CALC.openTooltip"
+            @click.stop="$emit('openPriceCalc', stock)"
+          >
+            <span class="text-lg font-bold" :class="priceColorClass">{{ formatNumber(stock.price) }}</span>
+            <span class="text-sm font-semibold" :class="changeColorClass">{{ formatChange(stock.change, stock.changePct) }}</span>
           </div>
         </div>
 
@@ -1061,6 +1061,23 @@ function handleCopy() {
 function formatNumber(num) {
   if (num === null || num === undefined || isNaN(num)) return '--'
   return Number(num).toFixed(2)
+}
+
+function formatTimelineDate(dateStr) {
+  if (!dateStr) return '--'
+  const parts = String(dateStr).split(/[-/]/)
+  if (parts.length >= 3) {
+    const year = parseInt(parts[0], 10)
+    const month = parseInt(parts[1], 10)
+    const day = parseInt(parts[2], 10)
+    const d = new Date(year, month - 1, day)
+    const mm = String(month).padStart(2, '0')
+    const dd = String(day).padStart(2, '0')
+    const weekDays = ['日', '一', '二', '三', '四', '五', '六']
+    const w = weekDays[d.getDay()] || ''
+    return `${mm}/${dd} ${w}`
+  }
+  return dateStr
 }
 
 function formatChange(change, changePct) {
