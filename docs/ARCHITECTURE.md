@@ -569,6 +569,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 頂部時光膠囊日期排版精簡（TimeMachineBar Date Simplification：橫向時光膠囊列無須維持兩位數固定寬度對齊，日期由 `10/02` 簡化為不補零 `10/2`，星期由 `週五` 簡化為 `五`，騰出橫向空間提升手機端滑動與閱讀體驗）— 完成 2026-10-03（v1003.01）
 - [x] 修復 stock-pool.json 籌碼覆蓋異常（Fix Chips Overwrite Bug：修復 10/3 本地 commit 意外將帶有空籌碼的本地 stock-pool.json 覆蓋遠端完整資料之問題；徹底恢復至 10/2 19:20 包含 472 檔真實 1D/3D/5D 籌碼集中度與短沖主力名單之正式資料庫，確保全市場卡片籌碼透視區塊正常渲染）— 完成 2026-10-03（v1003.02）
 - [x] 手機端籌碼提醒與驗證膠囊字級對齊（Mobile Font Size Polish：將 StockChipsSection 籌碼未建檔提示與 ForwardValidationBar 膠囊列字級統一調整為標準 text-sm 14px，消弭手機端過小字級閱讀疲勞，保持全卡片字級層級沉穩一致）— 完成 2026-10-03（v1003.02）
+- [x] 時光機後續驗證時間軸基準列對齊與累計權重強化（Forward Validation Timeline Polish：基準日列排版與 T+1~T+N 完全同欄對齊，基準價格與收盤價 100% 垂直切齊並補上 '--' 與 '0.00%' 佔位符，去除多餘底線與過大行高；視覺層次上將覆盤關鍵的「累計漲跌幅」加粗（font-bold）並維持飽和紅綠，輔助參考的「當日漲跌」調為正常字重（font-normal）與微淡色階（text-rise/80、text-fall/80），大幅提升掃視與覆盤體驗）— 完成 2026-10-03
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 
