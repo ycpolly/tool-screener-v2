@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="forwardVal"
-    class="py-1 px-2.5 rounded-lg border border-base-300/60 bg-base-300/35 text-xs sm:text-sm transition-colors"
+    class="py-1 px-2.5 rounded-lg border border-base-300/60 bg-base-300/35 text-sm transition-colors"
   >
     <div
       class="flex items-center justify-between gap-1.5 select-none cursor-pointer"

@@ -30,10 +30,10 @@
     <!-- 籌碼無資料或未建檔時之貼心提醒，避免空白疑慮 -->
     <div
       v-else-if="chipsNoticeText"
-      class="pt-1.5 pb-1 border-t border-base-300/40 text-xs text-base-content/50 flex items-center gap-1.5"
+      class="pt-1.5 pb-1 border-t border-base-300/40 text-sm text-base-content/70 flex items-center gap-1.5"
     >
-      <span class="font-medium text-base-content/60">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
-      <span class="text-base-content/30">·</span>
+      <span class="font-medium text-base-content/80">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
+      <span class="text-base-content/40">·</span>
       <span>{{ chipsNoticeText }}</span>
     </div>
   </div>
