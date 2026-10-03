@@ -1,7 +1,7 @@
 <template>
   <dialog :class="{ 'modal-open': isOpen }" class="modal modal-bottom sm:modal-middle select-none z-50">
     <div
-      class="modal-box max-w-4xl w-full bg-base-100 border border-base-300 rounded-2xl p-3.5 sm:p-6 space-y-3 sm:space-y-4 shadow-xl max-h-[90vh] flex flex-col safe-pb-modal"
+      class="modal-box max-w-4xl w-full bg-base-100 border border-base-300 rounded-2xl p-3.5 sm:p-6 space-y-3 sm:space-y-4 shadow-xl max-h-[80vh] flex flex-col safe-pb-modal"
     >
       <!-- Modal Header -->
       <div class="flex items-start justify-between pb-3 border-b border-base-300/80 shrink-0">
@@ -215,16 +215,6 @@
         </div>
       </div>
 
-      <!-- Modal Footer -->
-      <div class="modal-action pt-2 border-t border-base-300/80 shrink-0">
-        <button
-          type="button"
-          class="btn btn-sm btn-neutral h-8 min-h-0 px-4 rounded-lg cursor-pointer shadow-none"
-          @click="$emit('close')"
-        >
-          {{ UI_STRINGS.STOCK_POOL_MODAL.closeBtn }}
-        </button>
-      </div>
     </div>
     <form method="dialog" class="modal-backdrop" @click="$emit('close')">
       <button>close</button>
