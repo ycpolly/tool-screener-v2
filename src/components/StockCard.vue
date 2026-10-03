@@ -37,6 +37,88 @@
         </div>
       </div>
 
+      <!-- 時光機覆盤：後續交易日驗證膠囊條 (簡約模式) -->
+      <div
+        v-if="stock.forwardValidation"
+        class="my-1.5 py-1 px-2.5 rounded-lg border border-base-300/60 bg-base-300/35 text-xs sm:text-sm transition-colors"
+      >
+        <div
+          class="flex items-center justify-between gap-1.5 select-none cursor-pointer"
+          @click="isForwardExpanded = !isForwardExpanded"
+        >
+          <div class="flex items-baseline gap-1.5 truncate">
+            <span class="font-medium text-base-content/80">
+              {{ UI_STRINGS.FORWARD_VALIDATION?.titleWithDays(stock.forwardValidation.daysCount) }}
+            </span>
+            <span class="text-base-content/40">·</span>
+            <span class="text-base-content/75">{{ UI_STRINGS.FORWARD_VALIDATION?.cumulative }}</span>
+            <strong
+              class="font-numeric font-bold"
+              :class="stock.forwardValidation.totalGainPct > 0 ? 'text-rise' : (stock.forwardValidation.totalGainPct < 0 ? 'text-fall' : 'text-base-content')"
+            >
+              {{ stock.forwardValidation.totalGainPct > 0 ? '+' : '' }}{{ stock.forwardValidation.totalGainPct }}%
+            </strong>
+            <span class="text-base-content/60 text-xs hidden sm:inline">
+              ({{ UI_STRINGS.FORWARD_VALIDATION?.maxProfit }} {{ stock.forwardValidation.maxGainPct > 0 ? '+' : '' }}{{ stock.forwardValidation.maxGainPct }}% · {{ UI_STRINGS.FORWARD_VALIDATION?.maxDrawdown }} {{ stock.forwardValidation.maxDrawdownPct > 0 ? '+' : '' }}{{ stock.forwardValidation.maxDrawdownPct }}%)
+            </span>
+          </div>
+
+          <!-- 展開/收合按鈕 -->
+          <span class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0">
+            <span>{{ isForwardExpanded ? UI_STRINGS.FORWARD_VALIDATION?.collapse : UI_STRINGS.FORWARD_VALIDATION?.expand }}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3.5 w-3.5 transition-transform duration-200"
+              :class="{ 'rotate-180': isForwardExpanded }"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+
+        <!-- 展開後的迷你逐日時間軸歷程 -->
+        <div
+          v-if="isForwardExpanded"
+          class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
+          @click.stop
+        >
+          <!-- 進場基準列 -->
+          <div class="flex items-center justify-between text-base-content/70 pb-1 border-b border-base-300/30">
+            <span>{{ stock.forwardValidation.entryDate }} {{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark }}</span>
+            <span class="font-bold text-base-content">{{ formatNumber(stock.forwardValidation.entryPrice) }}</span>
+          </div>
+
+          <!-- T+1 ~ T+N 逐日明細 -->
+          <div
+            v-for="rec in stock.forwardValidation.dailyRecords"
+            :key="rec.tDay"
+            class="flex items-center justify-between text-base-content/85"
+          >
+            <div class="flex items-center gap-1.5">
+              <span class="font-medium text-base-content/70">T+{{ rec.tDay }} ({{ rec.date ? rec.date.slice(5) : '' }})</span>
+            </div>
+            <div class="flex items-baseline gap-2.5">
+              <span class="font-bold text-base-content">{{ formatNumber(rec.close) }}</span>
+              <span
+                class="font-semibold text-right w-16"
+                :class="rec.dayChangePct > 0 ? 'text-rise' : (rec.dayChangePct < 0 ? 'text-fall' : 'text-base-content/70')"
+              >
+                {{ rec.dayChangePct > 0 ? '▲' : (rec.dayChangePct < 0 ? '▼' : '') }}{{ Math.abs(rec.dayChangePct ?? 0).toFixed(2) }}%
+              </span>
+              <span
+                class="text-right w-16 text-xs"
+                :class="rec.cumChangePct > 0 ? 'text-rise' : (rec.cumChangePct < 0 ? 'text-fall' : 'text-base-content/60')"
+              >
+                {{ rec.cumChangePct > 0 ? '+' : '' }}{{ rec.cumChangePct }}%
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- 槽位 B：篩選判讀純文字結果 (支援點擊向下展開指標診斷清單) -->
       <div
         v-if="filterEvaluationText"
@@ -124,6 +206,88 @@
           <span class="text-sm font-semibold" :class="changeColorClass">
             {{ formatChange(stock.change, stock.changePct) }}
           </span>
+        </div>
+      </div>
+
+      <!-- 時光機覆盤：後續交易日驗證膠囊條 (手機端) -->
+      <div
+        v-if="stock.forwardValidation"
+        class="my-1.5 py-1 px-2.5 rounded-lg border border-base-300/60 bg-base-300/35 text-xs sm:text-sm transition-colors"
+      >
+        <div
+          class="flex items-center justify-between gap-1.5 select-none cursor-pointer"
+          @click="isForwardExpanded = !isForwardExpanded"
+        >
+          <div class="flex items-baseline gap-1.5 truncate">
+            <span class="font-medium text-base-content/80">
+              {{ UI_STRINGS.FORWARD_VALIDATION?.titleWithDays(stock.forwardValidation.daysCount) }}
+            </span>
+            <span class="text-base-content/40">·</span>
+            <span class="text-base-content/75">{{ UI_STRINGS.FORWARD_VALIDATION?.cumulative }}</span>
+            <strong
+              class="font-numeric font-bold"
+              :class="stock.forwardValidation.totalGainPct > 0 ? 'text-rise' : (stock.forwardValidation.totalGainPct < 0 ? 'text-fall' : 'text-base-content')"
+            >
+              {{ stock.forwardValidation.totalGainPct > 0 ? '+' : '' }}{{ stock.forwardValidation.totalGainPct }}%
+            </strong>
+            <span class="text-base-content/60 text-xs hidden sm:inline">
+              ({{ UI_STRINGS.FORWARD_VALIDATION?.maxProfit }} {{ stock.forwardValidation.maxGainPct > 0 ? '+' : '' }}{{ stock.forwardValidation.maxGainPct }}% · {{ UI_STRINGS.FORWARD_VALIDATION?.maxDrawdown }} {{ stock.forwardValidation.maxDrawdownPct > 0 ? '+' : '' }}{{ stock.forwardValidation.maxDrawdownPct }}%)
+            </span>
+          </div>
+
+          <!-- 展開/收合按鈕 -->
+          <span class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0">
+            <span>{{ isForwardExpanded ? UI_STRINGS.FORWARD_VALIDATION?.collapse : UI_STRINGS.FORWARD_VALIDATION?.expand }}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3.5 w-3.5 transition-transform duration-200"
+              :class="{ 'rotate-180': isForwardExpanded }"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </div>
+
+        <!-- 展開後的迷你逐日時間軸歷程 -->
+        <div
+          v-if="isForwardExpanded"
+          class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
+          @click.stop
+        >
+          <!-- 進場基準列 -->
+          <div class="flex items-center justify-between text-base-content/70 pb-1 border-b border-base-300/30">
+            <span>{{ stock.forwardValidation.entryDate }} {{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark }}</span>
+            <span class="font-bold text-base-content">{{ formatNumber(stock.forwardValidation.entryPrice) }}</span>
+          </div>
+
+          <!-- T+1 ~ T+N 逐日明細 -->
+          <div
+            v-for="rec in stock.forwardValidation.dailyRecords"
+            :key="rec.tDay"
+            class="flex items-center justify-between text-base-content/85"
+          >
+            <div class="flex items-center gap-1.5">
+              <span class="font-medium text-base-content/70">T+{{ rec.tDay }} ({{ rec.date ? rec.date.slice(5) : '' }})</span>
+            </div>
+            <div class="flex items-baseline gap-2.5">
+              <span class="font-bold text-base-content">{{ formatNumber(rec.close) }}</span>
+              <span
+                class="font-semibold text-right w-16"
+                :class="rec.dayChangePct > 0 ? 'text-rise' : (rec.dayChangePct < 0 ? 'text-fall' : 'text-base-content/70')"
+              >
+                {{ rec.dayChangePct > 0 ? '▲' : (rec.dayChangePct < 0 ? '▼' : '') }}{{ Math.abs(rec.dayChangePct ?? 0).toFixed(2) }}%
+              </span>
+              <span
+                class="text-right w-16 text-xs"
+                :class="rec.cumChangePct > 0 ? 'text-rise' : (rec.cumChangePct < 0 ? 'text-fall' : 'text-base-content/60')"
+              >
+                {{ rec.cumChangePct > 0 ? '+' : '' }}{{ rec.cumChangePct }}%
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -473,6 +637,88 @@
           >
             <span class="text-lg font-bold" :class="priceColorClass">{{ formatNumber(stock.price) }}</span>
             <span class="text-sm font-semibold" :class="changeColorClass">{{ formatChange(stock.change, stock.changePct) }}</span>
+          </div>
+        </div>
+
+        <!-- 時光機覆盤：後續交易日驗證膠囊條 (電腦端) -->
+        <div
+          v-if="stock.forwardValidation"
+          class="my-1.5 py-1 px-2.5 rounded-lg border border-base-300/60 bg-base-300/35 text-xs sm:text-sm transition-colors"
+        >
+          <div
+            class="flex items-center justify-between gap-1.5 select-none cursor-pointer"
+            @click="isForwardExpanded = !isForwardExpanded"
+          >
+            <div class="flex items-baseline gap-1.5 truncate">
+              <span class="font-medium text-base-content/80">
+                {{ UI_STRINGS.FORWARD_VALIDATION?.titleWithDays(stock.forwardValidation.daysCount) }}
+              </span>
+              <span class="text-base-content/40">·</span>
+              <span class="text-base-content/75">{{ UI_STRINGS.FORWARD_VALIDATION?.cumulative }}</span>
+              <strong
+                class="font-numeric font-bold"
+                :class="stock.forwardValidation.totalGainPct > 0 ? 'text-rise' : (stock.forwardValidation.totalGainPct < 0 ? 'text-fall' : 'text-base-content')"
+              >
+                {{ stock.forwardValidation.totalGainPct > 0 ? '+' : '' }}{{ stock.forwardValidation.totalGainPct }}%
+              </strong>
+              <span class="text-base-content/60 text-xs hidden sm:inline">
+                ({{ UI_STRINGS.FORWARD_VALIDATION?.maxProfit }} {{ stock.forwardValidation.maxGainPct > 0 ? '+' : '' }}{{ stock.forwardValidation.maxGainPct }}% · {{ UI_STRINGS.FORWARD_VALIDATION?.maxDrawdown }} {{ stock.forwardValidation.maxDrawdownPct > 0 ? '+' : '' }}{{ stock.forwardValidation.maxDrawdownPct }}%)
+              </span>
+            </div>
+
+            <!-- 展開/收合按鈕 -->
+            <span class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0">
+              <span>{{ isForwardExpanded ? UI_STRINGS.FORWARD_VALIDATION?.collapse : UI_STRINGS.FORWARD_VALIDATION?.expand }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-3.5 w-3.5 transition-transform duration-200"
+                :class="{ 'rotate-180': isForwardExpanded }"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </div>
+
+          <!-- 展開後的迷你逐日時間軸歷程 -->
+          <div
+            v-if="isForwardExpanded"
+            class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
+            @click.stop
+          >
+            <!-- 進場基準列 -->
+            <div class="flex items-center justify-between text-base-content/70 pb-1 border-b border-base-300/30">
+              <span>{{ stock.forwardValidation.entryDate }} {{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark }}</span>
+              <span class="font-bold text-base-content">{{ formatNumber(stock.forwardValidation.entryPrice) }}</span>
+            </div>
+
+            <!-- T+1 ~ T+N 逐日明細 -->
+            <div
+              v-for="rec in stock.forwardValidation.dailyRecords"
+              :key="rec.tDay"
+              class="flex items-center justify-between text-base-content/85"
+            >
+              <div class="flex items-center gap-1.5">
+                <span class="font-medium text-base-content/70">T+{{ rec.tDay }} ({{ rec.date ? rec.date.slice(5) : '' }})</span>
+              </div>
+              <div class="flex items-baseline gap-2.5">
+                <span class="font-bold text-base-content">{{ formatNumber(rec.close) }}</span>
+                <span
+                  class="font-semibold text-right w-16"
+                  :class="rec.dayChangePct > 0 ? 'text-rise' : (rec.dayChangePct < 0 ? 'text-fall' : 'text-base-content/70')"
+                >
+                  {{ rec.dayChangePct > 0 ? '▲' : (rec.dayChangePct < 0 ? '▼' : '') }}{{ Math.abs(rec.dayChangePct ?? 0).toFixed(2) }}%
+                </span>
+                <span
+                  class="text-right w-16 text-xs"
+                  :class="rec.cumChangePct > 0 ? 'text-rise' : (rec.cumChangePct < 0 ? 'text-fall' : 'text-base-content/60')"
+                >
+                  {{ rec.cumChangePct > 0 ? '+' : '' }}{{ rec.cumChangePct }}%
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -955,6 +1201,7 @@ const kdStatusText = computed(() => {
 })
 
 const isCeilingExpanded = ref(false)
+const isForwardExpanded = ref(false)
 
 const ladderCeilings = computed(() => {
   const ceilings = props.stock.allCeilings

@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-10-03**（後端完成時光機覆盤「後續交易日表現驗證」forwardValidation 核心運算邏輯、資料合約與單元測試，撰寫 FORWARD_VALIDATION_TASK.md 任務書交棒前端 UI 實作）
+> **最後更新：2026-10-03**（前端完成 StockCard.vue 時光機覆盤「後續交易日表現驗證」膠囊條與迷你逐日歷程展開 UI 實作，支援簡約與完整模式及手機桌機響應式適配）
 
 ---
 
@@ -559,6 +559,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 尾盤快選開關後端支援（Intraday Quick Select Engine Support：在 `src/constants/screener-modes.js` 為全部五大模式新增 `intradayMode: false` 預設參數；在 `src/engine/screener.js` 實作 `intradayMode` 啟用時略過 `excludeSell1D` 檢查，保留前日 3D 籌碼趨勢過濾；同步更新 `diagnoseStock` 診斷邏輯使通關明細一致，因應 13:30~14:30 零股下單時段當日 1D 籌碼尚未出爐之情境）— 完成 2026-09-22（v0922.03）
 - [x] 尾盤快選微調抽屜 UI 控制項（Intraday Quick Select Panel UI：在 ScreenerPanel.vue 量能模組最頂端為全部五大模式新增「尾盤快選」控制列；開啟時高亮顯示警告色背景、動態脈動圓點與琥珀色警示標籤，直觀提示略過當日 1D 籌碼並改以前日 3D 趨勢判定；支援各模式即時切換與「重設自訂」雙向連動；字串統一於 ui-strings.js PANEL 模組管理）— 完成 2026-09-22（v0922.03）
 - [x] 時光機覆盤「後續交易日表現驗證」後端運算引擎（Forward Validation Engine Support：在 `src/engine/screener.js` 的 `sliceStockAt` 實作時光機後續交易日表現追蹤，動態計算累計漲跌幅 `totalGainPct`、波段最高 `maxGainPct` (MFE)、最大拉回 `maxDrawdownPct` (MAE) 及逐日明細 `dailyRecords`；在 `src/constants/ui-strings.js` 補齊 `FORWARD_VALIDATION` 字串字典；在 `docs/INTERFACE_CONTRACT.md` 規範資料結構並產出 `docs/FORWARD_VALIDATION_TASK.md` 交接任務書）— 完成 2026-10-03
+- [x] 時光機覆盤「後續交易日表現驗證」卡片膠囊條與逐日歷程 UI（Forward Validation Card UI：在 `StockCard.vue` 實作簡約模式、手機端與電腦端三端自適應之後續驗證膠囊條；單行精簡呈現 T+N 結論、累計漲跌幅、波段最高 MFE 與最深 MAE；支援就地向下展開迷你直式時間軸歷程，清楚呈現選出基準收盤價、T+1~T+N 逐日收盤價、當日漲跌幅 ▲/▼ 與累計漲跌幅，數值標準紅綠上色並支援滑鼠反藍選取與複製；最新交易日 T-0 自動隱藏維持版面極簡）— 完成 2026-10-03
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 
