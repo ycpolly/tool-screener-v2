@@ -45,58 +45,12 @@
       </div>
 
       <!-- 槽位 B：篩選判讀純文字結果 (支援點擊向下展開指標診斷清單) -->
-      <div
-        v-if="filterEvaluationText"
-        class="text-sm font-normal leading-normal py-1.5 px-3 rounded-lg border transition-colors mt-1"
-        :class="[
-          isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/75' : 'bg-base-300/50 border-base-300/80 text-base-content',
-          hasEvaluationDetails ? 'cursor-pointer hover:bg-base-300/70' : ''
-        ]"
-        @click="hasEvaluationDetails && (isDetailsExpanded = !isDetailsExpanded)"
-      >
-        <div class="flex items-center justify-between gap-1.5 select-none">
-          <span class="font-medium flex-1">{{ filterEvaluationText }}</span>
-          <span
-            v-if="hasEvaluationDetails"
-            class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0"
-          >
-            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || UI_STRINGS.PANEL.collapseDiagnosis || '收合') : (UI_STRINGS.SCREENER.collapseDetails || UI_STRINGS.PANEL.collapseDetails || '收合')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || UI_STRINGS.PANEL.expandDiagnosis || '展開') : (UI_STRINGS.SCREENER.expandDetails || UI_STRINGS.PANEL.expandDetails || '展開')) }}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-3.5 w-3.5 transition-transform duration-200"
-              :class="{ 'rotate-180': isDetailsExpanded }"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-            </svg>
-          </span>
-        </div>
-
-        <!-- 展開後的純文字指標通關診斷清單 (允許選取複製文字) -->
-        <div
-          v-if="isDetailsExpanded && hasEvaluationDetails"
-          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-xs font-numeric select-text cursor-auto"
-          @click.stop
-        >
-          <div
-            v-for="(item, idx) in evaluationDetails"
-            :key="idx"
-            class="flex items-start gap-1.5 leading-relaxed"
-          >
-            <span
-              class="shrink-0 font-bold"
-              :class="item.pass ? 'text-success' : 'text-error'"
-            >
-              {{ item.pass ? '✓' : '✗' }}
-            </span>
-            <span class="text-base-content/90">
-              <strong class="text-base-content font-semibold">{{ item.label }}：</strong>{{ item.desc }}
-            </span>
-          </div>
-        </div>
-      </div>
+      <StockEvaluationSlot
+        :stock="stock"
+        :active-mode="activeMode"
+        :is-unmatched="isUnmatched"
+        :filter-evaluation="filterEvaluation"
+      />
     </div>
 
     <!-- ============================================================
@@ -170,126 +124,11 @@
         </span>
       </div>
 
-      <!-- 籌碼透視區塊（籌碼集中度 + 短沖避雷，頂部細分隔線 + 緊湊間距 + 基本文字色 + 百分比加粗） -->
-      <div
-        v-if="hasChipsSection"
-        class="pt-2 pb-1.5 border-t border-base-300/40 space-y-1 text-sm font-normal text-base-content/80 leading-normal"
-      >
-        <!-- 籌碼集中度 (百分比加粗，正值紅字，帶明確空白) -->
-        <div v-if="chipsConcentrationItems.length > 0" class="font-numeric flex items-baseline flex-wrap">
-          <span class="mr-2">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
-          <template v-for="(item, idx) in chipsConcentrationItems" :key="item.label">
-            <span class="inline-flex items-baseline gap-1">
-              <span>{{ item.label }}</span>
-              <strong class="font-bold" :class="item.isPositive ? 'text-rise' : 'text-base-content'">{{ item.val }}</strong>
-            </span>
-            <span v-if="idx < chipsConcentrationItems.length - 1" class="text-base-content/40 mx-1.5">·</span>
-          </template>
-        </div>
-
-        <!-- 短沖避雷 (基本文字色，百分比加粗，已依指令移除左側驚嘆號圖示) -->
-        <div v-if="dayTradersInfo" class="font-numeric flex items-center">
-          <span>
-            <span>{{ UI_STRINGS.CHIPS.dayTradersPrefix || '短沖佔 ' }}</span>
-            <strong class="font-bold text-base-content">{{ dayTradersInfo.pct }}</strong>
-            <span v-if="dayTradersInfo.branchesText"> ({{ dayTradersInfo.branchesText }})</span>
-          </span>
-        </div>
-      </div>
-      <!-- 籌碼無資料或未建檔時之貼心提醒，避免空白疑慮 -->
-      <div
-        v-else-if="chipsNoticeText"
-        class="pt-1.5 pb-1 border-t border-base-300/40 text-xs text-base-content/50 flex items-center gap-1.5"
-      >
-        <span class="font-medium text-base-content/60">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
-        <span class="text-base-content/30">·</span>
-        <span>{{ chipsNoticeText }}</span>
-      </div>
-
+      <!-- 籌碼透視區塊（籌碼集中度 + 短沖避雷） -->
+      <StockChipsSection :stock="stock" />
 
       <!-- 槽位 A：天花板關卡價與預期純利 (支援就地向下展開天梯清單) -->
-      <div
-        v-if="ceilingInfo"
-        class="text-sm font-normal leading-normal py-1.5 px-2.5 rounded-lg border border-base-300/60 bg-base-300/40 text-base-content transition-colors"
-      >
-        <div
-          class="flex items-center justify-between gap-1.5 select-none cursor-pointer"
-          @click="isCeilingExpanded = !isCeilingExpanded"
-        >
-          <div class="flex items-baseline gap-1.5 truncate">
-            <span class="text-base-content/80">{{ ceilingInfo.type }}</span>
-            <strong class="font-numeric font-bold text-base-content">{{ formatNumber(ceilingInfo.price) }}</strong>
-            <span class="text-base-content/40">·</span>
-            <span class="text-base-content/80">{{ UI_STRINGS.METRICS.expectedProfit }}</span>
-            <strong class="font-numeric font-bold text-base-content">{{ formatPercent(ceilingInfo.netProfitPct) }}</strong>
-          </div>
-          <span class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0">
-            <span>{{ isCeilingExpanded ? UI_STRINGS.CEILINGS.collapseLabel : UI_STRINGS.CEILINGS.expandLabel }}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-3.5 w-3.5 transition-transform duration-200"
-              :class="{ 'rotate-180': isCeilingExpanded }"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-            </svg>
-          </span>
-        </div>
-
-        <!-- 展開後的三明治價格天梯 (純文字、無彩色、標準字級 text-sm font-numeric) -->
-        <div
-          v-if="isCeilingExpanded"
-          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-sm font-normal leading-normal font-numeric select-text cursor-auto"
-          @click.stop
-        >
-          <!-- 1. 上方天花板 (由高至低排列，最高在最頂) -->
-          <div class="space-y-2.5">
-            <div
-              v-for="(item, idx) in ladderCeilings"
-              :key="`m-c-${idx}`"
-              class="flex items-center justify-between text-base-content/85"
-            >
-              <span class="truncate font-sans">{{ item.type }}</span>
-              <div class="flex items-baseline gap-3 shrink-0">
-                <span class="font-medium">{{ formatNumber(item.price) }}</span>
-                <span class="w-16 text-right">{{ formatPercent(item.netProfitPct) }}</span>
-              </div>
-            </div>
-            <div v-if="ladderCeilings.length === 0" class="text-base-content/60 text-sm">
-              {{ UI_STRINGS.CEILINGS.emptyCeilings }}
-            </div>
-          </div>
-
-          <!-- 2. 中間現價基準線 (同列排版，加上下中等透明度邊框) -->
-          <div class="flex items-center justify-between border-y border-base-content/20 py-1.5 my-2.5 text-base-content font-medium">
-            <span class="truncate font-sans">{{ UI_STRINGS.STOCK_TABLE.headers.price || '現價' }}</span>
-            <div class="flex items-baseline gap-3 shrink-0">
-              <span class="font-bold">{{ formatNumber(stock.price) }}</span>
-              <span class="w-16 text-right font-bold">0.00%</span>
-            </div>
-          </div>
-
-          <!-- 3. 下方地板 (由高至低排列，最近支撐在現價下方，最深在最底) -->
-          <div class="space-y-2.5">
-            <div
-              v-for="(item, idx) in ladderSupports"
-              :key="`m-s-${idx}`"
-              class="flex items-center justify-between text-base-content/85"
-            >
-              <span class="truncate font-sans">{{ item.type }}</span>
-              <div class="flex items-baseline gap-3 shrink-0">
-                <span class="font-medium">{{ formatNumber(item.price) }}</span>
-                <span class="w-16 text-right">-{{ Number(item.riskLossPct).toFixed(2) }}%</span>
-              </div>
-            </div>
-            <div v-if="ladderSupports.length === 0" class="text-base-content/60 text-sm">
-              {{ UI_STRINGS.CEILINGS.emptySupports }}
-            </div>
-          </div>
-        </div>
-      </div>
+      <StockCeilingLadder :stock="stock" :ceiling-profit="ceilingProfit" />
 
       <!-- 第 3 層：Sparkline 技術走勢圖 (純淨走勢，點擊查看近日表現) -->
       <div
@@ -360,90 +199,15 @@
       </div>
 
       <!-- ★ 預留槽位 B：篩選判讀純文字結果 (支援點擊向下展開指標診斷清單) -->
-      <div
-        v-if="filterEvaluationText"
-        class="text-sm font-normal leading-normal py-1.5 px-2.5 rounded-lg border transition-colors"
-        :class="[
-          isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/75' : 'bg-base-300/50 border-base-300/80 text-base-content',
-          hasEvaluationDetails ? 'cursor-pointer hover:bg-base-300/70' : ''
-        ]"
-        @click="hasEvaluationDetails && (isDetailsExpanded = !isDetailsExpanded)"
-      >
-        <div class="flex items-center justify-between gap-1.5 select-none">
-          <span class="font-medium flex-1">{{ filterEvaluationText }}</span>
-          <span
-            v-if="hasEvaluationDetails"
-            class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0"
-          >
-            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || UI_STRINGS.PANEL.collapseDiagnosis || '收合') : (UI_STRINGS.SCREENER.collapseDetails || UI_STRINGS.PANEL.collapseDetails || '收合')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || UI_STRINGS.PANEL.expandDiagnosis || '展開') : (UI_STRINGS.SCREENER.expandDetails || UI_STRINGS.PANEL.expandDetails || '展開')) }}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-3.5 w-3.5 transition-transform duration-200"
-              :class="{ 'rotate-180': isDetailsExpanded }"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-            </svg>
-          </span>
-        </div>
-
-        <!-- 展開後的純文字指標通關診斷清單 (允許選取複製文字) -->
-        <div
-          v-if="isDetailsExpanded && hasEvaluationDetails"
-          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-xs font-numeric select-text cursor-auto"
-          @click.stop
-        >
-          <div
-            v-for="(item, idx) in evaluationDetails"
-            :key="idx"
-            class="flex items-start gap-1.5 leading-relaxed"
-          >
-            <span
-              class="shrink-0 font-bold"
-              :class="item.pass ? 'text-success' : 'text-error'"
-            >
-              {{ item.pass ? '✓' : '✗' }}
-            </span>
-            <span class="text-base-content/90">
-              <strong class="text-base-content font-semibold">{{ item.label }}：</strong>{{ item.desc }}
-            </span>
-          </div>
-        </div>
-      </div>
+      <StockEvaluationSlot
+        :stock="stock"
+        :active-mode="activeMode"
+        :is-unmatched="isUnmatched"
+        :filter-evaluation="filterEvaluation"
+      />
 
       <!-- 第 5 層：極簡快捷操作列 (統一 text-sm font-normal) -->
-      <div class="flex items-center justify-between pt-2 border-t border-base-300/60 text-sm font-normal text-base-content/80 leading-normal">
-        <button
-          type="button"
-          class="hover:text-base-content inline-flex items-center gap-1 transition-colors"
-          @click="handleCopy"
-        >
-          <svg v-if="copied" class="w-3.5 h-3.5 text-base-content" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-          </svg>
-          <span :class="{ 'font-bold text-base-content': copied }">{{ copied ? UI_STRINGS.ACTIONS.copied : UI_STRINGS.ACTIONS.copy }}</span>
-        </button>
-
-        <div class="flex items-center gap-2.5">
-          <a :href="`https://tw.finance.yahoo.com/quote/${stock.code}.TW/institutional-trading`" target="_blank" rel="noopener" class="hover:text-base-content hover:underline">
-            {{ UI_STRINGS.ACTIONS.chips }}
-          </a>
-          <span class="text-base-content/40">·</span>
-          <a :href="`https://tw.finance.yahoo.com/quote/${stock.code}.TW/bullbear`" target="_blank" rel="noopener" class="hover:text-base-content hover:underline">
-            {{ UI_STRINGS.ACTIONS.bullbear }}
-          </a>
-          <span class="text-base-content/40">·</span>
-          <a :href="`https://fubon-ebrokerdj.fbs.com.tw/z/zc/zcn/zcn_${stock.code}.djhtm`" target="_blank" rel="noopener" class="hover:text-base-content hover:underline">
-            {{ UI_STRINGS.ACTIONS.margin }}
-          </a>
-          <span class="text-base-content/40">·</span>
-          <a :href="`https://fubon-ebrokerdj.fbs.com.tw/z/zc/zcw/zcw1_${stock.code}.djhtm`" target="_blank" rel="noopener" class="hover:text-base-content hover:underline">
-            {{ UI_STRINGS.ACTIONS.afterMarket }}
-          </a>
-        </div>
-      </div>
+      <StockCardActions :stock="stock" layout="mobile" />
     </div>
 
     <!-- ============================================================
@@ -526,148 +290,14 @@
           </span>
         </div>
 
-        <!-- 籌碼透視區塊（籌碼集中度 + 短沖避雷，上下細分隔線 + 緊湊間距 + 基本文字色 + 百分比加粗） -->
-        <div
-          v-if="hasChipsSection"
-          class="pt-2 pb-2 border-t border-b border-base-300/40 space-y-1 text-sm font-normal text-base-content/80 leading-normal"
-        >
-          <!-- 籌碼集中度 (百分比加粗，正值紅字，帶明確空白) -->
-          <div v-if="chipsConcentrationItems.length > 0" class="font-numeric flex items-baseline flex-wrap">
-            <span class="mr-2">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
-            <template v-for="(item, idx) in chipsConcentrationItems" :key="item.label">
-              <span class="inline-flex items-baseline gap-1">
-                <span>{{ item.label }}</span>
-                <strong class="font-bold" :class="item.isPositive ? 'text-rise' : 'text-base-content'">{{ item.val }}</strong>
-              </span>
-              <span v-if="idx < chipsConcentrationItems.length - 1" class="text-base-content/40 mx-1.5">·</span>
-            </template>
-          </div>
-
-          <!-- 短沖避雷 (基本文字色，百分比加粗，已依指令移除左側驚嘆號圖示) -->
-          <div v-if="dayTradersInfo" class="font-numeric flex items-center">
-            <span>
-              <span>{{ UI_STRINGS.CHIPS.dayTradersPrefix || '短沖佔 ' }}</span>
-              <strong class="font-bold text-base-content">{{ dayTradersInfo.pct }}</strong>
-              <span v-if="dayTradersInfo.branchesText"> ({{ dayTradersInfo.branchesText }})</span>
-            </span>
-          </div>
-        </div>
-        <!-- 籌碼無資料或未建檔時之貼心提醒，避免空白疑慮 -->
-        <div
-          v-else-if="chipsNoticeText"
-          class="pt-1 pb-1 border-t border-b border-base-300/40 text-xs text-base-content/50 flex items-center gap-1.5"
-        >
-          <span class="font-medium text-base-content/60">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
-          <span class="text-base-content/30">·</span>
-          <span>{{ chipsNoticeText }}</span>
-        </div>
-
+        <!-- 籌碼透視區塊（籌碼集中度 + 短沖避雷） -->
+        <StockChipsSection :stock="stock" />
 
         <!-- 槽位 A (電腦端，支援就地向下展開天梯清單) -->
-        <div
-          v-if="ceilingInfo"
-          class="text-sm font-normal leading-normal py-1 px-2.5 rounded-lg border border-base-300/60 bg-base-300/40 text-base-content transition-colors"
-        >
-          <div
-            class="flex items-center justify-between gap-1.5 select-none cursor-pointer"
-            @click="isCeilingExpanded = !isCeilingExpanded"
-          >
-            <div class="flex items-baseline gap-1.5 truncate">
-              <span class="text-base-content/80">{{ ceilingInfo.type }}</span>
-              <strong class="font-numeric font-bold text-base-content">{{ formatNumber(ceilingInfo.price) }}</strong>
-              <span class="text-base-content/40">·</span>
-              <span class="text-base-content/80">{{ UI_STRINGS.METRICS.expectedProfit }}</span>
-              <strong class="font-numeric font-bold text-base-content">{{ formatPercent(ceilingInfo.netProfitPct) }}</strong>
-            </div>
-            <span class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0">
-              <span>{{ isCeilingExpanded ? UI_STRINGS.CEILINGS.collapseLabel : UI_STRINGS.CEILINGS.expandLabel }}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-3.5 w-3.5 transition-transform duration-200"
-                :class="{ 'rotate-180': isCeilingExpanded }"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-              </svg>
-            </span>
-          </div>
-
-          <!-- 展開後的三明治價格天梯 (純文字、無彩色、標準字級 text-sm font-numeric) -->
-          <div
-            v-if="isCeilingExpanded"
-            class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-sm font-normal leading-normal font-numeric select-text cursor-auto"
-            @click.stop
-          >
-            <!-- 1. 上方天花板 (由高至低排列，最高在最頂) -->
-            <div class="space-y-2.5">
-              <div
-                v-for="(item, idx) in ladderCeilings"
-                :key="`d-c-${idx}`"
-                class="flex items-center justify-between text-base-content/85"
-              >
-                <span class="truncate font-sans">{{ item.type }}</span>
-                <div class="flex items-baseline gap-3 shrink-0">
-                  <span class="font-medium">{{ formatNumber(item.price) }}</span>
-                  <span class="w-16 text-right">{{ formatPercent(item.netProfitPct) }}</span>
-                </div>
-              </div>
-              <div v-if="ladderCeilings.length === 0" class="text-base-content/60 text-sm">
-                {{ UI_STRINGS.CEILINGS.emptyCeilings }}
-              </div>
-            </div>
-
-            <!-- 2. 中間現價基準線 (同列排版，加上下中等透明度邊框) -->
-            <div class="flex items-center justify-between border-y border-base-content/20 py-1.5 my-2.5 text-base-content font-medium">
-              <span class="truncate font-sans">{{ UI_STRINGS.STOCK_TABLE.headers.price || '現價' }}</span>
-              <div class="flex items-baseline gap-3 shrink-0">
-                <span class="font-bold">{{ formatNumber(stock.price) }}</span>
-                <span class="w-16 text-right font-bold">0.00%</span>
-              </div>
-            </div>
-
-            <!-- 3. 下方地板 (由高至低排列，最近支撐在現價下方，最深在最底) -->
-            <div class="space-y-2.5">
-              <div
-                v-for="(item, idx) in ladderSupports"
-                :key="`d-s-${idx}`"
-                class="flex items-center justify-between text-base-content/85"
-              >
-                <span class="truncate font-sans">{{ item.type }}</span>
-                <div class="flex items-baseline gap-3 shrink-0">
-                  <span class="font-medium">{{ formatNumber(item.price) }}</span>
-                  <span class="w-16 text-right">-{{ Number(item.riskLossPct).toFixed(2) }}%</span>
-                </div>
-              </div>
-              <div v-if="ladderSupports.length === 0" class="text-base-content/60 text-sm">
-                {{ UI_STRINGS.CEILINGS.emptySupports }}
-              </div>
-            </div>
-          </div>
-        </div>
+        <StockCeilingLadder :stock="stock" :ceiling-profit="ceilingProfit" size="compact" />
 
         <!-- 快捷操作列 (統一 text-sm font-normal) -->
-        <div class="flex items-center gap-2.5 text-sm font-normal text-base-content/80 leading-normal pt-0.5">
-          <button
-            type="button"
-            class="hover:text-base-content inline-flex items-center gap-1 transition-colors"
-            @click="handleCopy"
-          >
-            <svg v-if="copied" class="w-3.5 h-3.5 text-base-content" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-            </svg>
-            <span :class="{ 'font-bold text-base-content': copied }">{{ copied ? UI_STRINGS.ACTIONS.copied : UI_STRINGS.ACTIONS.copy }}</span>
-          </button>
-          <span class="text-base-content/40">|</span>
-          <a :href="`https://tw.finance.yahoo.com/quote/${stock.code}.TW/institutional-trading`" target="_blank" rel="noopener" class="hover:text-base-content hover:underline">{{ UI_STRINGS.ACTIONS.chips }}</a>
-          <span class="text-base-content/40">·</span>
-          <a :href="`https://tw.finance.yahoo.com/quote/${stock.code}.TW/bullbear`" target="_blank" rel="noopener" class="hover:text-base-content hover:underline">{{ UI_STRINGS.ACTIONS.bullbear }}</a>
-          <span class="text-base-content/40">·</span>
-          <a :href="`https://fubon-ebrokerdj.fbs.com.tw/z/zc/zcn/zcn_${stock.code}.djhtm`" target="_blank" rel="noopener" class="hover:text-base-content hover:underline">{{ UI_STRINGS.ACTIONS.margin }}</a>
-          <span class="text-base-content/40">·</span>
-          <a :href="`https://fubon-ebrokerdj.fbs.com.tw/z/zc/zcw/zcw1_${stock.code}.djhtm`" target="_blank" rel="noopener" class="hover:text-base-content hover:underline">{{ UI_STRINGS.ACTIONS.afterMarket }}</a>
-        </div>
+        <StockCardActions :stock="stock" layout="desktop" />
       </div>
 
       <!-- 右欄 (4/12)：量化指標網格 (均線 vs 量能 + KD 動能指標) -->
@@ -726,69 +356,28 @@
       </div>
 
       <!-- ★ 預留槽位 B (電腦端通欄底列，支援點擊展開指標診斷清單) -->
-      <div
-        v-if="filterEvaluationText"
-        class="lg:col-span-12 text-sm font-normal leading-normal py-1.5 px-3 rounded-lg border transition-colors mt-1"
-        :class="[
-          isUnmatched ? 'bg-base-300/30 border-base-300/60 text-base-content/75' : 'bg-base-300/50 border-base-300/80 text-base-content',
-          hasEvaluationDetails ? 'cursor-pointer hover:bg-base-300/70' : ''
-        ]"
-        @click="hasEvaluationDetails && (isDetailsExpanded = !isDetailsExpanded)"
-      >
-        <div class="flex items-center justify-between gap-2 select-none">
-          <span class="font-medium">{{ filterEvaluationText }}</span>
-          <span
-            v-if="hasEvaluationDetails"
-            class="text-xs text-base-content/60 flex items-center gap-0.5 shrink-0"
-          >
-            <span>{{ isDetailsExpanded ? (isUnmatched ? (UI_STRINGS.SCREENER.collapseDiagnosis || UI_STRINGS.PANEL.collapseDiagnosis || '收合') : (UI_STRINGS.SCREENER.collapseDetails || UI_STRINGS.PANEL.collapseDetails || '收合')) : (isUnmatched ? (UI_STRINGS.SCREENER.expandDiagnosis || UI_STRINGS.PANEL.expandDiagnosis || '展開') : (UI_STRINGS.SCREENER.expandDetails || UI_STRINGS.PANEL.expandDetails || '展開')) }}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-3.5 w-3.5 transition-transform duration-200"
-              :class="{ 'rotate-180': isDetailsExpanded }"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
-            </svg>
-          </span>
-        </div>
-
-        <!-- 展開後的純文字指標通關診斷清單 (允許選取複製文字) -->
-        <div
-          v-if="isDetailsExpanded && hasEvaluationDetails"
-          class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-xs sm:text-sm font-numeric select-text cursor-auto"
-          @click.stop
-        >
-          <div
-            v-for="(item, idx) in evaluationDetails"
-            :key="idx"
-            class="flex items-start gap-1.5 leading-relaxed"
-          >
-            <span
-              class="shrink-0 font-bold"
-              :class="item.pass ? 'text-success' : 'text-error'"
-            >
-              {{ item.pass ? '✓' : '✗' }}
-            </span>
-            <span class="text-base-content/90">
-              <strong class="text-base-content font-semibold">{{ item.label }}：</strong>{{ item.desc }}
-            </span>
-          </div>
-        </div>
-      </div>
+      <StockEvaluationSlot
+        :stock="stock"
+        :active-mode="activeMode"
+        :is-unmatched="isUnmatched"
+        :filter-evaluation="filterEvaluation"
+        class="lg:col-span-12"
+      />
     </div>
     </template>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { UI_STRINGS } from '../constants/ui-strings.js'
 import { getStockCategoryItems } from '../constants/category-urls.js'
 import Sparkline from './Sparkline.vue'
 import ForwardValidationBar from './ForwardValidationBar.vue'
+import StockEvaluationSlot from './StockEvaluationSlot.vue'
+import StockCeilingLadder from './StockCeilingLadder.vue'
+import StockChipsSection from './StockChipsSection.vue'
+import StockCardActions from './StockCardActions.vue'
 
 const props = defineProps({
   stock: {
@@ -818,21 +407,6 @@ const props = defineProps({
 })
 
 defineEmits(['select', 'openRiskModal', 'openPriceCalc', 'openLifecycle', 'searchCode'])
-
-const copied = ref(false)
-let copyTimer = null
-
-function handleCopy() {
-  const text = `${props.stock.code} ${props.stock.name}`
-  if (navigator?.clipboard?.writeText) {
-    navigator.clipboard.writeText(text).catch(() => {})
-  }
-  copied.value = true
-  if (copyTimer) clearTimeout(copyTimer)
-  copyTimer = setTimeout(() => {
-    copied.value = false
-  }, 1200)
-}
 
 function formatNumber(num) {
   if (num === null || num === undefined || isNaN(num)) return '--'
@@ -917,53 +491,6 @@ const sellWarningText = computed(() => {
   return props.stock.sellWarning.replace(/^⚠️\s*/, '')
 })
 
-const chipsConcentrationItems = computed(() => {
-  const chips = props.stock.chips
-  if (!chips) return []
-  const { concentration1d: d1, concentration3d: d3, concentration5d: d5 } = chips
-  if (d1 == null && d3 == null && d5 == null) return []
-  const items = []
-  if (d1 != null) items.push({ label: '1D', val: `${d1 >= 0 ? '+' : ''}${Number(d1).toFixed(1)}%`, isPositive: d1 > 0 })
-  if (d3 != null) items.push({ label: '3D', val: `${d3 >= 0 ? '+' : ''}${Number(d3).toFixed(1)}%`, isPositive: d3 > 0 })
-  if (d5 != null) items.push({ label: '5D', val: `${d5 >= 0 ? '+' : ''}${Number(d5).toFixed(1)}%`, isPositive: d5 > 0 })
-  return items
-})
-
-const dayTradersInfo = computed(() => {
-  const chips = props.stock.chips
-  if (!chips) return null
-  const branches = chips.dayTradersBranches ?? []
-  if (branches.length === 0) return null
-  const pct = typeof chips.dayTradersPct === 'number' ? chips.dayTradersPct.toFixed(1) : (chips.dayTradersPct ?? '0.0')
-  return {
-    pct: `${pct}%`,
-    branchesText: branches.join(' · '),
-  }
-})
-
-const hasChipsSection = computed(() => {
-  return chipsConcentrationItems.value.length > 0 || !!dayTradersInfo.value
-})
-
-const chipsNoticeText = computed(() => {
-  if (hasChipsSection.value) return ''
-  // 1. 若處於時光機歷史模式 (dayOffset > 0)
-  if (props.stock.dayOffset && props.stock.dayOffset > 0) {
-    return UI_STRINGS.CHIPS.missingHistorical || '該歷史日未入選追蹤池（無分點籌碼記錄）'
-  }
-  // 2. 若為今日且處於 17:46 ~ 19:16 第一波跑完、第二波籌碼結算前
-  const now = new Date()
-  const nowHour = now.getHours()
-  const nowMin = now.getMinutes()
-  const timeInMinutes = nowHour * 60 + nowMin
-  if (now.getDay() >= 1 && now.getDay() <= 5 && timeInMinutes >= 1066 && timeInMinutes < 1156) {
-    return UI_STRINGS.CHIPS.pendingSettlement || '今日分點籌碼結算中（預計 19:16 發布）'
-  }
-  return UI_STRINGS.CHIPS.noRecord || '無分點籌碼記錄'
-})
-
-
-
 const kdStatusText = computed(() => {
   const kd = props.stock.kd
   if (!kd) return ''
@@ -974,119 +501,5 @@ const kdStatusText = computed(() => {
     if (kd.prevK >= kd.prevD && kd.k < kd.d) return UI_STRINGS.KD_STATUS.death
   }
   return UI_STRINGS.KD_STATUS.mid
-})
-
-const isCeilingExpanded = ref(false)
-
-const ladderCeilings = computed(() => {
-  const ceilings = props.stock.allCeilings
-  if (Array.isArray(ceilings) && ceilings.length > 0) {
-    // 天花板由高至低排列（最高在最頂，最近在現價上方）
-    return [...ceilings].sort((a, b) => b.price - a.price)
-  }
-  return []
-})
-
-const ladderSupports = computed(() => {
-  const supports = props.stock.supportLevels
-  if (Array.isArray(supports) && supports.length > 0) {
-    // 地板由高至低排列（最近在現價下方，最深在最底）
-    return [...supports].sort((a, b) => b.price - a.price)
-  }
-  return []
-})
-
-function formatPercent(val) {
-  if (val === null || val === undefined || isNaN(val)) return '--'
-  const sign = val > 0 ? '+' : ''
-  return `${sign}${Number(val).toFixed(2)}%`
-}
-
-const ceilingInfo = computed(() => {
-  if (props.ceilingProfit) return props.ceilingProfit
-  if (props.stock.ceilingProfit) return props.stock.ceilingProfit
-  const ceilings = props.stock.allCeilings
-  if (Array.isArray(ceilings) && ceilings.length > 0) {
-    return ceilings[0]
-  }
-  // Fallback: 如果 stock 有 high5d，自動算出第一關卡
-  if (props.stock.high5d && props.stock.price) {
-    const profit = Number((((props.stock.high5d - props.stock.price) / props.stock.price) * 100).toFixed(2))
-    return {
-      type: `5日高`,
-      price: props.stock.high5d,
-      netProfitPct: profit,
-      passed: profit > 0,
-    }
-  }
-  return null
-})
-
-const isDetailsExpanded = ref(false)
-
-const evaluationDetails = computed(() => {
-  return props.stock?.filterEvaluation?.details || props.filterEvaluation?.details || []
-})
-
-const hasEvaluationDetails = computed(() => {
-  return evaluationDetails.value.length > 0
-})
-
-const filterEvaluationText = computed(() => {
-  // Case 1: 在「全部股票 (ALL)」模式下
-  if (props.activeMode === 'ALL') {
-    const matchedModes = props.stock?.matchedModes || []
-    if (matchedModes.length > 0) {
-      return UI_STRINGS.SCREENER.matchedStrategy(matchedModes.join(' · '))
-    }
-    return UI_STRINGS.SCREENER.noMatchedStrategy
-  }
-
-  // Case 2: 在特定模式下，若為「未符合/淘汰個股」
-  if (props.isUnmatched) {
-    const details = evaluationDetails.value || []
-    const failedItems = details.filter((item) => !item.pass)
-
-    if (failedItems.length > 0) {
-      const shortMap = UI_STRINGS.SCREENER.shortFailLabels || {}
-      const labels = failedItems.map((item) => {
-        if (item.label === '均線支撐') {
-          if (item.desc && (item.desc.includes('10MA') || item.desc.includes('雙均線'))) {
-            return '未站穩均線'
-          }
-          return shortMap['均線支撐'] || '未站穩 5MA'
-        }
-        const rawKey = item.label || ''
-        const noSpaceKey = rawKey.replace(/\s+/g, '')
-        const spacedKey = rawKey
-          .replace(/([A-Za-z0-9]+)([\u4e00-\u9fa5]+)/g, '$1 $2')
-          .replace(/([\u4e00-\u9fa5]+)([A-Za-z0-9]+)/g, '$1 $2')
-        return shortMap[rawKey] || shortMap[noSpaceKey] || shortMap[spacedKey] || rawKey
-      })
-      const reasonsText = labels.join(' · ')
-      return UI_STRINGS.SCREENER.unmatchedSummary
-        ? UI_STRINGS.SCREENER.unmatchedSummary(failedItems.length, reasonsText)
-        : `${failedItems.length} 項未達標：${reasonsText}`
-    }
-
-    const reason = props.stock?.filterEvaluation?.reasonText || props.filterEvaluation?.reasonText
-    if (!reason) return null
-    return `${UI_STRINGS.SCREENER.unmatchedReasonPrefix}${reason}`
-  }
-
-  // Case 3: 在特定模式下，若為「符合個股」 (使用 emoji 💡)
-  const modeLabels = {
-    BOTTOM_REVERSAL: '跌深反轉',
-    BOTTOM_CONSOLIDATION: '底部蓄勢',
-    MOMENTUM_BREAKOUT: '動能攻擊',
-    TREND_PULLBACK: '多頭回測',
-    WASHOUT_IGNITION: '洗盤起漲',
-  }
-  const currentModeName = modeLabels[props.activeMode] || ''
-  if (currentModeName) {
-    return UI_STRINGS.SCREENER.matchedCondition(currentModeName)
-  }
-
-  return props.stock?.filterEvaluation?.reasonText || null
 })
 </script>

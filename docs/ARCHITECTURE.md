@@ -88,6 +88,10 @@ tool-screener-v2/
 │   │   ├── StockTable.vue      ← 主選股結果容器（漸進式渲染與淘汰分組）
 │   │   ├── StockCard.vue       ← 獨立個股卡片（支援點擊代號快速搜尋、速算與近日表現）
 │   │   ├── ForwardValidationBar.vue ← 時光機後續交易日覆盤驗證膠囊條與迷你時間軸歷程
+│   │   ├── StockEvaluationSlot.vue ← 槽位 B 篩選理由與指標診斷詳細清單（支援展開/收合）
+│   │   ├── StockCeilingLadder.vue  ← 槽位 A 天花板關卡價與三明治價格天梯（支援展開/收合）
+│   │   ├── StockChipsSection.vue   ← 籌碼透視區塊（集中度 1D/3D/5D + 短沖避雷分點佔比）
+│   │   ├── StockCardActions.vue    ← 極簡快捷操作列（代號名稱複製 + 外部籌碼資券盤後連結）
 │   │   ├── Sparkline.vue       ← 10日走勢圖（K棒 + 均線 + KD）
 │   │   └── modals/
 │   │       ├── StockPoolModal.vue ← 股票池來源總覽與排行榜名單
