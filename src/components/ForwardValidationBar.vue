@@ -43,12 +43,12 @@
     <!-- 展開後的迷你逐日時間軸歷程 -->
     <div
       v-if="isExpanded"
-      class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-xs font-numeric select-text cursor-auto"
+      class="pt-2 mt-2 border-t border-base-300/40 space-y-2 text-sm font-numeric select-text cursor-auto leading-normal"
       @click.stop
     >
       <!-- 進場基準列 (例如：09/17 四 (基準)) -->
-      <div class="flex items-center justify-between text-base-content/70 pb-1 border-b border-base-300/30">
-        <span class="font-medium text-base-content/75">{{ formatTimelineDate(forwardVal.entryDate) }} ({{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark || '基準' }})</span>
+      <div class="flex items-center justify-between text-base-content/75 pb-1.5 border-b border-base-300/30">
+        <span class="font-medium">{{ formatTimelineDate(forwardVal.entryDate) }} ({{ UI_STRINGS.FORWARD_VALIDATION?.entryBenchmark || '基準' }})</span>
         <span class="font-bold text-base-content">{{ formatNumber(forwardVal.entryPrice) }}</span>
       </div>
 
@@ -56,10 +56,10 @@
       <div
         v-for="rec in forwardVal.dailyRecords"
         :key="rec.tDay"
-        class="flex items-center justify-between text-base-content/85"
+        class="flex items-center justify-between text-base-content/90 py-0.5"
       >
         <div class="flex items-center gap-1.5">
-          <span class="font-medium text-base-content/75">{{ formatTimelineDate(rec.date) }} (T+{{ rec.tDay }})</span>
+          <span class="font-medium text-base-content/80">{{ formatTimelineDate(rec.date) }} (T+{{ rec.tDay }})</span>
         </div>
         <div class="flex items-baseline gap-2.5">
           <span class="font-bold text-base-content">{{ formatNumber(rec.close) }}</span>
@@ -70,8 +70,8 @@
             {{ rec.dayChangePct > 0 ? '▴' : (rec.dayChangePct < 0 ? '▾' : '') }}{{ Math.abs(rec.dayChangePct ?? 0).toFixed(2) }}%
           </span>
           <span
-            class="text-right w-16 text-xs"
-            :class="rec.cumChangePct > 0 ? 'text-rise' : (rec.cumChangePct < 0 ? 'text-fall' : 'text-base-content/60')"
+            class="text-right w-16"
+            :class="rec.cumChangePct > 0 ? 'text-rise' : (rec.cumChangePct < 0 ? 'text-fall' : 'text-base-content/70')"
           >
             {{ rec.cumChangePct > 0 ? '+' : '' }}{{ rec.cumChangePct }}%
           </span>

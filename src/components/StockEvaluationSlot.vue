@@ -31,13 +31,13 @@
     <!-- 展開後的純文字指標通關診斷清單 (允許選取複製文字) -->
     <div
       v-if="isDetailsExpanded && hasEvaluationDetails"
-      class="pt-2 mt-2 border-t border-base-300/40 space-y-1 text-xs sm:text-sm font-numeric select-text cursor-auto"
+      class="pt-2 mt-2 border-t border-base-300/40 space-y-1.5 text-sm font-numeric select-text cursor-auto"
       @click.stop
     >
       <div
         v-for="(item, idx) in evaluationDetails"
         :key="idx"
-        class="flex items-start gap-1.5 leading-relaxed"
+        class="flex items-start gap-1.5 leading-normal py-0.5"
       >
         <span
           class="shrink-0 font-bold"
