@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-10-03**（前端完成 ForwardValidationBar.vue 獨立微元件重構，消除 StockCard.vue 240+ 行重複樣板，並完成置頂與日期星期格式排版）
+> **最後更新：2026-10-03**（修復並恢復 public/data/stock-pool.json 為 10/2 19:20 完整籌碼版本，恢復全市場 472 檔 1D/3D/5D 籌碼集中度與短沖名單，完成 v1003.02 版號維護）
 
 ---
 
@@ -567,6 +567,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 時光機覆盤「後續交易日表現驗證」卡片膠囊條與逐日歷程 UI（Forward Validation Card UI：抽出 `ForwardValidationBar.vue` 獨立微元件，在 `StockCard.vue` 簡約模式、手機端與電腦端以單行引入置頂於股票代號與名稱上方；徹底消除 240+ 行重複 HTML 與邏輯；單行精簡呈現 T+N 結論、累計漲跌幅、波段最高 MFE 與最深 MAE；支援就地向下展開迷你直式時間軸歷程，清楚呈現「MM/DD W (基準)」與「MM/DD W (T+N)」逐日收盤價、當日漲跌幅 ▲/▼ 與累計漲跌幅，數值標準紅綠上色並支援滑鼠反藍選取與複製；最新交易日 T-0 自動隱藏維持版面極簡）— 完成 2026-10-03（v1003.01）
 - [x] 個股卡片深度模組化大重構（StockCard Deep Refactoring & Modularization：將高達 1,093 行之 `StockCard.vue` 抽離出 4 大獨立子元件——`StockEvaluationSlot.vue` 篩選理由與指標通關診斷清單、`StockCeilingLadder.vue` 槽位 A 關卡價與三明治價格天梯、`StockChipsSection.vue` 籌碼集中度與短沖避雷、`StockCardActions.vue` 快捷操作列與外部連結；全元件代碼量驟降至 506 行，消除重複代碼並大幅優化 Vite HMR 與維護彈性）— 完成 2026-10-03（v1003.01）
 - [x] 頂部時光膠囊日期排版精簡（TimeMachineBar Date Simplification：橫向時光膠囊列無須維持兩位數固定寬度對齊，日期由 `10/02` 簡化為不補零 `10/2`，星期由 `週五` 簡化為 `五`，騰出橫向空間提升手機端滑動與閱讀體驗）— 完成 2026-10-03（v1003.01）
+- [x] 修復 stock-pool.json 籌碼覆蓋異常（Fix Chips Overwrite Bug：修復 10/3 本地 commit 意外將帶有空籌碼的本地 stock-pool.json 覆蓋遠端完整資料之問題；徹底恢復至 10/2 19:20 包含 472 檔真實 1D/3D/5D 籌碼集中度與短沖主力名單之正式資料庫，確保全市場卡片籌碼透視區塊正常渲染）— 完成 2026-10-03（v1003.02）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 
