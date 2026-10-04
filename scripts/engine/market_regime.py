@@ -70,6 +70,10 @@ def _calc_index_indicators(bars: List[Dict]) -> Optional[Dict]:
     ma20       = calc_sma(closes, 20)
     bias20     = round((price - ma20) / ma20 * 100, 2) if ma20 else 0.0
 
+    # 5日累計漲跌幅 % (方案 2: 相對大盤強弱度基準)
+    ref_5d     = closes[-6] if len(closes) >= 6 else closes[0]
+    chg5d      = round((price - ref_5d) / ref_5d * 100, 2) if ref_5d > 0 else 0.0
+
     # KD(9,3) — 大盤只有 close，用 close 作 h/l
     kd_input = [{'high': b.get('h', b['c']), 'low': b.get('l', b['c']), 'close': b['c']} for b in bars]
     kd_series = calc_kd_series(kd_input)
@@ -78,11 +82,27 @@ def _calc_index_indicators(bars: List[Dict]) -> Optional[Dict]:
 
     kd_status = _kd_status_label(curr_kd['k'], curr_kd['d'], prev_kd['k'], prev_kd['d'])
 
+    # 近 10 日簡要歷史 (含 date, close, chg5d)
+    history10d = []
+    num_hist = min(len(bars), 10)
+    for idx in range(len(bars) - num_hist, len(bars)):
+        b = bars[idx]
+        b_c = b['c']
+        r5_idx = idx - 5
+        r5 = closes[r5_idx] if r5_idx >= 0 else closes[0]
+        h_chg5d = round((b_c - r5) / r5 * 100, 2) if r5 > 0 else 0.0
+        history10d.append({
+            'date': b.get('date', ''),
+            'close': b_c,
+            'chg5d': h_chg5d,
+        })
+
     return {
         'price':       round(price, 2),
         'prevClose':   round(prev_close, 2),
         'changePrice': chg_price,
         'changePct':   chg_pct,
+        'chg5d':       chg5d,
         'ma5':         ma5,
         'ma10':        ma10,
         'ma20':        ma20,
@@ -95,13 +115,17 @@ def _calc_index_indicators(bars: List[Dict]) -> Optional[Dict]:
             'prevD':  prev_kd['d'],
             'status': kd_status,
         },
-        '_closes': closes,  # 供 MIS 校正用，不輸出到最終 JSON
-        '_bars':   bars,
+        'history10d':  history10d,
+        '_ref_5d':     ref_5d,  # 供 MIS 校正用，不輸出到最終 JSON
+        '_closes':     closes,
+        '_bars':       bars,
     }
 
 
 def _fetch_taiex_bars() -> List[Dict]:
     """Yahoo Finance ^TWII 4個月歷史 K 線"""
+    from datetime import datetime, timezone, timedelta
+    taiwan_tz = timezone(timedelta(hours=8))
     p2 = int(time.time())
     p1 = p2 - 120 * 86400
     url = f'https://query1.finance.yahoo.com/v8/finance/chart/^TWII?period1={p1}&period2={p2}&interval=1d'
@@ -109,19 +133,23 @@ def _fetch_taiex_bars() -> List[Dict]:
     try:
         with urllib.request.urlopen(req, context=_ctx, timeout=10) as resp:
             data = json.loads(resp.read().decode('utf-8'))
-        res   = data['chart']['result'][0]
-        quote = res['indicators']['quote'][0]
-        raw_c = quote['close']
-        raw_h = quote.get('high', raw_c)
-        raw_l = quote.get('low',  raw_c)
+        res        = data['chart']['result'][0]
+        quote      = res['indicators']['quote'][0]
+        timestamps = res.get('timestamp', [])
+        raw_c      = quote['close']
+        raw_h      = quote.get('high', raw_c)
+        raw_l      = quote.get('low',  raw_c)
         bars = []
         for i in range(len(raw_c)):
             if raw_c[i] is not None:
                 c = round(raw_c[i], 2)
+                ts = timestamps[i] if i < len(timestamps) else None
+                dt_str = datetime.fromtimestamp(ts, taiwan_tz).strftime('%Y-%m-%d') if ts else ''
                 bars.append({
                     'c': c,
                     'h': round(raw_h[i], 2) if raw_h[i] is not None else c,
                     'l': round(raw_l[i], 2) if raw_l[i] is not None else c,
+                    'date': dt_str,
                 })
         return bars
     except Exception as e:
@@ -130,7 +158,51 @@ def _fetch_taiex_bars() -> List[Dict]:
 
 
 def _fetch_otc_bars() -> List[Dict]:
-    """TPEx 官方 OpenAPI 櫃買指數歷史"""
+    """
+    TPEx 官方櫃買指數歷史：
+    優先抓取櫃買中心月度歷史日成交量值指數（含近 2 個月，解決月初交易日不足問題），
+    若失敗則 fallback 至 OpenAPI tpex_daily_trading_index。
+    """
+    from datetime import datetime, timezone, timedelta
+    taiwan_tz = timezone(timedelta(hours=8))
+    now = datetime.now(taiwan_tz)
+    roc_year = now.year - 1911
+    curr_m = now.month
+    if curr_m == 1:
+        prev_year, prev_m = roc_year - 1, 12
+    else:
+        prev_year, prev_m = roc_year, curr_m - 1
+
+    months_to_fetch = [f'{prev_year}/{prev_m:02d}', f'{roc_year}/{curr_m:02d}']
+    monthly_bars = []
+
+    try:
+        for m_str in months_to_fetch:
+            url = f'https://www.tpex.org.tw/web/stock/aftertrading/daily_trading_index/st41_result.php?l=zh-tw&d={m_str}&s=0,asc,0'
+            req = urllib.request.Request(url, headers=_HEADERS)
+            with urllib.request.urlopen(req, context=_ctx, timeout=8) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+            for r in data.get('tables', [{}])[0].get('data', []):
+                raw_close = r[4] if len(r) > 4 else None
+                raw_date = str(r[0]) if len(r) > 0 else ''
+                if raw_close is not None:
+                    try:
+                        c = round(float(str(raw_close).replace(',', '')), 2)
+                        date_parts = raw_date.split('/')
+                        if len(date_parts) == 3:
+                            ad_y = int(date_parts[0]) + 1911
+                            dt_str = f'{ad_y}-{date_parts[1].zfill(2)}-{date_parts[2].zfill(2)}'
+                        else:
+                            dt_str = raw_date
+                        monthly_bars.append({'c': c, 'h': c, 'l': c, 'date': dt_str})
+                    except (ValueError, TypeError):
+                        continue
+        if len(monthly_bars) >= 5:
+            return monthly_bars
+    except Exception as e:
+        print(f'  [market_regime] OTC TPEx 月度歷史抓取提示: {e}，切換 fallback')
+
+    # Fallback: TPEx 官方 OpenAPI
     url = 'https://www.tpex.org.tw/openapi/v1/tpex_daily_trading_index'
     req = urllib.request.Request(url, headers=_HEADERS)
     try:
@@ -139,15 +211,20 @@ def _fetch_otc_bars() -> List[Dict]:
         bars = []
         for r in data:
             raw = r.get('TPExIndex') or r.get('price') or r.get('Close')
+            raw_d = str(r.get('Date', ''))
             if raw:
                 try:
                     c = round(float(str(raw).replace(',', '')), 2)
-                    bars.append({'c': c, 'h': c, 'l': c})
+                    dt_str = ''
+                    if len(raw_d) == 7: # 民國 1151001
+                        ad_y = int(raw_d[:3]) + 1911
+                        dt_str = f'{ad_y}-{raw_d[3:5]}-{raw_d[5:7]}'
+                    bars.append({'c': c, 'h': c, 'l': c, 'date': dt_str})
                 except (ValueError, TypeError):
                     continue
         return bars
     except Exception as e:
-        print(f'  [market_regime] OTC TPEx 失敗: {e}')
+        print(f'  [market_regime] OTC TPEx OpenAPI 失敗: {e}')
         return []
 
 
@@ -182,6 +259,10 @@ def _mis_calibrate_indices(taiex: Dict, otc: Dict) -> None:
                 target['prevClose'] = y
             if target.get('ma20'):
                 target['bias20'] = round((z - target['ma20']) / target['ma20'] * 100, 2)
+
+            # 更新 5 日累計漲跌幅 %
+            if target.get('_ref_5d') and target['_ref_5d'] > 0:
+                target['chg5d'] = round((z - target['_ref_5d']) / target['_ref_5d'] * 100, 2)
 
             # 更新狀態描述
             target['statusDesc'] = _status_desc(
@@ -274,15 +355,17 @@ def fetch_market_data() -> Optional[Dict]:
     _mis_calibrate_indices(taiex, otc)
 
     # 移除內部暫存欄位
+    taiex.pop('_ref_5d', None)
     taiex.pop('_closes', None)
     taiex.pop('_bars',   None)
+    otc.pop('_ref_5d',   None)
     otc.pop('_closes',   None)
     otc.pop('_bars',     None)
 
     regime = _evaluate_regime(taiex, otc)
 
-    print(f'  [market_regime] TAIEX={taiex["price"]} ({taiex["changePct"]:+.2f}%) | '
-          f'OTC={otc["price"]} ({otc["changePct"]:+.2f}%) | {regime["code"]}')
+    print(f'  [market_regime] TAIEX={taiex["price"]} (1D {taiex["changePct"]:+.2f}%, 5D {taiex.get("chg5d", 0):+.2f}%) | '
+          f'OTC={otc["price"]} (1D {otc["changePct"]:+.2f}%, 5D {otc.get("chg5d", 0):+.2f}%) | {regime["code"]}')
 
     return {'taiex': taiex, 'otc': otc, 'regime': regime}
 

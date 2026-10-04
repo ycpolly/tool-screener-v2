@@ -21,11 +21,11 @@
 
 ---
 
-## 二、第一階段 (Phase 1)：現有資料零爬蟲擴充
+## 二、第一階段 (Phase 1)：現有資料零爬蟲擴充 【後端已完成 ✅ 2026-10-04】
 
 ### 1. 方案 2：相對大盤強弱度（Relative Strength）
 
-#### 【後端 Claude 職責】
+#### 【後端 Claude 職責】（✅ 已實作完成並驗證通過）
 1. **`scripts/engine/market_regime.py`**：
    - 在產出 `market.taiex` 與 `market.otc` 物件時，計算大盤加權指數與櫃買指數之近 5 日累計漲跌幅：
      $$\text{chg5d} = \frac{\text{close}_{\text{today}} - \text{close}_{5\text{D ago}}}{\text{close}_{5\text{D ago}}} \times 100$$
@@ -59,7 +59,7 @@
 
 ### 2. 方案 4：籌碼集中度連續趨勢（Chips Concentration Trend）
 
-#### 【後端 Claude 職責】
+#### 【後端 Claude 職責】（✅ 已實作完成並驗證通過）
 1. **`scripts/writer.py`（或 `src/engine/screener.js`）**：
    - 讀取個股既有的 `chipsHistory`（近 10 日快照）。
    - 取出最近 3 個有籌碼紀錄之交易日的「集中度 %（如 `concentration` 或 `major` 買超淨額）」。

@@ -12,7 +12,7 @@ import sys
 from collections import Counter
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
-from typing import List, Dict, Optional, Set
+from typing import List, Dict, Optional, Set, Tuple
 
 # 台灣時區 (UTC+8)，確保 GitHub Actions (預設 UTC) 寫入正確台灣時間
 _TAIWAN_TZ = timezone(timedelta(hours=8))
@@ -66,6 +66,77 @@ _UMBRELLA_CATEGORIES = {
     'MajorSell':   {'MajorSell1D', 'MajorSell3D'},
 }
 
+
+
+def _calc_stock_chg5d(data: Dict) -> Optional[float]:
+    """計算個股近 5 日累計漲跌幅 %"""
+    history = data.get('history10d') or []
+    if len(history) >= 6:
+        c0 = history[-1].get('close', 0.0)
+        c5 = history[-6].get('close', 0.0)
+        if c5 and c5 > 0:
+            return round((c0 - c5) / c5 * 100, 2)
+    elif len(history) >= 2:
+        c0 = history[-1].get('close', 0.0)
+        c_start = history[0].get('close', 0.0)
+        if c_start and c_start > 0:
+            return round((c0 - c_start) / c_start * 100, 2)
+    sparkline = data.get('sparkline') or []
+    if len(sparkline) >= 6:
+        c0 = sparkline[-1]
+        c5 = sparkline[-6]
+        if c5 and c5 > 0:
+            return round((c0 - c5) / c5 * 100, 2)
+    return None
+
+
+def _calc_rel_strength_5d(
+    stock_chg5d: Optional[float], market: str, market_data: Optional[Dict]
+) -> Optional[float]:
+    """計算個股相對大盤近 5 日強弱度 % (超額報酬)"""
+    if stock_chg5d is None or not market_data:
+        return None
+    bench = market_data.get('otc') if market == 'otc' else market_data.get('taiex')
+    bench_chg5d = bench.get('chg5d') if isinstance(bench, dict) else None
+    if bench_chg5d is not None:
+        return round(stock_chg5d - bench_chg5d, 2)
+    return None
+
+
+def _calc_chips_trend(chips_hist: Dict) -> Tuple[Optional[str], Optional[int]]:
+    """計算近 3 個有紀錄交易日之籌碼集中度連續趨勢與分數"""
+    if not chips_hist or not isinstance(chips_hist, dict):
+        return None, None
+    valid_dates = sorted([
+        d for d, val in chips_hist.items()
+        if isinstance(val, dict) and val.get('chips') and val['chips'].get('concentration1d') is not None
+    ])
+    if not valid_dates:
+        return None, None
+    if len(valid_dates) >= 3:
+        recent = valid_dates[-3:]
+        c0 = chips_hist[recent[2]]['chips']['concentration1d']
+        c1 = chips_hist[recent[1]]['chips']['concentration1d']
+        c2 = chips_hist[recent[0]]['chips']['concentration1d']
+        if c0 > c1 and c1 > c2:
+            return 'UP', 3
+        elif c0 > c1:
+            return 'UP', 2
+        elif c0 < c1 and c1 < c2:
+            return 'DOWN', 0
+        else:
+            return 'FLAT', 1
+    elif len(valid_dates) == 2:
+        c0 = chips_hist[valid_dates[1]]['chips']['concentration1d']
+        c1 = chips_hist[valid_dates[0]]['chips']['concentration1d']
+        if c0 > c1:
+            return 'UP', 2
+        elif c0 < c1:
+            return 'DOWN', 0
+        else:
+            return 'FLAT', 1
+    else:  # len == 1
+        return 'FLAT', 1
 
 
 def _is_valid_stock_code(code: str) -> bool:
@@ -231,6 +302,11 @@ def build_stock_pool(
         if effective_stock_chips is None and today_bar_date in chips_hist:
             effective_stock_chips = chips_hist[today_bar_date].get('chips')
 
+        # ── Phase 1: 相對大盤強弱度與籌碼連續趨勢 ──
+        stock_chg5d = _calc_stock_chg5d(data)
+        rel_strength_5d = _calc_rel_strength_5d(stock_chg5d, data.get('market', 'tse'), market_data)
+        chips_trend_3d, chips_score = _calc_chips_trend(chips_hist)
+
         stock = {
             'code':      code,
             'name':      name,
@@ -247,6 +323,9 @@ def build_stock_pool(
             'change':     data.get('change',     0.0),
             'changePct':  data.get('changePct',  0.0),
             'volume':     data.get('volume',     0),
+
+            # 相對強弱 (Phase 1 方案 2)
+            'relStrength5d': rel_strength_5d,
 
             # 均線
             'ma5':   data.get('ma5',  0.0),
@@ -276,6 +355,8 @@ def build_stock_pool(
             # 籌碼集中度與短沖分點（當日最新與歷史快照）
             'chips':        effective_stock_chips,
             'chipsHistory': chips_hist,
+            'chipsTrend3d': chips_trend_3d,
+            'chipsScore':   chips_score,
         }
         stocks.append(stock)
 

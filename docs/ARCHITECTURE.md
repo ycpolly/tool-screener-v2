@@ -158,6 +158,9 @@ Python 輸出 → `public/data/stock-pool.json`
       "low5d": 960.0,
       "low10d": 945.0,
       "low20d": 920.0,
+      "relStrength5d": 3.25,
+      "chipsTrend3d": "UP",
+      "chipsScore": 3,
       "kd": {
         "k": 58.3,
         "d": 54.1,
@@ -206,6 +209,7 @@ Python 輸出 → `public/data/stock-pool.json`
       "prevClose": 22100.0,
       "changePrice": 250.4,
       "changePct": 1.13,
+      "chg5d": 0.66,
       "ma5": 22100.0,
       "ma10": 21900.0,
       "ma20": 21800.0,
@@ -219,6 +223,7 @@ Python 輸出 → `public/data/stock-pool.json`
       "prevClose": 228.0,
       "changePrice": 2.5,
       "changePct": 1.10,
+      "chg5d": 3.18,
       "ma5": 228.0,
       "ma10": 226.0,
       "ma20": 225.0,
@@ -586,6 +591,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 全站日期時間戳記排版精簡（Timestamp Format Simplification：全站資料時間戳記全面改為『M/D W HH:mm (狀態)』無贅字規範；頂部狀態列改為『10/2 五 19:20 (盤後)』，去除前綴與西元年號；選股池來源總覽改為『總計納入 472 檔個股 · 10/2 五 19:20 更新』，維持全站精簡一致）— 完成 2026-10-03
 - [x] 選股池來源彈窗高度上限收斂與底欄簡化（StockPoolModal Height & Footer Polish：將彈窗最大高度由 90vh 收斂至 80vh（`max-h-[80vh]`），杜絕手機端頂部 Header 被瀏覽器網址列或安全區頂出視野之問題；右上角既有 X 叉叉與遮罩點擊關閉，徹底移除底部冗餘的「關閉」按鈕欄位，垂直高度節省約 50px 全數釋出給名單清單）— 完成 2026-10-03
 - [x] 選股池擴充 4 大官方來源排行（4 New Official Rankings & 38 Endpoints Expansion：後端爬蟲 `scripts/scrapers/fubon.py` 新增量增幅、量增、漲幅、自營商買超 1D 共 8 個富邦 DJ 端點與專屬解析器，排行榜擴增至 19 組 38 個 URL；`scripts/writer.py` 加入 VolGrowthPct、VolGrowth、PriceGain、DealerBuy1D 標籤映射與 DealerBuy 傘形收斂；`src/constants/category-urls.js` 與 `ui-strings.js` 建立官方外開跳轉與縮寫字典；`StockPoolModal.vue` 擴充 22 大來源面板卡片）— 完成 2026-10-03
+- [x] 五大模式準確度提升第一階段後端運算（Phase 1 Accuracy Improvement Backend：利用現有資料零新爬蟲，完成相對大盤 5 日強弱度 `relStrength5d`、加權與櫃買 5 日累計漲跌幅 `chg5d`、近 3 個有紀錄交易日之籌碼集中度連續趨勢 `chipsTrend3d` 與連續集中評分 `chipsScore`；修復月初 TPEx 官方月度日成交量值指數跨月拼接，解決交易日不足問題；時光機 `sliceStockAt` 與生命週期 `getStockLifecycle` 同步支援動態歷史倒流計算，零未來數據外洩）— 完成 2026-10-04
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

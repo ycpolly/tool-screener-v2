@@ -1079,7 +1079,7 @@ export function isLiveTradingDay(sampleBar, currentTime = new Date()) {
  * @param {Date}   [currentTime]     - 當前時間（預設 new Date()）
  * @returns {Object}                 - 該歷史日之個股快照物件
  */
-export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date()) {
+export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), benchmarkChg5d = null) {
   if (!stock || !Array.isArray(stock.history10d) || stock.history10d.length === 0 || dayOffset <= 0) {
     return stock
   }
@@ -1140,6 +1140,70 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date()) {
     if (hist.chips !== undefined) {
       slicedChips = hist.chips
     }
+  }
+
+  // Phase 1: 依據歷史快照計算該歷史日的籌碼集中度連續趨勢
+  let slicedChipsTrend3d = stock.chipsTrend3d ?? null
+  let slicedChipsScore = stock.chipsScore ?? null
+  if (stock.chipsHistory && targetDate) {
+    const validDates = Object.keys(stock.chipsHistory)
+      .filter(d => d <= targetDate && stock.chipsHistory[d]?.chips?.concentration1d != null)
+      .sort()
+
+    if (validDates.length >= 3) {
+      const recent = validDates.slice(-3)
+      const c0 = stock.chipsHistory[recent[2]].chips.concentration1d
+      const c1 = stock.chipsHistory[recent[1]].chips.concentration1d
+      const c2 = stock.chipsHistory[recent[0]].chips.concentration1d
+      if (c0 > c1 && c1 > c2) {
+        slicedChipsTrend3d = 'UP'
+        slicedChipsScore = 3
+      } else if (c0 > c1) {
+        slicedChipsTrend3d = 'UP'
+        slicedChipsScore = 2
+      } else if (c0 < c1 && c1 < c2) {
+        slicedChipsTrend3d = 'DOWN'
+        slicedChipsScore = 0
+      } else {
+        slicedChipsTrend3d = 'FLAT'
+        slicedChipsScore = 1
+      }
+    } else if (validDates.length === 2) {
+      const recent = validDates.slice(-2)
+      const c0 = stock.chipsHistory[recent[1]].chips.concentration1d
+      const c1 = stock.chipsHistory[recent[0]].chips.concentration1d
+      if (c0 > c1) {
+        slicedChipsTrend3d = 'UP'
+        slicedChipsScore = 2
+      } else if (c0 < c1) {
+        slicedChipsTrend3d = 'DOWN'
+        slicedChipsScore = 0
+      } else {
+        slicedChipsTrend3d = 'FLAT'
+        slicedChipsScore = 1
+      }
+    } else if (validDates.length === 1) {
+      slicedChipsTrend3d = 'FLAT'
+      slicedChipsScore = 1
+    } else {
+      slicedChipsTrend3d = null
+      slicedChipsScore = null
+    }
+  }
+
+  // Phase 1: 動態推算該歷史日的近 5 日累計漲跌幅與相對強弱度
+  let slicedStockChg5d = null
+  const prior5Index = targetIndex - 5
+  if (prior5Index >= 0 && stock.history10d[prior5Index]) {
+    const c0 = bar.close
+    const c5 = stock.history10d[prior5Index].close
+    if (c5 > 0) {
+      slicedStockChg5d = round2(((c0 - c5) / c5) * 100)
+    }
+  }
+  let slicedRelStrength5d = stock.relStrength5d ?? null
+  if (benchmarkChg5d != null && slicedStockChg5d != null) {
+    slicedRelStrength5d = round2(slicedStockChg5d - benchmarkChg5d)
   }
 
   // 依據歷史 categories 動態計算避雷警示字串
@@ -1248,6 +1312,10 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date()) {
       prevK: prevBar ? prevBar.k : bar.k,
       prevD: prevBar ? prevBar.d : bar.d,
     },
+    // Phase 1 指標
+    relStrength5d: slicedRelStrength5d,
+    chipsTrend3d: slicedChipsTrend3d,
+    chipsScore: slicedChipsScore,
     forwardValidation,
     // 截斷未來資料，確保前一日糾結與斜率判斷完全基於當時歷史視角
     history10d: stock.history10d.slice(0, targetIndex + 1),
@@ -1311,6 +1379,9 @@ export function getStockLifecycle(stock, maxDays = 7, currentTime = new Date()) 
       change: sliced.change,
       changePct: sliced.changePct,
       volume: sliced.volume,
+      relStrength5d: sliced.relStrength5d ?? null,
+      chipsTrend3d: sliced.chipsTrend3d ?? null,
+      chipsScore: sliced.chipsScore ?? null,
       bias5: sliced.bias5,
       bias20: sliced.bias20,
       ma5: sliced.ma5,

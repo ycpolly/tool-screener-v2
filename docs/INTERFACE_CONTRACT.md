@@ -68,6 +68,13 @@ interface Stock {
     dayTradersBranches?: string[] // 今日短沖主力分點名單，e.g. ["富邦", "凱基-台北", "台灣摩根士丹利"]
   }
 
+  // 相對大盤強弱度 (Phase 1 方案 2)
+  relStrength5d?: number    // 相對大盤近 5 日強弱度 % (超額報酬，例如 +13.10)
+
+  // 籌碼集中度連續趨勢 (Phase 1 方案 4)
+  chipsTrend3d?: 'UP' | 'FLAT' | 'DOWN' // 近 3 個有紀錄交易日之籌碼集中度趨勢
+  chipsScore?:   number                 // 籌碼連續集中天數評分 (3: 連3日集中, 2: 連2日集中, 1: 持平, 0: 連續發散)
+
   // Sparkline
   sparkline:  number[]      // 近10日收盤價陣列
   history10d: DayBar[]      // 近10日完整日K（含 ma5/ma10/kd）
@@ -143,10 +150,12 @@ interface IndexData {
   prevClose:   number
   changePrice: number
   changePct:   number
+  chg5d?:      number       // 近 5 日累計漲跌幅 %，例如 +0.66
   ma5:  number;  ma10: number;  ma20: number
   bias20:      number       // 月線乖離率 %
   statusDesc:  string       // 動態描述，e.g. "多頭強勢攻擊 (+1.13%)"
   kd: { k: number; d: number; prevK: number; prevD: number; status: string }
+  history10d?: Array<{ date: string; close: number; chg5d?: number }> // 近 10 日走勢與 5D 漲跌幅
 }
 
 interface MarketData {
