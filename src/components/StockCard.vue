@@ -31,9 +31,9 @@
           </span>
           <span
             v-if="relStrengthFormatted"
-            class="shrink-0 text-xs px-1.5 py-0.5 rounded font-numeric font-semibold select-none"
-            :class="rsBadgeClass"
-            :title="rsBadgeTitle"
+            class="shrink-0 text-xs font-numeric font-semibold select-none"
+            :class="rsColorClass"
+            :title="rsTitle"
           >
             {{ UI_STRINGS.REL_STRENGTH?.prefix || 'RS' }} {{ relStrengthFormatted }}
           </span>
@@ -90,9 +90,9 @@
             </span>
             <span
               v-if="relStrengthFormatted"
-              class="shrink-0 text-xs px-1.5 py-0.5 rounded font-numeric font-semibold select-none"
-              :class="rsBadgeClass"
-              :title="rsBadgeTitle"
+              class="shrink-0 text-xs font-numeric font-semibold select-none"
+              :class="rsColorClass"
+              :title="rsTitle"
             >
               {{ UI_STRINGS.REL_STRENGTH?.prefix || 'RS' }} {{ relStrengthFormatted }}
             </span>
@@ -268,9 +268,9 @@
             </span>
             <span
               v-if="relStrengthFormatted"
-              class="shrink-0 text-xs px-1.5 py-0.5 rounded font-numeric font-semibold select-none"
-              :class="rsBadgeClass"
-              :title="rsBadgeTitle"
+              class="shrink-0 text-xs font-numeric font-semibold select-none"
+              :class="rsColorClass"
+              :title="rsTitle"
             >
               {{ UI_STRINGS.REL_STRENGTH?.prefix || 'RS' }} {{ relStrengthFormatted }}
             </span>
@@ -534,19 +534,15 @@ const relStrengthFormatted = computed(() => {
   return `${sign}${Number(rs).toFixed(1)}%`
 })
 
-const rsBadgeClass = computed(() => {
+const rsColorClass = computed(() => {
   const rs = props.stock.relStrength5d
   if (rs === null || rs === undefined || isNaN(rs)) return ''
-  if (rs > 0) {
-    return 'bg-rise/10 text-rise border border-rise/25'
-  }
-  if (rs < 0) {
-    return 'bg-base-300/40 text-base-content/60 border border-base-300/60'
-  }
-  return 'bg-base-300/40 text-base-content/70 border border-base-300/60'
+  if (rs > 0) return 'text-rise'
+  if (rs < 0) return 'text-fall'
+  return 'text-base-content/60'
 })
 
-const rsBadgeTitle = computed(() => {
+const rsTitle = computed(() => {
   const rs = props.stock.relStrength5d
   if (rs === null || rs === undefined || isNaN(rs)) return ''
   const benchmarkName = props.stock.market === 'otc'
