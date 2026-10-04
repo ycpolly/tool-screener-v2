@@ -53,6 +53,15 @@ export const UI_STRINGS = {
     DANGER: { badge: '系統性風險', title: '破月線，建議空手觀望' },
   },
 
+  MARKET_BANNER: {
+    defaultBadge: '風控判定',
+    defaultTitle: '大盤多空監控',
+    taiexName: '加權指數',
+    otcName: '櫃買指數',
+    bias20: '月乖離',
+    benchmark5d: '5D',
+  },
+
   SCREENER: {
     updateBtn: '更新',
     updatingBtn: '更新中',
@@ -544,6 +553,26 @@ export const UI_STRINGS = {
     expand: '展開',
     collapse: '收合',
     empty: '最新交易日（尚無後續交易資料）',
+  },
+
+  REL_STRENGTH: {
+    label: '相對強弱',
+    stronger: '強於大盤',
+    weaker: '弱於大盤',
+    prefix: 'RS',
+    benchmark5d: '5D',
+    benchmarkTaiex: '加權 5D',
+    benchmarkOtc: '櫃買 5D',
+  },
+
+  CHIPS_TREND: {
+    up: '籌碼連續集中',
+    down: '籌碼連續發散',
+    flat: '籌碼持平',
+    streak3: '連 3 日集中',
+    streak2: '連 2 日集中',
+    streak3Short: '連 3 日',
+    streak2Short: '連 2 日',
   },
 }
 

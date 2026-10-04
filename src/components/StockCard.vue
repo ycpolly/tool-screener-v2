@@ -29,6 +29,14 @@
           <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
             [{{ UI_STRINGS.SCREENER.disposed }}]
           </span>
+          <span
+            v-if="relStrengthFormatted"
+            class="shrink-0 text-xs px-1.5 py-0.5 rounded font-numeric font-semibold select-none"
+            :class="rsBadgeClass"
+            :title="rsBadgeTitle"
+          >
+            {{ UI_STRINGS.REL_STRENGTH?.prefix || 'RS' }} {{ relStrengthFormatted }}
+          </span>
         </div>
         <div
           class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
@@ -79,6 +87,14 @@
             <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
             <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
               [{{ UI_STRINGS.SCREENER.disposed }}]
+            </span>
+            <span
+              v-if="relStrengthFormatted"
+              class="shrink-0 text-xs px-1.5 py-0.5 rounded font-numeric font-semibold select-none"
+              :class="rsBadgeClass"
+              :title="rsBadgeTitle"
+            >
+              {{ UI_STRINGS.REL_STRENGTH?.prefix || 'RS' }} {{ relStrengthFormatted }}
             </span>
           </div>
           <div
@@ -249,6 +265,14 @@
             <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
             <span v-if="stock.isDisposed" class="font-bold text-sm text-rise">
               [{{ UI_STRINGS.SCREENER.disposed }}]
+            </span>
+            <span
+              v-if="relStrengthFormatted"
+              class="shrink-0 text-xs px-1.5 py-0.5 rounded font-numeric font-semibold select-none"
+              :class="rsBadgeClass"
+              :title="rsBadgeTitle"
+            >
+              {{ UI_STRINGS.REL_STRENGTH?.prefix || 'RS' }} {{ relStrengthFormatted }}
             </span>
           </div>
           <div
@@ -501,5 +525,36 @@ const kdStatusText = computed(() => {
     if (kd.prevK >= kd.prevD && kd.k < kd.d) return UI_STRINGS.KD_STATUS.death
   }
   return UI_STRINGS.KD_STATUS.mid
+})
+
+const relStrengthFormatted = computed(() => {
+  const rs = props.stock.relStrength5d
+  if (rs === null || rs === undefined || isNaN(rs)) return null
+  const sign = rs >= 0 ? '+' : ''
+  return `${sign}${Number(rs).toFixed(1)}%`
+})
+
+const rsBadgeClass = computed(() => {
+  const rs = props.stock.relStrength5d
+  if (rs === null || rs === undefined || isNaN(rs)) return ''
+  if (rs > 0) {
+    return 'bg-rise/10 text-rise border border-rise/25'
+  }
+  if (rs < 0) {
+    return 'bg-base-300/40 text-base-content/60 border border-base-300/60'
+  }
+  return 'bg-base-300/40 text-base-content/70 border border-base-300/60'
+})
+
+const rsBadgeTitle = computed(() => {
+  const rs = props.stock.relStrength5d
+  if (rs === null || rs === undefined || isNaN(rs)) return ''
+  const benchmarkName = props.stock.market === 'otc'
+    ? (UI_STRINGS.REL_STRENGTH?.benchmarkOtc || '櫃買 5D')
+    : (UI_STRINGS.REL_STRENGTH?.benchmarkTaiex || '加權 5D')
+  const statusDesc = rs >= 0
+    ? (UI_STRINGS.REL_STRENGTH?.stronger || '強於大盤')
+    : (UI_STRINGS.REL_STRENGTH?.weaker || '弱於大盤')
+  return `${UI_STRINGS.REL_STRENGTH?.label || '相對強弱'}：${statusDesc} (${benchmarkName})`
 })
 </script>

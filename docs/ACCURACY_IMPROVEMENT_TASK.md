@@ -21,7 +21,7 @@
 
 ---
 
-## 二、第一階段 (Phase 1)：現有資料零爬蟲擴充 【後端已完成 ✅ 2026-10-04】
+## 二、第一階段 (Phase 1)：現有資料零爬蟲擴充 【後端已完成 ✅ 2026-10-04 / 前端已完成 ✅ 2026-10-04】
 
 ### 1. 方案 2：相對大盤強弱度（Relative Strength）
 
@@ -37,7 +37,7 @@
      $$\text{relStrength5d} = \text{stockChg5d} - \text{benchmarkChg5d}$$
    - 寫入 `stock.relStrength5d`（型態：`number`，四捨五入至小數點後 2 位，如 `+3.25`）。
 
-#### 【前端 Gemini 職責】
+#### 【前端 Gemini 職責】（✅ 已實作完成並驗證通過）
 1. **`src/constants/ui-strings.js`**：
    - 定義字串字典：
      ```javascript
@@ -46,6 +46,7 @@
        stronger: '強於大盤',
        weaker: '弱於大盤',
        prefix: 'RS',
+       benchmark5d: '5D',
        benchmarkTaiex: '加權 5D',
        benchmarkOtc: '櫃買 5D',
      },
@@ -53,8 +54,10 @@
        up: '籌碼連續集中',
        down: '籌碼連續發散',
        flat: '籌碼持平',
-       streak3: '連3日集中',
-       streak2: '連2日集中',
+       streak3: '連 3 日集中',
+       streak2: '連 2 日集中',
+       streak3Short: '連 3 日',
+       streak2Short: '連 2 日',
      }
      ```
 2. **`src/components/MarketBanner.vue`**：
@@ -80,7 +83,7 @@
      - 其餘情況：`chipsTrend3d: 'FLAT'`，`chipsScore: 1`。
    - 寫入 `stock.chipsTrend3d` 與 `stock.chipsScore`，且時光機 `sliceStockAt` 支援歷史動態倒流重算。
 
-#### 【前端 Gemini 職責】
+#### 【前端 Gemini 職責】（✅ 已實作完成並驗證通過）
 1. **`src/components/StockChipsSection.vue`**（籌碼透視子元件）：
    - **資料來源**：`props.stock.chipsTrend3d`（`'UP' | 'FLAT' | 'DOWN' | null`）與 `props.stock.chipsScore`（`number | null`）。
    - **視覺呈現**：在現有「籌碼集中度 1D · 3D · 5D」數值旁，附加趨勢箭頭或微型標記：

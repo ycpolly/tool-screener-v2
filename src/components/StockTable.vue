@@ -65,7 +65,7 @@
           <StockCard
             v-for="stock in visibleSearchMatchedStocks"
             :key="stock.code"
-            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, activeMode]"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, isCompact, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-compact="isCompact"
@@ -98,7 +98,7 @@
           <StockCard
             v-for="stock in visibleSearchUnmatchedStocks"
             :key="stock.code"
-            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, true, activeMode]"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, isCompact, true, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-unmatched="true"
@@ -142,7 +142,7 @@
         <StockCard
           v-for="stock in visibleSortedStocks"
           :key="stock.code"
-          v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, activeMode]"
+          v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, isCompact, activeMode]"
           :stock="stock"
           :active-mode="activeMode"
           :is-compact="isCompact"
@@ -194,7 +194,7 @@
           <StockCard
             v-for="stock in visibleSortedUnmatchedStocks"
             :key="stock.code"
-            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, isCompact, true, activeMode]"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, isCompact, true, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-unmatched="true"

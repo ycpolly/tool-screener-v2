@@ -15,6 +15,75 @@
           </span>
           <span v-if="idx < chipsConcentrationItems.length - 1" class="text-base-content/40 mx-1.5">·</span>
         </template>
+
+        <!-- 方案 4：籌碼集中連續趨勢徽章 (Phase 1) -->
+        <template v-if="chipsTrendBadge">
+          <span class="text-base-content/40 mx-1.5">·</span>
+          <span
+            class="inline-flex items-center align-baseline select-none"
+            :class="chipsTrendBadge.badgeClass"
+            :title="chipsTrendBadge.tooltip"
+          >
+            <!-- 連 3 日雙箭頭 -->
+            <svg
+              v-if="chipsTrendBadge.type === 'streak3'"
+              class="w-3 h-3 shrink-0"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 12.5l4-4 4 4" />
+              <path d="M4 7.5l4-4 4 4" />
+            </svg>
+
+            <!-- 連 2 日單箭頭 -->
+            <svg
+              v-else-if="chipsTrendBadge.type === 'streak2'"
+              class="w-3 h-3 shrink-0"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 10.5l4-4 4 4" />
+            </svg>
+
+            <!-- 發散向下箭頭 -->
+            <svg
+              v-else-if="chipsTrendBadge.type === 'down'"
+              class="w-3 h-3 shrink-0"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 5.5l4 4 4-4" />
+            </svg>
+
+            <!-- 持平向右箭頭 -->
+            <svg
+              v-else-if="chipsTrendBadge.type === 'flat'"
+              class="w-3 h-3 shrink-0"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5.5 4l4 4-4 4" />
+            </svg>
+
+            <span v-if="chipsTrendBadge.text" class="font-bold ml-0.5">{{ chipsTrendBadge.text }}</span>
+          </span>
+        </template>
       </div>
 
       <!-- 短沖避雷 (基本文字色，百分比加粗，已依指令移除左側驚嘆號圖示) -->
@@ -60,6 +129,49 @@ const chipsConcentrationItems = computed(() => {
   if (d3 != null) items.push({ label: '3D', val: `${d3 >= 0 ? '+' : ''}${Number(d3).toFixed(1)}%`, isPositive: d3 > 0 })
   if (d5 != null) items.push({ label: '5D', val: `${d5 >= 0 ? '+' : ''}${Number(d5).toFixed(1)}%`, isPositive: d5 > 0 })
   return items
+})
+
+const chipsTrendBadge = computed(() => {
+  const trend = props.stock.chipsTrend3d
+  const score = props.stock.chipsScore
+  if (!trend) return null
+
+  if (trend === 'UP') {
+    if (score >= 3) {
+      return {
+        type: 'streak3',
+        text: UI_STRINGS.CHIPS_TREND?.streak3Short || '連 3 日',
+        tooltip: UI_STRINGS.CHIPS_TREND?.streak3 || '連 3 日集中',
+        badgeClass: 'gap-0.5 px-1.5 py-0.5 bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded text-xs',
+      }
+    }
+    return {
+      type: 'streak2',
+      text: UI_STRINGS.CHIPS_TREND?.streak2Short || '連 2 日',
+      tooltip: UI_STRINGS.CHIPS_TREND?.streak2 || '連 2 日集中',
+      badgeClass: 'gap-0.5 px-1.5 py-0.5 bg-rise/10 text-rise border border-rise/25 rounded text-xs',
+    }
+  }
+
+  if (trend === 'FLAT') {
+    return {
+      type: 'flat',
+      text: '',
+      tooltip: UI_STRINGS.CHIPS_TREND?.flat || '籌碼持平',
+      badgeClass: 'text-base-content/60',
+    }
+  }
+
+  if (trend === 'DOWN') {
+    return {
+      type: 'down',
+      text: '',
+      tooltip: UI_STRINGS.CHIPS_TREND?.down || '籌碼連續發散',
+      badgeClass: 'text-fall',
+    }
+  }
+
+  return null
 })
 
 const dayTradersInfo = computed(() => {
