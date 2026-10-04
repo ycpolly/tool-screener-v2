@@ -593,6 +593,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 選股池擴充 4 大官方來源排行（4 New Official Rankings & 38 Endpoints Expansion：後端爬蟲 `scripts/scrapers/fubon.py` 新增量增幅、量增、漲幅、自營商買超 1D 共 8 個富邦 DJ 端點與專屬解析器，排行榜擴增至 19 組 38 個 URL；`scripts/writer.py` 加入 VolGrowthPct、VolGrowth、PriceGain、DealerBuy1D 標籤映射與 DealerBuy 傘形收斂；`src/constants/category-urls.js` 與 `ui-strings.js` 建立官方外開跳轉與縮寫字典；`StockPoolModal.vue` 擴充 22 大來源面板卡片）— 完成 2026-10-03
 - [x] 五大模式準確度提升第一階段後端運算（Phase 1 Accuracy Improvement Backend：利用現有資料零新爬蟲，完成相對大盤 5 日強弱度 `relStrength5d`、加權與櫃買 5 日累計漲跌幅 `chg5d`、近 3 個有紀錄交易日之籌碼集中度連續趨勢 `chipsTrend3d` 與連續集中評分 `chipsScore`；修復月初 TPEx 官方月度日成交量值指數跨月拼接，解決交易日不足問題；時光機 `sliceStockAt` 與生命週期 `getStockLifecycle` 同步支援動態歷史倒流計算，零未來數據外洩）— 完成 2026-10-04
 - [x] 五大模式準確度提升第一階段前端視覺實作（Phase 1 Accuracy Improvement Frontend UI：於 `src/constants/ui-strings.js` 建立 `REL_STRENGTH` 與 `CHIPS_TREND` 字典；於 `MarketBanner.vue` 補充加權與櫃買 5 日累計漲跌幅基準值對照（`5D +0.7%` / `5D +3.2%`）；於 `StockChipsSection.vue` 實作極簡內嵌式籌碼趨勢定調（例如：`籌碼 (集中 3) 1D +23.3% ...`，集中以紅字強調；首日納入樣本不足標記為 `(新進)`；所有括號文字統一粗體 `font-bold`，大幅縮短行寬杜絕手機端折行）；於 `StockCard.vue` 核心報價列整合 `RS +XX.X%` 微型相對強弱膠囊 Badge（跨版型支援簡約模式、手機端完整模式與電腦端完整模式）；同步強化 `StockTable.vue` 之 `v-memo` 依賴保證時光機倒流即時響應）— 完成 2026-10-04
+- [x] 時光機歷史切片防未來籌碼洩漏（Time Machine Historical Chips Anti-Leakage：修復 `sliceStockAt` 當 `dayOffset > 0` 且該股票在歷史基準日尚未入選追蹤池時，錯誤回退至今日籌碼之漏洞；將 `chips` 與 `categories` 正確預設為 `null` 與 `[]`，並將 `chipsHistory` 嚴格截斷至歷史基準日（`d <= targetDate`），使籌碼透視區忠實呈現「該歷史日未入選追蹤池（無分點籌碼記錄）」，徹底杜絕未來數據外洩）— 完成 2026-10-04
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

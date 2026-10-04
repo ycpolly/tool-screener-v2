@@ -567,11 +567,11 @@ export const UI_STRINGS = {
 
   CHIPS_TREND: {
     up: '籌碼連續集中',
-    down: '籌碼連續發散',
-    flat: '籌碼持平',
-    new: '新進追蹤池',
-    streak3: '籌碼連 3 日集中',
-    streak2: '籌碼連 2 日集中',
+    down: '近 3 日籌碼：連續發散',
+    flat: '近 3 日籌碼：持平',
+    new: '近 3 日籌碼：新進追蹤池',
+    streak3: '近 3 日籌碼：連 3 日集中',
+    streak2: '近 3 日籌碼：連 2 日集中',
     streak3Badge: '集中 3',
     streak2Badge: '集中 2',
     flatBadge: '持平',

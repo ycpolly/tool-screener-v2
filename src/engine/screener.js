@@ -1128,8 +1128,8 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
   const bias20 = ma20 > 0 ? round2(((bar.close - ma20) / ma20) * 100) : 0
 
   const targetDate = bar.date
-  let slicedCategories = stock.categories || []
-  let slicedChips = stock.chips || null
+  let slicedCategories = dayOffset > 0 ? [] : (stock.categories || [])
+  let slicedChips = dayOffset > 0 ? null : (stock.chips || null)
 
   // 嘗試自 chipsHistory 載入該歷史交易日之真實標籤與籌碼集中度
   if (stock.chipsHistory && targetDate && stock.chipsHistory[targetDate]) {
@@ -1142,19 +1142,31 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
     }
   }
 
+  // 截斷未來籌碼歷史，確保時光機視角下絕不外洩未來快照
+  let slicedChipsHistory = null
+  if (stock.chipsHistory && typeof stock.chipsHistory === 'object') {
+    slicedChipsHistory = {}
+    for (const [d, snap] of Object.entries(stock.chipsHistory)) {
+      if (d <= targetDate) {
+        slicedChipsHistory[d] = snap
+      }
+    }
+  }
+
   // Phase 1: 依據歷史快照計算該歷史日的籌碼集中度連續趨勢
-  let slicedChipsTrend3d = stock.chipsTrend3d ?? null
-  let slicedChipsScore = stock.chipsScore ?? null
-  if (stock.chipsHistory && targetDate) {
-    const validDates = Object.keys(stock.chipsHistory)
-      .filter(d => d <= targetDate && stock.chipsHistory[d]?.chips?.concentration1d != null)
+  // 若該歷史日無分點籌碼記錄（未入選追蹤池），籌碼趨勢與分數必須為 null
+  let slicedChipsTrend3d = dayOffset > 0 ? null : (stock.chipsTrend3d ?? null)
+  let slicedChipsScore = dayOffset > 0 ? null : (stock.chipsScore ?? null)
+  if (slicedChips != null && slicedChipsHistory && targetDate) {
+    const validDates = Object.keys(slicedChipsHistory)
+      .filter(d => d <= targetDate && slicedChipsHistory[d]?.chips?.concentration1d != null)
       .sort()
 
     if (validDates.length >= 3) {
       const recent = validDates.slice(-3)
-      const c0 = stock.chipsHistory[recent[2]].chips.concentration1d
-      const c1 = stock.chipsHistory[recent[1]].chips.concentration1d
-      const c2 = stock.chipsHistory[recent[0]].chips.concentration1d
+      const c0 = slicedChipsHistory[recent[2]].chips.concentration1d
+      const c1 = slicedChipsHistory[recent[1]].chips.concentration1d
+      const c2 = slicedChipsHistory[recent[0]].chips.concentration1d
       if (c0 > c1 && c1 > c2) {
         slicedChipsTrend3d = 'UP'
         slicedChipsScore = 3
@@ -1170,8 +1182,8 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
       }
     } else if (validDates.length === 2) {
       const recent = validDates.slice(-2)
-      const c0 = stock.chipsHistory[recent[1]].chips.concentration1d
-      const c1 = stock.chipsHistory[recent[0]].chips.concentration1d
+      const c0 = slicedChipsHistory[recent[1]].chips.concentration1d
+      const c1 = slicedChipsHistory[recent[0]].chips.concentration1d
       if (c0 > c1) {
         slicedChipsTrend3d = 'UP'
         slicedChipsScore = 2
@@ -1207,7 +1219,7 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
   }
 
   // 依據歷史 categories 動態計算避雷警示字串
-  let slicedSellWarning = stock.sellWarning
+  let slicedSellWarning = dayOffset > 0 ? null : (stock.sellWarning ?? null)
   if (Array.isArray(slicedCategories)) {
     const tags = []
     if (slicedCategories.includes('ForeignSell3D')) {
@@ -1278,6 +1290,7 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
 
   return {
     ...stock,
+    date: bar.date,
     price: bar.close,
     open: bar.open,
     high: bar.high,
@@ -1305,6 +1318,7 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
     bias20,
     categories: slicedCategories,
     chips: slicedChips,
+    chipsHistory: slicedChipsHistory,
     sellWarning: slicedSellWarning,
     kd: {
       k: bar.k,
