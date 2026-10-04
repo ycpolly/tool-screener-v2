@@ -39,52 +39,56 @@
 
 #### 【前端 Gemini 職責】
 1. **`src/constants/ui-strings.js`**：
-   - 定義字串：
+   - 定義字串字典：
      ```javascript
      REL_STRENGTH: {
        label: '相對強弱',
        stronger: '強於大盤',
        weaker: '弱於大盤',
+       prefix: 'RS',
        benchmarkTaiex: '加權 5D',
        benchmarkOtc: '櫃買 5D',
+     },
+     CHIPS_TREND: {
+       up: '籌碼連續集中',
+       down: '籌碼連續發散',
+       flat: '籌碼持平',
+       streak3: '連3日集中',
+       streak2: '連2日集中',
      }
      ```
 2. **`src/components/MarketBanner.vue`**：
-   - 於頂部大盤條補充顯示加權與櫃買近 5 日基準值（例如：`加權 5D: -1.8% | 櫃買 5D: -2.1%`），提供透明交叉驗證。
+   - **資料來源**：`props.taiex.chg5d` 與 `props.otc.chg5d`（型態：`number`，單位：`%`，例如 `+0.66` 與 `+3.18`）。
+   - **視覺呈現**：於頂部大盤條加權與櫃買迷你數據卡旁補充顯示近 5 日基準值（例如：`5D +0.7%` / `5D +3.2%`），提供透明交叉對照。
 3. **`src/components/StockCard.vue`**：
-   - 於卡片指標區新增相對強弱膠囊 Badge（正值為強勢綠色，負值為弱勢紅色）：
-     - 範例：`RS +3.2%`
+   - **資料來源**：`props.stock.relStrength5d`（型態：`number | null`，例如 `+13.1`）。
+   - **視覺呈現**：於卡片首行報價或指標區新增相對強弱微型 Badge（正值為強勢紅字/綠色膠囊，負值為弱勢文字）：
+     - 範例：`RS +13.1%`（智伸科）、`RS +9.6%`（大量）。
 
 ---
 
 ### 2. 方案 4：籌碼集中度連續趨勢（Chips Concentration Trend）
 
 #### 【後端 Claude 職責】（✅ 已實作完成並驗證通過）
-1. **`scripts/writer.py`（或 `src/engine/screener.js`）**：
-   - 讀取個股既有的 `chipsHistory`（近 10 日快照）。
-   - 取出最近 3 個有籌碼紀錄之交易日的「集中度 %（如 `concentration` 或 `major` 買超淨額）」。
+1. **`scripts/writer.py` 與 `src/engine/screener.js`**：
+   - 讀取個股既有的 `chipsHistory`（近 10 日歷史快照）。
+   - 取出最近 3 個有籌碼紀錄之交易日的「集中度 %（`concentration1d`）」。
    - 判斷趨勢：
-     - 若 $D_0 > D_1 > D_2$：`chipsTrend3d: 'UP'`，連續上升天數 `chipsScore: 3`（若 $D_0 > D_1$ 則 `chipsScore: 2`）。
-     - 若 $D_0 < D_1 < D_2$：`chipsTrend3d: 'DOWN'`。
-     - 其餘情況：`chipsTrend3d: 'FLAT'`。
-   - 寫入 `stock.chipsTrend3d` 與 `stock.chipsScore`。
+     - 若 $D_0 > D_1 > D_2$：`chipsTrend3d: 'UP'`，連續上升天數 `chipsScore: 3`。
+     - 若 $D_0 > D_1$：`chipsTrend3d: 'UP'`，連續上升天數 `chipsScore: 2`。
+     - 若 $D_0 < D_1 < D_2$：`chipsTrend3d: 'DOWN'`，`chipsScore: 0`。
+     - 其餘情況：`chipsTrend3d: 'FLAT'`，`chipsScore: 1`。
+   - 寫入 `stock.chipsTrend3d` 與 `stock.chipsScore`，且時光機 `sliceStockAt` 支援歷史動態倒流重算。
 
 #### 【前端 Gemini 職責】
-1. **`src/constants/ui-strings.js`**：
-   - 定義字串：
-     ```javascript
-     CHIPS_TREND: {
-       up: '籌碼連續集中',
-       down: '籌碼連續發散',
-       flat: '籌碼持平',
-       streakDays: (n) => `連 ${n} 日集中`,
-     }
-     ```
-2. **`src/components/StockCard.vue`**：
-   - 在現有「籌碼集中度」數值旁，附加趨勢箭頭或微型膠囊：
-     - `UP` 且 `chipsScore >= 3`：顯示雙箭頭或金色高亮提示 `▲▲ 連3日`。
+1. **`src/components/StockChipsSection.vue`**（籌碼透視子元件）：
+   - **資料來源**：`props.stock.chipsTrend3d`（`'UP' | 'FLAT' | 'DOWN' | null`）與 `props.stock.chipsScore`（`number | null`）。
+   - **視覺呈現**：在現有「籌碼集中度 1D · 3D · 5D」數值旁，附加趨勢箭頭或微型標記：
+     - `UP` 且 `chipsScore === 3`：顯示雙箭頭或金色高亮提示 `▲▲ 連3日`。
+     - `UP` 且 `chipsScore === 2`：顯示 `▲ 連2日`。
      - `FLAT`：灰色橫向箭頭 `▶`。
      - `DOWN`：弱勢箭頭 `▼`。
+     - 若 `chips == null` 或無資料時不顯示，維持原「未入選追蹤池」等提示。
 
 ---
 
