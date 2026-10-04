@@ -571,8 +571,10 @@ export const UI_STRINGS = {
     flat: '籌碼持平',
     streak3: '連 3 日集中',
     streak2: '連 2 日集中',
-    streak3Short: '連 3 日',
-    streak2Short: '連 2 日',
+    streak3Badge: '連 3 集中',
+    streak2Badge: '連 2 集中',
+    flatBadge: '持平',
+    divergeBadge: '發散',
   },
 }
 

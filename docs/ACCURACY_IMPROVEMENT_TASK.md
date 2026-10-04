@@ -56,8 +56,10 @@
        flat: '籌碼持平',
        streak3: '連 3 日集中',
        streak2: '連 2 日集中',
-       streak3Short: '連 3 日',
-       streak2Short: '連 2 日',
+       streak3Badge: '連 3 集中',
+       streak2Badge: '連 2 集中',
+       flatBadge: '持平',
+       divergeBadge: '發散',
      }
      ```
 2. **`src/components/MarketBanner.vue`**：
@@ -86,11 +88,11 @@
 #### 【前端 Gemini 職責】（✅ 已實作完成並驗證通過）
 1. **`src/components/StockChipsSection.vue`**（籌碼透視子元件）：
    - **資料來源**：`props.stock.chipsTrend3d`（`'UP' | 'FLAT' | 'DOWN' | null`）與 `props.stock.chipsScore`（`number | null`）。
-   - **視覺呈現**：在現有「籌碼集中度 1D · 3D · 5D」數值旁，附加趨勢箭頭或微型標記：
-     - `UP` 且 `chipsScore === 3`：顯示雙箭頭或金色高亮提示 `▲▲ 連3日`。
-     - `UP` 且 `chipsScore === 2`：顯示 `▲ 連2日`。
-     - `FLAT`：灰色橫向箭頭 `▶`。
-     - `DOWN`：弱勢箭頭 `▼`。
+   - **視覺呈現**：在現有「籌碼集中度 1D · 3D · 5D」數值旁，附加微型標記（文字皆不加粗）：
+     - `UP` 且 `chipsScore === 3`：顯示紅色雙箭頭 + `連 3 集中`（相容亮色模式）。
+     - `UP` 且 `chipsScore === 2`：顯示紅色單箭頭 + `連 2 集中`。
+     - `FLAT`：純文字徽章 `持平`（無箭頭）。
+     - `DOWN`：純文字徽章 `發散`（無箭頭）。
      - 若 `chips == null` 或無資料時不顯示，維持原「未入選追蹤池」等提示。
 
 ---

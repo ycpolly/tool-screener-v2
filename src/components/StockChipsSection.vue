@@ -24,7 +24,7 @@
             :class="chipsTrendBadge.badgeClass"
             :title="chipsTrendBadge.tooltip"
           >
-            <!-- 連 3 日雙箭頭 -->
+            <!-- 連 3 集中雙箭頭 -->
             <svg
               v-if="chipsTrendBadge.type === 'streak3'"
               class="w-3 h-3 shrink-0"
@@ -39,7 +39,7 @@
               <path d="M4 7.5l4-4 4 4" />
             </svg>
 
-            <!-- 連 2 日單箭頭 -->
+            <!-- 連 2 集中單箭頭 -->
             <svg
               v-else-if="chipsTrendBadge.type === 'streak2'"
               class="w-3 h-3 shrink-0"
@@ -53,35 +53,7 @@
               <path d="M4 10.5l4-4 4 4" />
             </svg>
 
-            <!-- 發散向下箭頭 -->
-            <svg
-              v-else-if="chipsTrendBadge.type === 'down'"
-              class="w-3 h-3 shrink-0"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M4 5.5l4 4 4-4" />
-            </svg>
-
-            <!-- 持平向右箭頭 -->
-            <svg
-              v-else-if="chipsTrendBadge.type === 'flat'"
-              class="w-3 h-3 shrink-0"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M5.5 4l4 4-4 4" />
-            </svg>
-
-            <span v-if="chipsTrendBadge.text" class="font-bold ml-0.5">{{ chipsTrendBadge.text }}</span>
+            <span v-if="chipsTrendBadge.text" :class="chipsTrendBadge.showArrow ? 'ml-0.5' : ''">{{ chipsTrendBadge.text }}</span>
           </span>
         </template>
       </div>
@@ -140,14 +112,16 @@ const chipsTrendBadge = computed(() => {
     if (score >= 3) {
       return {
         type: 'streak3',
-        text: UI_STRINGS.CHIPS_TREND?.streak3Short || '連 3 日',
+        showArrow: true,
+        text: UI_STRINGS.CHIPS_TREND?.streak3Badge || '連 3 集中',
         tooltip: UI_STRINGS.CHIPS_TREND?.streak3 || '連 3 日集中',
-        badgeClass: 'gap-0.5 px-1.5 py-0.5 bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded text-xs',
+        badgeClass: 'gap-0.5 px-1.5 py-0.5 bg-rise/10 text-rise border border-rise/25 rounded text-xs',
       }
     }
     return {
       type: 'streak2',
-      text: UI_STRINGS.CHIPS_TREND?.streak2Short || '連 2 日',
+      showArrow: true,
+      text: UI_STRINGS.CHIPS_TREND?.streak2Badge || '連 2 集中',
       tooltip: UI_STRINGS.CHIPS_TREND?.streak2 || '連 2 日集中',
       badgeClass: 'gap-0.5 px-1.5 py-0.5 bg-rise/10 text-rise border border-rise/25 rounded text-xs',
     }
@@ -156,18 +130,20 @@ const chipsTrendBadge = computed(() => {
   if (trend === 'FLAT') {
     return {
       type: 'flat',
-      text: '',
+      showArrow: false,
+      text: UI_STRINGS.CHIPS_TREND?.flatBadge || '持平',
       tooltip: UI_STRINGS.CHIPS_TREND?.flat || '籌碼持平',
-      badgeClass: 'text-base-content/60',
+      badgeClass: 'px-1.5 py-0.5 bg-base-300/40 text-base-content/70 border border-base-300/60 rounded text-xs',
     }
   }
 
   if (trend === 'DOWN') {
     return {
       type: 'down',
-      text: '',
+      showArrow: false,
+      text: UI_STRINGS.CHIPS_TREND?.divergeBadge || '發散',
       tooltip: UI_STRINGS.CHIPS_TREND?.down || '籌碼連續發散',
-      badgeClass: 'text-fall',
+      badgeClass: 'px-1.5 py-0.5 bg-fall/10 text-fall border border-fall/20 rounded text-xs',
     }
   }
 
