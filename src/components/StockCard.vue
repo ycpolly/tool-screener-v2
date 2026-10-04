@@ -26,6 +26,13 @@
             {{ stock.code }}
           </span>
           <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
+          <span
+            v-if="stock.isNewEntry"
+            class="shrink-0 text-xs font-sans font-medium px-1.5 py-0.5 rounded bg-base-300 text-base-content/80 select-none"
+            :title="UI_STRINGS.SCREENER?.newEntryTooltip"
+          >
+            {{ UI_STRINGS.SCREENER?.newEntry }}
+          </span>
           <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
             [{{ UI_STRINGS.SCREENER.disposed }}]
           </span>
@@ -85,6 +92,13 @@
               {{ stock.code }}
             </span>
             <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
+            <span
+              v-if="stock.isNewEntry"
+              class="shrink-0 text-xs font-sans font-medium px-1.5 py-0.5 rounded bg-base-300 text-base-content/80 select-none"
+              :title="UI_STRINGS.SCREENER?.newEntryTooltip"
+            >
+              {{ UI_STRINGS.SCREENER?.newEntry }}
+            </span>
             <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
               [{{ UI_STRINGS.SCREENER.disposed }}]
             </span>
@@ -111,8 +125,11 @@
           </div>
         </div>
 
-      <!-- 第 2 層：標籤 (統一 text-sm font-normal, text-base-content/80，支援官方排行榜外開超連結) -->
-      <div v-if="categoryItems.length > 0 || sellWarningText" class="text-sm font-normal text-base-content/80 leading-normal">
+      <!-- 第 2 層：標籤 (若該日未入池顯示未在追蹤池，否則顯示排行標籤，支援官方排行榜外開超連結) -->
+      <div v-if="stock.isInPool === false" class="text-sm font-normal text-base-content/50 leading-normal">
+        <span>{{ UI_STRINGS.SCREENER?.notInPoolNotice }}</span>
+      </div>
+      <div v-else-if="categoryItems.length > 0 || sellWarningText" class="text-sm font-normal text-base-content/80 leading-normal">
         <template v-if="categoryItems.length > 0">
           <template v-for="(item, idx) in categoryItems" :key="item.key">
             <a
@@ -263,6 +280,13 @@
               {{ stock.code }}
             </span>
             <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
+            <span
+              v-if="stock.isNewEntry"
+              class="shrink-0 text-xs font-sans font-medium px-1.5 py-0.5 rounded bg-base-300 text-base-content/80 select-none"
+              :title="UI_STRINGS.SCREENER?.newEntryTooltip"
+            >
+              {{ UI_STRINGS.SCREENER?.newEntry }}
+            </span>
             <span v-if="stock.isDisposed" class="font-bold text-sm text-rise">
               [{{ UI_STRINGS.SCREENER.disposed }}]
             </span>
@@ -285,8 +309,11 @@
           </div>
         </div>
 
-        <!-- 標籤 (統一 text-sm font-normal，支援官方排行榜外開超連結) -->
-        <div v-if="categoryItems.length > 0 || sellWarningText" class="text-sm font-normal text-base-content/80 leading-normal">
+        <!-- 標籤 (若該日未入池顯示未在追蹤池，否則顯示排行標籤，支援官方排行榜外開超連結) -->
+        <div v-if="stock.isInPool === false" class="text-sm font-normal text-base-content/50 leading-normal">
+          <span>{{ UI_STRINGS.SCREENER?.notInPoolNotice }}</span>
+        </div>
+        <div v-else-if="categoryItems.length > 0 || sellWarningText" class="text-sm font-normal text-base-content/80 leading-normal">
           <template v-if="categoryItems.length > 0">
             <template v-for="(item, idx) in categoryItems" :key="item.key">
               <a

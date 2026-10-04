@@ -1165,13 +1165,28 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
   let slicedChips = dayOffset > 0 ? null : (stock.chips || null)
 
   // 嘗試自 chipsHistory 載入該歷史交易日之真實標籤與籌碼集中度
-  if (stock.chipsHistory && targetDate && stock.chipsHistory[targetDate]) {
+  const hasHistoryEntry = !!(stock.chipsHistory && targetDate && stock.chipsHistory[targetDate])
+  if (hasHistoryEntry) {
     const hist = stock.chipsHistory[targetDate]
     if (Array.isArray(hist.categories)) {
       slicedCategories = hist.categories
     }
     if (hist.chips !== undefined) {
       slicedChips = hist.chips
+    }
+  }
+
+  // 判定該基準日是否在選股池中：
+  // 1. 若為當日 (dayOffset === 0)：所有位於 stock-pool 的股票皆在池內
+  // 2. 若為歷史時光機 (dayOffset > 0)：必須在 chipsHistory 中且當日有快照紀錄
+  const isInPool = dayOffset === 0 ? true : hasHistoryEntry
+
+  // 判定是否為該基準日「新進」（前一交易日不在追蹤池中）
+  let isNewEntry = false
+  if (isInPool) {
+    const prevDate = prevBar ? prevBar.date : null
+    if (!prevDate || !stock.chipsHistory || !stock.chipsHistory[prevDate]) {
+      isNewEntry = true
     }
   }
 
@@ -1324,6 +1339,8 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
   return {
     ...stock,
     date: bar.date,
+    isInPool,
+    isNewEntry,
     price: bar.close,
     open: bar.open,
     high: bar.high,
@@ -1418,6 +1435,12 @@ export function getStockLifecycle(stock, maxDays = 7, currentTime = new Date()) 
     const lastBar = sliced.history10d?.slice(-1)[0]
     const dateStr = lastBar?.date || ''
     const hasChips = !!(sliced.chips && (sliced.chips.concentration1d != null || sliced.chips.dayTradersPct != null))
+    const isInPool = sliced.isInPool ?? (offset === 0 ? true : !!(stock.chipsHistory && dateStr && stock.chipsHistory[dateStr]))
+    const prevBarDate = sliced.history10d?.length >= 2 ? sliced.history10d[sliced.history10d.length - 2]?.date : null
+    const isNewEntry = isInPool && (!prevBarDate || !stock.chipsHistory || !stock.chipsHistory[prevBarDate])
+
+    // 若該歷史日未在選股池中，清空模式匹配
+    const effectiveMatchedModes = isInPool ? matchedModes : []
 
     results.push({
       offset,
@@ -1438,7 +1461,9 @@ export function getStockLifecycle(stock, maxDays = 7, currentTime = new Date()) 
       chips: sliced.chips,
       hasChips,
       sellWarning: sliced.sellWarning,
-      matchedModes,
+      matchedModes: effectiveMatchedModes,
+      isInPool,
+      isNewEntry,
     })
   }
 

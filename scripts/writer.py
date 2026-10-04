@@ -307,12 +307,19 @@ def build_stock_pool(
         rel_strength_5d = _calc_rel_strength_5d(stock_chg5d, data.get('market', 'tse'), market_data)
         chips_trend_3d, chips_score = _calc_chips_trend(chips_hist)
 
+        # 判定今日是否為新入池（昨日不在 chipsHistory 中，或為首日納入）
+        hist10 = data.get('history10d', [])
+        prev_bar_date = hist10[-2].get('date') if len(hist10) >= 2 else None
+        is_new_entry = bool(today_bar_date in chips_hist and (not prev_bar_date or prev_bar_date not in chips_hist))
+
         stock = {
             'code':      code,
             'name':      name,
             'market':    data.get('market', 'tse'),
             'categories': cats,
             'isDisposed': code in disposed_codes,
+            'isInPool':   True,
+            'isNewEntry': is_new_entry,
 
             # 行情
             'price':      data.get('price',     0.0),

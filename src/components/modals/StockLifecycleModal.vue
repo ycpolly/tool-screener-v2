@@ -110,10 +110,16 @@
                 </div>
               </div>
 
-              <!-- 3. 符合策略模式標籤 (單行居中，未符合顯示 '--') -->
+              <!-- 3. 符合策略模式標籤 (單行居中，未入池顯示 '未入池'，在池內未符合顯示 '--') -->
               <div class="text-xs font-sans w-full truncate pt-1.5 border-t border-base-300/60">
                 <span
-                  v-if="row.matchedModes && row.matchedModes.length > 0"
+                  v-if="!row.isInPool"
+                  class="font-normal text-base-content/40 inline-block max-w-full truncate text-[11px]"
+                >
+                  {{ UI_STRINGS.LIFECYCLE.notInPool }}
+                </span>
+                <span
+                  v-else-if="row.matchedModes && row.matchedModes.length > 0"
                   class="font-medium text-base-content inline-block max-w-full truncate"
                   :title="row.matchedModes.map(m => m.label).join(' · ')"
                 >
@@ -159,9 +165,12 @@
                 <span class="ml-1 text-xs sm:text-sm font-semibold">{{ formatRowChange(row.change, row.changePct, row.price) }}</span>
               </div>
 
-              <!-- 欄 3：符合模式 (乾淨無彩色中性標籤) -->
+              <!-- 欄 3：符合模式 (未入池顯示 '未入池'，在池內未符合顯示 '--') -->
               <div class="w-24 sm:w-28 shrink-0 text-right font-sans">
-                <div v-if="row.matchedModes && row.matchedModes.length > 0" class="flex flex-wrap items-center justify-end gap-1">
+                <span v-if="!row.isInPool" class="text-xs text-base-content/40 font-normal">
+                  {{ UI_STRINGS.LIFECYCLE.notInPool }}
+                </span>
+                <div v-else-if="row.matchedModes && row.matchedModes.length > 0" class="flex flex-wrap items-center justify-end gap-1">
                   <span
                     v-for="m in row.matchedModes"
                     :key="m.id"

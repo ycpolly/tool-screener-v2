@@ -75,6 +75,10 @@ interface Stock {
   chipsTrend3d?: 'UP' | 'FLAT' | 'DOWN' | 'NEW' // 近 3 個有紀錄交易日之籌碼集中度趨勢 ('NEW' 代表首日納入追蹤樣本不足)
   chipsScore?:   number                         // 籌碼連續集中天數評分 (3: 集中 3, 2: 集中 2, 1: 持平/新進, 0: 連續發散)
 
+  // 入池與新進狀態 (追蹤池變動感應)
+  isInPool?:     boolean      // 該基準日是否在選股池中（歷史時光機若當日未入池為 false，最新當日為 true）
+  isNewEntry?:   boolean      // 該基準日是否為「新進」（前一交易日不在選股池中，或首日納入追蹤）
+
   // Sparkline
   sparkline:  number[]      // 近10日收盤價陣列
   history10d: DayBar[]      // 近10日完整日K（含 ma5/ma10/kd）
@@ -666,8 +670,20 @@ interface StockLifecycleItem {
     label:      string       // e.g. "底部蓄勢"
     shortLabel: string       // e.g. "底部"
   }>
+  isInPool:     boolean      // 該歷史日是否在追蹤池中（true: 在池內; false: 未入池）
+  isNewEntry:   boolean      // 該歷史日是否為新入池（前一日未在池內）
 }
 ```
+
+### 入池與模式缺漏狀態 UI 規範（Gemini 遵循）：
+- 當 `!item.isInPool` 時：
+  - 歷程時間軸與表格下方之策略模式標籤統一顯示中性灰字 `UI_STRINGS.LIFECYCLE.notInPool`（「未入池」），清晰提示該日尚未被選股池收錄。
+- 當 `item.isInPool && item.matchedModes.length === 0` 時：
+  - 顯示原本的中性符號 `UI_STRINGS.LIFECYCLE.noMatch`（「--」），代表在池內但未觸發任何選股策略。
+- 當 `stock.isNewEntry` 為 true 時：
+  - 在個股卡片（StockCard）股票名稱旁顯示低調的微型標籤 `UI_STRINGS.SCREENER.newEntry`（「新進」）。
+- 當時光機切換至過去歷史交易日（`dayOffset > 0`）且 `stock.isInPool === false` 時：
+  - 個股卡片排行榜標籤列顯示 `UI_STRINGS.SCREENER.notInPoolNotice`（「該日未在追蹤池」），避免標籤留空的疑惑。
 
 ### 籌碼缺漏狀態 UI 規範（Gemini 遵循）：
 - 當 `chips == null` 時，不得直接隱藏空白：

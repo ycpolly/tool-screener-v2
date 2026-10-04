@@ -118,6 +118,9 @@ export const UI_STRINGS = {
     collapseUnmatched: (n) => `收合未符合個股 (${n} 檔)`,
     disposed: '處置',
     noDisposedNotice: '已依策略嚴格過濾處置股票',
+    newEntry: '新進',
+    newEntryTooltip: '今日首次或重新入選追蹤池',
+    notInPoolNotice: '該日未在追蹤池',
     lastUpdated: (t) => `更新於 ${t}`,
   },
 
@@ -431,6 +434,7 @@ export const UI_STRINGS = {
     noMatchOnDay: '未符合特定策略',
     chipsUntracked: '未入選籌碼池',
     chipsPending: '籌碼結算中',
+    notInPool: '未入池',
   },
 
   STOCK_POOL_MODAL: {
