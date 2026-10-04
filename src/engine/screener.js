@@ -1183,7 +1183,7 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
         slicedChipsScore = 1
       }
     } else if (validDates.length === 1) {
-      slicedChipsTrend3d = 'FLAT'
+      slicedChipsTrend3d = 'NEW'
       slicedChipsScore = 1
     } else {
       slicedChipsTrend3d = null

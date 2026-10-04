@@ -10,7 +10,7 @@
         <span :class="chipsTrendItem ? 'mr-1' : 'mr-2'">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
         <span
           v-if="chipsTrendItem"
-          class="mr-2 select-none font-normal"
+          class="mr-2 select-none font-bold"
           :class="chipsTrendItem.colorClass"
           :title="chipsTrendItem.tooltip"
         >
@@ -75,17 +75,35 @@ const chipsTrendItem = computed(() => {
   const score = props.stock.chipsScore
   if (!trend) return null
 
+  // 1. 若只有 1 天紀錄（新進追蹤池，樣本不足以進行前後對照）
+  const hist = props.stock.chipsHistory
+  let isNewEntry = trend === 'NEW'
+  if (!isNewEntry && hist && typeof hist === 'object') {
+    const validDates = Object.keys(hist).filter(d => hist[d]?.chips?.concentration1d != null)
+    if (validDates.length === 1) {
+      isNewEntry = true
+    }
+  }
+
+  if (isNewEntry) {
+    return {
+      text: UI_STRINGS.CHIPS_TREND?.newBadge || '新進',
+      tooltip: UI_STRINGS.CHIPS_TREND?.new || '新進追蹤池',
+      colorClass: 'text-base-content/60',
+    }
+  }
+
   if (trend === 'UP') {
     if (score >= 3) {
       return {
-        text: UI_STRINGS.CHIPS_TREND?.streak3Badge || '連 3 集中',
-        tooltip: UI_STRINGS.CHIPS_TREND?.streak3 || '連 3 日集中',
+        text: UI_STRINGS.CHIPS_TREND?.streak3Badge || '集中 3',
+        tooltip: UI_STRINGS.CHIPS_TREND?.streak3 || '籌碼連 3 日集中',
         colorClass: 'text-rise',
       }
     }
     return {
-      text: UI_STRINGS.CHIPS_TREND?.streak2Badge || '連 2 集中',
-      tooltip: UI_STRINGS.CHIPS_TREND?.streak2 || '連 2 日集中',
+      text: UI_STRINGS.CHIPS_TREND?.streak2Badge || '集中 2',
+      tooltip: UI_STRINGS.CHIPS_TREND?.streak2 || '籌碼連 2 日集中',
       colorClass: 'text-rise',
     }
   }

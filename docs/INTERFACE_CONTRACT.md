@@ -72,8 +72,8 @@ interface Stock {
   relStrength5d?: number    // 相對大盤近 5 日強弱度 % (超額報酬，例如 +13.10)
 
   // 籌碼集中度連續趨勢 (Phase 1 方案 4)
-  chipsTrend3d?: 'UP' | 'FLAT' | 'DOWN' // 近 3 個有紀錄交易日之籌碼集中度趨勢
-  chipsScore?:   number                 // 籌碼連續集中天數評分 (3: 連3日集中, 2: 連2日集中, 1: 持平, 0: 連續發散)
+  chipsTrend3d?: 'UP' | 'FLAT' | 'DOWN' | 'NEW' // 近 3 個有紀錄交易日之籌碼集中度趨勢 ('NEW' 代表首日納入追蹤樣本不足)
+  chipsScore?:   number                         // 籌碼連續集中天數評分 (3: 集中 3, 2: 集中 2, 1: 持平/新進, 0: 連續發散)
 
   // Sparkline
   sparkline:  number[]      // 近10日收盤價陣列

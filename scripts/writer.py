@@ -136,7 +136,7 @@ def _calc_chips_trend(chips_hist: Dict) -> Tuple[Optional[str], Optional[int]]:
         else:
             return 'FLAT', 1
     else:  # len == 1
-        return 'FLAT', 1
+        return 'NEW', 1
 
 
 def _is_valid_stock_code(code: str) -> bool:

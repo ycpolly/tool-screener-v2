@@ -569,12 +569,14 @@ export const UI_STRINGS = {
     up: '籌碼連續集中',
     down: '籌碼連續發散',
     flat: '籌碼持平',
-    streak3: '連 3 日集中',
-    streak2: '連 2 日集中',
-    streak3Badge: '連 3 集中',
-    streak2Badge: '連 2 集中',
+    new: '新進追蹤池',
+    streak3: '籌碼連 3 日集中',
+    streak2: '籌碼連 2 日集中',
+    streak3Badge: '集中 3',
+    streak2Badge: '集中 2',
     flatBadge: '持平',
     divergeBadge: '發散',
+    newBadge: '新進',
   },
 }
 

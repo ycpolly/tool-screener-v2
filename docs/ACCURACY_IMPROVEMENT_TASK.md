@@ -82,17 +82,19 @@
      - 若 $D_0 > D_1 > D_2$：`chipsTrend3d: 'UP'`，連續上升天數 `chipsScore: 3`。
      - 若 $D_0 > D_1$：`chipsTrend3d: 'UP'`，連續上升天數 `chipsScore: 2`。
      - 若 $D_0 < D_1 < D_2$：`chipsTrend3d: 'DOWN'`，`chipsScore: 0`。
+     - 若僅有 1 日紀錄：`chipsTrend3d: 'NEW'`，`chipsScore: 1`（新進追蹤池）。
      - 其餘情況：`chipsTrend3d: 'FLAT'`，`chipsScore: 1`。
    - 寫入 `stock.chipsTrend3d` 與 `stock.chipsScore`，且時光機 `sliceStockAt` 支援歷史動態倒流重算。
 
 #### 【前端 Gemini 職責】（✅ 已實作完成並驗證通過）
 1. **`src/components/StockChipsSection.vue`**（籌碼透視子元件）：
-   - **資料來源**：`props.stock.chipsTrend3d`（`'UP' | 'FLAT' | 'DOWN' | null`）與 `props.stock.chipsScore`（`number | null`）。
-   - **視覺呈現**：內嵌於「籌碼」主題詞後方括號內呈現定調，文字不加粗，徹底消除手機端折行：
-     - `UP` 且 `chipsScore === 3`：`籌碼 (連 3 集中)`（紅色 `text-rise`）。
-     - `UP` 且 `chipsScore === 2`：`籌碼 (連 2 集中)`（紅色 `text-rise`）。
-     - `FLAT`：`籌碼 (持平)`（次要文字色）。
-     - `DOWN`：`籌碼 (發散)`（弱勢色 `text-fall`）。
+   - **資料來源**：`props.stock.chipsTrend3d`（`'UP' | 'FLAT' | 'DOWN' | 'NEW' | null`）與 `props.stock.chipsScore`（`number | null`）。
+   - **視覺呈現**：內嵌於「籌碼」主題詞後方括號內呈現定調，括號內文字統一加粗（`font-bold`），徹底消除手機端折行：
+     - `UP` 且 `chipsScore === 3`：`籌碼 (集中 3)`（紅色 `font-bold text-rise`）。
+     - `UP` 且 `chipsScore === 2`：`籌碼 (集中 2)`（紅色 `font-bold text-rise`）。
+     - `NEW`（如 3339 泰谷）：`籌碼 (新進)`（次要色 `font-bold text-base-content/60`）。
+     - `FLAT`：`籌碼 (持平)`（次要色 `font-bold text-base-content/60`）。
+     - `DOWN`：`籌碼 (發散)`（弱勢色 `font-bold text-fall`）。
      - 若 `chips == null` 或無趨勢時自動降級顯示 `籌碼 1D +XX% ...`。
 
 ---
