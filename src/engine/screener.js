@@ -138,7 +138,7 @@ function evaluateMarketRegime(taiex, otc) {
  * @param {Object} quote     - GCP 即時行情回傳的個股報價
  * @returns {Object}         - 合體後的完整個股物件
  */
-export function mergeRealtimeQuote(baseStock, quote, currentTime = new Date()) {
+export function mergeRealtimeQuote(baseStock, quote, currentTime = new Date(), benchChg5d = null) {
   if (!quote || typeof quote.price !== 'number' || quote.price <= 0) {
     return baseStock
   }
@@ -235,6 +235,16 @@ export function mergeRealtimeQuote(baseStock, quote, currentTime = new Date()) {
   const low10d = baseStock.low10d ? Math.min(baseStock.low10d, todayLow) : todayLow
   const low20d = baseStock.low20d ? Math.min(baseStock.low20d, todayLow) : todayLow
 
+  // 盤中即時推算動態相對大盤 5 日強弱度 (RS)
+  let relStrength5d = baseStock.relStrength5d ?? null
+  if (isLive && len >= 5 && typeof benchChg5d === 'number') {
+    const ref5 = history[len - 5]?.close
+    if (ref5 && ref5 > 0) {
+      const liveStockChg5d = round2(((price - ref5) / ref5) * 100)
+      relStrength5d = round2(liveStockChg5d - benchChg5d)
+    }
+  }
+
   return {
     ...baseStock,
     price,
@@ -262,6 +272,7 @@ export function mergeRealtimeQuote(baseStock, quote, currentTime = new Date()) {
     bias10,
     bias20,
     kd,
+    relStrength5d,
   }
 }
 
@@ -292,6 +303,15 @@ export function mergeMarketQuotes(baseMarket, quotesMap = {}) {
     const ma20 = newMarket.taiex.ma20 ?? price
     const bias20 = ma20 > 0 ? round2(((price - ma20) / ma20) * 100) : 0
 
+    // 動態更新加權 5 日累計漲跌幅 %
+    const hist = newMarket.taiex.history10d || []
+    if (hist.length >= 5) {
+      const ref5 = hist[hist.length - 5]?.close
+      if (ref5 && ref5 > 0) {
+        newMarket.taiex.chg5d = round2(((price - ref5) / ref5) * 100)
+      }
+    }
+
     newMarket.taiex.price = price
     newMarket.taiex.prevClose = prevClose
     newMarket.taiex.changePrice = changePrice
@@ -312,6 +332,15 @@ export function mergeMarketQuotes(baseMarket, quotesMap = {}) {
     const ma5 = newMarket.otc.ma5 ?? price
     const ma20 = newMarket.otc.ma20 ?? price
     const bias20 = ma20 > 0 ? round2(((price - ma20) / ma20) * 100) : 0
+
+    // 動態更新櫃買 5 日累計漲跌幅 %
+    const hist = newMarket.otc.history10d || []
+    if (hist.length >= 5) {
+      const ref5 = hist[hist.length - 5]?.close
+      if (ref5 && ref5 > 0) {
+        newMarket.otc.chg5d = round2(((price - ref5) / ref5) * 100)
+      }
+    }
 
     newMarket.otc.price = price
     newMarket.otc.prevClose = prevClose
@@ -346,12 +375,16 @@ export function mergeAllRealtimeQuotes(baseStocks = [], baseMarket = null, quote
     return { stocks: baseStocks, market: baseMarket }
   }
 
+  const mergedMarket = baseMarket ? mergeMarketQuotes(baseMarket, quotesMap) : baseMarket
+
+  const taiexChg5d = mergedMarket?.taiex?.chg5d ?? null
+  const otcChg5d = mergedMarket?.otc?.chg5d ?? null
+
   const mergedStocks = baseStocks.map(stock => {
     const quote = quotesMap[stock.code]
-    return quote ? mergeRealtimeQuote(stock, quote, currentTime) : stock
+    const benchChg5d = stock.market === 'otc' ? otcChg5d : taiexChg5d
+    return quote ? mergeRealtimeQuote(stock, quote, currentTime, benchChg5d) : stock
   })
-
-  const mergedMarket = baseMarket ? mergeMarketQuotes(baseMarket, quotesMap) : baseMarket
 
   return {
     stocks: mergedStocks,
