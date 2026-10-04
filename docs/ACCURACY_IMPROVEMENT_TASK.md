@@ -88,12 +88,12 @@
 #### 【前端 Gemini 職責】（✅ 已實作完成並驗證通過）
 1. **`src/components/StockChipsSection.vue`**（籌碼透視子元件）：
    - **資料來源**：`props.stock.chipsTrend3d`（`'UP' | 'FLAT' | 'DOWN' | null`）與 `props.stock.chipsScore`（`number | null`）。
-   - **視覺呈現**：在現有「籌碼集中度 1D · 3D · 5D」數值旁，附加微型標記（文字皆不加粗）：
-     - `UP` 且 `chipsScore === 3`：顯示紅色雙箭頭 + `連 3 集中`（相容亮色模式）。
-     - `UP` 且 `chipsScore === 2`：顯示紅色單箭頭 + `連 2 集中`。
-     - `FLAT`：純文字徽章 `持平`（無箭頭）。
-     - `DOWN`：純文字徽章 `發散`（無箭頭）。
-     - 若 `chips == null` 或無資料時不顯示，維持原「未入選追蹤池」等提示。
+   - **視覺呈現**：內嵌於「籌碼」主題詞後方括號內呈現定調，文字不加粗，徹底消除手機端折行：
+     - `UP` 且 `chipsScore === 3`：`籌碼 (連 3 集中)`（紅色 `text-rise`）。
+     - `UP` 且 `chipsScore === 2`：`籌碼 (連 2 集中)`（紅色 `text-rise`）。
+     - `FLAT`：`籌碼 (持平)`（次要文字色）。
+     - `DOWN`：`籌碼 (發散)`（弱勢色 `text-fall`）。
+     - 若 `chips == null` 或無趨勢時自動降級顯示 `籌碼 1D +XX% ...`。
 
 ---
 

@@ -7,54 +7,21 @@
     >
       <!-- 籌碼集中度 (百分比加粗，正值紅字，帶明確空白) -->
       <div v-if="chipsConcentrationItems.length > 0" class="font-numeric flex items-baseline flex-wrap">
-        <span class="mr-2">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
+        <span :class="chipsTrendItem ? 'mr-1' : 'mr-2'">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
+        <span
+          v-if="chipsTrendItem"
+          class="mr-2 select-none font-normal"
+          :class="chipsTrendItem.colorClass"
+          :title="chipsTrendItem.tooltip"
+        >
+          ({{ chipsTrendItem.text }})
+        </span>
         <template v-for="(item, idx) in chipsConcentrationItems" :key="item.label">
           <span class="inline-flex items-baseline gap-1">
             <span>{{ item.label }}</span>
             <strong class="font-bold" :class="item.isPositive ? 'text-rise' : 'text-base-content'">{{ item.val }}</strong>
           </span>
           <span v-if="idx < chipsConcentrationItems.length - 1" class="text-base-content/40 mx-1.5">·</span>
-        </template>
-
-        <!-- 方案 4：籌碼集中連續趨勢徽章 (Phase 1) -->
-        <template v-if="chipsTrendBadge">
-          <span class="text-base-content/40 mx-1.5">·</span>
-          <span
-            class="inline-flex items-center align-baseline select-none"
-            :class="chipsTrendBadge.badgeClass"
-            :title="chipsTrendBadge.tooltip"
-          >
-            <!-- 連 3 集中雙箭頭 -->
-            <svg
-              v-if="chipsTrendBadge.type === 'streak3'"
-              class="w-3 h-3 shrink-0"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M4 12.5l4-4 4 4" />
-              <path d="M4 7.5l4-4 4 4" />
-            </svg>
-
-            <!-- 連 2 集中單箭頭 -->
-            <svg
-              v-else-if="chipsTrendBadge.type === 'streak2'"
-              class="w-3 h-3 shrink-0"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M4 10.5l4-4 4 4" />
-            </svg>
-
-            <span v-if="chipsTrendBadge.text" :class="chipsTrendBadge.showArrow ? 'ml-0.5' : ''">{{ chipsTrendBadge.text }}</span>
-          </span>
         </template>
       </div>
 
@@ -103,7 +70,7 @@ const chipsConcentrationItems = computed(() => {
   return items
 })
 
-const chipsTrendBadge = computed(() => {
+const chipsTrendItem = computed(() => {
   const trend = props.stock.chipsTrend3d
   const score = props.stock.chipsScore
   if (!trend) return null
@@ -111,39 +78,31 @@ const chipsTrendBadge = computed(() => {
   if (trend === 'UP') {
     if (score >= 3) {
       return {
-        type: 'streak3',
-        showArrow: true,
         text: UI_STRINGS.CHIPS_TREND?.streak3Badge || '連 3 集中',
         tooltip: UI_STRINGS.CHIPS_TREND?.streak3 || '連 3 日集中',
-        badgeClass: 'gap-0.5 px-1.5 py-0.5 bg-rise/10 text-rise border border-rise/25 rounded text-xs',
+        colorClass: 'text-rise',
       }
     }
     return {
-      type: 'streak2',
-      showArrow: true,
       text: UI_STRINGS.CHIPS_TREND?.streak2Badge || '連 2 集中',
       tooltip: UI_STRINGS.CHIPS_TREND?.streak2 || '連 2 日集中',
-      badgeClass: 'gap-0.5 px-1.5 py-0.5 bg-rise/10 text-rise border border-rise/25 rounded text-xs',
+      colorClass: 'text-rise',
     }
   }
 
   if (trend === 'FLAT') {
     return {
-      type: 'flat',
-      showArrow: false,
       text: UI_STRINGS.CHIPS_TREND?.flatBadge || '持平',
       tooltip: UI_STRINGS.CHIPS_TREND?.flat || '籌碼持平',
-      badgeClass: 'px-1.5 py-0.5 bg-base-300/40 text-base-content/70 border border-base-300/60 rounded text-xs',
+      colorClass: 'text-base-content/60',
     }
   }
 
   if (trend === 'DOWN') {
     return {
-      type: 'down',
-      showArrow: false,
       text: UI_STRINGS.CHIPS_TREND?.divergeBadge || '發散',
       tooltip: UI_STRINGS.CHIPS_TREND?.down || '籌碼連續發散',
-      badgeClass: 'px-1.5 py-0.5 bg-fall/10 text-fall border border-fall/20 rounded text-xs',
+      colorClass: 'text-fall',
     }
   }
 

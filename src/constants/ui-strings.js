@@ -401,7 +401,7 @@ export const UI_STRINGS = {
   },
 
   CHIPS: {
-    concentrationLabel: '籌碼集中度',
+    concentrationLabel: '籌碼',
     concentration1d: '1D',
     concentration3d: '3D',
     concentration5d: '5D',
