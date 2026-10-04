@@ -1,9 +1,17 @@
 <template>
   <div
-    class="stock-card bg-base-200 border border-base-300 rounded-xl transition-all duration-200 hover:shadow-md hover:border-base-content/20 [content-visibility:auto]"
-    :class="isCompact ? 'p-3 sm:p-3.5' : 'p-6'"
+    class="stock-card relative bg-base-200 border border-base-300 rounded-xl transition-all duration-200 hover:shadow-md hover:border-base-content/20 [content-visibility:auto]"
+    :class="isCompact ? (stock.isNewEntry ? 'pt-6 p-3 sm:p-3.5' : 'p-3 sm:p-3.5') : 'p-6'"
     :style="{ containIntrinsicSize: isCompact ? '76px' : '160px' }"
   >
+    <!-- 左上角絕對定位：新進標籤 (NEW Entry Badge) -->
+    <span
+      v-if="stock.isNewEntry"
+      class="absolute top-0 left-0 z-10 text-[10px] sm:text-xs font-sans font-medium px-2 py-0.5 rounded-tl-xl rounded-br-md bg-base-300 text-base-content/75 select-none"
+      :title="UI_STRINGS.SCREENER?.newEntryTooltip"
+    >
+      {{ UI_STRINGS.SCREENER?.newEntry }}
+    </span>
     <!-- ============================================================
          簡約模式佈局 (Compact Mode)：僅保留首行核心報價與槽位 B 篩選理由
          ============================================================ -->
@@ -26,13 +34,6 @@
             {{ stock.code }}
           </span>
           <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
-          <span
-            v-if="stock.isNewEntry"
-            class="shrink-0 text-xs font-sans font-medium px-1.5 py-0.5 rounded bg-base-300 text-base-content/80 select-none"
-            :title="UI_STRINGS.SCREENER?.newEntryTooltip"
-          >
-            {{ UI_STRINGS.SCREENER?.newEntry }}
-          </span>
           <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
             [{{ UI_STRINGS.SCREENER.disposed }}]
           </span>
@@ -92,13 +93,6 @@
               {{ stock.code }}
             </span>
             <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
-            <span
-              v-if="stock.isNewEntry"
-              class="shrink-0 text-xs font-sans font-medium px-1.5 py-0.5 rounded bg-base-300 text-base-content/80 select-none"
-              :title="UI_STRINGS.SCREENER?.newEntryTooltip"
-            >
-              {{ UI_STRINGS.SCREENER?.newEntry }}
-            </span>
             <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
               [{{ UI_STRINGS.SCREENER.disposed }}]
             </span>
@@ -280,13 +274,6 @@
               {{ stock.code }}
             </span>
             <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
-            <span
-              v-if="stock.isNewEntry"
-              class="shrink-0 text-xs font-sans font-medium px-1.5 py-0.5 rounded bg-base-300 text-base-content/80 select-none"
-              :title="UI_STRINGS.SCREENER?.newEntryTooltip"
-            >
-              {{ UI_STRINGS.SCREENER?.newEntry }}
-            </span>
             <span v-if="stock.isDisposed" class="font-bold text-sm text-rise">
               [{{ UI_STRINGS.SCREENER.disposed }}]
             </span>
