@@ -84,7 +84,7 @@
 | **資料來源** | 公開資訊觀測站 MOPS（isin.twse.com.tw）每月 10 日前強制公告 |
 | **爬蟲 URL** | https://mops.twse.com.tw/mops/web/ajax_t05st10_ifrs（POST 請求，帶月份參數）|
 | **更新頻率** | 每月一次（月初抓前一個月的營收），可搭配現有 GitHub Actions |
-| **預期欄位** | evenueYoY: 62.5（%，正值為年增，負值為年減） |
+| **預期欄位** | revenueYoY: 62.5（%，正值為年增，負值為年減） |
 | **篩選建議** | 可選條件：月營收年增率 > 20% 才納入推薦；> 50% 視為強力催化劑 |
 | **鑑別效益** | ⭐⭐⭐⭐⭐ 最高 |
 | **實作難度** | 中（MOPS HTML 解析，POST 請求，需處理上市/上櫃分開） |
@@ -107,10 +107,10 @@
 | 項目 | 說明 |
 | :--- | :--- |
 | **資料來源** | 已有：個股 sparkline（10 日收盤）+ market.taiex / market.otc 指數資料 |
-| **計算方式** | 上市股：elStrength5d = stockChg5d - taiexChg5d；上櫃股對 OTC 指數 |
+| **計算方式** | 上市股：relStrength5d = stockChg5d - taiexChg5d；上櫃股對 OTC 指數 |
 | **需要新增** | market.taiex 需新增 chg5d（5 日漲跌幅）欄位；market.otc 同步新增 |
 | **更新頻率** | 每次爬蟲更新時即時計算，不需要額外 HTTP 請求 |
-| **預期欄位** | elStrength5d: +3.2（%，正值 = 強於大盤，負值 = 弱於大盤）|
+| **預期欄位** | relStrength5d: +3.2（%，正值 = 強於大盤，負值 = 弱於大盤）|
 | **UI 顯示** | StockCard 上以 +/- 色系顯示；排序時由高到低 = 最強勢優先 |
 | **驗證依據** | MarketBanner 需同步顯示 TAIEX / OTC 的 5 日漲跌幅基準值，讓使用者交叉確認 |
 | **鑑別效益** | ⭐⭐⭐⭐ 高 |
@@ -175,13 +175,13 @@
 | **負責方** | 後端 AI（計算）、前端 AI（UI 顯示趨勢箭頭）|
 
 **預期 JSON 格式**：
-`json
+```json
 {
   "code": "4551",
   "chipsTrend3d": "UP",
   "chipsScore": 3
 }
-`
+```
 
 ---
 
@@ -191,19 +191,19 @@
 | :--- | :--- |
 | **資料來源** | TWSE/TPEx 外資持股比例公開 API |
 | **更新頻率** | 每日更新（TWSE 盤後發布）|
-| **預期欄位** | oreignOwnership: 18.5（%）|
+| **預期欄位** | foreignOwnership: 18.5（%）|
 | **甜蜜點** | 5% ~ 40%：外資有參與但未過度集中，波段仍有操作空間 |
 | **鑑別效益** | ⭐⭐ 中 |
 | **實作難度** | 中 |
 | **負責方** | 後端 AI |
 
 **預期 JSON 格式**：
-`json
+```json
 {
   "code": "4551",
   "foreignOwnership": 18.5
 }
-`
+```
 
 ---
 

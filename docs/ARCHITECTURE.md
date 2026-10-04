@@ -51,7 +51,11 @@ tool-screener-v2/
 │   ├── ARCHITECTURE.md         ← 系統總覽與進度清單
 │   ├── INTERFACE_CONTRACT.md   ← 前後端分工合約與 TypeScript 型別
 │   ├── STOCK_CARD_DICTIONARY.md ← StockCard 標籤與視覺指標完整字典
-│   └── QUANTITATIVE_BACKTEST.md ← 五大模式量化回測與發酵週期白皮書
+│   ├── QUANTITATIVE_BACKTEST.md ← 五大模式量化回測與發酵週期白皮書
+│   ├── FORWARD_VALIDATION_TASK.md ← 時光機覆盤後續驗證任務書
+│   ├── INTRADAY_QUICK_SELECT_TASK.md ← 尾盤快選功能開發任務書
+│   ├── ACCURACY_IMPROVEMENT_PLAN.md ← 五大模式準確度提升規劃書
+│   └── ACCURACY_IMPROVEMENT_TASK.md ← 五大模式準確度提升開發任務書
 │
 ├── .github/workflows/
 │   ├── update-stock-pool.yml   ← 爬蟲機器人（平日 15:30 / 18:30 / 23:00）
