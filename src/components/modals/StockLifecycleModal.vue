@@ -110,20 +110,23 @@
                 </div>
               </div>
 
-              <!-- 3. 符合策略模式標籤 (單行居中，未入池顯示 '未入池'，在池內未符合顯示 '--') -->
+              <!-- 3. 符合策略模式標籤 (若有符合模式則顯示模式，未在池內則加註 '(未入池)'；若未符合且未入池顯示 '未入池'，在池內未符合顯示 '--') -->
               <div class="text-xs font-sans w-full truncate pt-1.5 border-t border-base-300/60">
                 <span
-                  v-if="!row.isInPool"
-                  class="font-normal text-base-content/40 inline-block max-w-full truncate text-[11px]"
-                >
-                  {{ UI_STRINGS.LIFECYCLE.notInPool }}
-                </span>
-                <span
-                  v-else-if="row.matchedModes && row.matchedModes.length > 0"
+                  v-if="row.matchedModes && row.matchedModes.length > 0"
                   class="font-medium text-base-content inline-block max-w-full truncate"
                   :title="row.matchedModes.map(m => m.label).join(' · ')"
                 >
                   {{ row.matchedModes[0].label }}
+                  <span v-if="!row.isInPool" class="font-normal text-base-content/50 text-[11px] ml-0.5">
+                    {{ UI_STRINGS.LIFECYCLE.notInPoolSuffix }}
+                  </span>
+                </span>
+                <span
+                  v-else-if="!row.isInPool"
+                  class="font-normal text-base-content/40 inline-block max-w-full truncate text-[11px]"
+                >
+                  {{ UI_STRINGS.LIFECYCLE.notInPool }}
                 </span>
                 <span v-else class="text-base-content/35 font-numeric">
                   {{ UI_STRINGS.LIFECYCLE.noMatch }}
@@ -165,20 +168,23 @@
                 <span class="ml-1 text-xs sm:text-sm font-semibold">{{ formatRowChange(row.change, row.changePct, row.price) }}</span>
               </div>
 
-              <!-- 欄 3：符合模式 (未入池顯示 '未入池'，在池內未符合顯示 '--') -->
+              <!-- 欄 3：符合模式 (未入池若有模式加註 '(未入池)'，無模式顯示 '未入池'，在池內無模式顯示 '--') -->
               <div class="w-24 sm:w-28 shrink-0 text-right font-sans">
-                <span v-if="!row.isInPool" class="text-xs text-base-content/40 font-normal">
-                  {{ UI_STRINGS.LIFECYCLE.notInPool }}
-                </span>
-                <div v-else-if="row.matchedModes && row.matchedModes.length > 0" class="flex flex-wrap items-center justify-end gap-1">
+                <div v-if="row.matchedModes && row.matchedModes.length > 0" class="flex flex-wrap items-center justify-end gap-1">
                   <span
                     v-for="m in row.matchedModes"
                     :key="m.id"
                     class="inline-block text-xs font-medium px-1.5 py-0.5 rounded bg-base-200 border border-base-300 text-base-content"
                   >
                     {{ m.label }}
+                    <span v-if="!row.isInPool" class="font-normal text-base-content/60 text-[10px] ml-0.5">
+                      {{ UI_STRINGS.LIFECYCLE.notInPoolSuffix }}
+                    </span>
                   </span>
                 </div>
+                <span v-else-if="!row.isInPool" class="text-xs text-base-content/40 font-normal">
+                  {{ UI_STRINGS.LIFECYCLE.notInPool }}
+                </span>
                 <span v-else class="text-xs text-base-content/35 font-numeric">
                   {{ UI_STRINGS.LIFECYCLE.noMatch }}
                 </span>

@@ -677,13 +677,14 @@ interface StockLifecycleItem {
 
 ### 入池與模式缺漏狀態 UI 規範（Gemini 遵循）：
 - 當 `!item.isInPool` 時：
-  - 歷程時間軸與表格下方之策略模式標籤統一顯示中性灰字 `UI_STRINGS.LIFECYCLE.notInPool`（「未入池」），清晰提示該日尚未被選股池收錄。
+  - 若技術面有符合策略模式（`item.matchedModes.length > 0`）：顯示模式名稱並附註 `(未入池)`（例如 `多頭回測 (未入池)`），清晰揭示該股在該歷史日「技術型態已成形，但當日尚未入官方追蹤池」。
+  - 若技術面未符合模式：顯示中性灰字 `UI_STRINGS.LIFECYCLE.notInPool`（「未入池」）。
 - 當 `item.isInPool && item.matchedModes.length === 0` 時：
   - 顯示原本的中性符號 `UI_STRINGS.LIFECYCLE.noMatch`（「--」），代表在池內但未觸發任何選股策略。
 - 當 `stock.isNewEntry` 為 true 時：
   - 在個股卡片（StockCard）股票名稱旁顯示低調的微型標籤 `UI_STRINGS.SCREENER.newEntry`（「新進」）。
 - 當時光機切換至過去歷史交易日（`dayOffset > 0`）且 `stock.isInPool === false` 時：
-  - 個股卡片排行榜標籤列顯示 `UI_STRINGS.SCREENER.notInPoolNotice`（「該日未在追蹤池」），避免標籤留空的疑惑。
+  - 個股卡片排行榜標籤列顯示 `UI_STRINGS.SCREENER.notInPoolNotice`（「技術型態符合（當日未在追蹤池）」），解釋為何技術選出但無官方法人標籤。
 
 ### 籌碼缺漏狀態 UI 規範（Gemini 遵循）：
 - 當 `chips == null` 時，不得直接隱藏空白：

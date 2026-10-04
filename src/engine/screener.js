@@ -1438,10 +1438,6 @@ export function getStockLifecycle(stock, maxDays = 7, currentTime = new Date()) 
     const isInPool = sliced.isInPool ?? (offset === 0 ? true : !!(stock.chipsHistory && dateStr && stock.chipsHistory[dateStr]))
     const prevBarDate = sliced.history10d?.length >= 2 ? sliced.history10d[sliced.history10d.length - 2]?.date : null
     const isNewEntry = isInPool && (!prevBarDate || !stock.chipsHistory || !stock.chipsHistory[prevBarDate])
-
-    // 若該歷史日未在選股池中，清空模式匹配
-    const effectiveMatchedModes = isInPool ? matchedModes : []
-
     results.push({
       offset,
       date: dateStr,
@@ -1461,7 +1457,7 @@ export function getStockLifecycle(stock, maxDays = 7, currentTime = new Date()) 
       chips: sliced.chips,
       hasChips,
       sellWarning: sliced.sellWarning,
-      matchedModes: effectiveMatchedModes,
+      matchedModes,
       isInPool,
       isNewEntry,
     })
