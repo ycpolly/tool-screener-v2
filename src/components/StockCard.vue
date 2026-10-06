@@ -1,17 +1,33 @@
 <template>
   <div
     class="stock-card relative bg-base-200 border border-base-300 rounded-xl transition-all duration-200 hover:shadow-md hover:border-base-content/20 [content-visibility:auto]"
-    :class="isCompact ? (stock.isNewEntry ? 'pt-6 p-3 sm:p-3.5' : 'p-3 sm:p-3.5') : 'p-6'"
-    :style="{ containIntrinsicSize: isCompact ? '76px' : '160px' }"
+    :class="isCompact ? (hasTopLeftBadge ? 'pt-6 p-3 sm:p-3.5' : 'p-3 sm:p-3.5') : 'p-6'"
+    :style="{ containIntrinsicSize: isCompact ? (hasTopLeftBadge ? '84px' : '76px') : '160px' }"
   >
-    <!-- 左上角絕對定位：新進標籤 (NEW Entry Badge) -->
-    <span
-      v-if="stock.isNewEntry"
-      class="absolute top-0 left-0 z-10 text-[10px] sm:text-xs font-sans font-medium px-2 py-0.5 rounded-tl-xl rounded-br-md bg-base-300 text-base-content/75 select-none"
-      :title="UI_STRINGS.SCREENER?.newEntryTooltip"
+    <!-- 左上角絕對定位：新進標籤 (NEW Entry Badge) 與 相對強弱 (RS Badge) -->
+    <div
+      v-if="hasTopLeftBadge"
+      class="absolute top-0 left-0 z-10 flex items-center"
     >
-      {{ UI_STRINGS.SCREENER?.newEntry }}
-    </span>
+      <span
+        v-if="stock.isNewEntry"
+        class="text-[10px] sm:text-xs font-sans font-medium px-2 py-0.5 rounded-tl-xl rounded-br-md bg-base-300 text-base-content/75 select-none"
+        :title="UI_STRINGS.SCREENER?.newEntryTooltip"
+      >
+        {{ UI_STRINGS.SCREENER?.newEntry }}
+      </span>
+      <span
+        v-if="relStrengthFormatted"
+        class="text-[10px] sm:text-xs font-numeric font-semibold select-none px-2 py-0.5"
+        :class="[
+          rsBadgeClass,
+          stock.isNewEntry ? 'ml-1 rounded-md' : 'rounded-tl-xl rounded-br-md'
+        ]"
+        :title="rsTitle"
+      >
+        {{ UI_STRINGS.REL_STRENGTH?.prefix || 'RS' }} {{ relStrengthFormatted }}
+      </span>
+    </div>
     <!-- ============================================================
          簡約模式佈局 (Compact Mode)：僅保留首行核心報價與槽位 B 篩選理由
          ============================================================ -->
@@ -36,14 +52,6 @@
           <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
           <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
             [{{ UI_STRINGS.SCREENER.disposed }}]
-          </span>
-          <span
-            v-if="relStrengthFormatted"
-            class="shrink-0 text-xs font-numeric font-semibold select-none"
-            :class="rsColorClass"
-            :title="rsTitle"
-          >
-            {{ UI_STRINGS.REL_STRENGTH?.prefix || 'RS' }} {{ relStrengthFormatted }}
           </span>
         </div>
         <div
@@ -95,14 +103,6 @@
             <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
             <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
               [{{ UI_STRINGS.SCREENER.disposed }}]
-            </span>
-            <span
-              v-if="relStrengthFormatted"
-              class="shrink-0 text-xs font-numeric font-semibold select-none"
-              :class="rsColorClass"
-              :title="rsTitle"
-            >
-              {{ UI_STRINGS.REL_STRENGTH?.prefix || 'RS' }} {{ relStrengthFormatted }}
             </span>
           </div>
           <div
@@ -276,14 +276,6 @@
             <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
             <span v-if="stock.isDisposed" class="font-bold text-sm text-rise">
               [{{ UI_STRINGS.SCREENER.disposed }}]
-            </span>
-            <span
-              v-if="relStrengthFormatted"
-              class="shrink-0 text-xs font-numeric font-semibold select-none"
-              :class="rsColorClass"
-              :title="rsTitle"
-            >
-              {{ UI_STRINGS.REL_STRENGTH?.prefix || 'RS' }} {{ relStrengthFormatted }}
             </span>
           </div>
           <div
@@ -546,6 +538,18 @@ const relStrengthFormatted = computed(() => {
   if (rs === null || rs === undefined || isNaN(rs)) return null
   const sign = rs >= 0 ? '+' : ''
   return `${sign}${Number(rs).toFixed(1)}%`
+})
+
+const hasTopLeftBadge = computed(() => {
+  return !!(props.stock.isNewEntry || relStrengthFormatted.value)
+})
+
+const rsBadgeClass = computed(() => {
+  const rs = props.stock.relStrength5d
+  if (rs === null || rs === undefined || isNaN(rs)) return ''
+  if (rs > 0) return 'bg-rise/10 text-rise'
+  if (rs < 0) return 'bg-fall/10 text-fall'
+  return 'bg-base-300/60 text-base-content/70'
 })
 
 const rsColorClass = computed(() => {
