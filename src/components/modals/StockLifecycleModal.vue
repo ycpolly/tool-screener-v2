@@ -109,15 +109,10 @@
                 ]"
                 @click="toggleDate(item.date)"
               >
-                <!-- 1. 日期 -->
+                <!-- 1. 日期 (時間軸不補0，如 10/1(四)) -->
                 <div class="text-xs text-base-content/75 font-medium whitespace-nowrap">
-                  <span v-if="item.isFuture">{{ formatFutureRowDate(item.date, item.tDay) }}</span>
-                  <span v-else>
-                    {{ formatRowDate(item.date) }}
-                    <span v-if="item.isAnchor && hasForwardData" class="text-[10px] text-primary font-semibold ml-0.5">
-                      ({{ UI_STRINGS.LIFECYCLE.entryDayBadge }})
-                    </span>
-                  </span>
+                  <span v-if="item.isFuture">{{ formatTimelineFutureDate(item.date, item.tDay) }}</span>
+                  <span v-else>{{ formatTimelineDate(item.date) }}</span>
                 </div>
 
                 <!-- 2. 當日收盤價與漲跌 (兩行疊加) -->
@@ -188,9 +183,6 @@
                 <span v-if="row.isFuture">{{ formatFutureRowDate(row.date, row.tDay) }}</span>
                 <span v-else>
                   {{ formatRowDate(row.date) }}
-                  <span v-if="row.isAnchor && hasForwardData" class="text-[10px] text-primary font-semibold ml-0.5">
-                    ({{ UI_STRINGS.LIFECYCLE.entryDayBadge }})
-                  </span>
                 </span>
               </div>
 
@@ -378,6 +370,7 @@ watch([() => props.isOpen, () => props.stock?.code, viewMode], ([open, code, mod
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
+// 表格檢視用日期：補 0 以利垂直對齊，例如 10/01 (四)
 function formatRowDate(dateStr) {
   if (!dateStr) return '--'
   const clean = String(dateStr).replace(/\//g, '-')
@@ -402,6 +395,31 @@ function formatFutureRowDate(dateStr, tDay) {
   const dd = String(parts[2]).padStart(2, '0')
   const suffix = tDay ? ` (T+${tDay})` : ''
   return `${mm}/${dd}${suffix}`
+}
+
+// 時間軸 Carousel 用日期：不補 0 節省橫向空間，例如 10/1(四)
+function formatTimelineDate(dateStr) {
+  if (!dateStr) return '--'
+  const clean = String(dateStr).replace(/\//g, '-')
+  const parts = clean.split('-')
+  if (parts.length < 3) return dateStr
+  const y = parseInt(parts[0], 10)
+  const m = parseInt(parts[1], 10)
+  const d = parseInt(parts[2], 10)
+  const dateObj = new Date(y, m - 1, d)
+  const weekDay = WEEKDAYS[dateObj.getDay()] || ''
+  return `${m}/${d}(${weekDay})`
+}
+
+function formatTimelineFutureDate(dateStr, tDay) {
+  if (!dateStr) return '--'
+  const clean = String(dateStr).replace(/\//g, '-')
+  const parts = clean.split('-')
+  if (parts.length < 3) return dateStr
+  const m = parseInt(parts[1], 10)
+  const d = parseInt(parts[2], 10)
+  const suffix = tDay ? ` (T+${tDay})` : ''
+  return `${m}/${d}${suffix}`
 }
 
 function formatPrice(num) {
