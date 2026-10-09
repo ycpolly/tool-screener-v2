@@ -94,6 +94,7 @@ tool-screener-v2/
 │   │   ├── StockCard.vue       ← 獨立個股卡片（支援點擊代號快速搜尋、速算與近日表現）
 │   │   ├── ForwardValidationBar.vue ← 時光機後續交易日覆盤驗證膠囊條與迷你時間軸歷程
 │   │   ├── StockEvaluationSlot.vue ← 槽位 B 篩選理由與指標診斷詳細清單（支援展開/收合）
+│   │   ├── StockRankScoreSlot.vue  ← 綜合量化評分與細項拆解清單（支援展開/收合 6 大維度評分明細）
 │   │   ├── StockCeilingLadder.vue  ← 槽位 A 天花板關卡價與三明治價格天梯（支援展開/收合）
 │   │   ├── StockChipsSection.vue   ← 籌碼透視區塊（集中度 1D/3D/5D + 短沖避雷分點佔比）
 │   │   ├── StockFundamentalsSection.vue ← 基本面與估值區塊（股本規模 (輕/中/大) + 動態 PE 與同業折溢價/虧損）
@@ -628,6 +629,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 全年度法定休市日行事曆與天然災害動態未開盤感知機制（Market Holiday Calendar & Dynamic Session Detection：於 `src/constants/market-holidays.js` 建立 TWSE 官方 2026 年度休市與補假行事曆；`src/engine/screener.js` 的 `isLiveTradingDay` 納入法定與動態休市日判定，徹底杜絕國定假日與補假日【如 10/9 國慶日補假】時光機誤認今日為開盤交易日而產生兩天相同價位之問題；`src/composables/useRealtimeQuotes.js` 新增指標權值股撮合日期動態偵測，於 09:05 後若指標股成交日皆早於今日自動將當日登錄為動態休市日【天然災害颱風假/交易所暫停交易】；`src/App.vue` 之 `isPostMarketTime` 與「更新」按鈕全面連動，休市日自動維持盤後模式並以 Toast 提示使用者，杜絕無效 API 輪詢）— 完成 2026-10-09
 - [x] 五大模式準確度提升第三階段月營收動能後端擴充（Phase 3 Monthly Revenue YoY & MoM Backend：實作 `scripts/scrapers/revenue.py`，串接 TWSE 與 TPEx 官方 OpenAPI `t187ap05_L` 與 `mopsfin_t187ap05_O`，兩次請求極速涵蓋全市場 1,978 檔上市櫃公司月營收；建立 `cache/revenue.json` 本地快取（TTL = 7 天），支援快速回退與斷網防護；`scripts/writer.py` 與 `main.py` 注入 `revenueYoY`、`revenueMoM` 與 `revenueLatestMonth`，全市場覆蓋率達 99.6%；於 `src/constants/ui-strings.js` 建立 `REVENUE` 字典；工作流 `update-stock-pool.yml` 納入快取提交）— 完成 2026-10-09
 - [x] 五大模式準確度提升第三階段月營收動能前端視覺實作（Phase 3 Monthly Revenue Frontend UI：於 `StockFundamentalsSection.vue` 實作月營收動能行，呈現資料月份、年增率、高成長徽章與月增率；針對波段催化劑年增率 ≥ 30% 提供微型紅色晶亮邊框 `(高成長)` 標籤；數值依正負採用 `text-rise` 漲紅與 `text-fall` 跌綠，若無資料自動優雅隱藏杜絕留白）— 完成 2026-10-09
+- [x] 五大模式準確度提升第四階段綜合量化評分前端視覺實作（Phase 4 Rank Score Frontend UI：建立獨立子元件 `StockRankScoreSlot.vue`，於個股卡片篩選槽位下方渲染綜合評分摘要行；評分採用純文字加粗呈現，摒棄雜亂色彩；支援就地向下平滑展開 6 大維度【起跳、營收、RS、股本、估值、籌碼】得分比與實測打勾說明；同步整合至手機端與電腦端 3 欄佈局）— 完成 2026-10-09
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

@@ -236,6 +236,9 @@
         :filter-evaluation="filterEvaluation"
       />
 
+      <!-- ★ 綜合量化評分與細項拆解 (支援點擊展開 6 大維度得分說明) -->
+      <StockRankScoreSlot :stock="stock" />
+
       <!-- 第 5 層：極簡快捷操作列 (統一 text-sm font-normal) -->
       <StockCardActions :stock="stock" layout="mobile" />
     </div>
@@ -399,6 +402,12 @@
         :filter-evaluation="filterEvaluation"
         class="lg:col-span-12"
       />
+
+      <!-- ★ 綜合量化評分與細項拆解 (電腦端通欄底列) -->
+      <StockRankScoreSlot
+        :stock="stock"
+        class="lg:col-span-12"
+      />
     </div>
     </template>
   </div>
@@ -411,6 +420,7 @@ import { getStockCategoryItems } from '../constants/category-urls.js'
 import Sparkline from './Sparkline.vue'
 import ForwardValidationBar from './ForwardValidationBar.vue'
 import StockEvaluationSlot from './StockEvaluationSlot.vue'
+import StockRankScoreSlot from './StockRankScoreSlot.vue'
 import StockCeilingLadder from './StockCeilingLadder.vue'
 import StockChipsSection from './StockChipsSection.vue'
 import StockFundamentalsSection from './StockFundamentalsSection.vue'
