@@ -101,7 +101,7 @@ tool-screener-v2/
 │   │   └── modals/
 │   │       ├── StockPoolModal.vue ← 股票池來源總覽與排行榜名單
 │   │       ├── PriceCalcModal.vue ← 價格速算 Bottom Sheet（基於現價 vs 基於昨收雙欄階梯）
-│   │       ├── StockLifecycleModal.vue ← 近日表現 Bottom Sheet（7日價量變化與策略命中歷程）
+│   │       ├── StockLifecycleModal.vue ← 近日表現 Bottom Sheet（7日價量變化與策略命中歷程，支援時光機回測後續 T+N 跨越時光分界線自由滑動覆盤）
 │   │       ├── RiskModal.vue   ← 空間與風控全貌（天花板/支撐/風報比）
 │   │       └── AvoidModal.vue  ← 避雷區（法人/主力/投信 賣超）
 │   ├── composables/

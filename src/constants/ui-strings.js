@@ -438,6 +438,9 @@ export const UI_STRINGS = {
     chipsPending: '籌碼結算中',
     notInPool: '未入池',
     notInPoolSuffix: '(未入池)',
+    forwardDivider: '後續',
+    entryDayBadge: '選出',
+    cumGainLabel: (pct) => `累計 ${pct >= 0 ? '+' : ''}${pct}%`,
   },
 
   STOCK_POOL_MODAL: {

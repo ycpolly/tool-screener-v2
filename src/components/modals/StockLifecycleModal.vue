@@ -78,61 +78,89 @@
             />
           </div>
 
-          <!-- 下半部：橫向時間軸 Carousel (左邊過去 T-7 ➔ 右邊最新 T-0) -->
+          <!-- 下半部：橫向時間軸 Carousel (左邊過去 T-7 ➔ 中間選出日 ➔ 時光分界線 ➔ 右邊後續 T+1~T+N) -->
           <div
             ref="carouselRef"
             class="flex items-stretch gap-2 overflow-x-auto no-scrollbar py-1 px-0.5 touch-pan-x scroll-smooth"
           >
-            <div
-              v-for="row in timelineRows"
-              :key="row.offset"
-              class="w-[104px] sm:w-[96px] shrink-0 rounded-xl p-2.5 flex flex-col items-center justify-between text-center space-y-1.5 font-numeric select-none transition-all cursor-pointer"
-              :class="[
-                selectedDate && isSameDate(selectedDate, row.date)
-                  ? 'border-2 border-base-content/50'
-                  : 'border ' + (row.offset === 0 ? 'border-base-content/25 shadow-xs hover:border-base-content/40' : 'border-base-300/70 hover:border-base-content/30'),
-                row.offset === 0 ? 'bg-base-200/90' : 'bg-base-200/40'
-              ]"
-              @click="toggleDate(row.date)"
-            >
-              <!-- 1. 日期 -->
-              <div class="text-xs text-base-content/75 font-medium whitespace-nowrap">
-                {{ formatRowDate(row.date) }}
-              </div>
-
-              <!-- 2. 當日收盤價與漲跌 (兩行疊加) -->
-              <div class="space-y-0.5 whitespace-nowrap" :class="getRowColorClass(row.changePct)">
-                <div class="text-sm sm:text-base font-bold">
-                  {{ formatPrice(row.price) }}
-                </div>
-                <div class="text-[10px] font-semibold">
-                  {{ formatRowChange(row.change, row.changePct, row.price) }}
-                </div>
-              </div>
-
-              <!-- 3. 符合策略模式標籤 (若有符合模式則顯示模式，未在池內則加註 '(未入池)'；若未符合且未入池顯示 '未入池'，在池內未符合顯示 '--') -->
-              <div class="text-xs font-sans w-full truncate pt-1.5 border-t border-base-300/60">
-                <span
-                  v-if="row.matchedModes && row.matchedModes.length > 0"
-                  class="font-medium text-base-content inline-block max-w-full truncate"
-                  :title="row.matchedModes.map(m => m.label).join(' · ')"
-                >
-                  {{ row.matchedModes[0].label }}
-                  <span v-if="!row.isInPool" class="font-normal text-base-content/50 text-[11px] ml-0.5">
-                    {{ UI_STRINGS.LIFECYCLE.notInPoolSuffix }}
+            <template v-for="item in carouselItems" :key="item.type === 'divider' ? 'divider' : item.key">
+              <!-- 時光分界線 -->
+              <div
+                v-if="item.type === 'divider'"
+                class="flex flex-col items-center justify-center shrink-0 px-1 py-1 text-[11px] font-medium text-base-content/40 select-none"
+              >
+                <div class="w-px h-full bg-base-300 relative flex items-center justify-center">
+                  <span class="absolute bg-base-200 border border-base-300 rounded-full px-1.5 py-0.5 text-[10px] text-base-content/70 whitespace-nowrap shadow-2xs">
+                    {{ UI_STRINGS.LIFECYCLE.forwardDivider }} ➔
                   </span>
-                </span>
-                <span
-                  v-else-if="!row.isInPool"
-                  class="font-normal text-base-content/40 inline-block max-w-full truncate text-[11px]"
-                >
-                  {{ UI_STRINGS.LIFECYCLE.notInPool }}
-                </span>
-                <span v-else class="text-base-content/35 font-numeric">
-                  {{ UI_STRINGS.LIFECYCLE.noMatch }}
-                </span>
+                </div>
               </div>
-            </div>
+
+              <!-- 卡片：歷史日（含選出日）或 後續驗證日 -->
+              <div
+                v-else
+                :ref="el => { if (item.isAnchor) anchorCardRef = el }"
+                class="w-[104px] sm:w-[96px] shrink-0 rounded-xl p-2.5 flex flex-col items-center justify-between text-center space-y-1.5 font-numeric select-none transition-all cursor-pointer"
+                :class="[
+                  selectedDate && isSameDate(selectedDate, item.date)
+                    ? 'border-2 border-base-content/50'
+                    : 'border ' + (item.isAnchor ? 'border-base-content/30 shadow-xs hover:border-base-content/50' : 'border-base-300/70 hover:border-base-content/30'),
+                  item.isAnchor ? 'bg-base-200/90' : 'bg-base-200/40'
+                ]"
+                @click="toggleDate(item.date)"
+              >
+                <!-- 1. 日期 -->
+                <div class="text-xs text-base-content/75 font-medium whitespace-nowrap">
+                  <span v-if="item.isFuture">{{ formatFutureRowDate(item.date, item.tDay) }}</span>
+                  <span v-else>
+                    {{ formatRowDate(item.date) }}
+                    <span v-if="item.isAnchor && hasForwardData" class="text-[10px] text-primary font-semibold ml-0.5">
+                      ({{ UI_STRINGS.LIFECYCLE.entryDayBadge }})
+                    </span>
+                  </span>
+                </div>
+
+                <!-- 2. 當日收盤價與漲跌 (兩行疊加) -->
+                <div class="space-y-0.5 whitespace-nowrap" :class="getRowColorClass(item.changePct)">
+                  <div class="text-sm sm:text-base font-bold">
+                    {{ formatPrice(item.price) }}
+                  </div>
+                  <div class="text-[10px] font-semibold">
+                    {{ formatRowChange(item.change, item.changePct, item.price) }}
+                  </div>
+                </div>
+
+                <!-- 3. 符合策略模式標籤 或 後續累計損益 -->
+                <div class="text-xs font-sans w-full truncate pt-1.5 border-t border-base-300/60">
+                  <!-- 後續日顯示累計漲跌幅 -->
+                  <div v-if="item.isFuture" class="font-numeric font-semibold text-xs truncate" :class="getRowColorClass(item.cumChangePct)">
+                    {{ UI_STRINGS.LIFECYCLE.cumGainLabel(item.cumChangePct) }}
+                  </div>
+                  <!-- 歷史日顯示選股模式 -->
+                  <template v-else>
+                    <span
+                      v-if="item.matchedModes && item.matchedModes.length > 0"
+                      class="font-medium text-base-content inline-block max-w-full truncate"
+                      :title="item.matchedModes.map(m => m.label).join(' · ')"
+                    >
+                      {{ item.matchedModes[0].label }}
+                      <span v-if="!item.isInPool" class="font-normal text-base-content/50 text-[11px] ml-0.5">
+                        {{ UI_STRINGS.LIFECYCLE.notInPoolSuffix }}
+                      </span>
+                    </span>
+                    <span
+                      v-else-if="!item.isInPool"
+                      class="font-normal text-base-content/40 inline-block max-w-full truncate text-[11px]"
+                    >
+                      {{ UI_STRINGS.LIFECYCLE.notInPool }}
+                    </span>
+                    <span v-else class="text-base-content/35 font-numeric">
+                      {{ UI_STRINGS.LIFECYCLE.noMatch }}
+                    </span>
+                  </template>
+                </div>
+              </div>
+            </template>
           </div>
         </div>
 
@@ -142,21 +170,28 @@
         <div v-else class="flex-1 overflow-y-auto min-h-0 border border-base-300/70 rounded-xl">
           <!-- 欄位標題 (日期 | 收盤 (漲跌) | 符合模式) -->
           <div class="flex items-center justify-between py-2 px-3 bg-base-200/50 border-b border-base-300/70 text-xs font-semibold text-base-content/70">
-            <span class="w-20 shrink-0 text-left">{{ UI_STRINGS.LIFECYCLE.colDate }}</span>
+            <span class="w-24 sm:w-28 shrink-0 text-left">{{ UI_STRINGS.LIFECYCLE.colDate }}</span>
             <span class="flex-1 text-center">{{ UI_STRINGS.LIFECYCLE.colPrice }}</span>
             <span class="w-24 sm:w-28 shrink-0 text-right">{{ UI_STRINGS.LIFECYCLE.colModes }}</span>
           </div>
 
-          <!-- 表格列 (近 7 個歷史交易日，由近到遠排) -->
+          <!-- 表格列 (近 7 個歷史交易日 + 後續驗證日) -->
           <div class="divide-y divide-base-300/40 text-xs sm:text-sm font-numeric">
             <div
-              v-for="row in rows"
-              :key="row.offset"
+              v-for="row in allTableRows"
+              :key="row.key"
               class="flex items-center justify-between py-2.5 px-3 hover:bg-base-200/30 transition-colors"
+              :class="row.isAnchor ? 'bg-base-200/40 font-semibold' : ''"
             >
               <!-- 欄 1：日期 -->
-              <div class="w-20 shrink-0 text-left text-base-content/75 font-numeric whitespace-nowrap">
-                {{ formatRowDate(row.date) }}
+              <div class="w-24 sm:w-28 shrink-0 text-left text-base-content/75 font-numeric whitespace-nowrap">
+                <span v-if="row.isFuture">{{ formatFutureRowDate(row.date, row.tDay) }}</span>
+                <span v-else>
+                  {{ formatRowDate(row.date) }}
+                  <span v-if="row.isAnchor && hasForwardData" class="text-[10px] text-primary font-semibold ml-0.5">
+                    ({{ UI_STRINGS.LIFECYCLE.entryDayBadge }})
+                  </span>
+                </span>
               </div>
 
               <!-- 欄 2：收盤 (漲跌) -->
@@ -168,26 +203,31 @@
                 <span class="ml-1 text-xs sm:text-sm font-semibold">{{ formatRowChange(row.change, row.changePct, row.price) }}</span>
               </div>
 
-              <!-- 欄 3：符合模式 (未入池若有模式加註 '(未入池)'，無模式顯示 '未入池'，在池內無模式顯示 '--') -->
+              <!-- 欄 3：符合模式 或 累計漲跌 -->
               <div class="w-24 sm:w-28 shrink-0 text-right font-sans">
-                <div v-if="row.matchedModes && row.matchedModes.length > 0" class="flex flex-wrap items-center justify-end gap-1">
-                  <span
-                    v-for="m in row.matchedModes"
-                    :key="m.id"
-                    class="inline-block text-xs font-medium px-1.5 py-0.5 rounded bg-base-200 border border-base-300 text-base-content"
-                  >
-                    {{ m.label }}
-                    <span v-if="!row.isInPool" class="font-normal text-base-content/60 text-[10px] ml-0.5">
-                      {{ UI_STRINGS.LIFECYCLE.notInPoolSuffix }}
-                    </span>
-                  </span>
+                <div v-if="row.isFuture" class="font-numeric font-semibold text-xs sm:text-sm" :class="getRowColorClass(row.cumChangePct)">
+                  {{ UI_STRINGS.LIFECYCLE.cumGainLabel(row.cumChangePct) }}
                 </div>
-                <span v-else-if="!row.isInPool" class="text-xs text-base-content/40 font-normal">
-                  {{ UI_STRINGS.LIFECYCLE.notInPool }}
-                </span>
-                <span v-else class="text-xs text-base-content/35 font-numeric">
-                  {{ UI_STRINGS.LIFECYCLE.noMatch }}
-                </span>
+                <template v-else>
+                  <div v-if="row.matchedModes && row.matchedModes.length > 0" class="flex flex-wrap items-center justify-end gap-1">
+                    <span
+                      v-for="m in row.matchedModes"
+                      :key="m.id"
+                      class="inline-block text-xs font-medium px-1.5 py-0.5 rounded bg-base-200 border border-base-300 text-base-content"
+                    >
+                      {{ m.label }}
+                      <span v-if="!row.isInPool" class="font-normal text-base-content/60 text-[10px] ml-0.5">
+                        {{ UI_STRINGS.LIFECYCLE.notInPoolSuffix }}
+                      </span>
+                    </span>
+                  </div>
+                  <span v-else-if="!row.isInPool" class="text-xs text-base-content/40 font-normal">
+                    {{ UI_STRINGS.LIFECYCLE.notInPool }}
+                  </span>
+                  <span v-else class="text-xs text-base-content/35 font-numeric">
+                    {{ UI_STRINGS.LIFECYCLE.noMatch }}
+                  </span>
+                </template>
               </div>
             </div>
           </div>
@@ -223,6 +263,7 @@ defineEmits(['close', 'searchCode'])
 
 const viewMode = ref('timeline')
 const carouselRef = ref(null)
+const anchorCardRef = ref(null)
 const selectedDate = ref('')
 
 function isSameDate(d1, d2) {
@@ -238,19 +279,89 @@ function toggleDate(dateStr) {
   }
 }
 
+// 歷史 7 個交易日軌跡 (T-0 到 T-7)
 const rows = computed(() => {
   if (!props.isOpen || !props.stock) return []
   return getStockLifecycle(props.stock, 7)
 })
 
-// 方案 A：橫向時間軸由左至右為由過去 (T-7) 至最新 (T-0)，與上方走勢圖同向
-const timelineRows = computed(() => {
-  return [...rows.value].reverse()
+// 後續驗證日資料 (若有時光機歷史回測未來天數)
+const forwardRows = computed(() => {
+  const fv = props.stock?.forwardValidation
+  if (!fv || !Array.isArray(fv.dailyRecords) || fv.dailyRecords.length === 0) {
+    return []
+  }
+  return fv.dailyRecords.map((r) => ({
+    key: `forward-${r.tDay}-${r.date}`,
+    isFuture: true,
+    isAnchor: false,
+    tDay: r.tDay,
+    date: r.date,
+    price: r.close,
+    change: r.dayChange,
+    changePct: r.dayChangePct,
+    cumChangePct: r.cumChangePct,
+    volume: r.volume,
+  }))
 })
 
-function scrollToLatest() {
+const hasForwardData = computed(() => forwardRows.value.length > 0)
+
+// 橫向時間軸卡片（含過去歷史、選出日、時光分界線、後續驗證）
+const carouselItems = computed(() => {
+  const pastRows = [...rows.value].reverse().map(r => ({
+    ...r,
+    key: `past-${r.offset}-${r.date}`,
+    isFuture: false,
+    isAnchor: r.offset === 0,
+    type: 'card',
+  }))
+
+  if (!hasForwardData.value) {
+    return pastRows
+  }
+
+  return [
+    ...pastRows,
+    { type: 'divider' },
+    ...forwardRows.value.map(f => ({ ...f, type: 'card' })),
+  ]
+})
+
+// 表格總列（依時間順序：未來在最上，或最新歷史在最上）
+const allTableRows = computed(() => {
+  const past = rows.value.map(r => ({
+    ...r,
+    key: `past-${r.offset}-${r.date}`,
+    isFuture: false,
+    isAnchor: r.offset === 0,
+  }))
+
+  if (!hasForwardData.value) {
+    return past
+  }
+
+  // 表格中：後續驗證按 T+N (由大到小) 排在最上方，接著是選出日 (T-0) 及過往歷史
+  const reversedForward = [...forwardRows.value].reverse()
+  return [...reversedForward, ...past]
+})
+
+function scrollToAnchor() {
   nextTick(() => {
-    if (carouselRef.value) {
+    if (!carouselRef.value) return
+
+    if (anchorCardRef.value) {
+      // 若有後續資料，將選出日 (anchor) 對齊在可視區偏右側，露出右方的時光分界線
+      const container = carouselRef.value
+      const card = anchorCardRef.value
+      const cardLeft = card.offsetLeft
+      const cardWidth = card.offsetWidth
+      const containerWidth = container.clientWidth
+      
+      // 計算目標滾動位置：使 anchor 卡片置於右側 (保留約 30px 給分界線露出)
+      const targetScroll = cardLeft - containerWidth + cardWidth + (hasForwardData.value ? 40 : 16)
+      container.scrollLeft = Math.max(0, targetScroll)
+    } else {
       carouselRef.value.scrollLeft = carouselRef.value.scrollWidth
     }
   })
@@ -261,7 +372,7 @@ watch([() => props.isOpen, () => props.stock?.code, viewMode], ([open, code, mod
     selectedDate.value = ''
   }
   if (open && mode === 'timeline') {
-    setTimeout(scrollToLatest, 60)
+    setTimeout(scrollToAnchor, 60)
   }
 })
 
@@ -280,6 +391,17 @@ function formatRowDate(dateStr) {
   const dd = String(d).padStart(2, '0')
   const weekDay = WEEKDAYS[dateObj.getDay()] || ''
   return `${mm}/${dd} (${weekDay})`
+}
+
+function formatFutureRowDate(dateStr, tDay) {
+  if (!dateStr) return '--'
+  const clean = String(dateStr).replace(/\//g, '-')
+  const parts = clean.split('-')
+  if (parts.length < 3) return dateStr
+  const mm = String(parts[1]).padStart(2, '0')
+  const dd = String(parts[2]).padStart(2, '0')
+  const suffix = tDay ? ` (T+${tDay})` : ''
+  return `${mm}/${dd}${suffix}`
 }
 
 function formatPrice(num) {
