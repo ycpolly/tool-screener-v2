@@ -86,6 +86,15 @@ interface Stock {
   peDiscount?:    number | null // 同業折溢價 %（例如 -41.82，負值代表相對同業便宜/折價，公式: (pe - industryPe) / industryPe * 100）
   trailingEps?:   number | null // 近 4 季 EPS 合計（例如 9.5287，供時光機與盤中實時動態推算 PE）
 
+  // 月營收動能 (Phase 3 方案 1)
+  revenueYoY?:         number | null // 最新月營收年增率 % (例如 33.5)
+  revenueMoM?:         number | null // 最新月營收月增率 % (例如 -2.81)
+  revenueLatestMonth?: string | null // 營收資料月份 (例如 '2026-08')
+
+  // 綜合量化評分與細項拆解 (Phase 4 方案 4)
+  rankScore?:     number | null // 模式綜合評分 (0 ~ 100，起跳 40，依照分數由高至低排序)
+  rankBreakdown?: RankBreakdown | null // 評分拆解與摘要文字
+
   // Sparkline
   sparkline:  number[]      // 近10日收盤價陣列
   history10d: DayBar[]      // 近10日完整日K（含 ma5/ma10/kd）
@@ -143,6 +152,19 @@ interface Stock {
   } | null
 }
 
+interface RankBreakdownItem {
+  key:   'base' | 'revenue' | 'rs' | 'capital' | 'valuation' | 'chips'
+  label: string  // '起跳' | '營收' | 'RS' | '股本' | '估值' | '籌碼'
+  score: number  // 該維度得分
+  max:   number  // 該維度滿分 (40 | 15 | 15 | 12 | 10 | 8)
+  desc:  string  // 該維度細部說明 (例如: '年增 +33.5% (8月)', 'RS +13.1% (強於大盤)', '11.5 億 (極輕型)', '便宜 42% (PE 19.3 vs 33.2)', '連 3 日集中')
+}
+
+interface RankBreakdown {
+  score:   number              // 總評分 (0 ~ 100)
+  summary: string              // 簡明摘要 (例如: '起跳40 · 營收+10 · RS+15 · 股本+12 · 估值+10 · 籌碼+8')
+  items:   RankBreakdownItem[] // 各維度拆解項目清單
+}
 
 interface DayBar {
   open: number;  high: number;  low: number;  close: number
@@ -698,4 +720,43 @@ interface StockLifecycleItem {
   - 歷史模式下（`dayOffset > 0`）：顯示 `UI_STRINGS.CHIPS.missingHistorical`（「該歷史日未入選追蹤池（無分點籌碼記錄）」）
   - 今日結算過渡期（17:46 ~ 19:16）：顯示 `UI_STRINGS.CHIPS.pendingSettlement`（「今日分點籌碼結算中（預計 19:16 發布）」）
   - 平時若無分點紀錄：顯示 `UI_STRINGS.CHIPS.noRecord`（「無分點籌碼記錄」）
+
+---
+
+## 八、綜合量化評分與細項拆解契約（Phase 4 Rank Score Contract）
+
+供 Gemini 在 `StockCard.vue` 實作「綜合評分摘要行」與「點開查看細部打勾項」之 UI 規格：
+
+### 1. 資料模型
+個股物件已由邏輯層與引擎自動注入：
+- `stock.rankScore`: `number | null`（滿分 100 分，起跳 40 分，例如 `95` 或 `83`）
+- `stock.rankBreakdown`: `RankBreakdown | null`
+  - `score`: `number`（總分）
+  - `summary`: `string`（格式範例：`起跳40 · 營收+10 · RS+15 · 股本+12 · 估值+10 · 籌碼+8`）
+  - `items`: `RankBreakdownItem[]`（包含 6 個維度：`base`, `revenue`, `rs`, `capital`, `valuation`, `chips`）
+    - `key`: `'base' | 'revenue' | 'rs' | 'capital' | 'valuation' | 'chips'`
+    - `label`: `string`（例如 `'起跳'`, `'營收'`, `'RS'`, `'股本'`, `'估值'`, `'籌碼'`）
+    - `score`: `number`（實得分數）
+    - `max`: `number`（該項滿分：40, 15, 15, 12, 10, 8）
+    - `desc`: `string`（詳細實測說明，例如 `'年增 +33.5% (8月)'`, `'RS +13.1% (強於大盤)'`, `'11.5 億 (極輕型)'`, `'便宜 42% (PE 19.3 vs 33.2)'`, `'連 3 日集中'`）
+
+### 2. UI 呈現位置與互動規範（使用者決策 3）
+- **呈現位置**：
+  在個股卡片（`StockCard.vue`）底下的「符合『XX』選股條件」列下方（或緊鄰處），渲染獨立的評分摘要行。
+- **摘要行外觀**：
+  - 格式範例：`評分 95：起跳40 · 營收+10 · RS+15 · 股本+12 · 估值+10 · 籌碼+8`
+  - 評分數字（如 `95`）加粗，高分標的（如 ≥ 85 分）可給予醒目徽章或強調色。
+  - 右側帶有小箭頭或展開提示（例如 `▾` 或 SVG 箭頭），整行可點擊切換就地展開/收合。
+- **展開細項外觀**：
+  - 點開後，就地展開 6 大項評分細目清單（或網格）：
+    1. **起跳 (40/40)**：技術型態通過（打勾圖示）
+    2. **營收 (+X/15)**：實測數值與年增率描述（如 `年增 +33.5% (8月)`）
+    3. **RS (+X/15)**：實測數值（如 `RS +13.1% (強於大盤)`）
+    4. **股本 (+X/12)**：實測規模與評級（如 `11.5 億 (極輕型)`）
+    5. **估值 (+X/10)**：實測 PE 與折價（如 `便宜 42% (PE 19.3 vs 33.2)`）
+    6. **籌碼 (+X/8)**：實測集中天數（如 `連 3 日集中`）
+  - 每一項皆顯示「得分/滿分」與「被打勾的實測條件文字 `desc`」。
+  - 滿分或高分項目可帶綠色或主題打勾圖示，未得分項（0分）則帶中性或灰色提示。
+  - 支援再次點擊收合，維持手機端緊湊排版。
+
 

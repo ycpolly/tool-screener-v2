@@ -7,6 +7,7 @@ import {
   getAllCeilings,
   getSupportLevels,
   calculateRiskReward,
+  calculateRankScore,
 } from '../engine/screener.js'
 import { SCREENER_MODES, DEFAULT_MODE } from '../constants/screener-modes.js'
 
@@ -114,6 +115,11 @@ export function useScreener(stocks) {
         supportLevels,
         riskReward,
       }
+
+      // Phase 4: 計算綜合量化評分與細項拆解 (rankScore & rankBreakdown)
+      const rankRes = calculateRankScore(enrichedStock)
+      enrichedStock.rankScore = rankRes.score
+      enrichedStock.rankBreakdown = rankRes
 
       if (activeMode.value === 'ALL') {
         // 在 ALL 模式下，計算這檔股票命中了哪些預設策略

@@ -197,17 +197,42 @@
 
 ---
 
-## 五、第四階段 (Phase 4)：篩選引擎評分與排序升級
+## 五、第四階段 (Phase 4)：篩選引擎評分與排序升級 【後端已完成 ✅ 2026-10-09 / 待前端 Gemini 接手 ⏳】
 
-### 【後端 Claude 職責】
+### 【後端 Claude 職責】（✅ 已實作完成並驗證通過）
 1. **`src/engine/screener.js`**：
-   - 在各模式（特別是「多頭回測」、「洗盤起漲」、「底部蓄勢」）之候選名單中，新增 `rankScore` 綜合評分加權：
-     - **相對強弱度加分**：`relStrength5d > 0` 基礎加分，每 +1% 累加分數。
-     - **籌碼集中趨勢加分**：`chipsTrend3d === 'UP'` 且 `chipsScore >= 3` 給予高額波段主力進駐加分。
-     - **股本彈性加分**：`paidInCapital <= 30` 億給予小股本彈性加分；`> 100` 億微幅降權。
-     - **估值保護加分**：`peDiscount <= -20%` 給予折價加分。
-     - **營收催化劑加分**：`revenueYoY >= 20%` 優先加分。
-   - 最終選出清單預設依照 `rankScore` 由大至小排序，使 4551 智伸科等具備全方位動能的標的自動置於卡片第一位。
+   - 實作純量化評分函式 `calculateRankScore(stock)`：
+     - **總分公式**：$$\text{rankScore} = \text{Base}(40) + S_{\text{rev}}(15) + S_{\text{rs}}(15) + S_{\text{cap}}(12) + S_{\text{val}}(10) + S_{\text{chip}}(8)$$
+     - **起跳分數 (40 分)**：通過策略型態篩選基準分。
+     - **營收催化劑 ($S_{\text{rev}}$, 0 ~ 15 分)**：YoY $\ge +50\% \rightarrow 15$；$\ge +20\% \rightarrow 10$；$\ge +5\% \rightarrow 5$；$\ge -5\% \rightarrow 2$；$< -5\% \rightarrow 0$；MoM $\ge +10\%$ 額外 $+1$ 分（上限 15）。
+     - **相對大盤強弱 ($S_{\text{rs}}$, 0 ~ 15 分)**：RS $\ge +10\% \rightarrow 15$；$0 < \text{RS} < +10\% \rightarrow \text{clamp}(3, 14, \text{round}(\text{RS} \times 1.2) + 3)$；$\ge -3\% \rightarrow 1$；$< -3\% \rightarrow 0$。
+     - **股本規模 ($S_{\text{cap}}$, 0 ~ 12 分)**：$\le 15$ 億 $\rightarrow 12$；$\le 30$ 億 $\rightarrow 9$；$\le 60$ 億 $\rightarrow 6$；$\le 100$ 億 $\rightarrow 3$；$> 100$ 億 $\rightarrow 0$。
+     - **估值保護 ($S_{\text{val}}$, 0 ~ 10 分)**：$\text{peDiscount} \le -30\% \rightarrow 10$；$\le -15\% \rightarrow 7$；$\le 0\% \rightarrow 4$；$\le 25\% \rightarrow 1$；$> 25\% \rightarrow 0$；無 PE 或虧損 $\rightarrow 0$。
+     - **籌碼集中趨勢 ($S_{\text{chip}}$, 0 ~ 8 分)**：$\text{chipsScore} \ge 3 \rightarrow 8$；$= 2 \rightarrow 5$；$\text{FLAT/NEW} \rightarrow 2$；$\text{DOWN} \rightarrow 0$。
+   - 時光機歷史切片回溯 `sliceStockAt` 支援歷史倒流重算，產出當時真實之 `rankScore` 與 `rankBreakdown`。
+2. **`src/composables/useScreener.js`**：
+   - 於 `screenerOutput` 計算各個股之 `rankScore` 與 `rankBreakdown`。
+3. **`src/App.vue`**：
+   - 監聽 `activeMode`：當切換至策略型態模式（Mode 1 ~ 5）時，自動將預設排序切換為 `sortKey = 'rankScore'`、`sortDir = 'desc'`（高分置頂）；切回 `ALL` 時還原為漲跌幅排序。
+4. **`src/components/SearchBar.vue` 與 `src/components/StockTable.vue`**：
+   - 排序選單新增「評分」按鈕（`rankScore`）。
+   - `StockTable.vue` 之 `sortList` 支援 `rankScore` 排序，同分時以漲跌幅降冪作次要排序。
+5. **`scripts/writer.py`**：
+   - 實作 `_compute_rank_score`，使 `public/data/stock-pool.json` 原生包含 `rankScore` 與 `rankBreakdown`。
+6. **`docs/INTERFACE_CONTRACT.md`**：
+   - 增補第八節：綜合量化評分與細項拆解 UI 規格。
+
+### 【前端 Gemini 職責】（⏳ 待 Gemini 實作）
+1. **`src/components/StockCard.vue`**：
+   - **呈現位置**：於個股卡片底部的「符合『XX』選股條件」列下方（或緊鄰處），渲染獨立的評分摘要行。
+   - **摘要行樣式**：
+     - 顯示 `評分 95：起跳40 · 營收+10 · RS+15 · 股本+12 · 估值+10 · 籌碼+8`（字串取自 `stock.rankBreakdown.summary`）。
+     - 評分數字（如 95）加粗或帶徽章，右側附帶展開指示箭頭（例如 `▾` 或 SVG）。
+   - **點擊就地展開細項**：
+     - 點擊該行切換展開/收合。
+     - 展開後展示 6 大維度（起跳、營收、RS、股本、估值、籌碼）之得分 (`score/max`) 與實測說明 (`desc`)。
+     - 滿分或高分項目顯示打勾圖示，未得分項顯示灰色。
+     - 遵守 mobile-first，不折行不破版，不使用硬編碼中文字串。
 
 ---
 

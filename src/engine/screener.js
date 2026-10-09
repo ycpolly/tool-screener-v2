@@ -1113,6 +1113,211 @@ export function isLiveTradingDay(sampleBar, currentTime = new Date()) {
 }
 
 /**
+ * Phase 4: 綜合評分排序與模式規則權重 (rankScore & rankBreakdown)
+ *
+ * 滿分 100 分，基礎分 40 分（通過技術型態檢驗即獲 40 分）
+ * 公式：rankScore = 起跳(40) + 營收(15) + RS(15) + 股本(12) + 估值(10) + 籌碼(8)
+ *
+ * @param {Object} stock - 個股物件 (含營收、RS、股本、估值、籌碼等指標)
+ * @returns {{ score: number, summary: string, items: Array<{ key: string, label: string, score: number, max: number, desc: string }> }}
+ */
+export function calculateRankScore(stock) {
+  if (!stock) return { score: 0, summary: '', items: [] }
+
+  const S = UI_STRINGS.RANK_SCORE || {}
+  const items = []
+  let totalScore = 0
+
+  // 1. 起跳分數 (通過技術型態)
+  const baseScore = 40
+  totalScore += baseScore
+  items.push({
+    key: 'base',
+    label: S.baseLabel || '起跳',
+    score: baseScore,
+    max: 40,
+    desc: S.baseDesc || '技術型態通過',
+  })
+
+  // 2. 營收催化劑 (S_rev, 0 ~ 15 分)
+  let revScore = 2
+  let revDesc = S.noRevenueData || '暫無營收資料'
+  const yoy = stock.revenueYoY
+  const mom = stock.revenueMoM
+  const rMonth = stock.revenueLatestMonth
+  let monthStr = ''
+  if (rMonth) {
+    const parts = String(rMonth).split('-')
+    monthStr = parts.length > 1 ? `${parseInt(parts[1], 10)}月` : rMonth
+  }
+
+  if (typeof yoy === 'number') {
+    if (yoy >= 50) revScore = 15
+    else if (yoy >= 20) revScore = 10
+    else if (yoy >= 5) revScore = 5
+    else if (yoy >= -5) revScore = 2
+    else revScore = 0
+
+    // 月增 MoM 加分 (+1 分，上限 15)
+    if (typeof mom === 'number' && mom >= 10 && revScore < 15) {
+      revScore += 1
+    }
+
+    const sign = yoy >= 0 ? '+' : ''
+    const momPart = typeof mom === 'number' ? ` · 月增 ${mom >= 0 ? '+' : ''}${mom}%` : ''
+    revDesc = `年增 ${sign}${yoy}%${monthStr ? ` (${monthStr})` : ''}${momPart}`
+  }
+  totalScore += revScore
+  items.push({
+    key: 'revenue',
+    label: S.revenueLabel || '營收',
+    score: revScore,
+    max: 15,
+    desc: revDesc,
+  })
+
+  // 3. 相對大盤強弱度 (S_rs, 0 ~ 15 分)
+  let rsScore = 1
+  let rsDesc = S.noRsData || '暫無大盤對照資料'
+  const rs = stock.relStrength5d
+  if (typeof rs === 'number') {
+    if (rs >= 10) {
+      rsScore = 15
+    } else if (rs > 0) {
+      rsScore = Math.min(14, Math.max(3, Math.round(rs * 1.2) + 3))
+    } else if (rs >= -3) {
+      rsScore = 1
+    } else {
+      rsScore = 0
+    }
+    const sign = rs >= 0 ? '+' : ''
+    const tag = rs >= 0 ? (S.strongerThanMarket || '強於大盤') : (S.weakerThanMarket || '弱於大盤')
+    rsDesc = `RS ${sign}${rs}% (${tag})`
+  }
+  totalScore += rsScore
+  items.push({
+    key: 'rs',
+    label: S.rsLabel || 'RS',
+    score: rsScore,
+    max: 15,
+    desc: rsDesc,
+  })
+
+  // 4. 股本彈性 (S_cap, 0 ~ 12 分)
+  let capScore = 3
+  let capDesc = S.noCapitalData || '暫無股本資料'
+  const cap = stock.paidInCapital
+  if (typeof cap === 'number') {
+    let tag = ''
+    if (cap <= 15) {
+      capScore = 12
+      tag = S.capUltraLight || '極輕型'
+    } else if (cap <= 30) {
+      capScore = 9
+      tag = S.capLight || '輕型股'
+    } else if (cap <= 60) {
+      capScore = 6
+      tag = S.capMid || '中型股'
+    } else if (cap <= 100) {
+      capScore = 3
+      tag = S.capLarge || '大型股'
+    } else {
+      capScore = 0
+      tag = S.capMega || '超大權值'
+    }
+    capDesc = `${cap} 億 (${tag})`
+  }
+  totalScore += capScore
+  items.push({
+    key: 'capital',
+    label: S.capitalLabel || '股本',
+    score: capScore,
+    max: 12,
+    desc: capDesc,
+  })
+
+  // 5. 同業估值保護 (S_val, 0 ~ 10 分)
+  let valScore = 2
+  let valDesc = S.noValuationData || '暫無同業資料'
+  const pe = stock.pe
+  const indPe = stock.industryPe
+  const peDisc = stock.peDiscount
+
+  if (pe === null || pe === undefined || pe <= 0) {
+    valScore = 0
+    valDesc = S.lossOrNoPe || '虧損或無 PE'
+  } else if (typeof peDisc === 'number') {
+    if (peDisc <= -30) valScore = 10
+    else if (peDisc <= -15) valScore = 7
+    else if (peDisc <= 0) valScore = 4
+    else if (peDisc <= 25) valScore = 1
+    else valScore = 0
+
+    const peStr = `PE ${pe}${indPe ? ` vs ${indPe}` : ''}`
+    if (peDisc <= 0) {
+      valDesc = `${S.cheaperPrefix || '便宜'} ${Math.abs(Math.round(peDisc))}% (${peStr})`
+    } else {
+      valDesc = `${S.expensivePrefix || '偏貴'} ${Math.round(peDisc)}% (${peStr})`
+    }
+  } else if (pe > 0) {
+    valScore = 2
+    valDesc = `PE ${pe} (${S.noIndustryPe || '無同業均值'})`
+  }
+  totalScore += valScore
+  items.push({
+    key: 'valuation',
+    label: S.valuationLabel || '估值',
+    score: valScore,
+    max: 10,
+    desc: valDesc,
+  })
+
+  // 6. 籌碼集中趨勢 (S_chip, 0 ~ 8 分)
+  let chipScore = 2
+  let chipDesc = S.chipsFlat || '籌碼持平'
+  const cScore = stock.chipsScore
+  const cTrend = stock.chipsTrend3d
+
+  if (cScore >= 3) {
+    chipScore = 8
+    chipDesc = S.chipsStreak3 || '連 3 日集中'
+  } else if (cScore === 2) {
+    chipScore = 5
+    chipDesc = S.chipsStreak2 || '連 2 日集中'
+  } else if (cTrend === 'DOWN') {
+    chipScore = 0
+    chipDesc = S.chipsDiverge || '連續發散'
+  } else if (cTrend === 'NEW') {
+    chipScore = 2
+    chipDesc = S.chipsNew || '新進追蹤池'
+  } else {
+    chipScore = 2
+    chipDesc = S.chipsFlat || '籌碼持平'
+  }
+  totalScore += chipScore
+  items.push({
+    key: 'chips',
+    label: S.chipsLabel || '籌碼',
+    score: chipScore,
+    max: 8,
+    desc: chipDesc,
+  })
+
+  // 構造簡潔一行摘要：起跳40 · 營收+10 · RS+15 · 股本+12 · 估值+10 · 籌碼+8
+  const summaryParts = items.map(it => {
+    if (it.key === 'base') return `${it.label}${it.score}`
+    return `${it.label}+${it.score}`
+  })
+  const summary = summaryParts.join(' · ')
+
+  return {
+    score: totalScore,
+    summary,
+    items,
+  }
+}
+
+/**
  * 時光切片：將個股狀態時光倒流至指定天數前（支援近 0 ~ 5 個歷史交易日）
  * @param {Object} stock             - 原始個股物件（包含完整 history10d）
  * @param {number} dayOffset         - 倒流天數（0: 今日/最新, 1: 昨日, 2: 前日...）
@@ -1353,7 +1558,7 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
     slicedPeDiscount = round2(((slicedPe - stock.industryPe) / stock.industryPe) * 100)
   }
 
-  return {
+  const slicedObj = {
     ...stock,
     date: bar.date,
     isInPool,
@@ -1406,6 +1611,13 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
     sparkline: stock.history10d.slice(Math.max(0, targetIndex - 9), targetIndex + 1).map(b => b.close),
     dayOffset,
   }
+
+  // Phase 4: 歷史倒流時依當時指標計算 rankScore
+  const rankRes = calculateRankScore(slicedObj)
+  slicedObj.rankScore = rankRes.score
+  slicedObj.rankBreakdown = rankRes
+
+  return slicedObj
 }
 
 
@@ -1468,6 +1680,8 @@ export function getStockLifecycle(stock, maxDays = 7, currentTime = new Date()) 
       relStrength5d: sliced.relStrength5d ?? null,
       chipsTrend3d: sliced.chipsTrend3d ?? null,
       chipsScore: sliced.chipsScore ?? null,
+      rankScore: sliced.rankScore ?? null,
+      rankBreakdown: sliced.rankBreakdown ?? null,
       bias5: sliced.bias5,
       bias20: sliced.bias20,
       ma5: sliced.ma5,
@@ -1528,6 +1742,10 @@ export function runScreener(stocks = [], params = {}, activeMode = '', dayOffset
       supportLevels,
       riskReward,
     }
+
+    const rankRes = calculateRankScore(enrichedStock)
+    enrichedStock.rankScore = rankRes.score
+    enrichedStock.rankBreakdown = rankRes
 
     const evalResult = evaluateStock(enrichedStock, params, activeMode)
     enrichedStock.filterEvaluation = evalResult

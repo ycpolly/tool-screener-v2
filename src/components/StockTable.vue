@@ -65,7 +65,7 @@
           <StockCard
             v-for="stock in visibleSearchMatchedStocks"
             :key="stock.code"
-            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.isInPool, stock.isNewEntry, isCompact, activeMode]"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.revenueYoY, stock.rankScore, stock.isInPool, stock.isNewEntry, isCompact, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-compact="isCompact"
@@ -98,7 +98,7 @@
           <StockCard
             v-for="stock in visibleSearchUnmatchedStocks"
             :key="stock.code"
-            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.isInPool, stock.isNewEntry, isCompact, true, activeMode]"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.revenueYoY, stock.rankScore, stock.isInPool, stock.isNewEntry, isCompact, true, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-unmatched="true"
@@ -142,7 +142,7 @@
         <StockCard
           v-for="stock in visibleSortedStocks"
           :key="stock.code"
-          v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.isInPool, stock.isNewEntry, isCompact, activeMode]"
+          v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.revenueYoY, stock.rankScore, stock.isInPool, stock.isNewEntry, isCompact, activeMode]"
           :stock="stock"
           :active-mode="activeMode"
           :is-compact="isCompact"
@@ -194,7 +194,7 @@
           <StockCard
             v-for="stock in visibleSortedUnmatchedStocks"
             :key="stock.code"
-            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.isInPool, stock.isNewEntry, isCompact, true, activeMode]"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.revenueYoY, stock.rankScore, stock.isInPool, stock.isNewEntry, isCompact, true, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-unmatched="true"
@@ -519,6 +519,9 @@ function sortList(list, key, dirStr) {
     } else if (key === 'expectedProfit') {
       valA = getStockExpectedProfit(a)
       valB = getStockExpectedProfit(b)
+    } else if (key === 'rankScore') {
+      valA = typeof a.rankScore === 'number' ? a.rankScore : -999
+      valB = typeof b.rankScore === 'number' ? b.rankScore : -999
     }
 
     if (valA === undefined || valA === null) return 1
@@ -529,6 +532,13 @@ function sortList(list, key, dirStr) {
     }
     const diff = (valA - valB) * dir
     if (diff !== 0) return diff
+
+    // 當 rankScore 同分時，次要排序優先比對漲跌幅 (降冪)
+    if (key === 'rankScore') {
+      const chgDiff = ((b.changePct ?? 0) - (a.changePct ?? 0)) * dir
+      if (chgDiff !== 0) return chgDiff
+    }
+
     return String(a.code || '').localeCompare(String(b.code || ''))
   })
 }

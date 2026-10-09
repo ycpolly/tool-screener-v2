@@ -138,6 +138,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'update:sortKey', 'update:sortDir', 'toggle-compact'])
 
 const sortOptions = [
+  { key: 'rankScore', label: UI_STRINGS.SORT_OPTIONS?.rankScore || '評分' },
   { key: 'changePct', label: UI_STRINGS.SORT_OPTIONS?.changePct || '漲跌幅' },
   { key: 'expectedProfit', label: UI_STRINGS.SORT_OPTIONS?.expectedProfit || '預期純利' },
   { key: 'volume', label: UI_STRINGS.SORT_OPTIONS?.volume || '成交量' },

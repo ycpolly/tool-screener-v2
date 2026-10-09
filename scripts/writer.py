@@ -139,6 +139,155 @@ def _calc_chips_trend(chips_hist: Dict) -> Tuple[Optional[str], Optional[int]]:
         return 'NEW', 1
 
 
+def _compute_rank_score(
+    revenue_yoy: Optional[float],
+    revenue_mom: Optional[float],
+    revenue_latest_month: Optional[str],
+    rel_strength_5d: Optional[float],
+    paid_in_capital: Optional[float],
+    pe: Optional[float],
+    industry_pe: Optional[float],
+    pe_discount: Optional[float],
+    chips_trend_3d: Optional[str],
+    chips_score: Optional[int],
+) -> dict:
+    """
+    Phase 4: 計算個股綜合量化評分與細項拆解 (rankScore & rankBreakdown)
+    滿分 100 分，起跳 40 分，公式：起跳(40) + 營收(15) + RS(15) + 股本(12) + 估值(10) + 籌碼(8)
+    """
+    base_score = 40
+    items = [{
+        'key': 'base',
+        'label': '起跳',
+        'score': 40,
+        'max': 40,
+        'desc': '技術型態通過',
+    }]
+    total_score = base_score
+
+    # 1. 營收 (0 ~ 15)
+    rev_score = 2
+    month_str = ''
+    if revenue_latest_month:
+        parts = str(revenue_latest_month).split('-')
+        month_str = f"{int(parts[1])}月" if len(parts) > 1 else str(revenue_latest_month)
+    if revenue_yoy is not None:
+        if revenue_yoy >= 50:
+            rev_score = 15
+        elif revenue_yoy >= 20:
+            rev_score = 10
+        elif revenue_yoy >= 5:
+            rev_score = 5
+        elif revenue_yoy >= -5:
+            rev_score = 2
+        else:
+            rev_score = 0
+        if revenue_mom is not None and revenue_mom >= 10 and rev_score < 15:
+            rev_score += 1
+        sign = '+' if revenue_yoy >= 0 else ''
+        mom_part = f" · 月增 {'+' if revenue_mom >= 0 else ''}{revenue_mom}%" if revenue_mom is not None else ''
+        rev_desc = f"年增 {sign}{revenue_yoy}%{f' ({month_str})' if month_str else ''}{mom_part}"
+    else:
+        rev_desc = '暫無營收資料'
+    total_score += rev_score
+    items.append({'key': 'revenue', 'label': '營收', 'score': rev_score, 'max': 15, 'desc': rev_desc})
+
+    # 2. RS (0 ~ 15)
+    rs_score = 1
+    if rel_strength_5d is not None:
+        if rel_strength_5d >= 10:
+            rs_score = 15
+        elif rel_strength_5d > 0:
+            rs_score = min(14, max(3, round(rel_strength_5d * 1.2) + 3))
+        elif rel_strength_5d >= -3:
+            rs_score = 1
+        else:
+            rs_score = 0
+        sign = '+' if rel_strength_5d >= 0 else ''
+        tag = '強於大盤' if rel_strength_5d >= 0 else '弱於大盤'
+        rs_desc = f"RS {sign}{rel_strength_5d}% ({tag})"
+    else:
+        rs_desc = '暫無大盤對照資料'
+    total_score += rs_score
+    items.append({'key': 'rs', 'label': 'RS', 'score': rs_score, 'max': 15, 'desc': rs_desc})
+
+    # 3. 股本 (0 ~ 12)
+    cap_score = 3
+    if paid_in_capital is not None:
+        if paid_in_capital <= 15:
+            cap_score, tag = 12, '極輕型'
+        elif paid_in_capital <= 30:
+            cap_score, tag = 9, '輕型股'
+        elif paid_in_capital <= 60:
+            cap_score, tag = 6, '中型股'
+        elif paid_in_capital <= 100:
+            cap_score, tag = 3, '大型股'
+        else:
+            cap_score, tag = 0, '超大權值'
+        cap_desc = f"{paid_in_capital} 億 ({tag})"
+    else:
+        cap_desc = '暫無股本資料'
+    total_score += cap_score
+    items.append({'key': 'capital', 'label': '股本', 'score': cap_score, 'max': 12, 'desc': cap_desc})
+
+    # 4. 估值 (0 ~ 10)
+    val_score = 2
+    if pe is None or pe <= 0:
+        val_score, val_desc = 0, '虧損或無 PE'
+    elif pe_discount is not None:
+        if pe_discount <= -30:
+            val_score = 10
+        elif pe_discount <= -15:
+            val_score = 7
+        elif pe_discount <= 0:
+            val_score = 4
+        elif pe_discount <= 25:
+            val_score = 1
+        else:
+            val_score = 0
+        pe_str = f"PE {pe}{f' vs {industry_pe}' if industry_pe else ''}"
+        if pe_discount <= 0:
+            val_desc = f"便宜 {abs(round(pe_discount))}% ({pe_str})"
+        else:
+            val_desc = f"偏貴 {round(pe_discount)}% ({pe_str})"
+    else:
+        val_score, val_desc = 2, f"PE {pe} (無同業均值)"
+    total_score += val_score
+    items.append({'key': 'valuation', 'label': '估值', 'score': val_score, 'max': 10, 'desc': val_desc})
+
+    # 5. 籌碼 (0 ~ 8)
+    chip_score = 2
+    chip_desc = '籌碼持平'
+    c_score = chips_score or 0
+    c_trend = chips_trend_3d or 'FLAT'
+    if c_score >= 3:
+        chip_score, chip_desc = 8, '連 3 日集中'
+    elif c_score == 2:
+        chip_score, chip_desc = 5, '連 2 日集中'
+    elif c_trend == 'DOWN':
+        chip_score, chip_desc = 0, '連續發散'
+    elif c_trend == 'NEW':
+        chip_score, chip_desc = 2, '新進追蹤池'
+    else:
+        chip_score, chip_desc = 2, '籌碼持平'
+    total_score += chip_score
+    items.append({'key': 'chips', 'label': '籌碼', 'score': chip_score, 'max': 8, 'desc': chip_desc})
+
+    summary_parts = []
+    for it in items:
+        if it['key'] == 'base':
+            summary_parts.append(f"{it['label']}{it['score']}")
+        else:
+            summary_parts.append(f"{it['label']}+{it['score']}")
+    summary = ' · '.join(summary_parts)
+
+    return {
+        'score': total_score,
+        'summary': summary,
+        'items': items,
+    }
+
+
 def _is_valid_stock_code(code: str) -> bool:
     """只收錄 4 位數字、非 00 開頭的一般股票"""
     s = str(code).strip()
@@ -374,7 +523,19 @@ def build_stock_pool(
         rev_entry = (revenue_data.get(code) if revenue_data else None) or existing_revenue.get(code, {})
         revenue_yoy = rev_entry.get('revenueYoY')
         revenue_mom = rev_entry.get('revenueMoM')
-        revenue_latest_month = rev_entry.get('revenueLatestMonth')
+        # ── Phase 4: 綜合評分與細項拆解 (rankScore & rankBreakdown) ──
+        rank_info = _compute_rank_score(
+            revenue_yoy=revenue_yoy,
+            revenue_mom=revenue_mom,
+            revenue_latest_month=revenue_latest_month,
+            rel_strength_5d=rel_strength_5d,
+            paid_in_capital=paid_in_capital,
+            pe=stock_pe,
+            industry_pe=industry_pe,
+            pe_discount=pe_discount,
+            chips_trend_3d=chips_trend_3d,
+            chips_score=chips_score,
+        )
 
         stock = {
             'code':      code,
@@ -396,6 +557,10 @@ def build_stock_pool(
             'revenueYoY':         revenue_yoy,
             'revenueMoM':         revenue_mom,
             'revenueLatestMonth': revenue_latest_month,
+
+            # 綜合評分 (Phase 4)
+            'rankScore':     rank_info['score'],
+            'rankBreakdown': rank_info,
 
             # 行情
             'price':      data.get('price',     0.0),

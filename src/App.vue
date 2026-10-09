@@ -314,7 +314,7 @@
 </template>
 
 <script setup>
-import { ref, computed, shallowRef, onMounted } from 'vue'
+import { ref, computed, shallowRef, watch, onMounted } from 'vue'
 import { UI_STRINGS } from './constants/ui-strings.js'
 import { isMarketHoliday, getMarketHolidayInfo } from './constants/market-holidays.js'
 import { useStockPool } from './composables/useStockPool.js'
@@ -544,6 +544,17 @@ const {
   togglePremium,
   resetParams,
 } = useScreener(activeStocks)
+
+// Phase 4: 切換到策略型態 (Mode 1 ~ 5) 時，預設排序自動切換為綜合評分 (rankScore) 降冪；切回 ALL 時還原為漲跌幅
+watch(activeMode, (newMode) => {
+  if (newMode !== 'ALL') {
+    sortKey.value = 'rankScore'
+    sortDir.value = 'desc'
+  } else {
+    sortKey.value = 'changePct'
+    sortDir.value = 'desc'
+  }
+})
 
 function handleSelectStock(stock) {
   console.log('[Stock Selected]', stock.code, stock.name)
