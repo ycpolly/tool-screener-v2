@@ -65,7 +65,7 @@
           <StockCard
             v-for="stock in visibleSearchMatchedStocks"
             :key="stock.code"
-            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.isInPool, stock.isNewEntry, isCompact, activeMode]"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.isInPool, stock.isNewEntry, isCompact, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-compact="isCompact"
@@ -98,7 +98,7 @@
           <StockCard
             v-for="stock in visibleSearchUnmatchedStocks"
             :key="stock.code"
-            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.isInPool, stock.isNewEntry, isCompact, true, activeMode]"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.isInPool, stock.isNewEntry, isCompact, true, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-unmatched="true"
@@ -142,7 +142,7 @@
         <StockCard
           v-for="stock in visibleSortedStocks"
           :key="stock.code"
-          v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.isInPool, stock.isNewEntry, isCompact, activeMode]"
+          v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.isInPool, stock.isNewEntry, isCompact, activeMode]"
           :stock="stock"
           :active-mode="activeMode"
           :is-compact="isCompact"
@@ -194,7 +194,7 @@
           <StockCard
             v-for="stock in visibleSortedUnmatchedStocks"
             :key="stock.code"
-            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.isInPool, stock.isNewEntry, isCompact, true, activeMode]"
+            v-memo="[stock.code, stock.price, stock.changePct, stock.volume, stock.relStrength5d, stock.chipsTrend3d, stock.paidInCapital, stock.pe, stock.isInPool, stock.isNewEntry, isCompact, true, activeMode]"
             :stock="stock"
             :active-mode="activeMode"
             :is-unmatched="true"
@@ -348,9 +348,9 @@ const sortedUnmatchedStocks = computed(() => {
 })
 
 // ============================================================
-// 漸進式批次載入機制（首屏 30 檔，大幅縮減 DOM 與記憶體，消除行動端彈窗卡頓）
+// 漸進式批次載入機制（首屏 15 檔，大幅縮減 DOM 與記憶體，消除行動端卡頓）
 // ============================================================
-const BATCH_SIZE = 30
+const BATCH_SIZE = 15
 const displayCount = ref(BATCH_SIZE)
 const unmatchedDisplayCount = ref(BATCH_SIZE)
 const loadMoreTriggerRef = ref(null)
