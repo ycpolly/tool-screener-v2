@@ -617,8 +617,10 @@ export const UI_STRINGS = {
     mom: '營收月增',
     growthPrefix: '年增',
     declinePrefix: '年減',
+    momPrefix: '月增',
     monthSuffix: '月',
     highGrowthBadge: '高成長',
+    noData: '--',
   },
 }
 

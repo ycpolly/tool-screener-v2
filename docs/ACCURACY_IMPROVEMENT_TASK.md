@@ -157,7 +157,7 @@
 
 ---
 
-## 四、第三階段 (Phase 3)：月營收年增率 (TWSE / TPEx OpenAPI 擴充) 【後端已完成 ✅ 2026-10-09 / 待前端 Gemini 接手 ⏳】
+## 四、第三階段 (Phase 3)：月營收年增率 (TWSE / TPEx OpenAPI 擴充) 【後端已完成 ✅ 2026-10-09 / 前端已完成 ✅ 2026-10-09】
 
 ### 方案 1：月營收年增率（YoY Revenue Growth）
 
@@ -186,13 +186,14 @@
 4. **`.github/workflows/update-stock-pool.yml`**：
    - 將 `cache/revenue.json` 納入 commit 與 push，維持 GitHub Actions 快取溫暖。
 
-#### 【前端 Gemini 職責】（⏳ 待 Gemini 實作）
-1. **`src/components/StockFundamentalsSection.vue` 或 `StockCard.vue`**：
-   - **資料來源**：`props.stock.revenueYoY`（`number | null`）、`props.stock.revenueMoM`（`number | null`）、`props.stock.revenueLatestMonth`（`string | null`）。
+#### 【前端 Gemini 職責】（✅ 已實作完成並驗證通過）
+1. **`src/components/StockFundamentalsSection.vue`**：
+   - **資料來源**：`props.stock.revenueYoY`、`props.stock.revenueMoM`、`props.stock.revenueLatestMonth`。
    - **視覺呈現**：
-     - 若 `stock.revenueYoY` 存在，呈現營收動能標籤：例如 `營收 8月 · 年增 +33.5%`（正值為漲色 `text-rise`、負值為跌色 `text-fall`）。
-     - 年增率 > 20% 可考慮給予亮色高成長加分標註。
-     - 若 `stock.revenueYoY == null`：優雅隱藏，不引發破版。
+     - 若 `stock.revenueYoY` 存在，在估值列下方渲染專屬「營收」資訊行：`營收 · 8月 · 年增 +33.5% (高成長) · 月增 -2.8%`。
+     - 年增率（YoY）與月增率（MoM）數值加粗，正值紅字（`text-rise`）、負值綠字（`text-fall`）。
+     - 年增率 ≥ 30% 給予微型紅色晶亮邊框 Badge `(高成長)`，強化選股催化劑可讀性。
+     - 若無營收資料自動安全隱藏，不引發版面錯位。
 
 ---
 

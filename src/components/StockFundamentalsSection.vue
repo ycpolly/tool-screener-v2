@@ -32,6 +32,43 @@
         </span>
       </span>
     </div>
+
+    <!-- 月營收動能區塊（月份 + 年增率 (高成長標籤) + 月增率） -->
+    <div
+      v-if="revenueInfo"
+      class="pt-1 pb-1 border-t border-base-300/40 text-sm font-normal text-base-content/80 leading-normal flex items-baseline flex-wrap font-numeric"
+    >
+      <!-- 主題詞：營收 -->
+      <span class="mr-1.5 font-sans text-base-content/70 select-none">{{ UI_STRINGS.REVENUE?.sectionLabel || '營收' }}</span>
+      <span class="text-base-content/40 mr-1.5 select-none">·</span>
+
+      <!-- 資料月份 (如 8月) -->
+      <span v-if="revenueInfo.month" class="mr-1.5 font-sans text-base-content/75 select-none">
+        {{ revenueInfo.month }}
+      </span>
+
+      <!-- 年增率 (YoY) -->
+      <span class="inline-flex items-baseline">
+        <span class="font-sans mr-1 select-none">{{ revenueInfo.yoyPrefix }}</span>
+        <strong class="font-bold" :class="revenueInfo.yoyClass">{{ revenueInfo.yoyText }}</strong>
+        <!-- 高成長微型標註 (年增 >= 30%) -->
+        <span
+          v-if="revenueInfo.isHighGrowth"
+          class="ml-1 text-[11px] font-sans font-bold px-1 py-0.2 rounded bg-rise/10 text-rise border border-rise/30 select-none inline-block align-baseline"
+        >
+          {{ UI_STRINGS.REVENUE?.highGrowthBadge || '高成長' }}
+        </span>
+      </span>
+
+      <!-- 分隔符號 -->
+      <span v-if="revenueInfo.hasMom" class="text-base-content/40 mx-1.5 select-none">·</span>
+
+      <!-- 月增率 (MoM) -->
+      <span v-if="revenueInfo.hasMom" class="inline-flex items-baseline">
+        <span class="font-sans mr-1 select-none">{{ UI_STRINGS.REVENUE?.momPrefix || '月增' }}</span>
+        <strong class="font-bold" :class="revenueInfo.momClass">{{ revenueInfo.momText }}</strong>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -134,8 +171,65 @@ const peInfo = computed(() => {
   }
 })
 
-// 是否具備基本面資訊區塊
+// 是否具備基本面估值區塊
 const hasFundamentalsSection = computed(() => {
   return !!capitalInfo.value || (peInfo.value && (peInfo.value.hasPe || peInfo.value.bracketText != null))
+})
+
+// 月營收動能解析
+const revenueInfo = computed(() => {
+  const stock = props.stock
+  const yoy = stock.revenueYoY
+  const mom = stock.revenueMoM
+  const latestMonth = stock.revenueLatestMonth
+
+  // 若無年增率則隱藏整個營收列
+  if (yoy == null || typeof yoy !== 'number' || isNaN(yoy)) {
+    return null
+  }
+
+  // 1. 月份格式化（例如 '2026-08' -> '8月'）
+  let month = ''
+  if (latestMonth && typeof latestMonth === 'string') {
+    const parts = latestMonth.split('-')
+    if (parts.length >= 2) {
+      const m = parseInt(parts[1], 10)
+      if (!isNaN(m)) {
+        month = `${m}${UI_STRINGS.REVENUE?.monthSuffix || '月'}`
+      }
+    }
+  }
+
+  // 2. 年增率 (YoY)
+  const isYoyPositive = yoy > 0
+  const isYoyNegative = yoy < 0
+  const yoyPrefix = isYoyNegative
+    ? (UI_STRINGS.REVENUE?.declinePrefix || '年減')
+    : (UI_STRINGS.REVENUE?.growthPrefix || '年增')
+  const yoyText = `${isYoyPositive ? '+' : ''}${yoy.toFixed(1)}%`
+  const yoyClass = isYoyPositive ? 'text-rise' : (isYoyNegative ? 'text-fall' : 'text-base-content')
+  const isHighGrowth = yoy >= 30
+
+  // 3. 月增率 (MoM)
+  const hasMom = mom != null && typeof mom !== 'number' ? false : (mom != null && !isNaN(mom))
+  let momText = ''
+  let momClass = ''
+  if (hasMom) {
+    const isMomPositive = mom > 0
+    const isMomNegative = mom < 0
+    momText = `${isMomPositive ? '+' : ''}${mom.toFixed(1)}%`
+    momClass = isMomPositive ? 'text-rise' : (isMomNegative ? 'text-fall' : 'text-base-content')
+  }
+
+  return {
+    month,
+    yoyPrefix,
+    yoyText,
+    yoyClass,
+    isHighGrowth,
+    hasMom,
+    momText,
+    momClass,
+  }
 })
 </script>
