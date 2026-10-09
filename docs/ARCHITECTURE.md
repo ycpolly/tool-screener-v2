@@ -95,6 +95,7 @@ tool-screener-v2/
 │   │   ├── StockEvaluationSlot.vue ← 槽位 B 篩選理由與指標診斷詳細清單（支援展開/收合）
 │   │   ├── StockCeilingLadder.vue  ← 槽位 A 天花板關卡價與三明治價格天梯（支援展開/收合）
 │   │   ├── StockChipsSection.vue   ← 籌碼透視區塊（集中度 1D/3D/5D + 短沖避雷分點佔比）
+│   │   ├── StockFundamentalsSection.vue ← 基本面與估值區塊（股本規模 (輕/中/大) + 動態 PE 與同業折溢價/虧損）
 │   │   ├── StockCardActions.vue    ← 極簡快捷操作列（代號名稱複製 + 外部籌碼資券盤後連結）
 │   │   ├── Sparkline.vue       ← 10日走勢圖（K棒 + 均線 + KD）
 │   │   └── modals/
@@ -161,6 +162,11 @@ Python 輸出 → `public/data/stock-pool.json`
       "relStrength5d": 3.25,
       "chipsTrend3d": "UP",
       "chipsScore": 3,
+      "paidInCapital": 2593.24,
+      "pe": 29.87,
+      "industryPe": 54.58,
+      "peDiscount": -45.27,
+      "trailingEps": 32.8092,
       "kd": {
         "k": 58.3,
         "d": 54.1,

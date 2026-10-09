@@ -154,6 +154,9 @@
       <!-- 籌碼透視區塊（籌碼集中度 + 短沖避雷） -->
       <StockChipsSection :stock="stock" />
 
+      <!-- 基本面與估值區塊（股本規模 + 動態 PE 與同業折溢價） -->
+      <StockFundamentalsSection :stock="stock" />
+
       <!-- 槽位 A：天花板關卡價與預期純利 (支援就地向下展開天梯清單) -->
       <StockCeilingLadder :stock="stock" :ceiling-profit="ceilingProfit" />
 
@@ -323,6 +326,9 @@
         <!-- 籌碼透視區塊（籌碼集中度 + 短沖避雷） -->
         <StockChipsSection :stock="stock" />
 
+        <!-- 基本面與估值區塊（股本規模 + 動態 PE 與同業折溢價） -->
+        <StockFundamentalsSection :stock="stock" />
+
         <!-- 槽位 A (電腦端，支援就地向下展開天梯清單) -->
         <StockCeilingLadder :stock="stock" :ceiling-profit="ceilingProfit" size="compact" />
 
@@ -407,6 +413,7 @@ import ForwardValidationBar from './ForwardValidationBar.vue'
 import StockEvaluationSlot from './StockEvaluationSlot.vue'
 import StockCeilingLadder from './StockCeilingLadder.vue'
 import StockChipsSection from './StockChipsSection.vue'
+import StockFundamentalsSection from './StockFundamentalsSection.vue'
 import StockCardActions from './StockCardActions.vue'
 
 const props = defineProps({

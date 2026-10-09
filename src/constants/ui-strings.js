@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v1009.01',
+    version: 'v1009.02',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -585,10 +585,19 @@ export const UI_STRINGS = {
   },
 
   FUNDAMENTALS: {
+    sectionLabel: '估值',
     capital: '股本',
     capitalUnit: '億',
+    capLight: '輕',
+    capMid: '中',
+    capLarge: '大',
+    pe: 'PE',
+    loss: '虧損',
+    industry: '同業',
+    cheaperPrefix: '便宜',
+    expensivePrefix: '偏貴',
+    noData: '--',
     smallCapitalBadge: '輕型股',
-    pe: '本益比',
     industryPe: '同業 PE',
     peDiscount: '同業折價',
     pePremium: '同業溢價',
