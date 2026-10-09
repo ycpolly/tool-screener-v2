@@ -397,7 +397,7 @@ function formatFutureRowDate(dateStr, tDay) {
   return `${mm}/${dd}${suffix}`
 }
 
-// 時間軸 Carousel 用日期：不補 0 節省橫向空間，例如 10/1(四)
+// 時間軸 Carousel 用日期：不補 0，中間保留半形空格，例如 10/1 (四)
 function formatTimelineDate(dateStr) {
   if (!dateStr) return '--'
   const clean = String(dateStr).replace(/\//g, '-')
@@ -408,7 +408,7 @@ function formatTimelineDate(dateStr) {
   const d = parseInt(parts[2], 10)
   const dateObj = new Date(y, m - 1, d)
   const weekDay = WEEKDAYS[dateObj.getDay()] || ''
-  return `${m}/${d}(${weekDay})`
+  return `${m}/${d} (${weekDay})`
 }
 
 function formatTimelineFutureDate(dateStr, tDay) {
