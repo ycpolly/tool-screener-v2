@@ -200,12 +200,10 @@ const revenueInfo = computed(() => {
     }
   }
 
-  // 2. 年增率 (YoY)
+  // 2. 年增率 (YoY) 指標名固定為「年增」，搭配帶符號之變動率（如 年增 +33.5% / 年增 -13.1%），與月增完全對稱且杜絕負負得正歧義
   const isYoyPositive = yoy > 0
   const isYoyNegative = yoy < 0
-  const yoyPrefix = isYoyNegative
-    ? (UI_STRINGS.REVENUE?.declinePrefix || '年減')
-    : (UI_STRINGS.REVENUE?.growthPrefix || '年增')
+  const yoyPrefix = UI_STRINGS.REVENUE?.growthPrefix || '年增'
   const yoyText = `${isYoyPositive ? '+' : ''}${yoy.toFixed(1)}%`
   const yoyClass = isYoyPositive ? 'text-rise' : (isYoyNegative ? 'text-fall' : 'text-base-content')
   const isHighGrowth = yoy >= 30
