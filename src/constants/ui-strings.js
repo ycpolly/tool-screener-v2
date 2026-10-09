@@ -610,6 +610,16 @@ export const UI_STRINGS = {
     pePremiumPrefix: '溢',
     valuationProtection: '估值優勢',
   },
+
+  REVENUE: {
+    sectionLabel: '營收',
+    yoy: '營收年增',
+    mom: '營收月增',
+    growthPrefix: '年增',
+    declinePrefix: '年減',
+    monthSuffix: '月',
+    highGrowthBadge: '高成長',
+  },
 }
 
 

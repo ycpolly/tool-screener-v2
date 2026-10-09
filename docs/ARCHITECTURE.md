@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-10-09**（台股全年度法定休市日行事曆與天然災害動態未開盤感知機制：納入 2026 TWSE 官方休市日、指標股撮合日期動態休市感知防護、徹底解決時光機國定假日與補假日出現重複今日 K 棒與同價位之問題）
+> **最後更新：2026-10-09**（五大模式準確度提升第三階段月營收動能擴充：TWSE / TPEx 官方 OpenAPI 全市場月營收年增率 revenueYoY、月增率 revenueMoM 與資料月份快取架構完成，覆蓋率達 99.6%）
 
 ---
 
@@ -66,6 +66,7 @@ tool-screener-v2/
 │   │   ├── __init__.py
 │   │   ├── moneydj.py          ← 0050 / 0051 成分股（MoneyDJ）
 │   │   ├── fubon.py            ← 富邦 DJ 全部 38 個 URL（19 組上市/上櫃）
+│   │   ├── revenue.py          ← TWSE / TPEx 官方 OpenAPI 月營收彙總抓取與快取
 │   │   ├── disposed.py         ← TWSE / TPEx 處置股官方 API
 │   │   └── yahoo.py            ← Yahoo Finance 3個月日K 原始抓取
 │   ├── engine/
@@ -607,6 +608,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 個股卡片 RS 標籤移至左上角與新進角標整合（RS Badge Top-Left Integration：將 `RS +XX.X%` 自個股名稱右側移至卡片左上角，與 `新進` 角標並列於 `absolute top-0 left-0` 容器；RS 標籤維持漲紅跌綠色系並施加極淺底色（`bg-rise/10` / `bg-fall/10` / `bg-base-300/60`）；當無新進標籤時 RS 承接貼角圓弧（`rounded-tl-xl rounded-br-md`），新進並存時平滑外推（`ml-1 rounded-md`）；簡約模式同步動態自適應 `pt-6` 杜絕文字重疊；徹底釋放個股名稱橫向寬度，杜絕手機端名稱截斷）— 完成 2026-10-06
 - [x] 五大模式準確度提升第二階段基本面與同業估值後端擴充（Phase 2 Fundamentals & Valuation Backend：實作富邦 DJ 個股基本資料爬蟲 `scripts/scrapers/fubon.py`，支援多執行緒批次抓取實收資本額 `paidInCapital`、個股本益比 `pe`、同業平均本益比 `industryPe` 與頁面價格推算近 4 季合計 `trailingEps`；建置 `cache/fundamentals.json` 本地快取，嚴格落實實收資本額 TTL = 28 天、同業 PE TTL = 7 天更新週期；`scripts/writer.py` 與 `main.py` 整合高頻動態本益比重算公式 $\text{pe} = \text{round}(\text{price} / \text{trailingEps}, 2)$ 與同業折溢價 $\text{peDiscount} = \text{round}((\text{pe} - \text{industryPe}) / \text{industryPe} \times 100, 2)$，虧損公司安全防護回傳 `null`；時光機回溯 `sliceStockAt` 支援歷史日倒流動態推算 당시 PE；於 `src/constants/ui-strings.js` 擴充 `FUNDAMENTALS` 字串字典；更新 `.github/workflows/update-stock-pool.yml` 自動提交快取維護溫暖狀態）— 完成 2026-10-09
 - [x] 全年度法定休市日行事曆與天然災害動態未開盤感知機制（Market Holiday Calendar & Dynamic Session Detection：於 `src/constants/market-holidays.js` 建立 TWSE 官方 2026 年度休市與補假行事曆；`src/engine/screener.js` 的 `isLiveTradingDay` 納入法定與動態休市日判定，徹底杜絕國定假日與補假日【如 10/9 國慶日補假】時光機誤認今日為開盤交易日而產生兩天相同價位之問題；`src/composables/useRealtimeQuotes.js` 新增指標權值股撮合日期動態偵測，於 09:05 後若指標股成交日皆早於今日自動將當日登錄為動態休市日【天然災害颱風假/交易所暫停交易】；`src/App.vue` 之 `isPostMarketTime` 與「更新」按鈕全面連動，休市日自動維持盤後模式並以 Toast 提示使用者，杜絕無效 API 輪詢）— 完成 2026-10-09
+- [x] 五大模式準確度提升第三階段月營收動能後端擴充（Phase 3 Monthly Revenue YoY & MoM Backend：實作 `scripts/scrapers/revenue.py`，串接 TWSE 與 TPEx 官方 OpenAPI `t187ap05_L` 與 `mopsfin_t187ap05_O`，兩次請求極速涵蓋全市場 1,978 檔上市櫃公司月營收；建立 `cache/revenue.json` 本地快取（TTL = 7 天），支援快速回退與斷網防護；`scripts/writer.py` 與 `main.py` 注入 `revenueYoY`、`revenueMoM` 與 `revenueLatestMonth`，全市場覆蓋率達 99.6%；於 `src/constants/ui-strings.js` 建立 `REVENUE` 字典；工作流 `update-stock-pool.yml` 納入快取提交）— 完成 2026-10-09
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

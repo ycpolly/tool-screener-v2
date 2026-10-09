@@ -157,40 +157,42 @@
 
 ---
 
-## 四、第三階段 (Phase 3)：月營收年增率 (MOPS API 擴充)
+## 四、第三階段 (Phase 3)：月營收年增率 (TWSE / TPEx OpenAPI 擴充) 【後端已完成 ✅ 2026-10-09 / 待前端 Gemini 接手 ⏳】
 
 ### 方案 1：月營收年增率（YoY Revenue Growth）
 
 #### 【資料來源】
-* **公開資訊觀測站 API (MOPS)**：每月 10 日彙總公告。
-* **URL**：`https://mops.twse.com.tw/mops/web/ajax_t05st10_ifrs`（或證交所官方 OpenAPI 下載全市場彙總檔）。
+* **證券交易所與櫃買中心官方 OpenAPI**：每月 10 日前強制公告。
+* **URL**：
+  * 上市：`https://openapi.twse.com.tw/v1/opendata/t187ap05_L`
+  * 上櫃：`https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap05_O`
 
-#### 【後端 Claude 職責】
-1. **`scripts/scrapers/mops.py`（新增模組）**：
-   - 每月月初排程拉取上市/上櫃月營收彙總表，輸出為 `cache/revenue_latest.json`。
-   - 欄位包含：當月營收、去年同期營收、去年同月增減 % (`revenueYoY`)、上月增減 % (`revenueMoM`)、資料月份 (`revenueLatestMonth`)。
-2. **`scripts/writer.py`**：
+#### 【後端 Claude 職責】（✅ 已實作完成並驗證通過）
+1. **`scripts/scrapers/revenue.py`（新增模組）**：
+   - 串接上市櫃雙 OpenAPI，全市場 1,978 檔月營收彙總，輸出為 `cache/revenue.json`（TTL = 7 天）。
+   - 欄位包含：當月營收、去年同月增減 % (`revenueYoY`)、上月比較增減 % (`revenueMoM`)、資料月份 (`revenueLatestMonth`)。
+2. **`scripts/writer.py` 與 `scripts/main.py`**：
    - 比對代號，寫入個股：
      ```json
      {
        "revenueYoY": 33.5,
-       "revenueMoM": 8.3,
+       "revenueMoM": -2.81,
        "revenueLatestMonth": "2026-08"
      }
      ```
+   - 股票池 516 檔覆蓋率達 99.6%（514 檔有效匹配）。
+3. **`src/constants/ui-strings.js`**：
+   - 新增 `REVENUE` 字典。
+4. **`.github/workflows/update-stock-pool.yml`**：
+   - 將 `cache/revenue.json` 納入 commit 與 push，維持 GitHub Actions 快取溫暖。
 
-#### 【前端 Gemini 職責】
-1. **`src/constants/ui-strings.js`**：
-   - 定義字串：
-     ```javascript
-     REVENUE: {
-       yoy: '營收年增',
-       mom: '營收月增',
-       monthSuffix: '月',
-     }
-     ```
-2. **`src/components/StockCard.vue`**：
-   - 呈現營收動能標籤：`營收年增 +33.5% (08月)`；年增率 > 20% 給予金色/亮色高亮徽章。
+#### 【前端 Gemini 職責】（⏳ 待 Gemini 實作）
+1. **`src/components/StockFundamentalsSection.vue` 或 `StockCard.vue`**：
+   - **資料來源**：`props.stock.revenueYoY`（`number | null`）、`props.stock.revenueMoM`（`number | null`）、`props.stock.revenueLatestMonth`（`string | null`）。
+   - **視覺呈現**：
+     - 若 `stock.revenueYoY` 存在，呈現營收動能標籤：例如 `營收 8月 · 年增 +33.5%`（正值為漲色 `text-rise`、負值為跌色 `text-fall`）。
+     - 年增率 > 20% 可考慮給予亮色高成長加分標註。
+     - 若 `stock.revenueYoY == null`：優雅隱藏，不引發破版。
 
 ---
 

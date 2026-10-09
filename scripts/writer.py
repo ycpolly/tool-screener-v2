@@ -197,6 +197,7 @@ def build_stock_pool(
     market_data:       Optional[Dict], # {taiex, otc, regime}
     chips_data:        Optional[Dict] = None, # {code: {concentration1d, concentration3d, concentration5d, dayTradersPct, dayTradersBranches}}
     fundamentals_data: Optional[Dict] = None, # {code: {paidInCapital, industryPe, pe, trailingEps, ...}}
+    revenue_data:      Optional[Dict] = None, # {code: {revenueYoY, revenueMoM, revenueLatestMonth, ...}}
 ) -> Dict:
 
     """
@@ -210,6 +211,7 @@ def build_stock_pool(
         market_data:       大盤指數與燈號
         chips_data:        籌碼集中度與短沖避雷資料
         fundamentals_data: 股本與同業 PE 基本面快取資料
+        revenue_data:      全市場月營收年增率與月增率快取資料
 
     Returns:
         stock-pool.json 完整物件
@@ -247,9 +249,10 @@ def build_stock_pool(
             if c and n and n != c:
                 name_dict[c] = n
 
-    # ── 讀取既有 chipsHistory 與基本面備援 ──
+    # ── 讀取既有 chipsHistory、基本面與月營收備援 ──
     existing_chips_history: Dict[str, Dict] = {}
     existing_fundamentals: Dict[str, Dict] = {}
+    existing_revenue: Dict[str, Dict] = {}
     if OUTPUT_PATH.exists():
         try:
             with open(OUTPUT_PATH, 'r', encoding='utf-8') as f:
@@ -265,6 +268,12 @@ def build_stock_pool(
                             'pe':            s.get('pe'),
                             'trailingEps':   s.get('trailingEps'),
                         }
+                    if c and (s.get('revenueYoY') is not None or s.get('revenueLatestMonth') is not None):
+                        existing_revenue[c] = {
+                            'revenueYoY':         s.get('revenueYoY'),
+                            'revenueMoM':         s.get('revenueMoM'),
+                            'revenueLatestMonth': s.get('revenueLatestMonth'),
+                        }
         except Exception as e:
             print(f'[writer] 讀取既有 stock-pool.json 提示: {e}')
 
@@ -277,6 +286,16 @@ def build_stock_pool(
                     fundamentals_data = json.load(f)
             except Exception as e:
                 print(f'[writer] 讀取 cache/fundamentals.json 提示: {e}')
+
+    # 若未傳入 revenue_data，嘗試自 cache/revenue.json 載入
+    if revenue_data is None:
+        rev_cache_path = Path('cache/revenue.json')
+        if rev_cache_path.exists():
+            try:
+                with open(rev_cache_path, 'r', encoding='utf-8') as f:
+                    revenue_data = json.load(f)
+            except Exception as e:
+                print(f'[writer] 讀取 cache/revenue.json 提示: {e}')
 
     # 建立個股物件
     stocks = []
@@ -351,6 +370,12 @@ def build_stock_pool(
         if stock_pe is not None and industry_pe is not None and industry_pe > 0:
             pe_discount = round(((stock_pe - industry_pe) / industry_pe) * 100, 2)
 
+        # ── Phase 3: 月營收年增率與月增率 (方案 1) ──
+        rev_entry = (revenue_data.get(code) if revenue_data else None) or existing_revenue.get(code, {})
+        revenue_yoy = rev_entry.get('revenueYoY')
+        revenue_mom = rev_entry.get('revenueMoM')
+        revenue_latest_month = rev_entry.get('revenueLatestMonth')
+
         stock = {
             'code':      code,
             'name':      name,
@@ -366,6 +391,11 @@ def build_stock_pool(
             'industryPe':    industry_pe,
             'peDiscount':    pe_discount,
             'trailingEps':   trailing_eps,
+
+            # 月營收動能 (Phase 3 方案 1)
+            'revenueYoY':         revenue_yoy,
+            'revenueMoM':         revenue_mom,
+            'revenueLatestMonth': revenue_latest_month,
 
             # 行情
             'price':      data.get('price',     0.0),

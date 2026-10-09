@@ -20,6 +20,7 @@ from datetime import datetime
 from scripts.scrapers.disposed     import fetch_disposed_codes
 from scripts.scrapers.moneydj      import fetch_etf_holdings
 from scripts.scrapers.fubon        import fetch_all_rankings, batch_fetch_fundamentals
+from scripts.scrapers.revenue      import fetch_all_monthly_revenue
 from scripts.scrapers.yahoo        import fetch_raw_ohlcv_batch
 from scripts.scrapers.chips        import fetch_all_chips_batch
 from scripts.engine.indicators     import calc_stock_indicators
@@ -185,6 +186,9 @@ def enrich(raw: dict, with_chips: bool = False, verbose: bool = True) -> dict:
     # 股本與同業估值基本面（股本 TTL=28D, 同業 PE TTL=7D）
     fundamentals_data = batch_fetch_fundamentals(list(all_codes), verbose=verbose)
 
+    # 全市場月營收動能（TWSE & TPEx 官方 OpenAPI, TTL=7D）
+    revenue_data = fetch_all_monthly_revenue(verbose=verbose)
+
     if verbose:
         ok = sum(1 for v in yahoo_results.values() if v)
         elapsed = time.time() - t0
@@ -198,6 +202,7 @@ def enrich(raw: dict, with_chips: bool = False, verbose: bool = True) -> dict:
         'market_data':       raw['market_data'],
         'chips_data':        chips_data,
         'fundamentals_data': fundamentals_data,
+        'revenue_data':      revenue_data,
     }
 
 
@@ -218,6 +223,7 @@ def write(enriched: dict, allow_regression: bool = False, verbose: bool = True) 
         market_data       = enriched['market_data'],
         chips_data        = enriched.get('chips_data'),
         fundamentals_data = enriched.get('fundamentals_data'),
+        revenue_data      = enriched.get('revenue_data'),
     )
     write_json(pool, allow_regression=allow_regression)
 
