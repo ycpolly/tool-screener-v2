@@ -8,11 +8,16 @@ scrapers/fubon.py
 職責：只負責 HTTP 連線與 HTML 解析，不做任何指標計算
 """
 
+import json
+import os
 import re
 import ssl
+import time
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from typing import List, Dict, Tuple
+from pathlib import Path
+from typing import List, Dict, Tuple, Optional, Union
 
 _ctx = ssl.create_default_context()
 _ctx.check_hostname = False
@@ -385,6 +390,203 @@ def fetch_all_rankings() -> Dict:
 
     print(f'[fubon] 全部抓取完成，共 {len(result)} 組排行榜')
     return result
+
+
+
+# ── 基本面與同業估值（Phase 2 方案 3 & 方案 6）────────────────
+CAPITAL_TTL_DAYS = 28        # 實收資本額更新週期：28 天（約 4 週，依使用者規範）
+INDUSTRY_PE_TTL_DAYS = 7     # 同業平均本益比更新週期：7 天（每週更新）
+
+
+def fetch_stock_fundamentals(code: str) -> Optional[Dict]:
+    """
+    抓取單檔個股基本資料（實收資本額、本益比、同業平均本益比、頁面收盤價）
+    來源：https://fubon-ebrokerdj.fbs.com.tw/z/zc/zca/zca_{code}.djhtm
+    """
+    url = f'{_BASE}/z/zc/zca/zca_{code}.djhtm'
+    req = urllib.request.Request(url, headers=_HEADERS)
+    try:
+        with urllib.request.urlopen(req, context=_ctx, timeout=10) as resp:
+            raw_bytes = resp.read()
+            html = _decode_html(raw_bytes)
+    except Exception:
+        return None
+
+    # 1. 股本 (億元，單位直接在標題中註明：股本(億, 台幣))
+    m_cap = re.search(r'>股本[^\d<]*</td>\s*<td[^>]*>([^<]+)</td>', html)
+    # 2. 本益比
+    m_pe = re.search(r'>本益比</td>\s*<td[^>]*>([^<]+)</td>', html)
+    # 3. 同業平均本益比
+    m_ind = re.search(r'>同業平均本益比</td>\s*<td[^>]*>([^<]+)</td>', html)
+    # 4. 頁面標註之收盤價
+    m_price = re.search(r'>收盤價</td>\s*<td[^>]*>([^<]+)</td>', html)
+
+    def _to_float(m):
+        if not m:
+            return None
+        v = m.group(1).replace(',', '').strip()
+        try:
+            val = float(v)
+            return round(val, 2) if val > 0 else None
+        except (ValueError, TypeError):
+            return None
+
+    cap = _to_float(m_cap)
+    pe = _to_float(m_pe)
+    ind = _to_float(m_ind)
+    price = _to_float(m_price)
+
+    # 近 4 季 EPS 合計 (Trailing EPS) = 價格 / 本益比
+    trailing_eps = round(price / pe, 4) if (price and pe and pe > 0) else None
+
+    return {
+        'code': code,
+        'paidInCapital': cap,
+        'pe': pe,
+        'industryPe': ind,
+        'price': price,
+        'trailingEps': trailing_eps,
+    }
+
+
+def batch_fetch_fundamentals(
+    codes: List[str],
+    cache_path: Union[str, Path] = 'cache/fundamentals.json',
+    force: bool = False,
+    max_workers: int = 10,
+    verbose: bool = True
+) -> Dict[str, Dict]:
+    """
+    批次抓取個股基本資料（股本與同業 PE），內建 28 天 / 7 天 TTL 本地快取。
+
+    快取規則：
+      - 股本 (paidInCapital)：TTL = 28 天（約 4 週更新一次）
+      - 同業本益比 (industryPe)：TTL = 7 天（每週更新一次）
+      - 若快取在期限內，直接命中快取，不發送網路請求
+      - 若過期或為新入池標的，僅針對需要更新的個股發起多執行緒抓取
+    """
+    cache_file = Path(cache_path)
+    cache: Dict[str, Dict] = {}
+    if cache_file.exists():
+        try:
+            with open(cache_file, 'r', encoding='utf-8') as f:
+                cache = json.load(f)
+        except Exception as e:
+            if verbose:
+                print(f'[fubon] 讀取快取失敗，重新初始化: {e}')
+            cache = {}
+
+    now_date = datetime.now().date()
+    today_str = now_date.strftime('%Y-%m-%d')
+
+    # 判定哪些代碼需要向富邦抓取
+    to_fetch: List[str] = []
+    for code in codes:
+        if force:
+            to_fetch.append(code)
+            continue
+
+        entry = cache.get(code)
+        if not entry:
+            to_fetch.append(code)
+            continue
+
+        cap_updated = entry.get('capitalUpdatedAt')
+        ind_updated = entry.get('industryPeUpdatedAt')
+        last_updated = entry.get('updatedAt')
+
+        # 若曾抓過但皆為 None（例如 ETF 或查無資料），在 7 天內不再重抓避免浪費頻寬
+        if entry.get('paidInCapital') is None and entry.get('industryPe') is None:
+            if last_updated:
+                try:
+                    d = datetime.strptime(last_updated, '%Y-%m-%d').date()
+                    if (now_date - d).days < 7:
+                        continue
+                except ValueError:
+                    pass
+            to_fetch.append(code)
+            continue
+
+        # 股本過期檢查 (28 天)
+        cap_expired = True
+        if cap_updated:
+            try:
+                d = datetime.strptime(cap_updated, '%Y-%m-%d').date()
+                cap_expired = (now_date - d).days >= CAPITAL_TTL_DAYS
+            except ValueError:
+                cap_expired = True
+
+        # 同業 PE 過期檢查 (7 天)
+        ind_expired = True
+        if ind_updated:
+            try:
+                d = datetime.strptime(ind_updated, '%Y-%m-%d').date()
+                ind_expired = (now_date - d).days >= INDUSTRY_PE_TTL_DAYS
+            except ValueError:
+                ind_expired = True
+
+        if cap_expired or ind_expired or entry.get('paidInCapital') is None:
+            to_fetch.append(code)
+
+    if verbose:
+        print(f'[fubon] 基本面快取命中：{len(codes) - len(to_fetch)}/{len(codes)} 檔，需向富邦抓取：{len(to_fetch)} 檔 (股本 TTL={CAPITAL_TTL_DAYS}D, 同業PE TTL={INDUSTRY_PE_TTL_DAYS}D)')
+
+    if to_fetch:
+        t0 = time.time()
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            fetched_results = list(executor.map(fetch_stock_fundamentals, to_fetch))
+
+        updated_count = 0
+        for code, res in zip(to_fetch, fetched_results):
+            if res:
+                entry = cache.get(code, {})
+                # 若抓到有效股本，更新股本與 capitalUpdatedAt
+                if res['paidInCapital'] is not None:
+                    entry['paidInCapital'] = res['paidInCapital']
+                    entry['capitalUpdatedAt'] = today_str
+                # 若抓到同業 PE，更新同業 PE 與 industryPeUpdatedAt
+                if res['industryPe'] is not None:
+                    entry['industryPe'] = res['industryPe']
+                    entry['industryPeUpdatedAt'] = today_str
+                # 更新本益比與 trailingEps
+                entry['pe'] = res['pe']
+                entry['fubonPrice'] = res['price']
+                if res['trailingEps'] is not None:
+                    entry['trailingEps'] = res['trailingEps']
+                entry['updatedAt'] = today_str
+                cache[code] = entry
+                updated_count += 1
+            else:
+                # 查無此股或請求失敗，記錄今日避免短時間內重複重試
+                if code not in cache:
+                    cache[code] = {
+                        'paidInCapital': None,
+                        'capitalUpdatedAt': today_str,
+                        'industryPe': None,
+                        'industryPeUpdatedAt': today_str,
+                        'pe': None,
+                        'trailingEps': None,
+                        'updatedAt': today_str,
+                    }
+
+        elapsed = time.time() - t0
+        if verbose:
+            print(f'[fubon] 基本面抓取完成：成功解析 {updated_count}/{len(to_fetch)} 檔，耗時 {elapsed:.1f}s')
+
+        # 儲存快取檔
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            tmp_cache = cache_file.with_suffix('.tmp.json')
+            with open(tmp_cache, 'w', encoding='utf-8') as f:
+                json.dump(cache, f, ensure_ascii=False, indent=2)
+            os.replace(tmp_cache, cache_file)
+            if verbose:
+                print(f'[fubon] 快取已寫入：{cache_file} (總計 {len(cache)} 檔紀錄)')
+        except Exception as e:
+            if verbose:
+                print(f'[fubon] 寫入快取檔警告: {e}')
+
+    return cache
 
 
 # ── 單獨測試 ─────────────────────────────────────────────────

@@ -19,7 +19,7 @@ from datetime import datetime
 
 from scripts.scrapers.disposed     import fetch_disposed_codes
 from scripts.scrapers.moneydj      import fetch_etf_holdings
-from scripts.scrapers.fubon        import fetch_all_rankings
+from scripts.scrapers.fubon        import fetch_all_rankings, batch_fetch_fundamentals
 from scripts.scrapers.yahoo        import fetch_raw_ohlcv_batch
 from scripts.scrapers.chips        import fetch_all_chips_batch
 from scripts.engine.indicators     import calc_stock_indicators
@@ -182,18 +182,22 @@ def enrich(raw: dict, with_chips: bool = False, verbose: bool = True) -> dict:
         ]
         chips_data = fetch_all_chips_batch(stocks_for_chips, max_workers=10, verbose=verbose)
 
+    # 股本與同業估值基本面（股本 TTL=28D, 同業 PE TTL=7D）
+    fundamentals_data = batch_fetch_fundamentals(list(all_codes), verbose=verbose)
+
     if verbose:
         ok = sum(1 for v in yahoo_results.values() if v)
         elapsed = time.time() - t0
         print(f'[main] ENRICH 完成（{elapsed:.1f}s）— 指標計算成功 {ok}/{len(yahoo_results)} 檔')
 
     return {
-        'yahoo_results':  yahoo_results,
-        'disposed_codes': raw['disposed_codes'],
-        'etf_holdings':   raw['etf_holdings'],
-        'rankings':       raw['rankings'],
-        'market_data':    raw['market_data'],
-        'chips_data':     chips_data,
+        'yahoo_results':     yahoo_results,
+        'disposed_codes':    raw['disposed_codes'],
+        'etf_holdings':      raw['etf_holdings'],
+        'rankings':          raw['rankings'],
+        'market_data':       raw['market_data'],
+        'chips_data':        chips_data,
+        'fundamentals_data': fundamentals_data,
     }
 
 
@@ -207,12 +211,13 @@ def write(enriched: dict, allow_regression: bool = False, verbose: bool = True) 
         print('=' * 60)
 
     pool = build_stock_pool(
-        yahoo_results  = enriched['yahoo_results'],
-        disposed_codes = enriched['disposed_codes'],
-        etf_holdings   = enriched['etf_holdings'],
-        rankings       = enriched['rankings'],
-        market_data    = enriched['market_data'],
-        chips_data     = enriched.get('chips_data'),
+        yahoo_results     = enriched['yahoo_results'],
+        disposed_codes    = enriched['disposed_codes'],
+        etf_holdings      = enriched['etf_holdings'],
+        rankings          = enriched['rankings'],
+        market_data       = enriched['market_data'],
+        chips_data        = enriched.get('chips_data'),
+        fundamentals_data = enriched.get('fundamentals_data'),
     )
     write_json(pool, allow_regression=allow_regression)
 

@@ -190,23 +190,26 @@ def _build_categories(
 
 
 def build_stock_pool(
-    yahoo_results:  Dict,           # {code: {ohlcv, market, symbol, ...indicators}}
-    disposed_codes: Set[str],
-    etf_holdings:   Dict,           # {holdings0050: {...}, holdings0051: {...}}
-    rankings:       Dict,           # {top100Volume: {...}, ...}
-    market_data:    Optional[Dict], # {taiex, otc, regime}
-    chips_data:     Optional[Dict] = None, # {code: {concentration1d, concentration3d, concentration5d, dayTradersPct, dayTradersBranches}}
+    yahoo_results:     Dict,           # {code: {ohlcv, market, symbol, ...indicators}}
+    disposed_codes:    Set[str],
+    etf_holdings:      Dict,           # {holdings0050: {...}, holdings0051: {...}}
+    rankings:          Dict,           # {top100Volume: {...}, ...}
+    market_data:       Optional[Dict], # {taiex, otc, regime}
+    chips_data:        Optional[Dict] = None, # {code: {concentration1d, concentration3d, concentration5d, dayTradersPct, dayTradersBranches}}
+    fundamentals_data: Optional[Dict] = None, # {code: {paidInCapital, industryPe, pe, trailingEps, ...}}
 ) -> Dict:
 
     """
     組裝完整的 stock-pool.json 資料結構
 
     Args:
-        yahoo_results:  每檔個股計算好的指標物件
-        disposed_codes: 即時處置股代碼集合
-        etf_holdings:   0050/0051 成分股
-        rankings:       15 種富邦 DJ 排行榜
-        market_data:    大盤指數與燈號
+        yahoo_results:     每檔個股計算好的指標物件
+        disposed_codes:    即時處置股代碼集合
+        etf_holdings:      0050/0051 成分股
+        rankings:          15 種富邦 DJ 排行榜
+        market_data:       大盤指數與燈號
+        chips_data:        籌碼集中度與短沖避雷資料
+        fundamentals_data: 股本與同業 PE 基本面快取資料
 
     Returns:
         stock-pool.json 完整物件
@@ -244,8 +247,9 @@ def build_stock_pool(
             if c and n and n != c:
                 name_dict[c] = n
 
-    # ── 讀取既有 chipsHistory（歷史快照累積制）──
+    # ── 讀取既有 chipsHistory 與基本面備援 ──
     existing_chips_history: Dict[str, Dict] = {}
+    existing_fundamentals: Dict[str, Dict] = {}
     if OUTPUT_PATH.exists():
         try:
             with open(OUTPUT_PATH, 'r', encoding='utf-8') as f:
@@ -254,8 +258,25 @@ def build_stock_pool(
                     c = s.get('code')
                     if c and isinstance(s.get('chipsHistory'), dict):
                         existing_chips_history[c] = s['chipsHistory']
+                    if c and (s.get('paidInCapital') is not None or s.get('industryPe') is not None):
+                        existing_fundamentals[c] = {
+                            'paidInCapital': s.get('paidInCapital'),
+                            'industryPe':    s.get('industryPe'),
+                            'pe':            s.get('pe'),
+                            'trailingEps':   s.get('trailingEps'),
+                        }
         except Exception as e:
-            print(f'[writer] 讀取既有 chipsHistory 提示: {e}')
+            print(f'[writer] 讀取既有 stock-pool.json 提示: {e}')
+
+    # 若未傳入 fundamentals_data，嘗試自 cache/fundamentals.json 載入
+    if fundamentals_data is None:
+        fund_cache_path = Path('cache/fundamentals.json')
+        if fund_cache_path.exists():
+            try:
+                with open(fund_cache_path, 'r', encoding='utf-8') as f:
+                    fundamentals_data = json.load(f)
+            except Exception as e:
+                print(f'[writer] 讀取 cache/fundamentals.json 提示: {e}')
 
     # 建立個股物件
     stocks = []
@@ -312,6 +333,24 @@ def build_stock_pool(
         prev_bar_date = hist10[-2].get('date') if len(hist10) >= 2 else None
         is_new_entry = bool(today_bar_date in chips_hist and (not prev_bar_date or prev_bar_date not in chips_hist))
 
+        # ── Phase 2: 基本面與同業估值 (方案 3 & 方案 6) ──
+        fund_entry = (fundamentals_data.get(code) if fundamentals_data else None) or existing_fundamentals.get(code, {})
+        paid_in_capital = fund_entry.get('paidInCapital')
+        industry_pe = fund_entry.get('industryPe')
+        trailing_eps = fund_entry.get('trailingEps')
+        fubon_pe = fund_entry.get('pe')
+
+        current_price = data.get('price', 0.0)
+        stock_pe = None
+        if trailing_eps and trailing_eps > 0 and current_price > 0:
+            stock_pe = round(current_price / trailing_eps, 2)
+        elif fubon_pe and fubon_pe > 0:
+            stock_pe = round(fubon_pe, 2)
+
+        pe_discount = None
+        if stock_pe is not None and industry_pe is not None and industry_pe > 0:
+            pe_discount = round(((stock_pe - industry_pe) / industry_pe) * 100, 2)
+
         stock = {
             'code':      code,
             'name':      name,
@@ -320,6 +359,13 @@ def build_stock_pool(
             'isDisposed': code in disposed_codes,
             'isInPool':   True,
             'isNewEntry': is_new_entry,
+
+            # 基本面與同業估值 (Phase 2 方案 3 & 方案 6)
+            'paidInCapital': paid_in_capital,
+            'pe':            stock_pe,
+            'industryPe':    industry_pe,
+            'peDiscount':    pe_discount,
+            'trailingEps':   trailing_eps,
 
             # 行情
             'price':      data.get('price',     0.0),

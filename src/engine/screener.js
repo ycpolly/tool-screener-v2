@@ -1336,6 +1336,16 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
     }
   }
 
+  // Phase 2: 時光機歷史切片之本益比與同業折價動態推算
+  let slicedPe = stock.pe ?? null
+  if (stock.trailingEps && stock.trailingEps > 0 && bar.close > 0) {
+    slicedPe = round2(bar.close / stock.trailingEps)
+  }
+  let slicedPeDiscount = stock.peDiscount ?? null
+  if (slicedPe != null && stock.industryPe && stock.industryPe > 0) {
+    slicedPeDiscount = round2(((slicedPe - stock.industryPe) / stock.industryPe) * 100)
+  }
+
   return {
     ...stock,
     date: bar.date,
@@ -1380,6 +1390,9 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
     relStrength5d: slicedRelStrength5d,
     chipsTrend3d: slicedChipsTrend3d,
     chipsScore: slicedChipsScore,
+    // Phase 2 指標
+    pe: slicedPe,
+    peDiscount: slicedPeDiscount,
     forwardValidation,
     // 截斷未來資料，確保前一日糾結與斜率判斷完全基於當時歷史視角
     history10d: stock.history10d.slice(0, targetIndex + 1),

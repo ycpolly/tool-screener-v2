@@ -99,54 +99,61 @@
 
 ---
 
-## 三、第二階段 (Phase 2)：基本面與同業估值擴充 (Fubon 爬蟲)
+## 三、第二階段 (Phase 2)：基本面與同業估值擴充 (Fubon 爬蟲) 【後端已完成 ✅ 2026-10-09 / 待前端 Gemini 接手 ⏳】
 
 ### 方案 3（股本）& 方案 6（本益比折同業）
 
 #### 【資料來源】
 * **富邦個股基本資料網址**：`https://fubon-ebrokerdj.fbs.com.tw/z/zc/zca/zca_{code}.djhtm`
 * **頁面包含欄位**：
-  * 「實收資本額」：例如 `1,152 百萬元` 或 `11.52 億元`。
-  * 「本益比」：例如 `19.52`。
-  * 「同業平均本益比」：例如 `32.39`。
+  * 「實收資本額」：例如 `股本(億, 台幣)` -> `11.52`。
+  * 「本益比」：例如 `19.31`。
+  * 「同業平均本益比」：例如 `33.19`。
+  * 「收盤價」：頁面當時收盤價（例如 `184`）。
 
-#### 【後端 Claude 職責】
+#### 【後端 Claude 職責】（✅ 已實作完成並驗證通過）
 1. **`scripts/scrapers/fubon.py`**：
-   - 新增 `fetch_stock_fundamentals(code: str) -> dict`。
-   - 複用現有的 `urllib.request` 與 `decode_fubon_html`，發送請求並解析 HTML 表格：
-     - 提取資本額，統一轉換為「億元（`float`）」，對應欄位 `paidInCapital`。
-     - 提取個股 PE，對應欄位 `pe`。
-     - 提取同業 PE，對應欄位 `industryPe`。
-     - 計算折溢價：
-       $$\text{peDiscount} = \frac{\text{pe} - \text{industryPe}}{\text{industryPe}} \times 100$$
-   - 批次抓取快取設計：由於資本額與同業 PE 變動頻率低，後端應建立 `cache/fundamentals.json` 本地快取，每週僅需全量更新一次，平日爬蟲只針對新納入選股池之標的進行增量查詢。
-2. **`scripts/writer.py`**：
+   - 實作 `fetch_stock_fundamentals(code: str) -> dict` 與 `batch_fetch_fundamentals(codes: List[str]) -> dict`。
+   - 提取實收資本額（單位：億元，`paidInCapital`）。
+   - 提取同業 PE（`industryPe`）。
+   - 提取近 4 季 EPS 合計（Trailing EPS）：$\text{trailingEps} = \frac{\text{fubonPrice}}{\text{fubonPe}}$。
+   - **快取架構設計 (`cache/fundamentals.json`)**：
+     - **股本 TTL = 28 天**（約 4 週更新一次，依使用者規範）。
+     - **同業 PE TTL = 7 天**（每週更新一次）。
+     - 405 檔股票快取命中 100%，耗時 < 0.1s；新入池標的多執行緒 (10 workers) 自動補齊。
+2. **`scripts/writer.py` 與 `scripts/main.py`**：
+   - 每交易日自動根據個股最新盤後/盤中真實收盤價動態計算高頻本益比：
+     $$\text{pe} = \text{round}\left(\frac{\text{todayPrice}}{\text{trailingEps}}, 2\right)$$
+   - 計算同業折溢價 %：
+     $$\text{peDiscount} = \text{round}\left(\frac{\text{pe} - \text{industryPe}}{\text{industryPe}} \times 100, 2\right)$$
    - 注入各個股物件：
      ```json
      {
        "paidInCapital": 11.52,
-       "pe": 19.52,
-       "industryPe": 32.39,
-       "peDiscount": -39.7
+       "pe": 19.31,
+       "industryPe": 33.19,
+       "peDiscount": -41.82,
+       "trailingEps": 9.5287
      }
      ```
+   - 若虧損或無 PE（如台泥、中石化、生技股顯示 N/A），欄位安全返回 `null`。
+3. **`src/engine/screener.js`**：
+   - 時光機歷史切片回溯 `sliceStockAt` 支援歷史倒流重算：當回溯至歷史基準日，自動依該歷史日收盤價與 `trailingEps` 動態還原當時歷史 `pe` 與 `peDiscount`。
+4. **`src/constants/ui-strings.js`**：
+   - 新增 `FUNDAMENTALS` 字串字典。
+5. **`.github/workflows/update-stock-pool.yml`**：
+   - 將 `cache/fundamentals.json` 納入 commit 與 push，確保 GitHub Actions 保持快取溫暖。
 
-#### 【前端 Gemini 職責】
-1. **`src/constants/ui-strings.js`**：
-   - 定義字串：
-     ```javascript
-     FUNDAMENTALS: {
-       capital: '股本',
-       capitalUnit: '億',
-       smallCapitalBadge: '輕型股',
-       pe: '本益比',
-       industryPe: '同業PE',
-       peDiscount: '同業折價',
-     }
-     ```
-2. **`src/components/StockCard.vue`**：
-   - 呈現股本規模：`股本 11.5 億`；若 `paidInCapital <= 30` 標註為輕型/波段彈性股。
-   - 呈現估值優勢：`PE 19.5 (同業 32.4) 折 -40%`，具備顯著折價優勢時給予綠色估值保護標籤。
+#### 【前端 Gemini 職責】（⏳ 待 Gemini 實作）
+1. **`src/components/StockCard.vue`**：
+   - **股本規模展示**：
+     - 若 `stock.paidInCapital` 存在，顯示股本規模（例如 `股本 11.5 億` 或 `11.5 億`）。
+     - 若 `stock.paidInCapital <= 30`（億元），標註為「輕型股」波段爆發標籤。
+   - **估值優勢展示**：
+     - 若 `stock.pe` 存在且 `stock.industryPe` 存在：
+       - 折價（`peDiscount < 0`，例如 `-41.8%`）：顯示 `折 -41.8%`，給予估值保護綠色 Badge。
+       - 溢價（`peDiscount > 0`，例如 `+30.6%`）：顯示 `溢 +30.6%`。
+     - 若 `stock.pe == null`：優雅隱藏或顯示 `PE --`，不引發破版。
 
 ---
 

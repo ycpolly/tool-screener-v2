@@ -79,6 +79,13 @@ interface Stock {
   isInPool?:     boolean      // 該基準日是否在選股池中（歷史時光機若當日未入池為 false，最新當日為 true）
   isNewEntry?:   boolean      // 該基準日是否為「新進」（前一交易日不在選股池中，或首日納入追蹤）
 
+  // 基本面與同業估值 (Phase 2 方案 3 & 方案 6)
+  paidInCapital?: number | null // 實收資本額（億元，例如 11.52；<= 30 億為輕型股）
+  pe?:            number | null // 本益比（動態依最新收盤價/時光機當日收盤價重算，例如 19.31；虧損或查無顯示 null）
+  industryPe?:    number | null // 同業平均本益比（例如 33.19）
+  peDiscount?:    number | null // 同業折溢價 %（例如 -41.82，負值代表相對同業便宜/折價，公式: (pe - industryPe) / industryPe * 100）
+  trailingEps?:   number | null // 近 4 季 EPS 合計（例如 9.5287，供時光機與盤中實時動態推算 PE）
+
   // Sparkline
   sparkline:  number[]      // 近10日收盤價陣列
   history10d: DayBar[]      // 近10日完整日K（含 ma5/ma10/kd）

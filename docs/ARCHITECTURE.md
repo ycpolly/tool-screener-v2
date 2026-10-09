@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-10-03**（擴充量增幅、量增、漲幅、自營商買超 1D 共 8 個官方 URL 爬蟲端點、整合 22 大資料來源對帳與標籤外開、完成 v1003.04 版號維護）
+> **最後更新：2026-10-09**（五大模式準確度提升第二階段基本面擴充：實收資本額 28 天 TTL、同業 PE 7 天 TTL、動態即時本益比與同業折溢價運算，完成前後端資料合約與架構同步）
 
 ---
 
@@ -248,6 +248,8 @@ Python 輸出 → `public/data/stock-pool.json`
 - `isDisposed` 每次更新必須即時從官方 API 重新拉取，嚴禁沿用上次結果
 - `history10d` 的長度保證為 10~20 筆（不足時用最早一筆補齊，前端不需防守）
 - `chipsHistory` 為字典結構（`{ [YYYY-MM-DD]: { categories: string[], chips: Object } }`），由後端 `writer.py` 每日自動累積保留近 10 個交易日快照，供前端 `sliceStockAt` 時光機還原真實歷史籌碼與避雷標籤
+- `paidInCapital` 為實收資本額（單位：億元，小數點後 2 位，例如 `11.52`；<= 30 億為輕型股），採用本地快取 `cache/fundamentals.json`，更新週期 (TTL) 嚴格遵守 28 天（約 4 週更新一次）
+- `pe`（本益比）、`industryPe`（同業平均本益比）與 `peDiscount`（同業折溢價 %，公式: `(pe - industryPe) / industryPe * 100`）：後端依富邦個股基本資料抓取近 4 季 EPS 合計（`trailingEps`），每日依盤後/盤中最新收盤價實時高頻動態計算 `pe = round(price / trailingEps, 2)`；同業 PE 快取更新週期為 7 天；若公司虧損或無 PE（顯示 N/A）則優雅保持 `null`；時光機回溯 `sliceStockAt` 支援歷史倒流動態推算 당시 PE 與折溢價
 
 ---
 
@@ -596,6 +598,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 時光機歷史切片防未來籌碼洩漏（Time Machine Historical Chips Anti-Leakage：修復 `sliceStockAt` 當 `dayOffset > 0` 且該股票在歷史基準日尚未入選追蹤池時，錯誤回退至今日籌碼之漏洞；將 `chips` 與 `categories` 正確預設為 `null` 與 `[]`，並將 `chipsHistory` 嚴格截斷至歷史基準日（`d <= targetDate`），使籌碼透視區忠實呈現「該歷史日未入選追蹤池（無分點籌碼記錄）」，徹底杜絕未來數據外洩）— 完成 2026-10-04
 - [x] 選股池入池動態感知與新進識別（Stock Pool Dynamic Entry & New Badge Tracking：後端 `writer.py` 與 `screener.js` 實作 `isInPool` 與 `isNewEntry` 欄位運算，透過 `chipsHistory` 動態感知歷史交易日是否在池內，並判定當日是否為新入榜；時光機回溯 `sliceStockAt` 支援歷史入池身分驗證，若歷史日不在池中標籤列精確顯示「技術型態符合（當日未在追蹤池）」；7 日策略生命週期 `getStockLifecycle` 在歷史未入池日統一將模式定調為「模式 (未入池)」或「未入池」，徹底消除 `--` 混淆；個股卡片將「新進」Badge 改採左上角絕對定位角標（`absolute top-0 left-0 rounded-tl-xl rounded-br-md`）呈現，徹底釋放報價列橫向空間；`StockTable.vue` 將 `isInPool` 與 `isNewEntry` 納入 `v-memo` 保證時光機即時響應）— 完成 2026-10-04
 - [x] 個股卡片 RS 標籤移至左上角與新進角標整合（RS Badge Top-Left Integration：將 `RS +XX.X%` 自個股名稱右側移至卡片左上角，與 `新進` 角標並列於 `absolute top-0 left-0` 容器；RS 標籤維持漲紅跌綠色系並施加極淺底色（`bg-rise/10` / `bg-fall/10` / `bg-base-300/60`）；當無新進標籤時 RS 承接貼角圓弧（`rounded-tl-xl rounded-br-md`），新進並存時平滑外推（`ml-1 rounded-md`）；簡約模式同步動態自適應 `pt-6` 杜絕文字重疊；徹底釋放個股名稱橫向寬度，杜絕手機端名稱截斷）— 完成 2026-10-06
+- [x] 五大模式準確度提升第二階段基本面與同業估值後端擴充（Phase 2 Fundamentals & Valuation Backend：實作富邦 DJ 個股基本資料爬蟲 `scripts/scrapers/fubon.py`，支援多執行緒批次抓取實收資本額 `paidInCapital`、個股本益比 `pe`、同業平均本益比 `industryPe` 與頁面價格推算近 4 季合計 `trailingEps`；建置 `cache/fundamentals.json` 本地快取，嚴格落實實收資本額 TTL = 28 天、同業 PE TTL = 7 天更新週期；`scripts/writer.py` 與 `main.py` 整合高頻動態本益比重算公式 $\text{pe} = \text{round}(\text{price} / \text{trailingEps}, 2)$ 與同業折溢價 $\text{peDiscount} = \text{round}((\text{pe} - \text{industryPe}) / \text{industryPe} \times 100, 2)$，虧損公司安全防護回傳 `null`；時光機回溯 `sliceStockAt` 支援歷史日倒流動態推算 당시 PE；於 `src/constants/ui-strings.js` 擴充 `FUNDAMENTALS` 字串字典；更新 `.github/workflows/update-stock-pool.yml` 自動提交快取維護溫暖狀態）— 完成 2026-10-09
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 
