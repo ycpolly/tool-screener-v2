@@ -1,5 +1,6 @@
 import { ref, computed, readonly } from 'vue'
 import { UI_STRINGS } from '../constants/ui-strings.js'
+import { registerDynamicHoliday } from '../constants/market-holidays.js'
 
 /**
  * useRealtimeQuotes — GCP 即時行情與大盤同步
@@ -18,7 +19,7 @@ function getInitialGcpUrl() {
     const saved = localStorage.getItem(STORAGE_KEY_URL)
     if (saved && saved.trim()) return saved.trim()
   } catch { /* 靜默忽略 */ }
-  return (import.meta.env.VITE_GCP_URL ?? '').trim()
+  return (import.meta.env?.VITE_GCP_URL ?? '').trim()
 }
 
 /**
@@ -38,6 +39,40 @@ function formatTimeString(str) {
     return `${trimmed.slice(0, 2)}:${trimmed.slice(2, 4)}:${trimmed.slice(4, 6)}`
   }
   return trimmed
+}
+
+/**
+ * 取得報價項目的撮合成交日期 (YYYY-MM-DD，台北時區)
+ * @param {Object} item
+ * @returns {string|null}
+ */
+export function extractQuoteTradeDate(item) {
+  if (!item) return null
+
+  // 1. 若為 TWSE MIS 格式: d = "20261008"
+  if (typeof item.d === 'string' && /^\d{8}$/.test(item.d)) {
+    return `${item.d.slice(0, 4)}-${item.d.slice(4, 6)}-${item.d.slice(6, 8)}`
+  }
+
+  // 2. 若為數字時間戳記 (微秒、毫秒或秒)
+  if (typeof item.updatedAt === 'number' && item.updatedAt > 0) {
+    const ts = item.updatedAt
+    const ms = ts > 1e14 ? ts / 1000 : (ts < 1e11 ? ts * 1000 : ts)
+    const d = new Date(ms)
+    if (!isNaN(d.getTime())) {
+      const y = d.getFullYear()
+      const m = String(d.getMonth() + 1).padStart(2, '0')
+      const day = String(d.getDate()).padStart(2, '0')
+      return `${y}-${m}-${day}`
+    }
+  }
+
+  // 3. 若為字串時間 "2026-10-08 13:30:00"
+  if (typeof item.time === 'string' && item.time.includes('-')) {
+    return item.time.split(' ')[0].trim()
+  }
+
+  return null
 }
 
 /**
@@ -121,12 +156,14 @@ export function extractExchangeTime(json, returnedData) {
 }
 
 
-const _gcpUrl      = ref(getInitialGcpUrl())
-const _quotes      = ref({})   // { [code]: { price, open, high, low, volume, change, changePct, ... } }
-const _loading     = ref(false)
-const _lastUpdated = ref(null)
-const _error       = ref(null)
-const _missing     = ref([])
+const _gcpUrl              = ref(getInitialGcpUrl())
+const _quotes              = ref({})   // { [code]: { price, open, high, low, volume, change, changePct, ... } }
+const _loading             = ref(false)
+const _lastUpdated         = ref(null)
+const _error               = ref(null)
+const _missing             = ref([])
+const _isMarketClosed      = ref(false)
+const _marketClosedReason  = ref('')
 
 export function useRealtimeQuotes() {
 
@@ -220,6 +257,32 @@ export function useRealtimeQuotes() {
           }
         }
 
+        // ── 智慧休市/未開盤撮合動態感知（颱風假、臨時停止交易）──
+        const now = new Date()
+        const nowDay = now.getDay()
+        const nowHour = now.getHours()
+        const nowMin = now.getMinutes()
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+
+        // 若為週一至週五且已過上午 09:05，檢查指標股 (2330, 2317, 2454, 2303, 2603)
+        if (nowDay >= 1 && nowDay <= 5 && (nowHour > 9 || (nowHour === 9 && nowMin >= 5))) {
+          const checkCodes = ['2330', '2317', '2454', '2303', '2603']
+          const tradeDates = checkCodes
+            .map(c => extractQuoteTradeDate(returnedData[c]))
+            .filter(Boolean)
+
+          // 若所有指標股撮合日期皆早於今日，代表交易所今日全日無撮合（天然災害颱風假、法定休市或臨時未開盤）
+          if (tradeDates.length > 0 && tradeDates.every(d => d < todayStr)) {
+            registerDynamicHoliday(todayStr, '今日台股無撮合紀錄（休市）')
+            _isMarketClosed.value = true
+            _marketClosedReason.value = '今日台股無撮合紀錄（休市）'
+            console.info(`[useRealtimeQuotes] 偵測到今日 (${todayStr}) 交易所無撮合紀錄，自動切換為休市/盤後模式`)
+          } else {
+            _isMarketClosed.value = false
+            _marketClosedReason.value = ''
+          }
+        }
+
         // 只採納本次正式回傳且具有有效價格的資料（嚴禁使用舊快取補洞）
         const validQuotes = {}
         for (const [code, item] of Object.entries(returnedData)) {
@@ -262,12 +325,14 @@ export function useRealtimeQuotes() {
     }
 
     return {
-      gcpUrl:       readonly(_gcpUrl),
-      quotes:       readonly(_quotes),
-      loading:      readonly(_loading),
-      lastUpdated:  readonly(_lastUpdated),
-      error:        readonly(_error),
-      missingCodes: readonly(_missing),
+      gcpUrl:             readonly(_gcpUrl),
+      quotes:             readonly(_quotes),
+      loading:            readonly(_loading),
+      lastUpdated:        readonly(_lastUpdated),
+      error:              readonly(_error),
+      missingCodes:       readonly(_missing),
+      isMarketClosed:     readonly(_isMarketClosed),
+      marketClosedReason: readonly(_marketClosedReason),
       isConfigured,
       saveGcpUrl,
       clearGcpUrl,

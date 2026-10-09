@@ -316,6 +316,7 @@
 <script setup>
 import { ref, computed, shallowRef, onMounted } from 'vue'
 import { UI_STRINGS } from './constants/ui-strings.js'
+import { isMarketHoliday, getMarketHolidayInfo } from './constants/market-holidays.js'
 import { useStockPool } from './composables/useStockPool.js'
 import { useScreener } from './composables/useScreener.js'
 import { useRealtimeQuotes } from './composables/useRealtimeQuotes.js'
@@ -394,6 +395,8 @@ const {
   loading: quotesLoading,
   lastUpdated: quotesLastUpdated,
   error: quotesError,
+  isMarketClosed,
+  marketClosedReason,
   isConfigured,
   saveGcpUrl,
   clearGcpUrl,
@@ -436,6 +439,19 @@ function formatFriendlyTime(isoString) {
 // 頂部導覽列資料時間戳記文字（包含 年/月/日、星期 與 撮合時間，三階段區分：盤中/收盤/盤後）
 const isPostMarketTime = computed(() => {
   const now = new Date()
+  const day = now.getDay()
+  if (day === 0 || day === 6) return true
+
+  const y = now.getFullYear()
+  const m = String(now.getMonth() + 1).padStart(2, '0')
+  const d = String(now.getDate()).padStart(2, '0')
+  const todayStr = `${y}-${m}-${d}`
+
+  // 國定假日、補假或動態偵測之休市日 (如天然災害颱風假)
+  if (isMarketHoliday(todayStr) || isMarketClosed.value) {
+    return true
+  }
+
   const nowHour = now.getHours()
   const nowMin = now.getMinutes()
   const timeInMinutes = nowHour * 60 + nowMin
@@ -461,7 +477,9 @@ const dataTimestampText = computed(() => {
         const min = String(d.getMinutes()).padStart(2, '0')
 
         const nowHour = now.getHours()
-        const isPreMarket = nowHour < 9 && now.getDay() >= 1 && now.getDay() <= 5
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+        const isHoliday = isMarketHoliday(todayStr) || isMarketClosed.value
+        const isPreMarket = !isHoliday && nowHour < 9 && now.getDay() >= 1 && now.getDay() <= 5
         const status = isPreMarket
           ? (UI_STRINGS.APP.statusPreMarket || '盤前')
           : (UI_STRINGS.APP.statusPostMarket || '盤後')
@@ -596,12 +614,21 @@ async function handleFetchRealtime() {
   const now = new Date()
   const day = now.getDay()
   const isWeekend = day === 0 || day === 6
+  const y = now.getFullYear()
+  const m = String(now.getMonth() + 1).padStart(2, '0')
+  const d = String(now.getDate()).padStart(2, '0')
+  const todayStr = `${y}-${m}-${d}`
+
+  const holidayInfo = getMarketHolidayInfo(todayStr)
+  const isHoliday = Boolean(holidayInfo || isMarketClosed.value)
+  const holidayName = holidayInfo?.name || marketClosedReason.value || ''
+
   const hour = now.getHours()
   const min = now.getMinutes()
   const timeInMinutes = hour * 60 + min
 
-  // 09:00 (540分) ~ 19:16 (1156分) 之間為交易與收盤過渡期（含機器人備援重疊區間）
-  const isMarketOrTransitionTime = !isWeekend && timeInMinutes >= 540 && timeInMinutes <= 1156
+  // 09:00 (540分) ~ 19:16 (1156分) 之間為交易與收盤過渡期（若為週末或休市日則不進入交易行情請求）
+  const isMarketOrTransitionTime = !isWeekend && !isHoliday && timeInMinutes >= 540 && timeInMinutes <= 1156
 
   const oldUpdatedAt = meta.value?.updatedAt
 
@@ -609,6 +636,13 @@ async function handleFetchRealtime() {
   const newPoolData = await loadPool()
   const currentUpdatedAt = newPoolData?.meta?.updatedAt || meta.value?.updatedAt
   const friendlyTime = formatFriendlyTime(currentUpdatedAt) || '最新'
+
+  // 若為已知國定假日/補假日：直接清除報價警示，提示使用者休市
+  if (isHoliday) {
+    clearQuotesError()
+    triggerToast(UI_STRINGS.REALTIME.holidayNotice(holidayName), 'info')
+    return
+  }
 
   // 2. 若在 09:00 ~ 19:16 交易與收盤過渡期，且已設定 GCP：同時抓取即時/收盤報價
   if (isMarketOrTransitionTime) {
@@ -621,6 +655,14 @@ async function handleFetchRealtime() {
       const codes = baseStocks.value.map(s => s.code)
       // 18:00 之後若 MIS 撮合伺服器陸續離線，啟用靜默降級，不跳刺眼黃色警告
       const quotesResult = await fetchQuotes(codes, { silentIfOffline: hour >= 18 })
+
+      // 若動態偵測到天然災害或交易所無撮合紀錄
+      if (isMarketClosed.value) {
+        clearQuotesError()
+        triggerToast(UI_STRINGS.REALTIME.marketClosedToday, 'info')
+        return
+      }
+
       if (quotesResult && Object.keys(quotesResult).length > 0) {
         triggerToast(UI_STRINGS.REALTIME.syncRealtimeSuccess(Object.keys(quotesResult).length, friendlyTime), 'success')
         return

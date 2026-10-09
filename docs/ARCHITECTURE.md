@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-10-09**（五大模式準確度提升第二階段基本面擴充：實收資本額 28 天 TTL、同業 PE 7 天 TTL、動態即時本益比與同業折溢價運算，完成前後端資料合約與架構同步）
+> **最後更新：2026-10-09**（台股全年度法定休市日行事曆與天然災害動態未開盤感知機制：納入 2026 TWSE 官方休市日、指標股撮合日期動態休市感知防護、徹底解決時光機國定假日與補假日出現重複今日 K 棒與同價位之問題）
 
 ---
 
@@ -112,7 +112,8 @@ tool-screener-v2/
 │   │   ├── screener.js         ← 純演算法引擎（零 DOM，純函式：輸入資料 → 輸出結果）
 │   │   └── tick-size.js        ← 台股升降單位（Tick size）換算與價格速算目標價運算
 │   └── constants/
-│       └── ui-strings.js       ← 所有 UI 文字，零硬編碼殘留
+│       ├── ui-strings.js       ← 所有 UI 文字，零硬編碼殘留
+│       └── market-holidays.js  ← 2026 年 TWSE 官方休市/補假行事曆與動態休市登錄器
 │
 ├── index.html
 ├── vite.config.js
@@ -605,6 +606,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 選股池入池動態感知與新進識別（Stock Pool Dynamic Entry & New Badge Tracking：後端 `writer.py` 與 `screener.js` 實作 `isInPool` 與 `isNewEntry` 欄位運算，透過 `chipsHistory` 動態感知歷史交易日是否在池內，並判定當日是否為新入榜；時光機回溯 `sliceStockAt` 支援歷史入池身分驗證，若歷史日不在池中標籤列精確顯示「技術型態符合（當日未在追蹤池）」；7 日策略生命週期 `getStockLifecycle` 在歷史未入池日統一將模式定調為「模式 (未入池)」或「未入池」，徹底消除 `--` 混淆；個股卡片將「新進」Badge 改採左上角絕對定位角標（`absolute top-0 left-0 rounded-tl-xl rounded-br-md`）呈現，徹底釋放報價列橫向空間；`StockTable.vue` 將 `isInPool` 與 `isNewEntry` 納入 `v-memo` 保證時光機即時響應）— 完成 2026-10-04
 - [x] 個股卡片 RS 標籤移至左上角與新進角標整合（RS Badge Top-Left Integration：將 `RS +XX.X%` 自個股名稱右側移至卡片左上角，與 `新進` 角標並列於 `absolute top-0 left-0` 容器；RS 標籤維持漲紅跌綠色系並施加極淺底色（`bg-rise/10` / `bg-fall/10` / `bg-base-300/60`）；當無新進標籤時 RS 承接貼角圓弧（`rounded-tl-xl rounded-br-md`），新進並存時平滑外推（`ml-1 rounded-md`）；簡約模式同步動態自適應 `pt-6` 杜絕文字重疊；徹底釋放個股名稱橫向寬度，杜絕手機端名稱截斷）— 完成 2026-10-06
 - [x] 五大模式準確度提升第二階段基本面與同業估值後端擴充（Phase 2 Fundamentals & Valuation Backend：實作富邦 DJ 個股基本資料爬蟲 `scripts/scrapers/fubon.py`，支援多執行緒批次抓取實收資本額 `paidInCapital`、個股本益比 `pe`、同業平均本益比 `industryPe` 與頁面價格推算近 4 季合計 `trailingEps`；建置 `cache/fundamentals.json` 本地快取，嚴格落實實收資本額 TTL = 28 天、同業 PE TTL = 7 天更新週期；`scripts/writer.py` 與 `main.py` 整合高頻動態本益比重算公式 $\text{pe} = \text{round}(\text{price} / \text{trailingEps}, 2)$ 與同業折溢價 $\text{peDiscount} = \text{round}((\text{pe} - \text{industryPe}) / \text{industryPe} \times 100, 2)$，虧損公司安全防護回傳 `null`；時光機回溯 `sliceStockAt` 支援歷史日倒流動態推算 당시 PE；於 `src/constants/ui-strings.js` 擴充 `FUNDAMENTALS` 字串字典；更新 `.github/workflows/update-stock-pool.yml` 自動提交快取維護溫暖狀態）— 完成 2026-10-09
+- [x] 全年度法定休市日行事曆與天然災害動態未開盤感知機制（Market Holiday Calendar & Dynamic Session Detection：於 `src/constants/market-holidays.js` 建立 TWSE 官方 2026 年度休市與補假行事曆；`src/engine/screener.js` 的 `isLiveTradingDay` 納入法定與動態休市日判定，徹底杜絕國定假日與補假日【如 10/9 國慶日補假】時光機誤認今日為開盤交易日而產生兩天相同價位之問題；`src/composables/useRealtimeQuotes.js` 新增指標權值股撮合日期動態偵測，於 09:05 後若指標股成交日皆早於今日自動將當日登錄為動態休市日【天然災害颱風假/交易所暫停交易】；`src/App.vue` 之 `isPostMarketTime` 與「更新」按鈕全面連動，休市日自動維持盤後模式並以 Toast 提示使用者，杜絕無效 API 輪詢）— 完成 2026-10-09
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

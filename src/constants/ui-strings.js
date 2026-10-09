@@ -396,6 +396,8 @@ export const UI_STRINGS = {
     lastUpdated: (t) => `即時更新於 ${t}`,
     preMarketNotice: '尚未開盤（09:00 正式開盤），維持盤後選股結果',
     weekendNotice: '週末休市，維持週五盤後選股結果',
+    holidayNotice: (holidayName) => holidayName ? `今日台股休市（${holidayName}），維持盤後選股結果` : '今日台股休市，維持盤後選股結果',
+    marketClosedToday: '今日台股未開盤撮合（休市日/天然災害），行情維持最新收盤',
     // 雙軌全時段智慧更新提示（無阻擋、消除焦慮設計）
     syncRealtimeSuccess: (count, timeStr) => `已同步即時行情（${count} 檔）與盤後資料庫（${timeStr}）`,
     poolUpdatedNew: (timeStr) => `已成功載入最新盤後資料庫（資料時間：${timeStr}）`,

@@ -1,5 +1,6 @@
 import { UI_STRINGS } from '../constants/ui-strings.js'
 import { SCREENER_MODES } from '../constants/screener-modes.js'
+import { isMarketHoliday } from '../constants/market-holidays.js'
 
 /**
  * screener.js — 純演算法引擎
@@ -1102,6 +1103,12 @@ export function isLiveTradingDay(sampleBar, currentTime = new Date()) {
   const m = String(now.getMonth() + 1).padStart(2, '0')
   const d = String(now.getDate()).padStart(2, '0')
   const todayStr = `${y}-${m}-${d}`
+
+  // 檢查是否為台股法定休市日或動態休市日 (國定假日、補假、颱風假等)
+  if (isMarketHoliday(todayStr)) {
+    return false
+  }
+
   return todayStr > sampleBar.date
 }
 
