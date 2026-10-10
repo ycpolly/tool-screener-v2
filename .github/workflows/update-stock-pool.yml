@@ -2,7 +2,8 @@ name: Update Stock Pool
 
 on:
   schedule:
-    # 台灣時間 (UTC+8) 兩波流排程（使用零散分鐘避開整點尖峰）：
+    # 台灣時間 (UTC+8) 三波流排程（使用零散分鐘避開整點尖峰）：
+    - cron: '35 5 * * 1-5'   # 13:35 台灣時間（第零波：收盤快刷，掌握今日最新量價選股與 13:40 零股交易決策）
     - cron: '46 9 * * 1-5'   # 17:46 台灣時間（第一批：盤後三大法人、量大排行與 5 大選股模式）
     - cron: '16 11 * * 1-5'  # 19:16 台灣時間（第二批：分點明細出爐，抓取 1D/3D/5D 籌碼集中度與短沖避雷）
 
@@ -42,21 +43,35 @@ jobs:
       - name: Check execution time window (防幽靈排程時段攔截)
         id: time_check
         run: |
-          # 盤後安全執行時段為台灣時間 16:30 ~ 22:30 (即 UTC 08:30 ~ 14:30)
+          # 合法執行時段 (UTC 時區)：
+          # 1. 收盤快刷窗口：UTC 05:30 ~ 07:00 (即台灣時間 13:30 ~ 15:00)
+          # 2. 盤後主力窗口：UTC 08:30 ~ 14:30 (即台灣時間 16:30 ~ 22:30)
           UTC_HOUR=$(date -u +%H)
+          UTC_MIN=$(date -u +%M)
+          CURRENT_MINUTES=$(( 10#$UTC_HOUR * 60 + 10#$UTC_MIN ))
           IS_SCHEDULE="${{ github.event_name == 'schedule' }}"
           IS_FORCE="${{ github.event.inputs.force == 'true' }}"
 
-          echo "Current UTC Hour: $UTC_HOUR"
+          echo "Current UTC: $UTC_HOUR:$UTC_MIN (Minutes: $CURRENT_MINUTES)"
           echo "Event Name: ${{ github.event_name }}"
           echo "Force: $IS_FORCE"
 
           if [ "$IS_SCHEDULE" = "true" ]; then
-            # schedule 排程若因 GitHub 隊列延遲拖到 UTC 15:00 ~ 08:00 (即台灣時間 23:00 ~ 16:00 次日)
-            # 視為無效幽靈排程，為防止半夜 Yahoo Finance 換日清算空值污染資料庫，自動跳過本次執行
-            if [ "$UTC_HOUR" -ge 15 ] || [ "$UTC_HOUR" -lt 8 ]; then
+            # 檢查 schedule 是否落在兩大合法安全窗口之一：
+            # 窗口 A (收盤快刷): UTC 05:25 (325m) ~ 07:15 (435m)
+            # 窗口 B (盤後主力): UTC 08:25 (505m) ~ 14:45 (885m)
+            IN_WINDOW_A=0
+            IN_WINDOW_B=0
+            if [ "$CURRENT_MINUTES" -ge 325 ] && [ "$CURRENT_MINUTES" -le 435 ]; then
+              IN_WINDOW_A=1
+            fi
+            if [ "$CURRENT_MINUTES" -ge 505 ] && [ "$CURRENT_MINUTES" -le 885 ]; then
+              IN_WINDOW_B=1
+            fi
+
+            if [ "$IN_WINDOW_A" -eq 0 ] && [ "$IN_WINDOW_B" -eq 0 ]; then
               echo "skip=true" >> "$GITHUB_OUTPUT"
-              echo "::warning title=Ghost Schedule Blocked::偵測到 GitHub Actions 隊列嚴重延遲之幽靈排程 (UTC: $(date -u +%H:%M))，落在非盤後安全窗口 (台灣時間 23:00 ~ 16:00)。自動跳過本次執行以確保資料庫安全！"
+              echo "::warning title=Ghost Schedule Blocked::偵測到 GitHub Actions 隊列嚴重延遲之幽靈排程 (UTC: $(date -u +%H:%M))，落在非安全窗口。自動跳過本次執行以確保資料庫安全！"
               exit 0
             fi
           elif [ "$IS_FORCE" != "true" ]; then
@@ -78,23 +93,20 @@ jobs:
       - name: Run stock pool update
         if: steps.time_check.outputs.skip != 'true'
         run: |
-          # 檢查當前時間：若為台灣時間 18:30 之後 (UTC 10:30 之後)，券商分點已結算完畢，一律啟用 --with-chips 抓取籌碼
           UTC_HOUR=$(date -u +%H)
           UTC_MIN=$(date -u +%M)
           CURRENT_MINUTES=$(( 10#$UTC_HOUR * 60 + 10#$UTC_MIN ))
 
-          # UTC 10:30 = 630 分鐘 (對應台灣時間 18:30)
-          if [ "${{ github.event.inputs.with_chips }}" = "false" ] && [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.force }}" = "true" ]; then
-            # 僅在手動 workflow_dispatch 明確勾選 force 且指定 false 時，才允許手動跳過籌碼
-            echo "[workflow] 手動強制指定無籌碼更新模式"
+          # UTC 10:30 = 630 分鐘 (對應台灣時間 18:30 券商分點出爐時段)
+          if [ "${{ github.event.inputs.with_chips }}" = "false" ]; then
+            echo "[workflow] 明確指定無籌碼快速更新模式"
             python -m scripts.main
           elif [ "$CURRENT_MINUTES" -ge 630 ] || [ "${{ github.event.inputs.with_chips }}" = "true" ]; then
-            # 晚上 18:30 以後 (含 19:16 第二波) 或明確指定 with_chips: 自動帶籌碼
-            echo "[workflow] 觸發第二波完整更新模式（含 1D/3D/5D 籌碼集中度與短沖避雷）"
+            echo "[workflow] 觸發晚上完整更新模式（含 1D/3D/5D 籌碼集中度與短沖避雷）"
             python -m scripts.main --with-chips
-          elif [ "$UTC_HOUR" = "09" ] || [ "${{ github.event.inputs.with_chips }}" = "false" ]; then
-            # 第一波 17:46 (09:46 UTC)：券商分點尚未出爐，快速更新五大模式名單
-            echo "[workflow] 觸發第一波快速更新模式（不含券商分點籌碼）"
+          elif [ "$CURRENT_MINUTES" -lt 630 ]; then
+            # 晚上 18:30 之前 (含 13:35 收盤快刷與 17:46 第一波)：分點尚未結算完畢，一律執行快速更新模式
+            echo "[workflow] 觸發收盤/第一波快速更新模式（不含券商分點籌碼，~45s 快速產出）"
             python -m scripts.main
           else
             echo "[workflow] 預設更新模式（含籌碼）"
