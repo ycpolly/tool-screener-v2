@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v1010.01',
+    version: 'v1010.02',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
