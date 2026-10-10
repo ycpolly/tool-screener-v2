@@ -205,6 +205,7 @@
           @open-risk-modal="handleOpenRiskModal"
           @open-price-calc="handleOpenPriceCalc"
           @open-lifecycle="handleOpenLifecycle"
+          @open-rs-details="handleOpenRsDetails"
           @search-code="handleSearchCode"
         />
       </template>
@@ -286,6 +287,14 @@
       @search-code="handleSearchCode"
     />
 
+    <!-- 相對大盤 5 日強弱 (RS) 明細 Modal -->
+    <StockRSModal
+      :is-open="showRsModal"
+      :stock="selectedRsStock"
+      @close="closeRsModal"
+      @search-code="handleSearchCode"
+    />
+
     <!-- 空間與風控全貌 Modal (Gemini 完成 RiskModal.vue 後引入掛載) -->
     <!--
     <RiskModal
@@ -330,6 +339,7 @@ import StockTable from './components/StockTable.vue'
 import StockPoolModal from './components/modals/StockPoolModal.vue'
 import PriceCalcModal from './components/modals/PriceCalcModal.vue'
 import StockLifecycleModal from './components/modals/StockLifecycleModal.vue'
+import StockRSModal from './components/modals/StockRSModal.vue'
 
 const searchQuery = ref('')
 const sortKey     = ref('changePct')
@@ -363,11 +373,25 @@ function closeLifecycleModal() {
   selectedLifecycleStock.value = null
 }
 
+const showRsModal = ref(false)
+const selectedRsStock = shallowRef(null)
+
+function handleOpenRsDetails(stock) {
+  selectedRsStock.value = stock
+  showRsModal.value = true
+}
+
+function closeRsModal() {
+  showRsModal.value = false
+  selectedRsStock.value = null
+}
+
 function handleSearchCode(code) {
   if (!code) return
   searchQuery.value = String(code)
   if (showLifecycleModal.value) closeLifecycleModal()
   if (showPriceCalcModal.value) closePriceCalcModal()
+  if (showRsModal.value) closeRsModal()
   triggerToast(UI_STRINGS.SEARCH?.searchCodeToast ? UI_STRINGS.SEARCH.searchCodeToast(code) : `已代入搜尋 ${code}`, 'info', 2000)
   if (typeof window !== 'undefined') {
     window.scrollTo({ top: 0, behavior: 'smooth' })

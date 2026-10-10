@@ -18,12 +18,13 @@
       </span>
       <span
         v-if="relStrengthFormatted"
-        class="text-[10px] sm:text-xs font-numeric font-semibold select-none px-2 py-0.5"
+        class="text-[10px] sm:text-xs font-numeric font-semibold select-none px-2 py-0.5 cursor-pointer hover:brightness-110 active:scale-95 transition-all touch-manipulation"
         :class="[
           rsBadgeClass,
           stock.isNewEntry ? 'ml-1 rounded-md' : 'rounded-tl-xl rounded-br-md'
         ]"
         :title="rsTitle"
+        @click.stop="$emit('openRsDetails', stock)"
       >
         {{ UI_STRINGS.REL_STRENGTH?.prefix || 'RS' }} {{ relStrengthFormatted }}
       </span>
@@ -475,7 +476,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['select', 'openRiskModal', 'openPriceCalc', 'openLifecycle', 'searchCode'])
+defineEmits(['select', 'openRiskModal', 'openPriceCalc', 'openLifecycle', 'openRsDetails', 'searchCode'])
 
 function formatNumber(num) {
   if (num === null || num === undefined || isNaN(num)) return '--'
