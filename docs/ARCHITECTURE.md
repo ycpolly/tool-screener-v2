@@ -87,7 +87,7 @@ tool-screener-v2/
 │   ├── assets/css/
 │   │   └── main.css            ← CSS 變數（漲跌色、字型 token 等）
 │   ├── components/
-│   │   ├── MarketBanner.vue    ← TradingView 即時大盤走馬燈橫幅（加權指數 INDEX:TAIEX & 櫃買指數 TPEX:IX0043）
+│   │   ├── MarketBanner.vue    ← TradingView 即時大盤走馬燈橫幅（加權指數 INDEX:TAIEX & 櫃買指數 TPEX:IX0043，採用 compact 模式與自訂漲跌色彩變數）
 │   │   ├── ScreenerPanel.vue   ← 篩選參數面板（支援多模式擴充）
 │   │   ├── SearchBar.vue       ← 即時個股搜尋與多欄位排序工具列
 │   │   ├── StockTable.vue      ← 主選股結果容器（漸進式渲染與淘汰分組）
