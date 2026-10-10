@@ -106,6 +106,7 @@ tool-screener-v2/
 │   │       ├── PriceCalcModal.vue ← 價格速算 Bottom Sheet（基於現價 vs 基於昨收雙欄階梯）
 │   │       ├── StockLifecycleModal.vue ← 近日表現 Bottom Sheet（7日價量變化與策略命中歷程，支援時光機回測後續 T+N 跨越時光分界線自由滑動覆盤）
 │   │       ├── StockRSModal.vue   ← 相對大盤 5 日強弱 (RS) 明細 Bottom Sheet（置頂超額 RS 摘要、個股 vs 大盤雙欄走勢與逐日對照表）
+│   │       ├── CurrencyModal.vue  ← 美元兌台幣即時匯率 (USD/TWD) 彈窗（嵌入 Investing.com 報價、獨立局部重新整理與連動台股觀念說明）
 │   │       ├── RiskModal.vue   ← 空間與風控全貌（天花板/支撐/風報比）
 │   │       └── AvoidModal.vue  ← 避雷區（法人/主力/投信 賣超）
 │   ├── composables/

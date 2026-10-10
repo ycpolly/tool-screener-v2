@@ -15,15 +15,17 @@
             <slot name="header-title">
               <h3 class="text-base sm:text-lg font-bold text-base-content flex items-center gap-1.5 truncate">
                 <span
+                  v-if="stock?.code"
                   class="font-numeric cursor-pointer hover:underline touch-manipulation"
                   :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
                   @click="$emit('searchCode', stock?.code)"
                 >
                   {{ stock?.code }}
                 </span>
-                <span class="truncate">{{ stock?.name }}</span>
+                <span v-if="stock?.name" class="truncate">{{ stock?.name }}</span>
+                <span v-if="!stock && title" class="truncate">{{ title }}</span>
                 <span v-if="titleSuffix" class="text-base-content/80 font-medium text-xs sm:text-sm shrink-0">
-                  {{ titleSuffix.startsWith('·') ? titleSuffix : `· ${titleSuffix}` }}
+                  {{ (!stock && !title) ? titleSuffix : (titleSuffix.startsWith('·') ? titleSuffix : `· ${titleSuffix}`) }}
                 </span>
               </h3>
             </slot>
@@ -69,6 +71,10 @@ defineProps({
   stock: {
     type: Object,
     default: null,
+  },
+  title: {
+    type: String,
+    default: '',
   },
   titleSuffix: {
     type: String,
