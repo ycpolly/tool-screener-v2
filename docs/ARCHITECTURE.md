@@ -97,7 +97,7 @@ tool-screener-v2/
 │   │   ├── StockRankScoreSlot.vue  ← 綜合量化評分與細項拆解清單（支援展開/收合 6 大維度評分明細）
 │   │   ├── StockCeilingLadder.vue  ← 槽位 A 天花板關卡價與三明治價格天梯（支援展開/收合）
 │   │   ├── StockChipsSection.vue   ← 籌碼透視區塊（集中度 1D/3D/5D + 短沖避雷分點佔比）
-│   │   ├── StockFundamentalsSection.vue ← 基本面與估值區塊（股本規模 (輕/中/大) + 動態 PE 與同業折溢價/虧損）
+│   │   ├── StockFundamentalsSection.vue ← 基本面與估值區塊（股本規模 (輕/中/大) + 動態 PE 與同業折溢價/虧損 + 月營收動能 + 所屬產業與富邦關聯企業外開）
 │   │   ├── StockCardActions.vue    ← 極簡快捷操作列（代號名稱複製 + 外部籌碼資券盤後連結）
 │   │   ├── Sparkline.vue       ← 10日走勢圖（K棒 + 均線 + KD）
 │   │   └── modals/

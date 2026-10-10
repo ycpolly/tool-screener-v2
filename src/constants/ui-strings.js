@@ -705,6 +705,7 @@ export const UI_STRINGS = {
 
   INDUSTRY: {
     sectionLabel: '產業',
+    relatedLinkText: '關聯',
     relatedCompaniesTooltip: '查看富邦公司互動與關聯企業（供應鏈/客戶/競爭者）',
     noIndustry: '未分類',
   },

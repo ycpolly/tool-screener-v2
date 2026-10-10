@@ -69,6 +69,50 @@
         <strong class="font-bold" :class="revenueInfo.momClass">{{ revenueInfo.momText }}</strong>
       </span>
     </div>
+
+    <!-- 所屬產業與關聯企業區塊 (前 2 ~ 3 個核心產業 + [關聯 ↗] 外開富邦關聯企業) -->
+    <div
+      v-if="industryInfo"
+      class="pt-1 pb-1 border-t border-base-300/40 text-sm font-normal text-base-content/80 leading-normal flex items-baseline flex-wrap"
+    >
+      <!-- 主題詞：產業 -->
+      <span class="mr-1.5 font-sans text-base-content/70 select-none">{{ UI_STRINGS.INDUSTRY?.sectionLabel || '產業' }}</span>
+      <span class="text-base-content/40 mr-1.5 select-none">·</span>
+
+      <!-- 產業標籤清單（取前 2 ~ 3 個核心產業） -->
+      <template v-for="(item, idx) in industryInfo.displayList" :key="idx">
+        <span class="text-base-content font-medium">{{ item }}</span>
+        <span v-if="idx < industryInfo.displayList.length - 1" class="text-base-content/40 mx-1 select-none">·</span>
+      </template>
+
+      <!-- 超過顯示上限的數量提示 (+N)，hover 提示完整清單 -->
+      <span
+        v-if="industryInfo.extraCount > 0"
+        class="ml-1 text-xs text-base-content/60 font-numeric select-none cursor-help"
+        :title="industryInfo.fullListTooltip"
+      >
+        (+{{ industryInfo.extraCount }})
+      </span>
+
+      <!-- 分隔符號 -->
+      <span v-if="industryInfo.url" class="text-base-content/40 mx-1.5 select-none">·</span>
+
+      <!-- [關聯 ↗] 外開富邦關聯企業 -->
+      <a
+        v-if="industryInfo.url"
+        :href="industryInfo.url"
+        target="_blank"
+        rel="noopener nofollow"
+        class="inline-flex items-center gap-0.5 text-xs text-base-content/75 hover:text-base-content hover:underline transition-colors py-0.5 select-none"
+        :title="UI_STRINGS.INDUSTRY?.relatedCompaniesTooltip"
+        @click.stop
+      >
+        <span>{{ UI_STRINGS.INDUSTRY?.relatedLinkText || '關聯' }}</span>
+        <svg class="w-3 h-3 shrink-0 ml-0.5" viewBox="0 0 16 16" fill="none">
+          <path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -228,6 +272,29 @@ const revenueInfo = computed(() => {
     hasMom,
     momText,
     momClass,
+  }
+})
+
+// 所屬產業與關聯企業解析
+const industryInfo = computed(() => {
+  const stock = props.stock
+  const rawList = stock.industry
+
+  if (!Array.isArray(rawList) || rawList.length === 0) {
+    return null
+  }
+
+  // 避免過長折行：最多顯示前 3 個產業標籤（若單一標籤較長或超過 3 個，其餘收合於 +N）
+  const MAX_DISPLAY = 3
+  const displayList = rawList.slice(0, MAX_DISPLAY)
+  const extraCount = Math.max(0, rawList.length - MAX_DISPLAY)
+  const fullListTooltip = rawList.join(' · ')
+
+  return {
+    displayList,
+    extraCount,
+    fullListTooltip,
+    url: stock.industryUrl || null,
   }
 })
 </script>
