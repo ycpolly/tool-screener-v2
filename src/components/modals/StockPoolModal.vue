@@ -193,7 +193,7 @@
                 <td class="py-2 px-3 hidden sm:table-cell whitespace-nowrap">
                   <span
                     class="px-2 py-0.5 rounded text-xs font-medium"
-                    :class="row.market === 'otc' ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20' : 'bg-info/10 text-info border border-info/20'"
+                    :class="row.market === 'otc' ? 'bg-base-200 text-base-content/80 border border-base-300' : 'bg-info/10 text-info border border-info/20'"
                   >
                     {{ row.market === 'otc' ? (UI_STRINGS.STOCK_POOL_MODAL.marketOtc || '上櫃') : (UI_STRINGS.STOCK_POOL_MODAL.marketTse || '上市') }}
                   </span>
