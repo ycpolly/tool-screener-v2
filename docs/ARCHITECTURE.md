@@ -382,6 +382,10 @@ collect  →  enrich  →  write
   - 實作於 `scripts/writer.py` 的 `write_json()` 函式。
   - 寫入前自動統計並比對「既有資料庫最新交易日」vs「本次爬蟲最新交易日」（以各股 `history10d` 最新日期之眾數 Mode 判定）。
   - 若新資料最新交易日早於既有資料庫最新交易日（例如 9/18 < 9/21），程式判定為上游 API 換日維護異常或過期快取，**強制拋出 `RuntimeError` 終止寫入**，阻斷任何污染線上資料庫的可能性（可透過 `--allow-regression` 參數手動覆蓋）。
+- **富邦排行榜日期守門員（Date Guard，防護三）**：
+  - 實作於 `scripts/scrapers/fubon.py` 的 `check_rankings_date_guard()` 與 `scripts/main.py`。
+  - 收盤快刷執行時，自動檢驗富邦核心排行（成交量前100、成交值前100、漲幅）之 HTML 標註日期是否已正式跳至今日收盤日期。
+  - 若富邦主機尚未結算完畢（仍為昨日日期），系統主動攔截並安全略過寫入與部署，杜絕誤抓舊排行覆蓋最新股票池；待後續排程或富邦結算就緒後自動重試。
 
 ### 前端雙軌全時段智慧更新機制（Dual-track Refresh Architecture）
 

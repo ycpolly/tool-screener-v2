@@ -239,15 +239,37 @@ def write(enriched: dict, allow_regression: bool = False, verbose: bool = True) 
 def main():
     with_chips = '--with-chips' in sys.argv
     allow_regression = '--allow-regression' in sys.argv
+    check_date = '--check-date' in sys.argv
+    force = '--force' in sys.argv
+
     start = time.time()
     print(f'\n{"=" * 60}')
     print(f'tool-screener-v2 資料更新 {"(含 1D/3D/5D 籌碼集中度與短沖避雷)" if with_chips else "(第一批選股名單更新)"}')
     if allow_regression:
         print('[main] ⚠️ 已啟用 --allow-regression（允許日期倒退覆蓋）')
+    if check_date:
+        print('[main] 🛡️ 已啟用 --check-date（富邦收盤日期守門員）')
     print(f'開始時間：{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
     print(f'{"=" * 60}\n')
 
-    raw      = collect()
+    raw = collect()
+
+    # ── Date Guard: 富邦排行榜日期守門員 ─────────────────────────
+    if check_date and not force:
+        from scripts.scrapers.fubon import check_rankings_date_guard
+        from datetime import timezone, timedelta
+        taiwan_tz = timezone(timedelta(hours=8))
+        now_tw = datetime.now(taiwan_tz)
+        # 僅在台股交易日（週一至週五）收盤時段（13:30 以後）嚴格攔截尚未更新的排行榜
+        if now_tw.weekday() < 5 and (now_tw.hour > 13 or (now_tw.hour == 13 and now_tw.minute >= 30)):
+            is_fresh, fubon_md, today_md = check_rankings_date_guard(raw['rankings'])
+            if not is_fresh:
+                print(f'\n{"=" * 60}')
+                print(f'[main] 🛑 Date Guard 攔截：富邦量大排行 ({fubon_md}) 尚未更新為今日 ({today_md})！')
+                print('[main] 富邦主機可能仍在進行收盤結算，為保護股票池正確性，略過本次寫入與部署。')
+                print(f'{"=" * 60}\n')
+                sys.exit(0)
+
     enriched = enrich(raw, with_chips=with_chips)
     write(enriched, allow_regression=allow_regression)
 

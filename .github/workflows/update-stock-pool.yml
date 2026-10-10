@@ -97,20 +97,25 @@ jobs:
           UTC_MIN=$(date -u +%M)
           CURRENT_MINUTES=$(( 10#$UTC_HOUR * 60 + 10#$UTC_MIN ))
 
+          FORCE_FLAG=""
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then
+            FORCE_FLAG="--force"
+          fi
+
           # UTC 10:30 = 630 分鐘 (對應台灣時間 18:30 券商分點出爐時段)
           if [ "${{ github.event.inputs.with_chips }}" = "false" ]; then
             echo "[workflow] 明確指定無籌碼快速更新模式"
-            python -m scripts.main
+            python -m scripts.main $FORCE_FLAG
           elif [ "$CURRENT_MINUTES" -ge 630 ] || [ "${{ github.event.inputs.with_chips }}" = "true" ]; then
             echo "[workflow] 觸發晚上完整更新模式（含 1D/3D/5D 籌碼集中度與短沖避雷）"
-            python -m scripts.main --with-chips
+            python -m scripts.main --with-chips $FORCE_FLAG
           elif [ "$CURRENT_MINUTES" -lt 630 ]; then
-            # 晚上 18:30 之前 (含 13:35 收盤快刷與 17:46 第一波)：分點尚未結算完畢，一律執行快速更新模式
-            echo "[workflow] 觸發收盤/第一波快速更新模式（不含券商分點籌碼，~45s 快速產出）"
-            python -m scripts.main
+            # 晚上 18:30 之前 (含 13:35 收盤快刷與 17:46 第一波)：分點尚未結算完畢，一律執行快速更新模式並啟用日期守門員
+            echo "[workflow] 觸發收盤/第一波快速更新模式（不含券商分點籌碼，~45s 快速產出，附 Date Guard）"
+            python -m scripts.main --check-date $FORCE_FLAG
           else
             echo "[workflow] 預設更新模式（含籌碼）"
-            python -m scripts.main --with-chips
+            python -m scripts.main --with-chips $FORCE_FLAG
           fi
 
       - name: Commit and push updated stock-pool.json

@@ -392,6 +392,41 @@ def fetch_all_rankings() -> Dict:
     return result
 
 
+def check_rankings_date_guard(rankings: Dict, verbose: bool = True) -> Tuple[bool, str, str]:
+    """
+    富邦排行榜日期守門員 (Date Guard)
+    檢查核心排行（成交量前100、成交值前100）是否已更新至台灣時間今日。
+
+    Returns:
+        (is_fresh: bool, fubon_date_str: str, today_date_str: str)
+    """
+    from datetime import datetime, timezone, timedelta
+    taiwan_tz = timezone(timedelta(hours=8))
+    now_tw = datetime.now(taiwan_tz)
+    today_md = f'{now_tw.month:02d}/{now_tw.day:02d}'
+
+    sample_dates = []
+    for k in ['top100Volume', 'valueTop', 'priceGain']:
+        d = rankings.get(k, {}).get('date', '')
+        if d:
+            parts = d.replace('-', '/').split('/')
+            if len(parts) >= 2:
+                try:
+                    sample_dates.append(f'{int(parts[-2]):02d}/{int(parts[-1]):02d}')
+                except ValueError:
+                    pass
+
+    fubon_md = sample_dates[0] if sample_dates else ''
+    is_today = (fubon_md == today_md)
+
+    if verbose:
+        if is_today:
+            print(f'  [fubon Date Guard] ✅ 富邦量價排行日期 ({fubon_md}) 與今日 ({today_md}) 一致，數據已為最新收盤狀態！')
+        else:
+            print(f'  [fubon Date Guard] ⚠️ 富邦量價排行日期 ({fubon_md}) 尚未跳至今日 ({today_md})，可能仍在結算中或為前一交易日快取。')
+
+    return is_today, fubon_md, today_md
+
 
 # ── 基本面與同業估值（Phase 2 方案 3 & 方案 6）────────────────
 CAPITAL_TTL_DAYS = 28        # 實收資本額更新週期：28 天（約 4 週，依使用者規範）
