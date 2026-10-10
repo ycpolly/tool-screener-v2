@@ -1,63 +1,34 @@
 <template>
-  <Teleport to="body">
-    <dialog
-      v-if="isOpen"
-      :class="{ 'modal-open': isOpen }"
-      class="modal modal-bottom sm:modal-middle select-none z-50"
-    >
-      <div
-        class="modal-box max-w-lg w-full bg-base-100 border border-base-300 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-xl max-h-[90vh] flex flex-col safe-pb-modal"
-      >
-        <!-- Modal Header -->
-        <div class="flex items-center justify-between pb-2.5 border-b border-base-300/80 shrink-0">
-          <div class="flex items-center gap-2 min-w-0">
-            <h3 class="text-base sm:text-lg font-bold text-base-content flex items-center gap-1.5 truncate">
-              <span
-                class="font-numeric cursor-pointer hover:underline touch-manipulation"
-                :title="UI_STRINGS.SEARCH?.searchCodeTooltip"
-                @click="$emit('searchCode', stock?.code)"
-              >
-                {{ stock?.code }}
-              </span>
-              <span class="truncate">{{ stock?.name }}</span>
-              <span class="text-base-content/80 font-medium text-sm sm:text-base shrink-0">· {{ UI_STRINGS.LIFECYCLE.titleSuffix }}</span>
-            </h3>
-          </div>
+  <BaseStockModal
+    :is-open="isOpen"
+    :stock="stock"
+    :title-suffix="UI_STRINGS.LIFECYCLE.titleSuffix"
+    :close-aria-label="UI_STRINGS.LIFECYCLE.closeBtn"
+    @close="$emit('close')"
+    @search-code="$emit('searchCode', $event)"
+  >
+    <template #header-actions>
+      <!-- AB 測試版面切換器：時間軸 vs 表格 -->
+      <div class="join bg-base-200 p-0.5 rounded-lg border border-base-300 text-xs">
+        <button
+          type="button"
+          class="px-2 py-1 rounded-md font-medium transition-colors cursor-pointer"
+          :class="viewMode === 'timeline' ? 'bg-base-100 text-base-content font-bold shadow-xs' : 'text-base-content/60 hover:text-base-content'"
+          @click="viewMode = 'timeline'"
+        >
+          {{ UI_STRINGS.LIFECYCLE.viewTimeline }}
+        </button>
+        <button
+          type="button"
+          class="px-2 py-1 rounded-md font-medium transition-colors cursor-pointer"
+          :class="viewMode === 'table' ? 'bg-base-100 text-base-content font-bold shadow-xs' : 'text-base-content/60 hover:text-base-content'"
+          @click="viewMode = 'table'"
+        >
+          {{ UI_STRINGS.LIFECYCLE.viewTable }}
+        </button>
+      </div>
+    </template>
 
-          <div class="flex items-center gap-2 shrink-0">
-            <!-- AB 測試版面切換器：時間軸 vs 表格 -->
-            <div class="join bg-base-200 p-0.5 rounded-lg border border-base-300 text-xs">
-              <button
-                type="button"
-                class="px-2 py-1 rounded-md font-medium transition-colors cursor-pointer"
-                :class="viewMode === 'timeline' ? 'bg-base-100 text-base-content font-bold shadow-xs' : 'text-base-content/60 hover:text-base-content'"
-                @click="viewMode = 'timeline'"
-              >
-                {{ UI_STRINGS.LIFECYCLE.viewTimeline }}
-              </button>
-              <button
-                type="button"
-                class="px-2 py-1 rounded-md font-medium transition-colors cursor-pointer"
-                :class="viewMode === 'table' ? 'bg-base-100 text-base-content font-bold shadow-xs' : 'text-base-content/60 hover:text-base-content'"
-                @click="viewMode = 'table'"
-              >
-                {{ UI_STRINGS.LIFECYCLE.viewTable }}
-              </button>
-            </div>
-
-            <!-- 關閉按鈕 -->
-            <button
-              type="button"
-              class="btn btn-sm btn-ghost btn-circle text-base-content/60 hover:text-base-content"
-              :aria-label="UI_STRINGS.LIFECYCLE.closeBtn"
-              @click="$emit('close')"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
 
         <!-- 無資料狀態 -->
         <div v-if="rows.length === 0" class="py-12 text-center text-sm text-base-content/50 border border-base-300/70 rounded-xl">
@@ -224,14 +195,7 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- 背景遮罩 (點擊關閉) -->
-      <form method="dialog" class="modal-backdrop" @click="$emit('close')">
-        <button>close</button>
-      </form>
-    </dialog>
-  </Teleport>
+  </BaseStockModal>
 </template>
 
 <script setup>
@@ -239,6 +203,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 import { UI_STRINGS } from '../../constants/ui-strings.js'
 import { getStockLifecycle } from '../../engine/screener.js'
 import Sparkline from '../Sparkline.vue'
+import BaseStockModal from './BaseStockModal.vue'
 
 const props = defineProps({
   isOpen: {

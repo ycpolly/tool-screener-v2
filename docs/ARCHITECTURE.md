@@ -101,10 +101,11 @@ tool-screener-v2/
 │   │   ├── StockCardActions.vue    ← 極簡快捷操作列（代號名稱複製 + 外部籌碼資券盤後連結）
 │   │   ├── Sparkline.vue       ← 10日走勢圖（K棒 + 均線 + KD）
 │   │   └── modals/
+│   │       ├── BaseStockModal.vue ← 個股彈窗共用外殼（Teleport、響應式 Bottom Sheet、代號快速代入搜尋 Header 與 Backdrop 遮罩）
 │   │       ├── StockPoolModal.vue ← 股票池來源總覽與排行榜名單
 │   │       ├── PriceCalcModal.vue ← 價格速算 Bottom Sheet（基於現價 vs 基於昨收雙欄階梯）
 │   │       ├── StockLifecycleModal.vue ← 近日表現 Bottom Sheet（7日價量變化與策略命中歷程，支援時光機回測後續 T+N 跨越時光分界線自由滑動覆盤）
-│   │       ├── StockRSModal.vue   ← 相對大盤 5 日強弱 (RS) 明細 Bottom Sheet（個股 vs 大盤 5 日走勢、超額報酬與時間序列逐日對照表）
+│   │       ├── StockRSModal.vue   ← 相對大盤 5 日強弱 (RS) 明細 Bottom Sheet（置頂超額 RS 摘要、個股 vs 大盤雙欄走勢與逐日對照表）
 │   │       ├── RiskModal.vue   ← 空間與風控全貌（天花板/支撐/風報比）
 │   │       └── AvoidModal.vue  ← 避雷區（法人/主力/投信 賣超）
 │   ├── composables/
