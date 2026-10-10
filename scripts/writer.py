@@ -534,6 +534,7 @@ def build_stock_pool(
         rev_entry = (revenue_data.get(code) if revenue_data else None) or existing_revenue.get(code, {})
         revenue_yoy = rev_entry.get('revenueYoY')
         revenue_mom = rev_entry.get('revenueMoM')
+        revenue_latest_month = rev_entry.get('revenueLatestMonth')
         # ── Phase 4: 綜合評分與細項拆解 (rankScore & rankBreakdown) ──
         rank_info = _compute_rank_score(
             revenue_yoy=revenue_yoy,
