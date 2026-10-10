@@ -1,4 +1,4 @@
-import { ref, readonly } from 'vue'
+import { ref, readonly, shallowRef } from 'vue'
 import { UI_STRINGS } from '../constants/ui-strings.js'
 
 /**
@@ -7,7 +7,7 @@ import { UI_STRINGS } from '../constants/ui-strings.js'
  * 職責：載入資料並計算避雷警示（法人/主力賣超）
  */
 
-const _stocks   = ref([])
+const _stocks   = shallowRef([])
 const _rankings = ref({})
 const _market   = ref(null)
 const _meta     = ref(null)

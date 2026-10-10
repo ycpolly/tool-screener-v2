@@ -21,13 +21,22 @@ defineProps({
 })
 
 onMounted(() => {
-  const SCRIPT_URL = 'https://widgets.tradingview-widget.com/w/zh_TW/tv-ticker-tape.js'
-  if (!document.querySelector(`script[src="${SCRIPT_URL}"]`)) {
-    const script = document.createElement('script')
-    script.type = 'module'
-    script.src = SCRIPT_URL
-    script.async = true
-    document.head.appendChild(script)
+  const loadScript = () => {
+    const SCRIPT_URL = 'https://widgets.tradingview-widget.com/w/zh_TW/tv-ticker-tape.js'
+    if (!document.querySelector(`script[src="${SCRIPT_URL}"]`)) {
+      const script = document.createElement('script')
+      script.type = 'module'
+      script.src = SCRIPT_URL
+      script.async = true
+      document.head.appendChild(script)
+    }
+  }
+
+  // 避免首頁開啟時外部腳本與第三方連線搶佔主執行緒與資料庫載入資源
+  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+    window.requestIdleCallback(loadScript, { timeout: 1500 })
+  } else {
+    setTimeout(loadScript, 200)
   }
 })
 </script>

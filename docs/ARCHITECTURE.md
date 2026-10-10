@@ -87,7 +87,7 @@ tool-screener-v2/
 │   ├── assets/css/
 │   │   └── main.css            ← CSS 變數（漲跌色、字型 token 等）
 │   ├── components/
-│   │   ├── MarketBanner.vue    ← TradingView 即時大盤走馬燈橫幅（加權指數 INDEX:TAIEX & 櫃買指數 TPEX:IX0043，採用 compact 模式與自訂漲跌色彩變數）
+│   │   ├── MarketBanner.vue    ← TradingView 即時大盤走馬燈橫幅（加權指數 INDEX:TAIEX & 櫃買指數 TPEX:IX0043，採用 compact 模式、自訂漲跌色彩變數與 requestIdleCallback 延遲掛載）
 │   │   ├── ScreenerPanel.vue   ← 篩選參數面板（支援多模式擴充）
 │   │   ├── SearchBar.vue       ← 即時個股搜尋與多欄位排序工具列
 │   │   ├── StockTable.vue      ← 主選股結果容器（漸進式渲染與淘汰分組）
@@ -110,7 +110,7 @@ tool-screener-v2/
 │   │       ├── RiskModal.vue   ← 空間與風控全貌（天花板/支撐/風報比）
 │   │       └── AvoidModal.vue  ← 避雷區（法人/主力/投信 賣超）
 │   ├── composables/
-│   │   ├── useStockPool.js     ← 載入與快取 stock-pool.json
+│   │   ├── useStockPool.js     ← 載入與快取 stock-pool.json（採用 shallowRef 大陣列響應式降載，免除深層 Proxy 負擔）
 │   │   ├── useScreener.js      ← 篩選邏輯（呼叫 engine，不碰 DOM）
 │   │   └── useRealtimeQuotes.js← GCP 即時行情（富果 API + TWSE MIS fallback）
 │   ├── engine/
