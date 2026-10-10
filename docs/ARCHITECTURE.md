@@ -293,6 +293,7 @@ Python 輸出 → `public/data/stock-pool.json`
 - `categories` 為字串陣列，前端篩選與 badge 顯示的唯一依據
 - `isDisposed` 每次更新必須即時從官方 API 重新拉取，嚴禁沿用上次結果
 - `history10d` 的長度保證為 10~20 筆（不足時用最早一筆補齊，前端不需防守）
+- `market.taiex.history10d` 與 `market.otc.history10d` 保證保留近 20~25 筆交易日歷史（供前端 `sliceStockAt` 時光機回溯至 5~7 日前時，仍可完整對照當時往前 5 日之基準日收盤點數，精確推算相對大盤 5 日 RS 明細與逐日時間序列）
 - `chipsHistory` 為字典結構（`{ [YYYY-MM-DD]: { categories: string[], chips: Object } }`），由後端 `writer.py` 每日自動累積保留近 10 個交易日快照，供前端 `sliceStockAt` 時光機還原真實歷史籌碼與避雷標籤
 - `paidInCapital` 為實收資本額（單位：億元，小數點後 2 位，例如 `11.52`；<= 30 億為輕型股），採用本地快取 `cache/fundamentals.json`，更新週期 (TTL) 嚴格遵守 28 天（約 4 週更新一次）
 - `pe`（本益比）、`industryPe`（同業平均本益比）與 `peDiscount`（同業折溢價 %，公式: `(pe - industryPe) / industryPe * 100`）：後端依富邦個股基本資料抓取近 4 季 EPS 合計（`trailingEps`），每日依盤後/盤中最新收盤價實時高頻動態計算 `pe = round(price / trailingEps, 2)`；同業 PE 快取更新週期為 7 天；若公司虧損或無 PE（顯示 N/A）則優雅保持 `null`；時光機回溯 `sliceStockAt` 支援歷史倒流動態推算 당시 PE 與折溢價

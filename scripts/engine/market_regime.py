@@ -82,9 +82,9 @@ def _calc_index_indicators(bars: List[Dict]) -> Optional[Dict]:
 
     kd_status = _kd_status_label(curr_kd['k'], curr_kd['d'], prev_kd['k'], prev_kd['d'])
 
-    # 近 10 日簡要歷史 (含 date, close, chg5d)
+    # 近 25 日簡要歷史 (含 date, close, chg5d)，供時光機歷史回溯與 5D RS 基準日對照
     history10d = []
-    num_hist = min(len(bars), 10)
+    num_hist = min(len(bars), 25)
     for idx in range(len(bars) - num_hist, len(bars)):
         b = bars[idx]
         b_c = b['c']
