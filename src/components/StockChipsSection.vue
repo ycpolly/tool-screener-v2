@@ -6,16 +6,76 @@
       class="pt-2 pb-1.5 border-t border-base-300/40 space-y-1 text-sm font-normal text-base-content/80 leading-normal"
     >
       <!-- 籌碼集中度 (百分比加粗，正值紅字，帶明確空白) -->
-      <div v-if="chipsConcentrationItems.length > 0" class="font-numeric flex items-baseline flex-wrap">
-        <span :class="chipsTrendItem ? 'mr-1' : 'mr-2'">{{ UI_STRINGS.CHIPS.concentrationLabel }}</span>
+      <div v-if="chipsConcentrationItems.length > 0 || chipsTrendItem" class="font-numeric flex items-baseline flex-wrap">
+        <span class="mr-1.5 select-none font-sans text-base-content/75">{{ UI_STRINGS.CHIPS?.concentrationLabel || '籌碼' }}</span>
+
+        <!-- 方案 4：籌碼趨勢箭頭徽章 -->
         <span
           v-if="chipsTrendItem"
-          class="mr-2 select-none font-bold"
-          :class="chipsTrendItem.colorClass"
+          class="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded border text-xs font-bold mr-2 select-none align-baseline"
+          :class="chipsTrendItem.badgeClass"
           :title="chipsTrendItem.tooltip"
         >
-          ({{ chipsTrendItem.text }})
+          <!-- 連 3 日集中雙折線箭頭 -->
+          <svg
+            v-if="chipsTrendItem.icon === 'double-up'"
+            class="w-3 h-3 shrink-0"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M4 12.5l4-4 4 4" />
+            <path d="M4 7.5l4-4 4 4" />
+          </svg>
+
+          <!-- 連 2 日集中單折線箭頭 -->
+          <svg
+            v-else-if="chipsTrendItem.icon === 'up'"
+            class="w-3 h-3 shrink-0"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M4 10.5l4-4 4 4" />
+          </svg>
+
+          <!-- 持平向右箭頭 -->
+          <svg
+            v-else-if="chipsTrendItem.icon === 'flat'"
+            class="w-3 h-3 shrink-0"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5.5 4l4 4-4 4" />
+          </svg>
+
+          <!-- 發散向下箭頭 -->
+          <svg
+            v-else-if="chipsTrendItem.icon === 'down'"
+            class="w-3 h-3 shrink-0"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M4 5.5l4 4 4-4" />
+          </svg>
+
+          <span>{{ chipsTrendItem.text }}</span>
         </span>
+
         <template v-for="(item, idx) in chipsConcentrationItems" :key="item.label">
           <span class="inline-flex items-baseline gap-1">
             <span>{{ item.label }}</span>
@@ -87,40 +147,50 @@ const chipsTrendItem = computed(() => {
 
   if (isNewEntry) {
     return {
+      type: 'new',
+      icon: null,
       text: UI_STRINGS.CHIPS_TREND?.newBadge || '新進',
       tooltip: UI_STRINGS.CHIPS_TREND?.new || '新進追蹤池',
-      colorClass: 'text-base-content/60',
+      badgeClass: 'text-base-content/70 bg-base-300/40 border-base-300/60',
     }
   }
 
   if (trend === 'UP') {
     if (score >= 3) {
       return {
-        text: UI_STRINGS.CHIPS_TREND?.streak3Badge || '集中 3',
+        type: 'streak3',
+        icon: 'double-up',
+        text: UI_STRINGS.CHIPS_TREND?.streak3Badge || '連 3 集中',
         tooltip: UI_STRINGS.CHIPS_TREND?.streak3 || '籌碼連 3 日集中',
-        colorClass: 'text-rise',
+        badgeClass: 'text-rise bg-rise/10 border-rise/30',
       }
     }
     return {
-      text: UI_STRINGS.CHIPS_TREND?.streak2Badge || '集中 2',
+      type: 'streak2',
+      icon: 'up',
+      text: UI_STRINGS.CHIPS_TREND?.streak2Badge || '連 2 集中',
       tooltip: UI_STRINGS.CHIPS_TREND?.streak2 || '籌碼連 2 日集中',
-      colorClass: 'text-rise',
+      badgeClass: 'text-rise bg-rise/10 border-rise/30',
     }
   }
 
   if (trend === 'FLAT') {
     return {
+      type: 'flat',
+      icon: 'flat',
       text: UI_STRINGS.CHIPS_TREND?.flatBadge || '持平',
       tooltip: UI_STRINGS.CHIPS_TREND?.flat || '籌碼持平',
-      colorClass: 'text-base-content/60',
+      badgeClass: 'text-base-content/70 bg-base-300/40 border-base-300/60',
     }
   }
 
   if (trend === 'DOWN') {
     return {
+      type: 'down',
+      icon: 'down',
       text: UI_STRINGS.CHIPS_TREND?.divergeBadge || '發散',
       tooltip: UI_STRINGS.CHIPS_TREND?.down || '籌碼連續發散',
-      colorClass: 'text-fall',
+      badgeClass: 'text-fall bg-fall/10 border-fall/30',
     }
   }
 
@@ -140,7 +210,7 @@ const dayTradersInfo = computed(() => {
 })
 
 const hasChipsSection = computed(() => {
-  return chipsConcentrationItems.value.length > 0 || !!dayTradersInfo.value
+  return chipsConcentrationItems.value.length > 0 || !!dayTradersInfo.value || !!chipsTrendItem.value
 })
 
 const chipsNoticeText = computed(() => {

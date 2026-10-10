@@ -418,6 +418,19 @@ export const UI_STRINGS = {
     noRecord: '無分點籌碼記錄',
   },
 
+  CHIPS_TREND: {
+    streak3Badge: '連 3 集中',
+    streak2Badge: '連 2 集中',
+    flatBadge: '持平',
+    divergeBadge: '發散',
+    newBadge: '新進',
+    streak3: '籌碼連 3 日集中',
+    streak2: '籌碼連 2 日集中',
+    flat: '籌碼持平',
+    down: '籌碼連續發散',
+    new: '新進追蹤池',
+  },
+
   LIFECYCLE: {
     title: '7 日策略生命週期',
     titleSuffix: '近日表現',
