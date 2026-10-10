@@ -680,7 +680,15 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "水泥",
+        "水泥製品",
+        "汽電共生",
+        "預拌混凝土",
+        "電力"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1101.djhtm"
     },
     {
       "code": "1102",
@@ -1309,7 +1317,15 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "水泥",
+        "汽電共生",
+        "高爐水泥",
+        "預拌混凝土",
+        "電力"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1102.djhtm"
     },
     {
       "code": "1216",
@@ -1931,7 +1947,16 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "乳製品",
+        "食品加工",
+        "非酒精飲料",
+        "速食麵",
+        "穀類烘焙製品",
+        "飲料相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1216.djhtm"
     },
     {
       "code": "1229",
@@ -2515,7 +2540,14 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "麵粉",
+        "大宗物資",
+        "系統整合",
+        "軟體業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1229.djhtm"
     },
     {
       "code": "1259",
@@ -2957,7 +2989,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "餐飲",
+        "旅宿／餐飲"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1259.djhtm"
     },
     {
       "code": "1301",
@@ -3635,7 +3672,21 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "PVC",
+        "塑化原料",
+        "AN",
+        "EVA",
+        "PE",
+        "PP",
+        "合成樹脂",
+        "其他化工產品",
+        "鹼業",
+        "化學工業",
+        "化纖原料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1301.djhtm"
     },
     {
       "code": "1303",
@@ -4341,7 +4392,30 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "塑膠加工",
+        "塑化製品",
+        "DOP",
+        "EG",
+        "PA",
+        "丁二醇",
+        "化學纖維",
+        "印刷電路板",
+        "合成樹脂",
+        "玻纖布",
+        "塑膠皮布",
+        "聚酯粒",
+        "聚酯棉",
+        "聚酯絲",
+        "銅箔",
+        "銅箔基板",
+        "化學工業",
+        "化纖原料",
+        "印刷電路板相關",
+        "塑化原料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1303.djhtm"
     },
     {
       "code": "1304",
@@ -4810,7 +4884,15 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "PE",
+        "塑化原料",
+        "ABS",
+        "EVA",
+        "PS"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1304.djhtm"
     },
     {
       "code": "1310",
@@ -5260,7 +5342,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "SM",
+        "塑化原料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1310.djhtm"
     },
     {
       "code": "1312",
@@ -5755,7 +5842,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "SM",
+        "塑化原料",
+        "ABS"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1312.djhtm"
     },
     {
       "code": "1313",
@@ -6209,7 +6302,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "DOP",
+        "塑化原料",
+        "PVC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1313.djhtm"
     },
     {
       "code": "1314",
@@ -6861,7 +6960,16 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "CPL",
+        "化纖原料",
+        "AN",
+        "尼龍粒",
+        "資產股",
+        "化學纖維"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1314.djhtm"
     },
     {
       "code": "1325",
@@ -7334,7 +7442,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "不織布",
+        "工業紡織品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1325.djhtm"
     },
     {
       "code": "1326",
@@ -7986,7 +8099,27 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "PTA",
+        "化纖原料",
+        "ABS",
+        "PP",
+        "PS",
+        "SM",
+        "二甲基甲醯胺(DMF)",
+        "尼龍加工絲",
+        "尼龍粒",
+        "尼龍絲",
+        "其他化工產品",
+        "芳香烴",
+        "粘膠",
+        "酚",
+        "化學工業",
+        "化學纖維",
+        "塑化原料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1326.djhtm"
     },
     {
       "code": "1341",
@@ -8424,7 +8557,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "塑膠皮布",
+        "塑化製品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1341.djhtm"
     },
     {
       "code": "1402",
@@ -9028,7 +9166,27 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "聚酯粒",
+        "化學纖維",
+        "PTA",
+        "成衣製造",
+        "成衣銷售／零售",
+        "控股公司",
+        "棉紡業",
+        "資產股",
+        "寢具",
+        "聚酯加工絲",
+        "聚酯棉",
+        "聚酯絲",
+        "織布業",
+        "化纖原料",
+        "成衣",
+        "家居用品",
+        "紡紗"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1402.djhtm"
     },
     {
       "code": "1409",
@@ -9530,7 +9688,16 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "聚酯粒",
+        "化學纖維",
+        "塑膠加工",
+        "資產股",
+        "聚酯絲",
+        "塑化製品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1409.djhtm"
     },
     {
       "code": "1434",
@@ -10006,7 +10173,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "尼龍製品",
+        "工業紡織品",
+        "加油站",
+        "尼龍塔夫塔布",
+        "其他公用事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1434.djhtm"
     },
     {
       "code": "1439",
@@ -10450,7 +10625,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "營建",
+        "地產",
+        "資產股"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1439.djhtm"
     },
     {
       "code": "1440",
@@ -10923,7 +11104,17 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "聚酯棉",
+        "化學纖維",
+        "棉紡業",
+        "資產股",
+        "聚酯粒",
+        "聚酯絲",
+        "紡紗"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1440.djhtm"
     },
     {
       "code": "1443",
@@ -11365,7 +11556,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "倉儲服務",
+        "運輸事業",
+        "物流業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1443.djhtm"
     },
     {
       "code": "1455",
@@ -11830,7 +12027,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "尼龍粒",
+        "化學纖維",
+        "尼龍加工絲",
+        "尼龍絲"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1455.djhtm"
     },
     {
       "code": "1476",
@@ -12425,7 +12629,13 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "成衣製造",
+        "成衣",
+        "織布業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1476.djhtm"
     },
     {
       "code": "1503",
@@ -13004,7 +13214,24 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電機",
+        "電力設備",
+        "引擎相關",
+        "充電樁",
+        "車用充電相關",
+        "重電設備",
+        "配電盤",
+        "設備儀器商",
+        "智慧電網相關",
+        "資產股",
+        "電氣開關設備",
+        "電氣零件與設備",
+        "變電設備",
+        "汽機車零組件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1503.djhtm"
     },
     {
       "code": "1504",
@@ -13610,7 +13837,24 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "電機",
+        "電力設備",
+        "小家電",
+        "自動化設備",
+        "冷氣機",
+        "洗衣機",
+        "重電設備",
+        "家電",
+        "配電工程",
+        "液晶電視",
+        "資產股",
+        "電冰箱",
+        "變頻器",
+        "產業機械"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1504.djhtm"
     },
     {
       "code": "1513",
@@ -14199,7 +14443,21 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "電機",
+        "電力設備",
+        "空調製冷",
+        "重電設備",
+        "配電工程",
+        "停車場",
+        "智慧電網相關",
+        "電氣開關設備",
+        "輸配電設備",
+        "其他公用事業",
+        "產業機械"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1513.djhtm"
     },
     {
       "code": "1519",
@@ -14769,7 +15027,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "變電設備",
+        "電力設備",
+        "配電盤"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1519.djhtm"
     },
     {
       "code": "1560",
@@ -15358,7 +15622,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "磨料磨具",
+        "產業機械",
+        "矽晶圓",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1560.djhtm"
     },
     {
       "code": "1569",
@@ -15906,7 +16177,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "模具沖壓",
+        "電子零件元件",
+        "機殼"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1569.djhtm"
     },
     {
       "code": "1590",
@@ -16489,7 +16766,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "氣動元件",
+        "機械零組件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1590.djhtm"
     },
     {
       "code": "1595",
@@ -17078,7 +17360,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "PCB相關設備",
+        "設備儀器商",
+        "半導體製程設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1595.djhtm"
     },
     {
       "code": "1599",
@@ -17520,7 +17808,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "沙灘車",
+        "車輛整車",
+        "電動機車",
+        "機車"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1599.djhtm"
     },
     {
       "code": "1604",
@@ -17958,7 +18253,19 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "家電",
+        "小家電",
+        "冷氣機",
+        "物流業",
+        "液晶電視",
+        "資產股",
+        "電冰箱",
+        "顯示器",
+        "運輸事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1604.djhtm"
     },
     {
       "code": "1605",
@@ -18613,7 +18920,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "不鏽鋼",
+        "電力電纜",
+        "電線電纜"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1605.djhtm"
     },
     {
       "code": "1615",
@@ -19063,7 +19376,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "電力電纜",
+        "電線電纜"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1615.djhtm"
     },
     {
       "code": "1709",
@@ -19715,7 +20033,14 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "烷基苯",
+        "化學工業",
+        "合成樹脂",
+        "酚"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1709.djhtm"
     },
     {
       "code": "1710",
@@ -20171,7 +20496,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "EG",
+        "化纖原料",
+        "其他化工產品",
+        "化學工業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1710.djhtm"
     },
     {
       "code": "1711",
@@ -20671,7 +21003,16 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "染料",
+        "顏料",
+        "化學工業",
+        "半導體化學品",
+        "光阻劑",
+        "其他化工產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1711.djhtm"
     },
     {
       "code": "1714",
@@ -21196,7 +21537,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "正烷屬烴",
+        "化學工業",
+        "其他化工產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1714.djhtm"
     },
     {
       "code": "1717",
@@ -21800,7 +22147,13 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "合成樹脂",
+        "化學工業",
+        "半導體化學品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1717.djhtm"
     },
     {
       "code": "1718",
@@ -22395,7 +22748,17 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "EG",
+        "化纖原料",
+        "其他化工產品",
+        "聚酯加工絲",
+        "聚酯絲",
+        "化學工業",
+        "化學纖維"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1718.djhtm"
     },
     {
       "code": "1720",
@@ -22839,7 +23202,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "西藥製劑",
+        "醫藥產業",
+        "食品生技",
+        "學名藥",
+        "生物科技"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1720.djhtm"
     },
     {
       "code": "1727",
@@ -23461,7 +23832,16 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "強酸產品",
+        "化學工業",
+        "半導體化學品",
+        "其他化工產品",
+        "染料",
+        "顏料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1727.djhtm"
     },
     {
       "code": "1732",
@@ -23901,7 +24281,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "衛生清潔用品",
+        "化學工業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1732.djhtm"
     },
     {
       "code": "1752",
@@ -24351,7 +24736,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "西藥製劑",
+        "醫藥產業",
+        "學名藥"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1752.djhtm"
     },
     {
       "code": "1760",
@@ -24799,7 +25190,21 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "西藥製劑",
+        "醫藥產業",
+        "美妝保養品",
+        "食品生技",
+        "專利藥",
+        "新藥研發",
+        "學名藥",
+        "檢驗試劑／紙",
+        "生物科技",
+        "時尚產業",
+        "體外診斷用醫材"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1760.djhtm"
     },
     {
       "code": "1762",
@@ -25245,7 +25650,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "原料藥",
+        "醫藥產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1762.djhtm"
     },
     {
       "code": "1776",
@@ -25693,7 +26103,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "PU樹脂",
+        "化學工業",
+        "其他化工產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1776.djhtm"
     },
     {
       "code": "1781",
@@ -26141,7 +26557,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "血壓計",
+        "診斷與監測用醫材"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1781.djhtm"
     },
     {
       "code": "1785",
@@ -26822,7 +27243,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "其他半導體耗材",
+        "IC製造",
+        "循環經濟",
+        "貴金屬",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1785.djhtm"
     },
     {
       "code": "1802",
@@ -27464,7 +27893,16 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "玻璃",
+        "建材",
+        "玻纖布",
+        "複合材料",
+        "印刷電路板相關",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1802.djhtm"
     },
     {
       "code": "1815",
@@ -28173,7 +28611,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "玻纖布",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_1815.djhtm"
     },
     {
       "code": "2002",
@@ -28815,7 +29258,20 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "冷軋鋼捲",
+        "板鋼",
+        "棒鋼",
+        "塗鍍鋼捲",
+        "熱軋鋼捲",
+        "線材盤元",
+        "鋼板",
+        "鋼胚",
+        "鍍鋅鋼捲",
+        "條鋼"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2002.djhtm"
     },
     {
       "code": "2006",
@@ -29267,7 +29723,13 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "鋼筋",
+        "條鋼",
+        "型鋼"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2006.djhtm"
     },
     {
       "code": "2024",
@@ -29709,7 +30171,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "棒鋼",
+        "條鋼",
+        "線材盤元"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2024.djhtm"
     },
     {
       "code": "2027",
@@ -30337,7 +30805,17 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "不鏽鋼",
+        "不鏽鋼品",
+        "不鏽鋼管",
+        "鋁",
+        "螺絲螺帽",
+        "非鐵金屬",
+        "線材盤元"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2027.djhtm"
     },
     {
       "code": "2049",
@@ -30915,7 +31393,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "滑軌",
+        "機械零組件",
+        "機器手臂",
+        "機器人"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2049.djhtm"
     },
     {
       "code": "2059",
@@ -31511,7 +31996,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "其他電子零件",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2059.djhtm"
     },
     {
       "code": "2061",
@@ -32088,7 +32578,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "漆包線",
+        "電線電纜"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2061.djhtm"
     },
     {
       "code": "2104",
@@ -32536,7 +33031,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "碳煙",
+        "橡膠工業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2104.djhtm"
     },
     {
       "code": "2105",
@@ -33119,7 +33619,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "輪胎",
+        "橡膠工業",
+        "橡膠製品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2105.djhtm"
     },
     {
       "code": "2207",
@@ -33696,7 +34202,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "汽車銷售",
+        "汽車服務相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2207.djhtm"
     },
     {
       "code": "2239",
@@ -34138,7 +34649,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "汽機車零組件",
+        "車用沖壓件",
+        "車用金屬成型"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2239.djhtm"
     },
     {
       "code": "2241",
@@ -34618,7 +35135,11 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "汽機車零組件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2241.djhtm"
     },
     {
       "code": "2247",
@@ -35064,7 +35585,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "汽車銷售",
+        "汽車服務相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2247.djhtm"
     },
     {
       "code": "2254",
@@ -35536,7 +36062,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "車燈",
+        "汽機車零組件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2254.djhtm"
     },
     {
       "code": "2301",
@@ -36160,7 +36691,29 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電源供應器",
+        "電子零件元件",
+        "LED封裝",
+        "LED照明產品",
+        "PV Inverter",
+        "光纖被動元件",
+        "車用電子",
+        "車用鋰電池",
+        "無線充電",
+        "無線網路設備系統(WLAN)",
+        "週邊產品",
+        "電腦系統業",
+        "機殼",
+        "鍵盤",
+        "LED",
+        "太陽能",
+        "光通訊",
+        "電池",
+        "網通設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2301.djhtm"
     },
     {
       "code": "2302",
@@ -36606,7 +37159,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "二極體",
+        "分離式元件",
+        "電晶體"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2302.djhtm"
     },
     {
       "code": "2303",
@@ -37309,7 +37868,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "晶圓代工",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2303.djhtm"
     },
     {
       "code": "2305",
@@ -37801,7 +38365,15 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "設備儀器商",
+        "掃瞄器",
+        "醫學影像裝置",
+        "診斷與監測用醫材",
+        "週邊產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2305.djhtm"
     },
     {
       "code": "2308",
@@ -38444,7 +39016,38 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "電源供應器",
+        "電子零件元件",
+        "LED照明產品",
+        "PV Inverter",
+        "UPS",
+        "充電樁",
+        "系統整合",
+        "車用充電相關",
+        "車用電子",
+        "車用鋰電池",
+        "其他電子零件",
+        "散熱風扇馬達",
+        "散熱模組",
+        "晶片電阻",
+        "無線充電",
+        "雲端科技",
+        "電感",
+        "網通設備",
+        "機器人",
+        "變壓器",
+        "顯示器",
+        "Internet技術與基礎設施",
+        "LED",
+        "太陽能",
+        "被動元件",
+        "軟體業",
+        "電力設備",
+        "電池"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2308.djhtm"
     },
     {
       "code": "2313",
@@ -39102,7 +39705,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "印刷電路板",
+        "印刷電路板相關",
+        "HDI板",
+        "軟板"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2313.djhtm"
     },
     {
       "code": "2317",
@@ -39772,7 +40382,42 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子製造服務",
+        "電腦系統業",
+        "AI伺服器",
+        "ASIC伺服器",
+        "手機製造",
+        "平板電腦",
+        "印表機",
+        "伺服器",
+        "車用電子",
+        "穿戴式裝置",
+        "桌上型電腦",
+        "液晶電視",
+        "連接器",
+        "筆記型電腦製造",
+        "視訊轉換相關",
+        "雲端科技",
+        "遊戲機",
+        "電子書閱讀器",
+        "電動車",
+        "網通設備",
+        "語音助理",
+        "衛星通訊設備",
+        "機器人",
+        "顯示器",
+        "Internet技術與基礎設施",
+        "手機",
+        "車輛整車",
+        "家電",
+        "消費性電子產品",
+        "週邊產品",
+        "遊戲產業",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2317.djhtm"
     },
     {
       "code": "2321",
@@ -40210,7 +40855,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "網通設備",
+        "智慧電網相關",
+        "電話／傳真機",
+        "消費性電子產品",
+        "電力設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2321.djhtm"
     },
     {
       "code": "2324",
@@ -40842,7 +41495,26 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "筆記型電腦製造",
+        "電腦系統業",
+        "AI伺服器",
+        "手機製造",
+        "平板電腦",
+        "伺服器",
+        "車用電子",
+        "穿戴式裝置",
+        "液晶電視",
+        "智慧型手機",
+        "電子製造服務",
+        "網通設備",
+        "顯示器",
+        "手機",
+        "家電",
+        "消費性電子產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2324.djhtm"
     },
     {
       "code": "2327",
@@ -41553,7 +42225,16 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "晶片電阻",
+        "被動元件",
+        "MLCC",
+        "電容",
+        "電感",
+        "鉭質電解電容"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2327.djhtm"
     },
     {
       "code": "2330",
@@ -42231,7 +42912,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "晶圓代工",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2330.djhtm"
     },
     {
       "code": "2332",
@@ -42669,7 +43355,17 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "無線網路設備系統(WLAN)",
+        "網通設備",
+        "用戶端設備",
+        "安全監控",
+        "資安設備",
+        "網路交換器",
+        "工業電腦"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2332.djhtm"
     },
     {
       "code": "2337",
@@ -43299,7 +43995,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "非揮發性記憶體",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2337.djhtm"
     },
     {
       "code": "2340",
@@ -43914,7 +44615,16 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "LED晶粒",
+        "LED",
+        "LED照明產品",
+        "二極體",
+        "電晶體",
+        "分離式元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2340.djhtm"
     },
     {
       "code": "2344",
@@ -44601,7 +45311,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "非揮發性記憶體",
+        "IC製造",
+        "DRAM"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2344.djhtm"
     },
     {
       "code": "2345",
@@ -45210,7 +45926,13 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "網路交換器",
+        "網通設備",
+        "用戶端設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2345.djhtm"
     },
     {
       "code": "2347",
@@ -45827,7 +46549,15 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電腦通路商",
+        "電子通路",
+        "IC零組件通路商",
+        "手機零售通路商",
+        "電子元件代理商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2347.djhtm"
     },
     {
       "code": "2353",
@@ -46430,7 +47160,23 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "筆記型電腦",
+        "電腦系統業",
+        "AI伺服器",
+        "平板電腦",
+        "伺服器",
+        "投影機",
+        "桌上型電腦",
+        "教育筆電",
+        "週邊產品",
+        "電競筆電",
+        "電競週邊",
+        "顯示器",
+        "消費性電子產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2353.djhtm"
     },
     {
       "code": "2354",
@@ -47029,7 +47775,16 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "鎂鋁合金",
+        "電子零件元件",
+        "筆記型電腦用散熱模組",
+        "電子製造服務",
+        "散熱模組",
+        "電腦系統業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2354.djhtm"
     },
     {
       "code": "2356",
@@ -47650,7 +48405,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "筆記型電腦製造",
+        "電腦系統業",
+        "AI伺服器",
+        "伺服器",
+        "電子製造服務"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2356.djhtm"
     },
     {
       "code": "2357",
@@ -48234,7 +48997,24 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "筆記型電腦",
+        "電腦系統業",
+        "AI伺服器",
+        "主機板",
+        "桌上型電腦",
+        "教育筆電",
+        "智慧手錶",
+        "智慧型手機",
+        "電競筆電",
+        "電競週邊",
+        "繪圖卡",
+        "手機",
+        "穿戴式裝置",
+        "週邊產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2357.djhtm"
     },
     {
       "code": "2360",
@@ -48836,7 +49616,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "量測儀器",
+        "設備儀器商",
+        "半導體製程設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2360.djhtm"
     },
     {
       "code": "2367",
@@ -49335,7 +50121,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "印刷電路板",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2367.djhtm"
     },
     {
       "code": "2368",
@@ -49976,7 +50767,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "印刷電路板",
+        "印刷電路板相關",
+        "HDI板"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2368.djhtm"
     },
     {
       "code": "2375",
@@ -50435,7 +51232,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "鋁質電解電容",
+        "被動元件",
+        "散熱風扇馬達",
+        "晶片電阻",
+        "散熱模組"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2375.djhtm"
     },
     {
       "code": "2376",
@@ -51044,7 +51849,19 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "主機板",
+        "電腦系統業",
+        "AI伺服器",
+        "伺服器",
+        "筆記型電腦",
+        "週邊產品",
+        "電競筆電",
+        "電競週邊",
+        "繪圖卡"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2376.djhtm"
     },
     {
       "code": "2377",
@@ -51635,7 +52452,19 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "主機板",
+        "電腦系統業",
+        "伺服器",
+        "桌上型電腦",
+        "筆記型電腦",
+        "週邊產品",
+        "電競筆電",
+        "電競週邊",
+        "繪圖卡"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2377.djhtm"
     },
     {
       "code": "2379",
@@ -52248,7 +53077,20 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "網路通訊IC",
+        "IC設計",
+        "LCD控制IC",
+        "PC週邊IC",
+        "安全監控IC",
+        "無線網路IC",
+        "集線器IC",
+        "網路卡IC",
+        "影音IC",
+        "數位電視IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2379.djhtm"
     },
     {
       "code": "2382",
@@ -52909,7 +53751,15 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "筆記型電腦製造",
+        "電腦系統業",
+        "AI伺服器",
+        "伺服器",
+        "電子製造服務"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2382.djhtm"
     },
     {
       "code": "2383",
@@ -53512,7 +54362,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "銅箔基板",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2383.djhtm"
     },
     {
       "code": "2385",
@@ -54094,7 +54949,15 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "鍵盤",
+        "週邊產品",
+        "電源供應器",
+        "電競週邊",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2385.djhtm"
     },
     {
       "code": "2395",
@@ -54693,7 +55556,11 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "工業電腦"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2395.djhtm"
     },
     {
       "code": "2404",
@@ -55309,7 +56176,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "廠務工程",
+        "電子其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2404.djhtm"
     },
     {
       "code": "2408",
@@ -56004,7 +56876,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "DRAM",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2408.djhtm"
     },
     {
       "code": "2409",
@@ -56695,7 +57572,15 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "TFT-LCD",
+        "面板業",
+        "OLED",
+        "中小尺吋面板",
+        "觸控面板"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2409.djhtm"
     },
     {
       "code": "2412",
@@ -57336,7 +58221,16 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "電信／數據服務",
+        "通訊服務",
+        "多軌道衛星",
+        "行動通訊",
+        "衛星通訊服務",
+        "網通設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2412.djhtm"
     },
     {
       "code": "2424",
@@ -57776,7 +58670,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "衛星通訊服務",
+        "通訊服務",
+        "低軌道衛星",
+        "網通設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2424.djhtm"
     },
     {
       "code": "2426",
@@ -58403,7 +59304,18 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "LED晶粒",
+        "LED",
+        "MicroLED",
+        "二極體",
+        "光纖主動元件",
+        "電晶體",
+        "分離式元件",
+        "光通訊"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2426.djhtm"
     },
     {
       "code": "2428",
@@ -58849,7 +59761,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "熱敏電阻",
+        "被動元件",
+        "壓敏電阻"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2428.djhtm"
     },
     {
       "code": "2441",
@@ -59334,7 +60252,13 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC封裝",
+        "IC封裝測試",
+        "IC測試"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2441.djhtm"
     },
     {
       "code": "2449",
@@ -60013,7 +60937,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC測試",
+        "IC封裝測試"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2449.djhtm"
     },
     {
       "code": "2451",
@@ -60596,7 +61525,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "記憶體模組",
+        "電子零件元件",
+        "DRAM模組",
+        "Flash模組"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2451.djhtm"
     },
     {
       "code": "2454",
@@ -61228,7 +62164,23 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "手機晶片相關",
+        "IC設計",
+        "CPU",
+        "DSL晶片組",
+        "LCD控制IC",
+        "光碟機驅動IC",
+        "消費性IC",
+        "無線網路IC",
+        "網路通訊IC",
+        "影音IC",
+        "數位電視IC",
+        "數據機晶片組",
+        "衛星導航晶片組"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2454.djhtm"
     },
     {
       "code": "2455",
@@ -61832,7 +62784,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "光通訊元件磊晶",
+        "IC製造",
+        "砷化鎵相關",
+        "第三類半導體"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2455.djhtm"
     },
     {
       "code": "2458",
@@ -62305,7 +63264,16 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "觸控IC",
+        "IC設計",
+        "MCU",
+        "PC週邊IC",
+        "生物辨識IC",
+        "消費性IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2458.djhtm"
     },
     {
       "code": "2466",
@@ -62810,7 +63778,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "LED照明產品",
+        "LED",
+        "光纖被動元件",
+        "光通訊"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2466.djhtm"
     },
     {
       "code": "2467",
@@ -63389,7 +64364,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "PCB相關設備",
+        "設備儀器商",
+        "半導體製程設備",
+        "面板設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2467.djhtm"
     },
     {
       "code": "2474",
@@ -63957,7 +64939,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "鎂鋁合金",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2474.djhtm"
     },
     {
       "code": "2481",
@@ -64590,7 +65577,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "二極體",
+        "分離式元件",
+        "電晶體"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2481.djhtm"
     },
     {
       "code": "2484",
@@ -65213,7 +66206,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "石英元件",
+        "被動元件",
+        "振盪器",
+        "濾波器"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2484.djhtm"
     },
     {
       "code": "2485",
@@ -65717,7 +66717,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "視訊轉換相關",
+        "消費性電子產品",
+        "低雜訊降頻器",
+        "網通設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2485.djhtm"
     },
     {
       "code": "2489",
@@ -66176,7 +67183,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "液晶電視",
+        "家電",
+        "LCD顯示器",
+        "顯示器"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2489.djhtm"
     },
     {
       "code": "2492",
@@ -66876,7 +67890,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "MLCC",
+        "被動元件",
+        "晶片電阻",
+        "電容"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2492.djhtm"
     },
     {
       "code": "2504",
@@ -67324,7 +68345,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "預拌混凝土",
+        "水泥",
+        "資產股"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2504.djhtm"
     },
     {
       "code": "2515",
@@ -67787,7 +68814,15 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "基礎建設",
+        "營造工程",
+        "住宅建設",
+        "配電工程",
+        "電力設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2515.djhtm"
     },
     {
       "code": "2542",
@@ -68427,7 +69462,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "營建",
+        "地產"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2542.djhtm"
     },
     {
       "code": "2603",
@@ -69025,7 +70065,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "貨櫃航運",
+        "運輸事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2603.djhtm"
     },
     {
       "code": "2605",
@@ -69477,7 +70522,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "散裝航運",
+        "運輸事業",
+        "油輪"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2605.djhtm"
     },
     {
       "code": "2609",
@@ -70111,7 +71162,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "貨櫃航運",
+        "運輸事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2609.djhtm"
     },
     {
       "code": "2610",
@@ -70755,7 +71811,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "空運",
+        "運輸事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2610.djhtm"
     },
     {
       "code": "2614",
@@ -71226,7 +72287,16 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "寵物用品",
+        "傳產其他",
+        "有線電視",
+        "貨櫃場服務",
+        "傳播事業",
+        "運輸事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2614.djhtm"
     },
     {
       "code": "2615",
@@ -71818,7 +72888,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "貨櫃航運",
+        "運輸事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2615.djhtm"
     },
     {
       "code": "2618",
@@ -72450,7 +73525,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "空運",
+        "運輸事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2618.djhtm"
     },
     {
       "code": "2633",
@@ -73060,7 +74140,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "鐵路運輸",
+        "運輸事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2633.djhtm"
     },
     {
       "code": "2645",
@@ -73631,7 +74716,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "飛機維修",
+        "運輸事業",
+        "航天軍工",
+        "航天機械零組件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2645.djhtm"
     },
     {
       "code": "2646",
@@ -74206,7 +75298,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "空運",
+        "運輸事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2646.djhtm"
     },
     {
       "code": "2718",
@@ -74772,7 +75869,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "營建",
+        "地產",
+        "控股公司"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2718.djhtm"
     },
     {
       "code": "2801",
@@ -75429,7 +76532,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "銀行",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2801.djhtm"
     },
     {
       "code": "2812",
@@ -76050,7 +77158,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "銀行",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2812.djhtm"
     },
     {
       "code": "2834",
@@ -76677,7 +77790,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "銀行",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2834.djhtm"
     },
     {
       "code": "2838",
@@ -77245,7 +78363,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "銀行",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2838.djhtm"
     },
     {
       "code": "2851",
@@ -77713,7 +78836,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "再保險",
+        "金融業",
+        "產險",
+        "壽險"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2851.djhtm"
     },
     {
       "code": "2855",
@@ -78161,7 +79291,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "證券",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2855.djhtm"
     },
     {
       "code": "2880",
@@ -78788,7 +79923,18 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "投信",
+        "金融其他",
+        "產險",
+        "資產管理",
+        "銀行",
+        "證券"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2880.djhtm"
     },
     {
       "code": "2881",
@@ -79409,7 +80555,20 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "投信",
+        "投資信託",
+        "金融其他",
+        "產險",
+        "資產管理",
+        "壽險",
+        "銀行",
+        "證券"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2881.djhtm"
     },
     {
       "code": "2882",
@@ -80049,7 +81208,20 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "投信",
+        "投資信託",
+        "金融其他",
+        "產險",
+        "資產管理",
+        "壽險",
+        "銀行",
+        "證券"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2882.djhtm"
     },
     {
       "code": "2883",
@@ -80724,7 +81896,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "銀行",
+        "證券"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2883.djhtm"
     },
     {
       "code": "2884",
@@ -81386,7 +82565,16 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "金融其他",
+        "保險經紀",
+        "銀行",
+        "證券"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2884.djhtm"
     },
     {
       "code": "2885",
@@ -82048,7 +83236,19 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "投信",
+        "投資信託",
+        "金融其他",
+        "資產管理",
+        "銀行",
+        "證券",
+        "證金公司"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2885.djhtm"
     },
     {
       "code": "2886",
@@ -82704,7 +83904,19 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "投信",
+        "金融其他",
+        "產險",
+        "票券",
+        "資產管理",
+        "銀行",
+        "證券"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2886.djhtm"
     },
     {
       "code": "2887",
@@ -83386,7 +84598,19 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "投信",
+        "金融其他",
+        "保險經紀",
+        "資產管理",
+        "壽險",
+        "銀行",
+        "證券"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2887.djhtm"
     },
     {
       "code": "2889",
@@ -83976,7 +85200,15 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "金融其他",
+        "票券",
+        "證券"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2889.djhtm"
     },
     {
       "code": "2890",
@@ -84630,7 +85862,18 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "投信",
+        "金融其他",
+        "租賃",
+        "資產管理",
+        "銀行",
+        "證券"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2890.djhtm"
     },
     {
       "code": "2891",
@@ -85303,7 +86546,21 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "投信",
+        "投資信託",
+        "保全業",
+        "保險經紀",
+        "資產管理",
+        "壽險",
+        "銀行",
+        "證券",
+        "服務業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2891.djhtm"
     },
     {
       "code": "2892",
@@ -85946,7 +87203,18 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "投信",
+        "金融其他",
+        "資產管理",
+        "壽險",
+        "銀行",
+        "證券"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2892.djhtm"
     },
     {
       "code": "2906",
@@ -86390,7 +87658,17 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "貿易",
+        "流通業",
+        "成衣銷售／零售",
+        "家居相關用品通路",
+        "醫療器材通路",
+        "成衣",
+        "醫藥流通"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2906.djhtm"
     },
     {
       "code": "2912",
@@ -86972,7 +88250,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "便利商店",
+        "流通業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2912.djhtm"
     },
     {
       "code": "3005",
@@ -87551,7 +88834,16 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "強固電腦",
+        "電腦系統業",
+        "工業電腦",
+        "汽機車零組件",
+        "機殼",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3005.djhtm"
     },
     {
       "code": "3006",
@@ -88134,7 +89426,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "DRAM記憶體IC",
+        "IC設計",
+        "FLASH記憶體IC",
+        "類比IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3006.djhtm"
     },
     {
       "code": "3008",
@@ -88726,7 +90025,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "光學鏡片／頭",
+        "光學元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3008.djhtm"
     },
     {
       "code": "3014",
@@ -89164,7 +90468,19 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "IO控制IC",
+        "IC設計",
+        "PC週邊IC",
+        "安全監控IC",
+        "消費性IC",
+        "高速傳輸介面IC",
+        "影音IC",
+        "數位電視IC",
+        "觸控IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3014.djhtm"
     },
     {
       "code": "3017",
@@ -89757,7 +91073,18 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "筆記型電腦用散熱模組",
+        "散熱模組",
+        "伺服器用散熱模組",
+        "伺服器機殼",
+        "其他散熱零件",
+        "散熱風扇馬達",
+        "機殼",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3017.djhtm"
     },
     {
       "code": "3023",
@@ -90342,7 +91669,13 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "連接線材",
+        "電子零件元件",
+        "連接器"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3023.djhtm"
     },
     {
       "code": "3026",
@@ -90982,7 +92315,16 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子元件代理商",
+        "電子通路",
+        "IC零組件通路商",
+        "MLCC",
+        "鋁質電解電容",
+        "被動元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3026.djhtm"
     },
     {
       "code": "3030",
@@ -91566,7 +92908,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "PCB相關設備",
+        "設備儀器商",
+        "IC檢測設備",
+        "封測用設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3030.djhtm"
     },
     {
       "code": "3034",
@@ -92167,7 +93516,20 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "LCD驅動IC",
+        "IC設計",
+        "CMOS晶片",
+        "LCD控制IC",
+        "SOC",
+        "手機面板驅動IC",
+        "安全監控IC",
+        "影音IC",
+        "數位電視IC",
+        "觸控IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3034.djhtm"
     },
     {
       "code": "3036",
@@ -92784,7 +94146,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC零組件通路商",
+        "電子通路"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3036.djhtm"
     },
     {
       "code": "3037",
@@ -93464,7 +94831,17 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "印刷電路板",
+        "印刷電路板相關",
+        "ABF載板",
+        "BGA基板",
+        "HDI板",
+        "IC基板",
+        "封測服務與材料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3037.djhtm"
     },
     {
       "code": "3042",
@@ -94117,7 +95494,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "石英元件",
+        "被動元件",
+        "振盪器"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3042.djhtm"
     },
     {
       "code": "3044",
@@ -94707,7 +96090,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "印刷電路板",
+        "印刷電路板相關",
+        "HDI板"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3044.djhtm"
     },
     {
       "code": "3045",
@@ -95325,7 +96714,20 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "電信／數據服務",
+        "通訊服務",
+        "行動通訊",
+        "低軌道衛星",
+        "電商平台",
+        "電視購物",
+        "衛星通訊服務",
+        "Internet應用與服務",
+        "無店舖販售",
+        "網通設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3045.djhtm"
     },
     {
       "code": "3048",
@@ -95769,7 +97171,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC零組件通路商",
+        "電子通路"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3048.djhtm"
     },
     {
       "code": "3073",
@@ -96209,7 +97616,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "太陽能發電",
+        "電力",
+        "風力發電"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3073.djhtm"
     },
     {
       "code": "3078",
@@ -96816,7 +98229,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "電源供應器",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3078.djhtm"
     },
     {
       "code": "3081",
@@ -97462,7 +98880,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "光通訊元件磊晶",
+        "IC製造",
+        "砷化鎵相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3081.djhtm"
     },
     {
       "code": "3105",
@@ -98179,7 +99603,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "砷化鎵相關",
+        "IC製造",
+        "化合物晶圓",
+        "第三類半導體"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3105.djhtm"
     },
     {
       "code": "3114",
@@ -98625,7 +100056,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子元件代理商",
+        "電子通路",
+        "連接線材",
+        "連接器",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3114.djhtm"
     },
     {
       "code": "3131",
@@ -99215,7 +100654,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "封測用設備",
+        "設備儀器商",
+        "半導體化學品",
+        "半導體製程設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3131.djhtm"
     },
     {
       "code": "3141",
@@ -99695,7 +101141,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "LCD驅動IC",
+        "IC設計",
+        "馬達IC",
+        "觸控IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3141.djhtm"
     },
     {
       "code": "3147",
@@ -100180,7 +101633,14 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "系統整合",
+        "軟體業",
+        "電腦通路商",
+        "電子通路"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3147.djhtm"
     },
     {
       "code": "3162",
@@ -100618,7 +102078,11 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "汽機車零組件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3162.djhtm"
     },
     {
       "code": "3163",
@@ -101223,7 +102687,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "光纖被動元件",
+        "光通訊"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3163.djhtm"
     },
     {
       "code": "3167",
@@ -101821,7 +103290,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "雷射鑽孔機、鑽頭",
+        "印刷電路板相關",
+        "PCB相關設備",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3167.djhtm"
     },
     {
       "code": "3171",
@@ -102259,7 +103735,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "塑膠加工",
+        "塑化製品",
+        "膠帶",
+        "化學工業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3171.djhtm"
     },
     {
       "code": "3189",
@@ -102933,7 +104416,16 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC基板",
+        "封測服務與材料",
+        "ABF載板",
+        "BGA基板",
+        "隱形眼鏡",
+        "輔助與彌補用醫材"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3189.djhtm"
     },
     {
       "code": "3211",
@@ -103590,7 +105082,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "消費用電池",
+        "電池",
+        "BBU",
+        "資產股"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3211.djhtm"
     },
     {
       "code": "3213",
@@ -104063,7 +105562,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "電腦通路商",
+        "電子通路",
+        "強固電腦",
+        "筆記型電腦製造",
+        "電腦系統業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3213.djhtm"
     },
     {
       "code": "3218",
@@ -104532,7 +106039,11 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "醫療服務"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3218.djhtm"
     },
     {
       "code": "3219",
@@ -104974,7 +106485,11 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3219.djhtm"
     },
     {
       "code": "3221",
@@ -105527,7 +107042,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "濾波器",
+        "被動元件",
+        "石英元件",
+        "振盪器"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3221.djhtm"
     },
     {
       "code": "3224",
@@ -105975,7 +107497,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子元件代理商",
+        "電子通路",
+        "連接器",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3224.djhtm"
     },
     {
       "code": "3227",
@@ -106448,7 +107977,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "CMOS晶片",
+        "IC設計",
+        "感測元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3227.djhtm"
     },
     {
       "code": "3231",
@@ -107123,7 +108658,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "筆記型電腦製造",
+        "電腦系統業",
+        "AI伺服器",
+        "伺服器",
+        "電子製造服務"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3231.djhtm"
     },
     {
       "code": "3234",
@@ -107648,7 +109191,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "光纖主動元件",
+        "光通訊"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3234.djhtm"
     },
     {
       "code": "3236",
@@ -108233,7 +109781,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電感",
+        "被動元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3236.djhtm"
     },
     {
       "code": "3252",
@@ -108673,7 +110226,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "飯店",
+        "旅宿／餐飲"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3252.djhtm"
     },
     {
       "code": "3260",
@@ -109340,7 +110898,17 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "記憶體模組",
+        "電子零件元件",
+        "DRAM模組",
+        "Flash模組",
+        "硬碟相關",
+        "週邊產品",
+        "電競週邊"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3260.djhtm"
     },
     {
       "code": "3264",
@@ -110010,7 +111578,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC測試",
+        "IC封裝測試"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3264.djhtm"
     },
     {
       "code": "3265",
@@ -110514,7 +112087,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC封裝",
+        "IC封裝測試",
+        "IC測試"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3265.djhtm"
     },
     {
       "code": "3287",
@@ -110964,7 +112543,16 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "電競週邊",
+        "週邊產品",
+        "耳機",
+        "滑鼠",
+        "鍵盤",
+        "電聲產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3287.djhtm"
     },
     {
       "code": "3290",
@@ -111430,7 +113018,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "塑膠射出",
+        "電子零件元件",
+        "機殼"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3290.djhtm"
     },
     {
       "code": "3293",
@@ -112101,7 +113695,13 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "PC遊戲",
+        "遊戲產業",
+        "手機遊戲"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3293.djhtm"
     },
     {
       "code": "3317",
@@ -112559,7 +114159,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "電晶體",
+        "分離式元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3317.djhtm"
     },
     {
       "code": "3322",
@@ -113003,7 +114608,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "連接線材",
+        "電子零件元件",
+        "連接器"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3322.djhtm"
     },
     {
       "code": "3324",
@@ -113653,7 +115264,13 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "筆記型電腦用散熱模組",
+        "散熱模組",
+        "伺服器用散熱模組"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3324.djhtm"
     },
     {
       "code": "3354",
@@ -114160,7 +115777,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "軟板基板",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3354.djhtm"
     },
     {
       "code": "3362",
@@ -114658,7 +116280,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "光學鏡片／頭",
+        "光學元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3362.djhtm"
     },
     {
       "code": "3363",
@@ -115152,7 +116779,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "光纖被動元件",
+        "光通訊"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3363.djhtm"
     },
     {
       "code": "3373",
@@ -115604,7 +117236,16 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "體溫計",
+        "診斷與監測用醫材",
+        "量測儀器",
+        "儀表",
+        "產業機械",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3373.djhtm"
     },
     {
       "code": "3374",
@@ -116286,7 +117927,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC封裝",
+        "IC封裝測試",
+        "IC測試"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3374.djhtm"
     },
     {
       "code": "3402",
@@ -116795,7 +118442,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "廠務工程",
+        "電子其他",
+        "半導體製程設備",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3402.djhtm"
     },
     {
       "code": "3406",
@@ -117314,7 +118968,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "光學鏡片／頭",
+        "光學元件",
+        "LED照明產品",
+        "LED"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3406.djhtm"
     },
     {
       "code": "3416",
@@ -117764,7 +119425,11 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "工業電腦"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3416.djhtm"
     },
     {
       "code": "3441",
@@ -118334,7 +119999,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "光學鏡片／頭",
+        "光學元件",
+        "光學",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3441.djhtm"
     },
     {
       "code": "3443",
@@ -118939,7 +120611,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "ASIC",
+        "IC設計",
+        "設計IP"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3443.djhtm"
     },
     {
       "code": "3447",
@@ -119389,7 +121067,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "接取設備",
+        "網通設備",
+        "物聯網裝置",
+        "視訊轉換相關",
+        "消費性電子產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3447.djhtm"
     },
     {
       "code": "3450",
@@ -119985,7 +121671,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC封裝",
+        "IC封裝測試",
+        "IC測試"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3450.djhtm"
     },
     {
       "code": "3455",
@@ -120604,7 +122296,15 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "PCB相關設備",
+        "設備儀器商",
+        "IC檢測設備",
+        "半導體製程設備",
+        "面板設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3455.djhtm"
     },
     {
       "code": "3479",
@@ -121090,7 +122790,11 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "工業電腦"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3479.djhtm"
     },
     {
       "code": "3481",
@@ -121761,7 +123465,17 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "TFT-LCD",
+        "面板業",
+        "MicroLED",
+        "OLED",
+        "中小尺吋面板",
+        "觸控面板",
+        "LED"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3481.djhtm"
     },
     {
       "code": "3483",
@@ -122240,7 +123954,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "筆記型電腦用散熱模組",
+        "散熱模組",
+        "伺服器用散熱模組",
+        "散熱風扇馬達"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3483.djhtm"
     },
     {
       "code": "3491",
@@ -122871,7 +124592,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "通訊設備零組件",
+        "網通設備",
+        "天線"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3491.djhtm"
     },
     {
       "code": "3498",
@@ -123317,7 +125044,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "PCB相關設備",
+        "設備儀器商",
+        "自動化設備",
+        "產業機械"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3498.djhtm"
     },
     {
       "code": "3523",
@@ -123757,7 +125491,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "光學膜",
+        "面板零組件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3523.djhtm"
     },
     {
       "code": "3526",
@@ -124349,7 +126088,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "連接器",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3526.djhtm"
     },
     {
       "code": "3527",
@@ -124795,7 +126539,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "LED驅動IC",
+        "IC設計",
+        "類比IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3527.djhtm"
     },
     {
       "code": "3529",
@@ -125416,7 +127166,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "設計IP",
+        "IC設計",
+        "FLASH記憶體IC",
+        "嵌入式晶片"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3529.djhtm"
     },
     {
       "code": "3532",
@@ -126008,7 +127765,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "矽晶圓",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3532.djhtm"
     },
     {
       "code": "3533",
@@ -126603,7 +128365,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "CPU Socket",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3533.djhtm"
     },
     {
       "code": "3556",
@@ -127086,7 +128853,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "觸控IC",
+        "IC設計",
+        "消費性IC",
+        "影音IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3556.djhtm"
     },
     {
       "code": "3564",
@@ -127613,7 +129387,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "資安設備",
+        "網通設備",
+        "用戶端設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3564.djhtm"
     },
     {
       "code": "3587",
@@ -128077,7 +129857,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "檢測驗證服務",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3587.djhtm"
     },
     {
       "code": "3591",
@@ -128523,7 +130308,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "LED封裝",
+        "LED",
+        "LED照明產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3591.djhtm"
     },
     {
       "code": "3593",
@@ -128959,7 +130750,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "塑膠射出",
+        "電子零件元件",
+        "機殼"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3593.djhtm"
     },
     {
       "code": "3597",
@@ -129431,7 +131228,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "連接線材",
+        "電子零件元件",
+        "電子元件代理商",
+        "電子通路"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3597.djhtm"
     },
     {
       "code": "3605",
@@ -129913,7 +131717,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "連接器",
+        "電子零件元件",
+        "其他電子零件",
+        "連接線材"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3605.djhtm"
     },
     {
       "code": "3624",
@@ -130593,7 +132404,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "晶片電阻",
+        "被動元件",
+        "電阻"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3624.djhtm"
     },
     {
       "code": "3629",
@@ -131041,7 +132858,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "行銷",
+        "傳播事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3629.djhtm"
     },
     {
       "code": "3630",
@@ -131521,7 +133343,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "光學鏡片／頭",
+        "光學元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3630.djhtm"
     },
     {
       "code": "3631",
@@ -131967,7 +133794,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "金、錫凸塊",
+        "封測服務與材料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3631.djhtm"
     },
     {
       "code": "3653",
@@ -132558,7 +134390,14 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "其他散熱零件",
+        "散熱模組",
+        "導線架",
+        "封測服務與材料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3653.djhtm"
     },
     {
       "code": "3661",
@@ -133162,7 +135001,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "ASIC",
+        "IC設計",
+        "設計IP"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3661.djhtm"
     },
     {
       "code": "3665",
@@ -133775,7 +135620,15 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "連接線材",
+        "電子零件元件",
+        "連接器",
+        "電子線",
+        "電線電纜"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3665.djhtm"
     },
     {
       "code": "3666",
@@ -134217,7 +136070,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "光學膜",
+        "面板零組件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3666.djhtm"
     },
     {
       "code": "3675",
@@ -134842,7 +136700,15 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "二極體",
+        "分離式元件",
+        "矽晶圓",
+        "電晶體",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3675.djhtm"
     },
     {
       "code": "3680",
@@ -135468,7 +137334,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "半導體製程設備",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3680.djhtm"
     },
     {
       "code": "3684",
@@ -135932,7 +137803,15 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "無線網路設備系統(WLAN)",
+        "網通設備",
+        "用戶端設備",
+        "連接線材",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3684.djhtm"
     },
     {
       "code": "3685",
@@ -136380,7 +138259,11 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "汽機車零組件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3685.djhtm"
     },
     {
       "code": "3689",
@@ -136869,7 +138752,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "連接器",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3689.djhtm"
     },
     {
       "code": "3693",
@@ -137361,7 +139249,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "伺服器機殼",
+        "電子零件元件",
+        "準系統",
+        "電腦系統業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3693.djhtm"
     },
     {
       "code": "3702",
@@ -137994,7 +139889,13 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC零組件通路商",
+        "電子通路",
+        "控股公司"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3702.djhtm"
     },
     {
       "code": "3706",
@@ -138579,7 +140480,19 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "伺服器",
+        "電腦系統業",
+        "AI伺服器",
+        "工業電腦",
+        "行車紀錄器",
+        "車用電子",
+        "控股公司",
+        "衛星導航",
+        "網通設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3706.djhtm"
     },
     {
       "code": "3707",
@@ -139260,7 +141173,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "磊晶",
+        "IC製造",
+        "第三類半導體",
+        "晶圓代工"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3707.djhtm"
     },
     {
       "code": "3709",
@@ -139712,7 +141632,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "電腦通路商",
+        "電子通路",
+        "控股公司"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3709.djhtm"
     },
     {
       "code": "3711",
@@ -140367,7 +142293,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC封裝",
+        "IC封裝測試",
+        "IC測試",
+        "電子製造服務",
+        "電腦系統業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3711.djhtm"
     },
     {
       "code": "3713",
@@ -140811,7 +142745,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "太陽能系統運用",
+        "太陽能",
+        "太陽能發電",
+        "太陽能電池模組",
+        "電力"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3713.djhtm"
     },
     {
       "code": "3717",
@@ -141297,7 +143239,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "LED封裝",
+        "LED"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_3717.djhtm"
     },
     {
       "code": "4105",
@@ -141920,7 +143867,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "西藥製劑",
+        "醫藥產業",
+        "學名藥"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4105.djhtm"
     },
     {
       "code": "4114",
@@ -142430,7 +144383,17 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "西藥製劑",
+        "醫藥產業",
+        "食品生技",
+        "學名藥",
+        "藥品通路",
+        "生物科技",
+        "醫藥流通"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4114.djhtm"
     },
     {
       "code": "4121",
@@ -142874,7 +144837,17 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "血壓計",
+        "診斷與監測用醫材",
+        "生理檢測器材",
+        "血糖儀",
+        "醫藥流通",
+        "體溫計",
+        "體外診斷用醫材"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4121.djhtm"
     },
     {
       "code": "4123",
@@ -143365,7 +145338,15 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "西藥製劑",
+        "醫藥產業",
+        "食品生技",
+        "學名藥",
+        "生物科技"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4123.djhtm"
     },
     {
       "code": "4127",
@@ -143813,7 +145794,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "食品生技",
+        "生物科技",
+        "西藥製劑",
+        "學名藥",
+        "醫藥產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4127.djhtm"
     },
     {
       "code": "4128",
@@ -144392,7 +146381,16 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "中藥製劑",
+        "醫藥產業",
+        "食品生技",
+        "植物新藥",
+        "新藥研發",
+        "生物科技"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4128.djhtm"
     },
     {
       "code": "4133",
@@ -144849,7 +146847,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "生物製劑",
+        "醫藥產業",
+        "檢驗試劑／紙",
+        "體外診斷用醫材"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4133.djhtm"
     },
     {
       "code": "4139",
@@ -145291,7 +147296,11 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "醫療服務"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4139.djhtm"
     },
     {
       "code": "4157",
@@ -145749,7 +147758,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "新藥研發",
+        "醫藥產業",
+        "西藥製劑"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4157.djhtm"
     },
     {
       "code": "4167",
@@ -146243,7 +148258,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "原料藥",
+        "醫藥產業",
+        "西藥製劑"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4167.djhtm"
     },
     {
       "code": "4171",
@@ -146705,7 +148726,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "農業生技",
+        "生物科技",
+        "檢驗試劑／紙",
+        "體外診斷用醫材"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4171.djhtm"
     },
     {
       "code": "4174",
@@ -147300,7 +149328,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "新藥研發",
+        "醫藥產業",
+        "生物製劑"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4174.djhtm"
     },
     {
       "code": "4175",
@@ -147738,7 +149772,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "醫療器材通路",
+        "醫藥流通"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4175.djhtm"
     },
     {
       "code": "4178",
@@ -148184,7 +150223,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "新藥研發",
+        "醫藥產業",
+        "生物科技",
+        "細胞治療"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4178.djhtm"
     },
     {
       "code": "4401",
@@ -148626,7 +150672,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "尼龍絲",
+        "化學纖維",
+        "聚酯紗",
+        "紡紗"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4401.djhtm"
     },
     {
       "code": "4402",
@@ -149064,7 +151117,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "織布業",
+        "太陽能系統運用",
+        "太陽能"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4402.djhtm"
     },
     {
       "code": "4416",
@@ -149508,7 +151567,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "營建",
+        "地產"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4416.djhtm"
     },
     {
       "code": "4420",
@@ -150081,7 +152145,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "聚酯加工絲",
+        "化學纖維"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4420.djhtm"
     },
     {
       "code": "4430",
@@ -150527,7 +152596,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "尼龍絲",
+        "化學纖維"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4430.djhtm"
     },
     {
       "code": "4530",
@@ -150967,7 +153041,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "污水處理",
+        "水資源",
+        "水資源設備／耗材",
+        "安全氣囊",
+        "汽車內裝"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4530.djhtm"
     },
     {
       "code": "4551",
@@ -151425,7 +153507,13 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "汽機車零組件",
+        "金屬加工／製品",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4551.djhtm"
     },
     {
       "code": "4609",
@@ -151861,7 +153949,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "小家電",
+        "家電"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4609.djhtm"
     },
     {
       "code": "4707",
@@ -152427,7 +154520,13 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "其他化工產品",
+        "化學工業",
+        "衛生清潔用品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4707.djhtm"
     },
     {
       "code": "4714",
@@ -152902,7 +155001,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "PU樹脂",
+        "化學工業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4714.djhtm"
     },
     {
       "code": "4716",
@@ -153429,7 +155533,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "合成樹脂",
+        "化學工業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4716.djhtm"
     },
     {
       "code": "4720",
@@ -153947,7 +156056,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "熱熔膠",
+        "化學工業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4720.djhtm"
     },
     {
       "code": "4726",
@@ -154389,7 +156503,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "醫藥研發外包服務",
+        "醫藥產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4726.djhtm"
     },
     {
       "code": "4743",
@@ -155009,7 +157128,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "植物新藥",
+        "醫藥產業",
+        "新藥研發"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4743.djhtm"
     },
     {
       "code": "4749",
@@ -155472,7 +157597,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "半導體化學品",
+        "光阻劑"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4749.djhtm"
     },
     {
       "code": "4760",
@@ -156008,7 +158138,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "被動元件上游",
+        "被動元件",
+        "太陽能導電漿",
+        "太陽能"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4760.djhtm"
     },
     {
       "code": "4763",
@@ -156603,7 +158740,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "半合成纖維",
+        "化學纖維"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4763.djhtm"
     },
     {
       "code": "4770",
@@ -157039,7 +159181,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "合成樹脂",
+        "化學工業",
+        "金屬加工／製品",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4770.djhtm"
     },
     {
       "code": "4807",
@@ -157485,7 +159634,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "珠寶",
+        "時尚產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4807.djhtm"
     },
     {
       "code": "4903",
@@ -157959,7 +160113,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "光通訊",
+        "光纖光纜"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4903.djhtm"
     },
     {
       "code": "4904",
@@ -158566,7 +160725,16 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電信／數據服務",
+        "通訊服務",
+        "行動通訊",
+        "低軌道衛星",
+        "衛星通訊服務",
+        "網通設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4904.djhtm"
     },
     {
       "code": "4908",
@@ -159105,7 +161273,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "光纖主動元件",
+        "光通訊"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4908.djhtm"
     },
     {
       "code": "4915",
@@ -159585,7 +161758,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "週邊產品",
+        "車用電子",
+        "電聲產品",
+        "電競週邊"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4915.djhtm"
     },
     {
       "code": "4924",
@@ -160045,7 +162225,16 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "生質燃料",
+        "石油及天然氣",
+        "汽電共生",
+        "塑膠射出",
+        "電力",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4924.djhtm"
     },
     {
       "code": "4927",
@@ -160564,7 +162753,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "印刷電路板",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4927.djhtm"
     },
     {
       "code": "4930",
@@ -161002,7 +163196,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "小家電",
+        "家電"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4930.djhtm"
     },
     {
       "code": "4931",
@@ -161630,7 +163829,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "工業用電池",
+        "電池",
+        "車用鋰電池"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4931.djhtm"
     },
     {
       "code": "4934",
@@ -162080,7 +164285,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "太陽能電池",
+        "太陽能",
+        "太陽能電池模組"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4934.djhtm"
     },
     {
       "code": "4935",
@@ -162528,7 +164739,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "面板零組件",
+        "模具沖壓",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4935.djhtm"
     },
     {
       "code": "4938",
@@ -163137,7 +165354,27 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子製造服務",
+        "電腦系統業",
+        "AI伺服器",
+        "手機製造",
+        "主機板",
+        "平板電腦",
+        "伺服器",
+        "車用電子",
+        "穿戴式裝置",
+        "桌上型電腦",
+        "消費性電子產品",
+        "筆記型電腦製造",
+        "視訊轉換相關",
+        "遊戲機",
+        "網通設備",
+        "手機",
+        "遊戲產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4938.djhtm"
     },
     {
       "code": "4939",
@@ -163595,7 +165832,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "軟板基板",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4939.djhtm"
     },
     {
       "code": "4953",
@@ -164079,7 +166321,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "軟體業",
+        "雲端科技",
+        "Internet技術與基礎設施"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4953.djhtm"
     },
     {
       "code": "4958",
@@ -164771,7 +167019,17 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "印刷電路板",
+        "印刷電路板相關",
+        "ABF載板",
+        "BGA基板",
+        "HDI板",
+        "軟板",
+        "封測服務與材料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4958.djhtm"
     },
     {
       "code": "4966",
@@ -165363,7 +167621,18 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "高速傳輸介面IC",
+        "IC設計",
+        "Displayport",
+        "LCD控制IC",
+        "LCD驅動IC",
+        "USB IC",
+        "觸控IC",
+        "傳輸介面"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4966.djhtm"
     },
     {
       "code": "4973",
@@ -165819,7 +168088,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "記憶體模組",
+        "電子零件元件",
+        "DRAM模組",
+        "Flash模組"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4973.djhtm"
     },
     {
       "code": "4979",
@@ -166318,7 +168594,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "光纖主動元件",
+        "光通訊"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4979.djhtm"
     },
     {
       "code": "4989",
@@ -166818,7 +169099,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "銅箔",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4989.djhtm"
     },
     {
       "code": "4991",
@@ -167477,7 +169763,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "砷化鎵相關",
+        "IC製造",
+        "化合物晶圓",
+        "第三類半導體"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_4991.djhtm"
     },
     {
       "code": "5009",
@@ -167939,7 +170232,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "特殊鋼",
+        "合金鋼",
+        "工具鋼",
+        "不鏽鋼"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5009.djhtm"
     },
     {
       "code": "5205",
@@ -168407,7 +170707,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "污水處理",
+        "水資源",
+        "循環經濟",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5205.djhtm"
     },
     {
       "code": "5209",
@@ -168903,7 +171210,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "系統整合",
+        "軟體業",
+        "雲端科技",
+        "Internet技術與基礎設施"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5209.djhtm"
     },
     {
       "code": "5225",
@@ -169345,7 +171659,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "音響設備及零件",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5225.djhtm"
     },
     {
       "code": "5228",
@@ -169885,7 +172204,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電感",
+        "被動元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5228.djhtm"
     },
     {
       "code": "5230",
@@ -170347,7 +172671,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "LED照明產品",
+        "LED",
+        "模具沖壓",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5230.djhtm"
     },
     {
       "code": "5243",
@@ -170799,7 +173130,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "模具沖壓",
+        "電子零件元件",
+        "車用沖壓件",
+        "車用金屬成型"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5243.djhtm"
     },
     {
       "code": "5263",
@@ -171249,7 +173587,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "商用遊戲機",
+        "遊戲產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5263.djhtm"
     },
     {
       "code": "5269",
@@ -171837,7 +174180,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "高速傳輸介面IC",
+        "IC設計",
+        "USB IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5269.djhtm"
     },
     {
       "code": "5274",
@@ -172319,7 +174668,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "其他IC",
+        "IC設計",
+        "影音IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5274.djhtm"
     },
     {
       "code": "5287",
@@ -172904,7 +175259,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電商平台",
+        "Internet應用與服務"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5287.djhtm"
     },
     {
       "code": "5289",
@@ -173387,7 +175747,16 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "硬碟相關",
+        "週邊產品",
+        "DRAM模組",
+        "Flash模組",
+        "記憶體模組",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5289.djhtm"
     },
     {
       "code": "5309",
@@ -174055,7 +176424,18 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "車用電子",
+        "UPS",
+        "工業用電池",
+        "車用鋰電池",
+        "胎壓監測系統",
+        "電源供應器",
+        "電子零件元件",
+        "電池"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5309.djhtm"
     },
     {
       "code": "5314",
@@ -174689,7 +177069,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "食品生技",
+        "生物科技"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5314.djhtm"
     },
     {
       "code": "5340",
@@ -175221,7 +177606,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "玻纖布",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5340.djhtm"
     },
     {
       "code": "5347",
@@ -175917,7 +178307,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "晶圓代工",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5347.djhtm"
     },
     {
       "code": "5351",
@@ -176566,7 +178961,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "DRAM記憶體IC",
+        "IC設計",
+        "SRAM記憶體IC",
+        "高速傳輸介面IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5351.djhtm"
     },
     {
       "code": "5392",
@@ -177008,7 +179410,16 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "其他電子零件",
+        "電子零件元件",
+        "汽機車零組件",
+        "控股公司",
+        "塑膠射出",
+        "機械零組件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5392.djhtm"
     },
     {
       "code": "5425",
@@ -177670,7 +180081,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "二極體",
+        "分離式元件",
+        "印表機",
+        "週邊產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5425.djhtm"
     },
     {
       "code": "5434",
@@ -178262,7 +180680,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "半導體材料通路商",
+        "電子通路",
+        "環保工程",
+        "營造工程"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5434.djhtm"
     },
     {
       "code": "5439",
@@ -178782,7 +181207,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "印刷電路板",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5439.djhtm"
     },
     {
       "code": "5452",
@@ -179277,7 +181707,15 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子元件代理商",
+        "電子通路",
+        "ABS",
+        "半導體化學品",
+        "塑化原料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5452.djhtm"
     },
     {
       "code": "5460",
@@ -179749,7 +182187,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "模具沖壓",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5460.djhtm"
     },
     {
       "code": "5475",
@@ -180234,7 +182677,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "玻纖布",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5475.djhtm"
     },
     {
       "code": "5483",
@@ -180948,7 +183396,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "太陽能矽晶圓",
+        "太陽能",
+        "矽晶圓",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5483.djhtm"
     },
     {
       "code": "5512",
@@ -181435,7 +183890,16 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "營建",
+        "地產",
+        "飯店",
+        "環保工程",
+        "旅宿／餐飲",
+        "營造工程"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5512.djhtm"
     },
     {
       "code": "5516",
@@ -181871,7 +184335,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "住宅建設",
+        "營造工程",
+        "工程顧問",
+        "基礎建設"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5516.djhtm"
     },
     {
       "code": "5534",
@@ -182437,7 +184908,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "營建",
+        "地產"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5534.djhtm"
     },
     {
       "code": "5536",
@@ -183089,7 +185565,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "廠務工程",
+        "電子其他",
+        "水電消防工程",
+        "營造工程"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5536.djhtm"
     },
     {
       "code": "5546",
@@ -183533,7 +186016,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "預拌混凝土",
+        "水泥"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5546.djhtm"
     },
     {
       "code": "5864",
@@ -184035,7 +186523,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "證券",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5864.djhtm"
     },
     {
       "code": "5871",
@@ -184655,7 +187148,15 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "租賃",
+        "金融業",
+        "汽車服務相關",
+        "汽車融資",
+        "控股公司"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5871.djhtm"
     },
     {
       "code": "5876",
@@ -185263,7 +187764,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "銀行",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5876.djhtm"
     },
     {
       "code": "5880",
@@ -185880,7 +188386,18 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "金控",
+        "金融業",
+        "投信",
+        "票券",
+        "資產管理",
+        "壽險",
+        "銀行",
+        "證券"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5880.djhtm"
     },
     {
       "code": "5904",
@@ -186535,7 +189052,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "家居相關用品通路",
+        "流通業",
+        "藥妝零售相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_5904.djhtm"
     },
     {
       "code": "6005",
@@ -186973,7 +189496,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "證券",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6005.djhtm"
     },
     {
       "code": "6015",
@@ -187527,7 +190055,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "證券",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6015.djhtm"
     },
     {
       "code": "6016",
@@ -187985,7 +190518,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "證券",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6016.djhtm"
     },
     {
       "code": "6026",
@@ -188594,7 +191132,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "證券",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6026.djhtm"
     },
     {
       "code": "6104",
@@ -189171,7 +191714,13 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "USB IC",
+        "IC設計",
+        "集線器IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6104.djhtm"
     },
     {
       "code": "6113",
@@ -189613,7 +192162,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC零組件通路商",
+        "電子通路"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6113.djhtm"
     },
     {
       "code": "6116",
@@ -190249,7 +192803,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "中小尺吋面板",
+        "面板業",
+        "TFT-LCD",
+        "觸控面板"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6116.djhtm"
     },
     {
       "code": "6121",
@@ -190718,7 +193279,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "消費用電池",
+        "電池",
+        "工業用電池"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6121.djhtm"
     },
     {
       "code": "6122",
@@ -191381,7 +193948,16 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "工程顧問",
+        "營造工程",
+        "水電消防工程",
+        "配電工程",
+        "基礎建設",
+        "電力設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6122.djhtm"
     },
     {
       "code": "6125",
@@ -191829,7 +194405,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "設備儀器商",
+        "自動化設備",
+        "電子製造服務",
+        "產業機械",
+        "電腦系統業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6125.djhtm"
     },
     {
       "code": "6127",
@@ -192452,7 +195036,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "被動元件上游",
+        "被動元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6127.djhtm"
     },
     {
       "code": "6136",
@@ -192902,7 +195491,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "手機零售通路商",
+        "電子通路",
+        "廣告",
+        "影音娛樂",
+        "傳播事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6136.djhtm"
     },
     {
       "code": "6138",
@@ -193492,7 +196089,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "電源管理IC",
+        "IC設計",
+        "馬達IC",
+        "影音IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6138.djhtm"
     },
     {
       "code": "6139",
@@ -194067,7 +196671,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "廠務工程",
+        "電子其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6139.djhtm"
     },
     {
       "code": "6143",
@@ -194532,7 +197141,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子書閱讀器",
+        "消費性電子產品",
+        "電子紙",
+        "面板業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6143.djhtm"
     },
     {
       "code": "6146",
@@ -195034,7 +197650,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "檢測驗證服務",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6146.djhtm"
     },
     {
       "code": "6147",
@@ -195734,7 +198355,16 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "LCD驅動IC封裝",
+        "IC封裝測試",
+        "IC封裝",
+        "IC測試",
+        "金、錫凸塊",
+        "封測服務與材料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6147.djhtm"
     },
     {
       "code": "6152",
@@ -196226,7 +198856,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "視訊轉換相關",
+        "消費性電子產品",
+        "低雜訊降頻器",
+        "網通設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6152.djhtm"
     },
     {
       "code": "6155",
@@ -196683,7 +199320,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "電感",
+        "被動元件",
+        "被動元件上游"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6155.djhtm"
     },
     {
       "code": "6163",
@@ -197182,7 +199825,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "系統整合",
+        "軟體業",
+        "企業資源規劃"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6163.djhtm"
     },
     {
       "code": "6168",
@@ -197664,7 +200313,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "LED封裝",
+        "LED"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6168.djhtm"
     },
     {
       "code": "6174",
@@ -198218,7 +200872,14 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "石英元件",
+        "被動元件",
+        "振盪器",
+        "濾波器"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6174.djhtm"
     },
     {
       "code": "6179",
@@ -198706,7 +201367,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "工程顧問",
+        "營造工程"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6179.djhtm"
     },
     {
       "code": "6182",
@@ -199377,7 +202043,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "矽晶圓",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6182.djhtm"
     },
     {
       "code": "6187",
@@ -200030,7 +202701,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "封測用設備",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6187.djhtm"
     },
     {
       "code": "6190",
@@ -200658,7 +203334,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "連接線材",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6190.djhtm"
     },
     {
       "code": "6196",
@@ -201242,7 +203923,16 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "廠務工程",
+        "電子其他",
+        "半導體製程設備",
+        "系統整合",
+        "設備儀器商",
+        "軟體業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6196.djhtm"
     },
     {
       "code": "6199",
@@ -201865,7 +204555,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "殯葬服務",
+        "服務業",
+        "物業投資發展",
+        "地產"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6199.djhtm"
     },
     {
       "code": "6207",
@@ -202522,7 +205219,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "設備儀器商",
+        "其他電子零件",
+        "封測用設備",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6207.djhtm"
     },
     {
       "code": "6209",
@@ -203003,7 +205707,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "光學鏡片／頭",
+        "光學元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6209.djhtm"
     },
     {
       "code": "6213",
@@ -203639,7 +206348,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "銅箔基板",
+        "印刷電路板相關",
+        "軟板基板"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6213.djhtm"
     },
     {
       "code": "6218",
@@ -204126,7 +206841,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "系統整合",
+        "軟體業",
+        "半導體製程設備",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6218.djhtm"
     },
     {
       "code": "6223",
@@ -204750,7 +207472,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "探針、探針卡",
+        "封測服務與材料",
+        "半導體製程設備",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6223.djhtm"
     },
     {
       "code": "6225",
@@ -205192,7 +207921,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "行車紀錄器",
+        "車用電子"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6225.djhtm"
     },
     {
       "code": "6226",
@@ -205706,7 +208440,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "LED封裝",
+        "LED"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6226.djhtm"
     },
     {
       "code": "6233",
@@ -206187,7 +208926,15 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "USB IC",
+        "IC設計",
+        "MEMS",
+        "其他IC",
+        "馬達IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6233.djhtm"
     },
     {
       "code": "6234",
@@ -206653,7 +209400,13 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "設備儀器商",
+        "雷射鑽孔機、鑽頭",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6234.djhtm"
     },
     {
       "code": "6239",
@@ -207287,7 +210040,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC封裝",
+        "IC封裝測試",
+        "IC測試"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6239.djhtm"
     },
     {
       "code": "6244",
@@ -207915,7 +210674,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "太陽能電池模組",
+        "太陽能",
+        "太陽能電池"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6244.djhtm"
     },
     {
       "code": "6245",
@@ -208424,7 +211189,13 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "資安設備",
+        "網通設備",
+        "用戶端設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6245.djhtm"
     },
     {
       "code": "6257",
@@ -209065,7 +211836,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC測試",
+        "IC封裝測試",
+        "IC封裝"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6257.djhtm"
     },
     {
       "code": "6271",
@@ -209511,7 +212288,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC基板",
+        "封測服務與材料",
+        "IC封裝測試",
+        "LED散熱基板",
+        "LED"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6271.djhtm"
     },
     {
       "code": "6274",
@@ -210192,7 +212977,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "銅箔基板",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6274.djhtm"
     },
     {
       "code": "6277",
@@ -210636,7 +213426,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "週邊產品",
+        "視訊轉換相關",
+        "消費性電子產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6277.djhtm"
     },
     {
       "code": "6278",
@@ -211224,7 +214020,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子製造服務",
+        "電腦系統業",
+        "LED照明產品",
+        "LED"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6278.djhtm"
     },
     {
       "code": "6279",
@@ -211754,7 +214557,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "汽車端子",
+        "汽機車零組件",
+        "連接器",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6279.djhtm"
     },
     {
       "code": "6284",
@@ -212329,7 +215139,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "天線",
+        "網通設備",
+        "其他電子零件",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6284.djhtm"
     },
     {
       "code": "6285",
@@ -212924,7 +215741,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "無線網路設備系統(WLAN)",
+        "網通設備",
+        "車用電子",
+        "通訊設備零組件",
+        "衛星通訊設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6285.djhtm"
     },
     {
       "code": "6290",
@@ -213482,7 +216307,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "連接線材",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6290.djhtm"
     },
     {
       "code": "6291",
@@ -213922,7 +216752,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "電源管理IC",
+        "IC設計",
+        "音響設備及零件",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6291.djhtm"
     },
     {
       "code": "6294",
@@ -214360,7 +217197,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "教育事業",
+        "服務業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6294.djhtm"
     },
     {
       "code": "6409",
@@ -214942,7 +217784,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "UPS",
+        "電子零件元件",
+        "PV Inverter",
+        "太陽能"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6409.djhtm"
     },
     {
       "code": "6415",
@@ -215520,7 +218369,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電源管理IC",
+        "IC設計",
+        "LED驅動IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6415.djhtm"
     },
     {
       "code": "6426",
@@ -215988,7 +218843,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "光纖零組件",
+        "光通訊"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6426.djhtm"
     },
     {
       "code": "6442",
@@ -216582,7 +219442,15 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "光纖主動元件",
+        "光通訊",
+        "光纖被動元件",
+        "連接器",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6442.djhtm"
     },
     {
       "code": "6446",
@@ -217166,7 +220034,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "新藥研發",
+        "醫藥產業",
+        "生物製劑"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6446.djhtm"
     },
     {
       "code": "6449",
@@ -217633,7 +220507,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "鋁質電解電容",
+        "被動元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6449.djhtm"
     },
     {
       "code": "6456",
@@ -218265,7 +221144,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "觸控面板",
+        "面板業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6456.djhtm"
     },
     {
       "code": "6485",
@@ -218730,7 +221614,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "FLASH記憶體IC",
+        "IC設計",
+        "SSD控制IC",
+        "記憶卡IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6485.djhtm"
     },
     {
       "code": "6488",
@@ -219430,7 +222321,13 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "矽晶圓",
+        "IC製造",
+        "第三類半導體"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6488.djhtm"
     },
     {
       "code": "6504",
@@ -219878,7 +222775,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "不織布",
+        "工業紡織品",
+        "個人保護用器材",
+        "其他醫療器材"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6504.djhtm"
     },
     {
       "code": "6505",
@@ -220560,7 +223464,15 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "煉油",
+        "石油及天然氣",
+        "油品儲運／分銷",
+        "烯烴類",
+        "塑化原料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6505.djhtm"
     },
     {
       "code": "6509",
@@ -221171,7 +224083,14 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "其他化工產品",
+        "化學工業",
+        "文具",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6509.djhtm"
     },
     {
       "code": "6510",
@@ -221658,7 +224577,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "測試用板卡",
+        "封測服務與材料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6510.djhtm"
     },
     {
       "code": "6515",
@@ -222249,7 +225173,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "封測服務與材料",
+        "探針、探針卡"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6515.djhtm"
     },
     {
       "code": "6526",
@@ -222828,7 +225757,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "無線網路IC",
+        "IC設計",
+        "射頻前端晶片",
+        "網路通訊IC",
+        "衛星導航晶片組"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6526.djhtm"
     },
     {
       "code": "6531",
@@ -223411,7 +226348,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "SRAM記憶體IC",
+        "IC設計",
+        "DRAM記憶體IC",
+        "設計IP"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6531.djhtm"
     },
     {
       "code": "6532",
@@ -223873,7 +226817,13 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "半導體製程設備",
+        "設備儀器商",
+        "化學氣相沈積設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6532.djhtm"
     },
     {
       "code": "6538",
@@ -224357,7 +227307,11 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6538.djhtm"
     },
     {
       "code": "6547",
@@ -224971,7 +227925,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "生物製劑",
+        "醫藥產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6547.djhtm"
     },
     {
       "code": "6548",
@@ -225603,7 +228562,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "導線架",
+        "封測服務與材料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6548.djhtm"
     },
     {
       "code": "6550",
@@ -226047,7 +229011,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "新藥研發",
+        "醫藥產業",
+        "生物製劑",
+        "醫藥研發外包服務"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6550.djhtm"
     },
     {
       "code": "6561",
@@ -226530,7 +229501,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電信／數據服務",
+        "通訊服務",
+        "雲端科技",
+        "Internet技術與基礎設施"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6561.djhtm"
     },
     {
       "code": "6577",
@@ -227006,7 +229984,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "工業電腦",
+        "顯示器"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6577.djhtm"
     },
     {
       "code": "6584",
@@ -227478,7 +230461,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "其他電子零件",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6584.djhtm"
     },
     {
       "code": "6597",
@@ -227918,7 +230906,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "LED散熱基板",
+        "LED"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6597.djhtm"
     },
     {
       "code": "6603",
@@ -228374,7 +231367,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "塑膠機械",
+        "產業機械"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6603.djhtm"
     },
     {
       "code": "6613",
@@ -228852,7 +231850,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "設備儀器商",
+        "半導體製程設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6613.djhtm"
     },
     {
       "code": "6620",
@@ -229465,7 +232468,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "西藥製劑",
+        "醫藥產業",
+        "新藥研發",
+        "學名藥"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6620.djhtm"
     },
     {
       "code": "6640",
@@ -229919,7 +232929,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "封測用設備",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6640.djhtm"
     },
     {
       "code": "6645",
@@ -230361,7 +233376,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "IVD檢驗儀器設備",
+        "體外診斷用醫材",
+        "基因定序",
+        "檢驗試劑／紙",
+        "生物科技"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6645.djhtm"
     },
     {
       "code": "6655",
@@ -230803,7 +233826,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "木地板",
+        "建材",
+        "複合板"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6655.djhtm"
     },
     {
       "code": "6657",
@@ -231249,7 +234278,16 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "新藥研發",
+        "醫藥產業",
+        "生命科學工具",
+        "檢驗試劑／紙",
+        "診斷與監測用醫材",
+        "體外診斷用醫材"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6657.djhtm"
     },
     {
       "code": "6658",
@@ -231695,7 +234733,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "PCB相關設備",
+        "設備儀器商",
+        "半導體製程設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6658.djhtm"
     },
     {
       "code": "6664",
@@ -232312,7 +235356,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "PCB相關設備",
+        "設備儀器商",
+        "半導體製程設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6664.djhtm"
     },
     {
       "code": "6667",
@@ -232790,7 +235840,13 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "設備儀器商",
+        "廠務工程",
+        "電子其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6667.djhtm"
     },
     {
       "code": "6668",
@@ -233266,7 +236322,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "模具",
+        "機械零組件",
+        "光學鏡片／頭",
+        "光學元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6668.djhtm"
     },
     {
       "code": "6669",
@@ -233871,7 +236934,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "伺服器",
+        "電腦系統業",
+        "AI伺服器",
+        "ASIC伺服器"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6669.djhtm"
     },
     {
       "code": "6672",
@@ -234332,7 +237402,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "銅箔基板",
+        "印刷電路板相關",
+        "LED散熱基板",
+        "LED"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6672.djhtm"
     },
     {
       "code": "6683",
@@ -234814,7 +237891,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "測試用板卡",
+        "封測服務與材料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6683.djhtm"
     },
     {
       "code": "6691",
@@ -235400,7 +238482,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "廠務工程",
+        "電子其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6691.djhtm"
     },
     {
       "code": "6703",
@@ -235975,7 +239062,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "美妝保養品",
+        "時尚產業",
+        "電商平台",
+        "Internet應用與服務"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6703.djhtm"
     },
     {
       "code": "6719",
@@ -236413,7 +239507,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "電源管理IC",
+        "IC設計",
+        "電晶體",
+        "分離式元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6719.djhtm"
     },
     {
       "code": "6720",
@@ -236857,7 +239958,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "類比IC",
+        "IC設計",
+        "電晶體",
+        "分離式元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6720.djhtm"
     },
     {
       "code": "6751",
@@ -237307,7 +240415,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "系統整合",
+        "軟體業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6751.djhtm"
     },
     {
       "code": "6770",
@@ -237987,7 +241100,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "晶圓代工",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6770.djhtm"
     },
     {
       "code": "6781",
@@ -238563,7 +241681,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "車用鋰電池",
+        "電池",
+        "儲能設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6781.djhtm"
     },
     {
       "code": "6789",
@@ -239144,7 +242268,16 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "影像感測元件",
+        "數位相機",
+        "IC測試",
+        "晶圓代工",
+        "IC封裝測試",
+        "IC製造"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6789.djhtm"
     },
     {
       "code": "6792",
@@ -239590,7 +242723,16 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "天線",
+        "網通設備",
+        "MLCC",
+        "其他電子零件",
+        "被動元件",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6792.djhtm"
     },
     {
       "code": "6805",
@@ -240205,7 +243347,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "樞紐",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6805.djhtm"
     },
     {
       "code": "6811",
@@ -240681,7 +243828,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "系統整合",
+        "軟體業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6811.djhtm"
     },
     {
       "code": "6834",
@@ -241145,7 +244297,12 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "晶片電阻",
+        "被動元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6834.djhtm"
     },
     {
       "code": "6843",
@@ -241581,7 +244738,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "工業閥門",
+        "機械零組件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6843.djhtm"
     },
     {
       "code": "6919",
@@ -242149,7 +245311,14 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "新藥研發",
+        "醫藥產業",
+        "食品生技",
+        "生物科技"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6919.djhtm"
     },
     {
       "code": "6921",
@@ -242587,7 +245756,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "高速傳輸介面IC",
+        "IC設計"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6921.djhtm"
     },
     {
       "code": "6949",
@@ -243171,7 +246345,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "新藥研發",
+        "醫藥產業",
+        "生物製劑",
+        "細胞治療"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6949.djhtm"
     },
     {
       "code": "6951",
@@ -243609,7 +246790,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "循環經濟",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6951.djhtm"
     },
     {
       "code": "6965",
@@ -244055,7 +247241,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "製鞋業",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6965.djhtm"
     },
     {
       "code": "6971",
@@ -244499,7 +247690,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "污水處理",
+        "水資源",
+        "水利"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_6971.djhtm"
     },
     {
       "code": "7610",
@@ -245075,7 +248272,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "循環經濟",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_7610.djhtm"
     },
     {
       "code": "7734",
@@ -245546,7 +248748,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "封測用設備",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_7734.djhtm"
     },
     {
       "code": "7740",
@@ -246000,7 +249207,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "儲能設備",
+        "電池"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_7740.djhtm"
     },
     {
       "code": "7747",
@@ -246438,7 +249650,16 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "雲端科技",
+        "Internet技術與基礎設施",
+        "資安設備",
+        "資訊安全",
+        "軟體業",
+        "網通設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_7747.djhtm"
     },
     {
       "code": "7749",
@@ -246876,7 +250097,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "設計IP",
+        "IC設計",
+        "ASIC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_7749.djhtm"
     },
     {
       "code": "7750",
@@ -247451,7 +250678,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "工具機控制器",
+        "工具機",
+        "工具機主軸"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_7750.djhtm"
     },
     {
       "code": "7751",
@@ -248042,7 +251275,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "封測用設備",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_7751.djhtm"
     },
     {
       "code": "7769",
@@ -248628,7 +251866,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "封測用設備",
+        "設備儀器商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_7769.djhtm"
     },
     {
       "code": "7777",
@@ -249190,7 +252433,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "資產管理",
+        "金融業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_7777.djhtm"
     },
     {
       "code": "7792",
@@ -249655,7 +252903,16 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "重電設備",
+        "電力設備",
+        "UPS",
+        "配電工程",
+        "電機",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_7792.djhtm"
     },
     {
       "code": "7856",
@@ -250270,7 +253527,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "探針、探針卡",
+        "封測服務與材料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_7856.djhtm"
     },
     {
       "code": "8021",
@@ -250794,7 +254056,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "雷射鑽孔機、鑽頭",
+        "印刷電路板相關",
+        "電子製造服務",
+        "電腦系統業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8021.djhtm"
     },
     {
       "code": "8038",
@@ -251240,7 +254509,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "工業用電池",
+        "電池",
+        "鋰電池",
+        "儲能設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8038.djhtm"
     },
     {
       "code": "8039",
@@ -251807,7 +255083,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "軟板基板",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8039.djhtm"
     },
     {
       "code": "8042",
@@ -252307,7 +255588,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "鋁質電解電容",
+        "被動元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8042.djhtm"
     },
     {
       "code": "8043",
@@ -252770,7 +256056,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子元件代理商",
+        "電子通路",
+        "MLCC",
+        "電感",
+        "被動元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8043.djhtm"
     },
     {
       "code": "8046",
@@ -253415,7 +256709,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC基板",
+        "封測服務與材料",
+        "HDI板",
+        "印刷電路板",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8046.djhtm"
     },
     {
       "code": "8050",
@@ -253872,7 +257174,13 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "工業電腦",
+        "主機板",
+        "電腦系統業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8050.djhtm"
     },
     {
       "code": "8054",
@@ -254470,7 +257778,17 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "USB IC",
+        "IC設計",
+        "FLASH記憶體IC",
+        "PC週邊IC",
+        "記憶卡IC",
+        "集線器IC",
+        "影音IC"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8054.djhtm"
     },
     {
       "code": "8064",
@@ -255084,7 +258402,14 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "面板設備",
+        "設備儀器商",
+        "LED設備",
+        "半導體製程設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8064.djhtm"
     },
     {
       "code": "8068",
@@ -255530,7 +258855,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC零組件通路商",
+        "電子通路"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8068.djhtm"
     },
     {
       "code": "8069",
@@ -256192,7 +259522,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子紙",
+        "面板業",
+        "中小尺吋面板"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8069.djhtm"
     },
     {
       "code": "8070",
@@ -256666,7 +260002,14 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "半導體材料通路商",
+        "電子通路",
+        "封測服務與材料",
+        "導線架"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8070.djhtm"
     },
     {
       "code": "8077",
@@ -257104,7 +260447,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "飯店",
+        "旅宿／餐飲"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8077.djhtm"
     },
     {
       "code": "8086",
@@ -257720,7 +261068,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "砷化鎵相關",
+        "IC製造",
+        "化合物晶圓"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8086.djhtm"
     },
     {
       "code": "8087",
@@ -258162,7 +261516,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "太陽能發電",
+        "電力",
+        "太陽能系統運用",
+        "風力發電",
+        "太陽能"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8087.djhtm"
     },
     {
       "code": "8092",
@@ -258604,7 +261966,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "量測儀器",
+        "設備儀器商",
+        "工具機",
+        "磨床"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8092.djhtm"
     },
     {
       "code": "8096",
@@ -259153,7 +262522,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC零組件通路商",
+        "電子通路",
+        "電子元件代理商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8096.djhtm"
     },
     {
       "code": "8097",
@@ -259591,7 +262966,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "無線網路設備系統(WLAN)",
+        "網通設備",
+        "用戶端設備"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8097.djhtm"
     },
     {
       "code": "8109",
@@ -260067,7 +263448,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電源供應器",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8109.djhtm"
     },
     {
       "code": "8111",
@@ -260715,7 +264101,13 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "LED封裝",
+        "LED",
+        "LED照明產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8111.djhtm"
     },
     {
       "code": "8112",
@@ -261157,7 +264549,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC零組件通路商",
+        "電子通路",
+        "電子元件代理商"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8112.djhtm"
     },
     {
       "code": "8121",
@@ -261655,7 +265053,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "被動元件上游",
+        "被動元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8121.djhtm"
     },
     {
       "code": "8150",
@@ -262328,7 +265731,16 @@
             "desc": "連續發散"
           }
         ]
-      }
+      },
+      "industry": [
+        "LCD驅動IC封裝",
+        "IC封裝測試",
+        "IC封裝",
+        "IC測試",
+        "金、錫凸塊",
+        "封測服務與材料"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8150.djhtm"
     },
     {
       "code": "8155",
@@ -262768,7 +266180,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "印刷電路板",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8155.djhtm"
     },
     {
       "code": "8162",
@@ -263218,7 +266635,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "IC測試",
+        "IC封裝測試"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8162.djhtm"
     },
     {
       "code": "8182",
@@ -263672,7 +267094,13 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "石英元件",
+        "被動元件",
+        "振盪器"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8182.djhtm"
     },
     {
       "code": "8210",
@@ -264240,7 +267668,12 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "伺服器機殼",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8210.djhtm"
     },
     {
       "code": "8261",
@@ -264676,7 +268109,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "電晶體",
+        "分離式元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8261.djhtm"
     },
     {
       "code": "8289",
@@ -265231,7 +268669,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "振盪器",
+        "被動元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8289.djhtm"
     },
     {
       "code": "8299",
@@ -265892,7 +269335,21 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "FLASH記憶體IC",
+        "IC設計",
+        "Flash模組",
+        "PC週邊IC",
+        "SSD控制IC",
+        "USB IC",
+        "記憶卡",
+        "記憶卡IC",
+        "嵌入式晶片",
+        "週邊產品",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8299.djhtm"
     },
     {
       "code": "8358",
@@ -266580,7 +270037,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "銅箔",
+        "印刷電路板相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8358.djhtm"
     },
     {
       "code": "8424",
@@ -267022,7 +270484,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "複合板",
+        "建材"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8424.djhtm"
     },
     {
       "code": "8431",
@@ -267464,7 +270931,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "機殼表面處理",
+        "電子零件元件"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8431.djhtm"
     },
     {
       "code": "8436",
@@ -267944,7 +271416,16 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "食品生技",
+        "生物科技",
+        "保健食品",
+        "美妝保養品",
+        "食品加工",
+        "時尚產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8436.djhtm"
     },
     {
       "code": "8442",
@@ -268394,7 +271875,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "手提箱",
+        "傳產其他",
+        "運動用品",
+        "運動產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8442.djhtm"
     },
     {
       "code": "8443",
@@ -268836,7 +272324,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "製鞋業",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8443.djhtm"
     },
     {
       "code": "8462",
@@ -269272,7 +272765,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "連鎖健身房",
+        "休閒娛樂"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8462.djhtm"
     },
     {
       "code": "8464",
@@ -269862,7 +273360,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "窗簾",
+        "家居用品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8464.djhtm"
     },
     {
       "code": "8482",
@@ -270302,7 +273805,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "傢俱",
+        "家居用品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8482.djhtm"
     },
     {
       "code": "8905",
@@ -270740,7 +274248,15 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "肉品加工",
+        "食品加工",
+        "貨櫃場服務",
+        "罐頭業",
+        "運輸事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8905.djhtm"
     },
     {
       "code": "8921",
@@ -271178,7 +274694,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "印刷業",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8921.djhtm"
     },
     {
       "code": "8923",
@@ -271616,7 +275137,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "出版業",
+        "傳播事業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8923.djhtm"
     },
     {
       "code": "8924",
@@ -272207,7 +275733,13 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "高爾夫球桿頭",
+        "運動產業",
+        "球具"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8924.djhtm"
     },
     {
       "code": "8928",
@@ -272645,7 +276177,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "高爾夫球桿頭",
+        "運動產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8928.djhtm"
     },
     {
       "code": "8932",
@@ -273185,7 +276722,15 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "企業資源規劃",
+        "軟體業",
+        "拉鍊",
+        "應用軟體",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8932.djhtm"
     },
     {
       "code": "8936",
@@ -273791,7 +277336,14 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "水泥製品",
+        "水泥",
+        "水利",
+        "水資源"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8936.djhtm"
     },
     {
       "code": "8938",
@@ -274381,7 +277933,15 @@
             "desc": "連 2 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "高爾夫球桿頭",
+        "運動產業",
+        "球具",
+        "複合材料",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8938.djhtm"
     },
     {
       "code": "8941",
@@ -274817,7 +278377,12 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "烤肉架",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8941.djhtm"
     },
     {
       "code": "8996",
@@ -275424,7 +278989,12 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "金屬加工／製品",
+        "傳產其他"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_8996.djhtm"
     },
     {
       "code": "9103",
@@ -275901,7 +279471,14 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "個人保護用器材",
+        "其他醫療器材",
+        "醫療管理服務",
+        "醫療服務"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_9103.djhtm"
     },
     {
       "code": "9105",
@@ -276523,7 +280100,23 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "電子製造服務",
+        "電腦系統業",
+        "POS機系統",
+        "主機板",
+        "印表機",
+        "穿戴式裝置",
+        "液晶電視",
+        "硬碟相關",
+        "視訊轉換相關",
+        "工業電腦",
+        "家電",
+        "消費性電子產品",
+        "週邊產品"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_9105.djhtm"
     },
     {
       "code": "9904",
@@ -277149,7 +280742,15 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "製鞋業",
+        "傳產其他",
+        "控股公司",
+        "運動用品",
+        "運動產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_9904.djhtm"
     },
     {
       "code": "9910",
@@ -277720,7 +281321,14 @@
             "desc": "連 3 日集中"
           }
         ]
-      }
+      },
+      "industry": [
+        "製鞋業",
+        "傳產其他",
+        "運動鞋",
+        "運動產業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_9910.djhtm"
     },
     {
       "code": "9919",
@@ -278164,7 +281772,14 @@
             "desc": "新進追蹤池"
           }
         ]
-      }
+      },
+      "industry": [
+        "不織布",
+        "工業紡織品",
+        "家庭用紙",
+        "造紙業"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_9919.djhtm"
     },
     {
       "code": "9941",
@@ -278752,7 +282367,12 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "汽車融資",
+        "汽車服務相關"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_9941.djhtm"
     },
     {
       "code": "9945",
@@ -279373,7 +282993,13 @@
             "desc": "籌碼持平"
           }
         ]
-      }
+      },
+      "industry": [
+        "營建",
+        "地產",
+        "水泥"
+      ],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_9945.djhtm"
     }
   ],
   "rankings": {

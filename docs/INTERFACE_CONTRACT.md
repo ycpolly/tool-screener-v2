@@ -92,6 +92,10 @@ interface Stock {
   revenueMoM?:         number | null // 最新月營收月增率 % (例如 -2.81)
   revenueLatestMonth?: string | null // 營收資料月份 (例如 '2026-08')
 
+  // 所屬產業分類與關聯公司 (Phase 5)
+  industry?:           string[]      // 所屬產業類別清單，e.g. ["晶圓代工", "IC製造"] 或 ["資安設備", "網通設備"]
+  industryUrl?:        string        // 富邦公司互動與關聯企業（供應鏈/客戶/競爭者）URL，e.g. "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2330.djhtm"
+
   // 綜合量化評分與細項拆解 (Phase 4 方案 4)
   rankScore?:     number | null // 模式綜合評分 (0 ~ 100，起跳 40，依照分數由高至低排序)
   rankBreakdown?: RankBreakdown | null // 評分拆解與摘要文字
@@ -827,6 +831,31 @@ interface RSDayItem {
      - **大盤**：當日點數（附當日漲跌 % 與相較基準累計 %）
      - **超額 RS**：累計超額 %
    - 支援抽樣核對，使用者能一眼看出哪一天股價和大盤開始脫鉤走強。
+
+---
+
+## 十、個股所屬產業與關聯公司契約（Phase 5 Industry & Related Companies Contract）
+
+供 Gemini 在 `StockCard.vue` 實作「個股產業標籤」與點擊外開「富邦公司互動（上下游供應鏈/客戶/競爭者）」之 UI 規格：
+
+### 1. 資料模型（Data Types）
+
+個股物件已由邏輯層與爬蟲自動注入：
+- `stock.industry`: `string[]`（例如 `['晶圓代工', 'IC製造']`、`['資安設備', '網通設備', '用戶端設備']`；查無時為空陣列 `[]`）
+- `stock.industryUrl`: `string`（固定格式：`https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_{code}.djhtm`）
+
+### 2. UI 呈現位置與互動規範（Gemini 遵循）
+- **呈現位置**：
+  在 `StockCard.vue` 或 `StockFundamentalsSection.vue` 中（例如在營收資訊下方，或在名稱/代號右側）：
+  - 建議獨立行或緊鄰基本面：`產業 · 晶圓代工 · IC製造`。
+  - 建議只取前 2 ~ 3 個核心產業（避免字數過長折行），其餘若有更多可用 tooltip 呈現完整清單。
+- **點擊行為**：
+  - 整行或產業標籤本身支援點擊，外開 `stock.industryUrl`（新分頁開啟 target="_blank" rel="noopener nofollow"）。
+  - 右側可附帶低調微型外部連結 SVG 圖示，提示使用者點擊可「查看關聯企業/上下游供應鏈/客戶名單」。
+  - 滑鼠懸停 tooltip 顯示 `UI_STRINGS.INDUSTRY?.relatedCompaniesTooltip`（「查看富邦公司互動與關聯企業（供應鏈/客戶/競爭者）」）。
+- **無資料防禦**：
+  - 若 `!stock.industry || stock.industry.length === 0`，優雅隱藏該行，絕不留白或報錯。
+
 
 
 

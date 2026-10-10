@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-10-10**（相對大盤 5 日強弱度 RS 明細架構：完成 calculateRSDetails 純演算法計算與 5 個交易日逐日對照時間序列，支援時光機回溯與盤中實時動態注入，規範 RS Details 前後端合約）
+> **最後更新：2026-10-10**（個股所屬產業與關聯企業外開架構：完成 batch_fetch_industry 富邦產業爬蟲與 60 天快取架構，全池 516 檔 100% 覆蓋注入 industry 與 industryUrl，規範前後端合約）
 
 ---
 
@@ -205,6 +205,8 @@ Python 輸出 → `public/data/stock-pool.json`
           { "date": "2026-10-01", "dayLabel": "基準日 (T-5)", "stockPrice": 160.0, "stockDailyChg": 0.5, "stockCumChg": 0.0, "benchPrice": 21933.7, "benchDailyChg": 0.2, "benchCumChg": 0.0, "rsCum": 0.0 }
         ]
       },
+      "industry": ["晶圓代工", "IC製造"],
+      "industryUrl": "https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_2330.djhtm",
       "kd": {
         "k": 58.3,
         "d": 54.1,

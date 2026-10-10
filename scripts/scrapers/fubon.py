@@ -589,6 +589,122 @@ def batch_fetch_fundamentals(
     return cache
 
 
+# ── 所屬產業分類（Phase 5 產業題材與關聯公司）─────────────────
+INDUSTRY_TTL_DAYS = 60       # 產業分類更新週期：60 天 (超低頻變動)
+
+
+def fetch_stock_industry(code: str) -> Optional[List[str]]:
+    """
+    抓取單檔個股所屬產業類別清單
+    來源：https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZCS/ZCS_{code}.djhtm
+    """
+    url = f'{_BASE}/Z/ZC/ZCS/ZCS_{code}.djhtm'
+    req = urllib.request.Request(url, headers=_HEADERS)
+    try:
+        with urllib.request.urlopen(req, context=_ctx, timeout=8) as resp:
+            raw_bytes = resp.read()
+            html = _decode_html(raw_bytes)
+    except Exception:
+        return None
+
+    m = re.search(r'所屬產業\s*</td>\s*<td[^>]*>(.*?)</td>', html, re.DOTALL)
+    if m:
+        clean = re.sub(r'<[^>]+>', ' ', m.group(1)).strip()
+        items = [x.strip() for x in re.split(r'[，,]', clean) if x.strip()]
+        return items
+    return []
+
+
+def batch_fetch_industry(
+    codes: List[str],
+    cache_path: str = 'cache/industry.json',
+    max_workers: int = 15,
+    force: bool = False,
+    verbose: bool = True
+) -> Dict[str, List[str]]:
+    """
+    批次抓取股票池所屬產業分類（附帶本地 JSON 快取架構，TTL=60 天）
+    """
+    cache_file = Path(cache_path)
+    cache: Dict[str, Dict] = {}
+
+    if cache_file.exists():
+        try:
+            with open(cache_file, 'r', encoding='utf-8') as f:
+                cache = json.load(f)
+        except Exception as e:
+            if verbose:
+                print(f'[fubon] 讀取產業快取失敗，重新初始化: {e}')
+            cache = {}
+
+    now_date = datetime.now().date()
+    today_str = now_date.strftime('%Y-%m-%d')
+
+    to_fetch: List[str] = []
+    for code in codes:
+        if force:
+            to_fetch.append(code)
+            continue
+
+        entry = cache.get(code)
+        if not entry:
+            to_fetch.append(code)
+            continue
+
+        updated = entry.get('updatedAt')
+        if not updated:
+            to_fetch.append(code)
+            continue
+
+        try:
+            d = datetime.strptime(updated, '%Y-%m-%d').date()
+            if (now_date - d).days >= INDUSTRY_TTL_DAYS:
+                to_fetch.append(code)
+        except ValueError:
+            to_fetch.append(code)
+
+    if verbose:
+        print(f'[fubon] 產業分類快取命中：{len(codes) - len(to_fetch)}/{len(codes)} 檔，需向富邦抓取：{len(to_fetch)} 檔 (TTL={INDUSTRY_TTL_DAYS}D)')
+
+    if to_fetch:
+        t0 = time.time()
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            fetched_results = list(executor.map(fetch_stock_industry, to_fetch))
+
+        updated_count = 0
+        for code, res in zip(to_fetch, fetched_results):
+            if res is not None:
+                cache[code] = {
+                    'industry': res,
+                    'updatedAt': today_str,
+                }
+                updated_count += 1
+            else:
+                if code not in cache:
+                    cache[code] = {
+                        'industry': [],
+                        'updatedAt': today_str,
+                    }
+
+        elapsed = time.time() - t0
+        if verbose:
+            print(f'[fubon] 產業分類抓取完成：成功解析 {updated_count}/{len(to_fetch)} 檔，耗時 {elapsed:.1f}s')
+
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            tmp_cache = cache_file.with_suffix('.tmp.json')
+            with open(tmp_cache, 'w', encoding='utf-8') as f:
+                json.dump(cache, f, ensure_ascii=False, indent=2)
+            os.replace(tmp_cache, cache_file)
+            if verbose:
+                print(f'[fubon] 產業快取已寫入：{cache_file} (總計 {len(cache)} 檔紀錄)')
+        except Exception as e:
+            if verbose:
+                print(f'[fubon] 寫入產業快取檔警告: {e}')
+
+    return {c: cache.get(c, {}).get('industry', []) for c in codes}
+
+
 # ── 單獨測試 ─────────────────────────────────────────────────
 if __name__ == '__main__':
     data = fetch_all_rankings()

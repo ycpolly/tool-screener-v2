@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v1010.02',
+    version: 'v1010.03',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -701,6 +701,12 @@ export const UI_STRINGS = {
     impactRises: '上升 = 台幣貶：外資資金傾向流出，權值股與指數承壓',
     impactFalls: '下降 = 台幣升：外資資金傾向匯入，有利推升大型權值股',
     closeBtn: '關閉',
+  },
+
+  INDUSTRY: {
+    sectionLabel: '產業',
+    relatedCompaniesTooltip: '查看富邦公司互動與關聯企業（供應鏈/客戶/競爭者）',
+    noIndustry: '未分類',
   },
 }
 

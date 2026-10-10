@@ -106,9 +106,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/data/stock-pool.json cache/fundamentals.json cache/revenue.json
+          git add public/data/stock-pool.json cache/fundamentals.json cache/revenue.json cache/industry.json
           if ! git diff --cached --quiet; then
-            git commit -m "data: update stock-pool.json, fundamentals and revenue cache [$(TZ='Asia/Taipei' date +'%Y-%m-%d %H:%M') CST]"
+            git commit -m "data: update stock-pool.json, fundamentals, revenue and industry cache [$(TZ='Asia/Taipei' date +'%Y-%m-%d %H:%M') CST]"
             git push origin main
           fi
 

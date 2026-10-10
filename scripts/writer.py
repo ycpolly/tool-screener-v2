@@ -347,6 +347,7 @@ def build_stock_pool(
     chips_data:        Optional[Dict] = None, # {code: {concentration1d, concentration3d, concentration5d, dayTradersPct, dayTradersBranches}}
     fundamentals_data: Optional[Dict] = None, # {code: {paidInCapital, industryPe, pe, trailingEps, ...}}
     revenue_data:      Optional[Dict] = None, # {code: {revenueYoY, revenueMoM, revenueLatestMonth, ...}}
+    industry_data:     Optional[Dict] = None, # {code: {industry, ...} or [industry1, industry2]}
 ) -> Dict:
 
     """
@@ -445,6 +446,16 @@ def build_stock_pool(
                     revenue_data = json.load(f)
             except Exception as e:
                 print(f'[writer] 讀取 cache/revenue.json 提示: {e}')
+
+    # 若未傳入 industry_data，嘗試自 cache/industry.json 載入
+    if industry_data is None:
+        ind_cache_path = Path('cache/industry.json')
+        if ind_cache_path.exists():
+            try:
+                with open(ind_cache_path, 'r', encoding='utf-8') as f:
+                    industry_data = json.load(f)
+            except Exception as e:
+                print(f'[writer] 讀取 cache/industry.json 提示: {e}')
 
     # 建立個股物件
     stocks = []
@@ -557,6 +568,14 @@ def build_stock_pool(
             'revenueYoY':         revenue_yoy,
             'revenueMoM':         revenue_mom,
             'revenueLatestMonth': revenue_latest_month,
+
+            # 所屬產業分類與富邦關聯企業外開 (Phase 5)
+            'industry':    (
+                (industry_data.get(code).get('industry', []) if isinstance(industry_data.get(code), dict) else industry_data.get(code, []))
+                if industry_data and code in industry_data
+                else []
+            ),
+            'industryUrl': f"https://fubon-ebrokerdj.fbs.com.tw/Z/ZC/ZC0/ZC00/ZC00_{code}.djhtm",
 
             # 綜合評分 (Phase 4)
             'rankScore':     rank_info['score'],
