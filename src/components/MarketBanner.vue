@@ -2,7 +2,7 @@
   <div class="market-banner border border-base-300/80 rounded-xl overflow-hidden bg-base-200/40 shadow-xs min-h-[38px] flex flex-col justify-center">
     <tv-ticker-tape
       :key="isDark ? 'dark' : 'light'"
-      symbols="INDEX:TAIEX,TPEX:IX0043"
+      symbols="INDEX:TAIEX,TPEX:IX0043,FX_IDC:USDTWD"
       item-size="compact"
       :theme="isDark ? 'dark' : 'light'"
       class="w-full"
