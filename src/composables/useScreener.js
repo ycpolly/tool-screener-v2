@@ -8,6 +8,7 @@ import {
   getSupportLevels,
   calculateRiskReward,
   calculateRankScore,
+  calculateRSDetails,
 } from '../engine/screener.js'
 import { SCREENER_MODES, DEFAULT_MODE } from '../constants/screener-modes.js'
 
@@ -16,7 +17,7 @@ import { SCREENER_MODES, DEFAULT_MODE } from '../constants/screener-modes.js'
  *
  * 職責：呼叫純引擎，管理篩選條件與時光機回測狀態，不碰 DOM
  */
-export function useScreener(stocks) {
+export function useScreener(stocks, market = null) {
   const activeMode        = ref(DEFAULT_MODE)
   const params            = ref(DEFAULT_MODE === 'ALL' ? {} : { ...(SCREENER_MODES[DEFAULT_MODE]?.defaultParams || {}) })
   const selectedDayOffset = ref(0) // 0: 今日/最新, 1: 1天前 (T-1), 2: 2天前 (T-2)...
@@ -79,10 +80,11 @@ export function useScreener(stocks) {
   const screenerOutput = computed(() => {
     const rawList = stocks.value || []
     if (!Array.isArray(rawList)) return { matched: [], unmatched: [] }
+    const rawMarket = market ? (market.value || market) : null
 
     // 若啟用時光機回測，自動將股票池倒流至該歷史交易日
     const list = selectedDayOffset.value > 0
-      ? sliceStockPoolAt(rawList, selectedDayOffset.value)
+      ? sliceStockPoolAt(rawList, selectedDayOffset.value, new Date(), rawMarket)
       : rawList
 
     const matched = []
@@ -106,6 +108,10 @@ export function useScreener(stocks) {
       const supportLevels = getSupportLevels(stock)
       const riskReward    = calculateRiskReward(stock)
 
+      // RS 相對大盤 5 日強弱度完整明細 (動態推算今日或回測歷史日)
+      const rsDetails = stock.rsDetails || (rawMarket ? calculateRSDetails(stock, rawMarket, selectedDayOffset.value) : null)
+      const relStrength5d = rsDetails ? rsDetails.relStrength : (stock.relStrength5d ?? null)
+
       const enrichedStock = {
         ...stock,
         bias5,
@@ -114,6 +120,8 @@ export function useScreener(stocks) {
         allCeilings,
         supportLevels,
         riskReward,
+        relStrength5d,
+        rsDetails,
       }
 
       // Phase 4: 計算綜合量化評分與細項拆解 (rankScore & rankBreakdown)

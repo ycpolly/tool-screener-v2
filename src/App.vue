@@ -543,7 +543,7 @@ const {
   setDayOffset,
   togglePremium,
   resetParams,
-} = useScreener(activeStocks)
+} = useScreener(activeStocks, activeMarket)
 
 // Phase 4: 切換到策略型態 (Mode 1 ~ 5) 時，預設排序自動切換為綜合評分 (rankScore) 降冪；切回 ALL 時還原為漲跌幅
 watch(activeMode, (newMode) => {

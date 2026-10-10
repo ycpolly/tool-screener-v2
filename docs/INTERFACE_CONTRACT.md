@@ -68,8 +68,9 @@ interface Stock {
     dayTradersBranches?: string[] // 今日短沖主力分點名單，e.g. ["富邦", "凱基-台北", "台灣摩根士丹利"]
   }
 
-  // 相對大盤強弱度 (Phase 1 方案 2)
-  relStrength5d?: number    // 相對大盤近 5 日強弱度 % (超額報酬，例如 +13.10)
+  // 相對大盤強弱度 (Phase 1 方案 2 & Phase 4 RS Details)
+  relStrength5d?: number           // 相對大盤近 5 日強弱度 % (超額報酬，例如 +13.10)
+  rsDetails?:     RSDetails | null // 相對大盤 5 日強弱度完整明細與歷史走勢數據（點擊 RS 徽章開啟彈窗）
 
   // 籌碼集中度連續趨勢 (Phase 1 方案 4)
   chipsTrend3d?: 'UP' | 'FLAT' | 'DOWN' | 'NEW' // 近 3 個有紀錄交易日之籌碼集中度趨勢 ('NEW' 代表首日納入追蹤樣本不足)
@@ -758,5 +759,74 @@ interface StockLifecycleItem {
   - 每一項皆顯示「得分/滿分」與「被打勾的實測條件文字 `desc`」。
   - 滿分或高分項目可帶綠色或主題打勾圖示，未得分項（0分）則帶中性或灰色提示。
   - 支援再次點擊收合，維持手機端緊湊排版。
+
+---
+
+## 九、相對大盤 5 日強弱度明細契約（Phase 4 RS Details Contract）
+
+供 Gemini 在 `StockCard.vue` 實作點擊 RS 徽章開啟「相對大盤 5 日強弱 (RS) 明細彈窗」之 UI 規格：
+
+### 1. 資料模型（Data Types）
+
+由邏輯層與引擎在 `stock.rsDetails` 自動注入：
+
+```typescript
+interface RSDetails {
+  benchmarkName:  string       // 對照指數名稱，e.g. "加權指數" | "櫃買指數"
+  marketCode:     'tse'|'otc'  // 市場類別代號
+  baseDate:       string       // 基準交易日 (T-5)，e.g. "2026-10-01"
+  currentDate:    string       // 目標交易日 (T-0)，e.g. "2026-10-08"
+  stockPrice:     number       // 個股今日（或回測歷史日）當下價格，e.g. 184
+  stockBasePrice: number       // 個股 5 個交易日前 (T-5) 基準日收盤價，e.g. 160
+  stockChg5d:     number       // 個股 5 日累計漲跌幅 %，e.g. 15.00
+  benchPrice:     number       // 大盤今日（或回測歷史日）當下點數，e.g. 22350.4
+  benchBasePrice: number       // 大盤 5 個交易日前 (T-5) 基準日收盤點數，e.g. 21933.7
+  benchChg5d:     number       // 大盤 5 日累計漲跌幅 %，e.g. 1.90
+  relStrength:    number       // 相對強弱度 (RS) % (公式: stockChg5d - benchChg5d)，e.g. 13.10
+  days:           RSDayItem[]  // 近 5 個交易日逐日對照時間序列（依序由 T-5 基準日至 T-0 當日）
+}
+
+interface RSDayItem {
+  date:          string        // 交易日，e.g. "2026-10-08"
+  dayLabel:      string        // 週期標籤，e.g. "今日 (T-0)" | "基準日 (T-5)" | "T-1"
+  stockPrice:    number        // 當日個股價格
+  stockDailyChg: number        // 個股當日漲跌幅 %
+  stockCumChg:   number        // 個股相較 T-5 基準日之累計漲跌幅 %
+  benchPrice:    number | null // 當日大盤收盤點數
+  benchDailyChg: number        // 大盤當日漲跌幅 %
+  benchCumChg:   number        // 大盤相較 T-5 基準日之累計漲跌幅 %
+  rsCum:         number        // 累計超額 RS % (公式: stockCumChg - benchCumChg)
+}
+```
+
+### 2. 觸發與互動入口（Gemini 遵循）
+- **觸發位置**：
+  在 `StockCard.vue` 左上角的 RS 徽章（`UI_STRINGS.REL_STRENGTH.prefix`）：
+  - 增加點擊事件與觸控反饋：`@click.stop="$emit('openRsDetails', stock)"` 或直接呼叫彈窗元件。
+  - 保留游標 pointer 與微微 hover 變色，提示可點擊深入查看。
+- **彈窗形式**：
+  - 建議建立 `src/components/modals/StockRSModal.vue`（或依彈窗管理原則統一於 `App.vue` 掛載）。
+  - 使用 DaisyUI 標準結構 `<dialog class="modal modal-bottom sm:modal-middle">`，Mobile-First 設計。
+
+### 3. 彈窗 UI 視覺層級與佈局規範
+1. **彈窗標題列（Header）**：
+   - 股票代號與名稱（例如 `2330 台積電`）
+   - 對照指數標籤（例如 `對照：加權指數 (上市)` 或 `對照：櫃買指數 (上櫃)`）
+   - 關閉按鈕（`UI_STRINGS.REL_STRENGTH.closeBtn`）
+2. **核心對比摘要卡（Summary Cards）**：
+   - **個股 5 日**：`160 元 ➔ 184 元 (+15.0%)`
+   - **大盤 5 日**：`21,933 點 ➔ 22,350 點 (+1.9%)`
+   - **超額 RS**：醒目粗體卡片 `+13.1%`（正值以漲色呈現，負值以跌色呈現）
+3. **公式白話註解（Formula Callout）**：
+   - 顯示 `UI_STRINGS.REL_STRENGTH.formulaText`（「計算公式：個股 5 日累計漲跌幅 － 大盤 5 日累計漲跌幅」），清楚釐清是**「相較 5 交易日前收盤價之累計漲幅」**而非均價。
+4. **5 日每日歷史對照表（History Table）**：
+   - 橫向響應式表格，包含欄位：
+     - **日期**（格式：`MM/DD`）
+     - **週期**（`基準日 (T-5)`, `T-4`, `T-3`, `T-2`, `T-1`, `今日 (T-0)`）
+     - **個股**：當日價格（附當日漲跌 % 與相較基準累計 %）
+     - **大盤**：當日點數（附當日漲跌 % 與相較基準累計 %）
+     - **超額 RS**：累計超額 %
+   - 支援抽樣核對，使用者能一眼看出哪一天股價和大盤開始脫鉤走強。
+
 
 

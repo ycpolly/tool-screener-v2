@@ -1318,13 +1318,158 @@ export function calculateRankScore(stock) {
 }
 
 /**
+ * 計算單一個股近 5 個交易日相對大盤強弱度 (RS) 的完整明細與歷史走勢
+ * 涵蓋 T-5 基準日收盤價、今日 (或歷史回測日) 當下價格、個股與大盤累計漲跌幅，以及這 5 個交易日的逐日對照數據
+ *
+ * @param {Object} stock             - 個股物件（含 market, price, history10d）
+ * @param {Object} marketData        - stock-pool.json 中的 market 物件（含 taiex 與 otc）
+ * @param {number} [dayOffset=0]     - 回溯天數（0: 今日/最新, 1: 昨日...）
+ * @param {Date}   [currentTime]     - 當前時間
+ * @returns {Object|null}            - RS 詳細計算資料物件
+ */
+export function calculateRSDetails(stock, marketData, dayOffset = 0, currentTime = new Date()) {
+  if (!stock || !Array.isArray(stock.history10d) || stock.history10d.length < 5 || !marketData) {
+    return null
+  }
+
+  const isOtc = stock.market === 'otc'
+  const bench = isOtc ? marketData.otc : marketData.taiex
+  if (!bench) return null
+
+  const S = UI_STRINGS.REL_STRENGTH || {}
+  const benchmarkName = bench.name || (isOtc ? (S.benchmarkOtcName || '櫃買指數') : (S.benchmarkTaiexName || '加權指數'))
+  const marketCode = isOtc ? 'otc' : 'tse'
+
+  const stockLen = stock.history10d.length
+  const isLive = isLiveTradingDay(stock.history10d[stockLen - 1], currentTime)
+
+  // 確定個股在目標日與 5 個交易日前的索引
+  const targetIndex = (stock.dayOffset === dayOffset && dayOffset > 0)
+    ? (stockLen - 1)
+    : ((dayOffset > 0)
+        ? (isLive ? Math.max(0, stockLen - dayOffset) : Math.max(0, stockLen - 1 - dayOffset))
+        : (stockLen - 1))
+
+  const prior5Index = targetIndex - 5
+  if (prior5Index < 0 || !stock.history10d[prior5Index] || !stock.history10d[targetIndex]) {
+    return null
+  }
+
+  const baseBar = stock.history10d[prior5Index]
+  const targetBar = stock.history10d[targetIndex]
+  const baseDate = baseBar.date
+  const currentDate = targetBar.date
+
+  const stockBasePrice = baseBar.close
+  const stockPrice = (dayOffset === 0 && typeof stock.price === 'number')
+    ? stock.price
+    : targetBar.close
+
+  const stockChg5d = stockBasePrice > 0
+    ? round2(((stockPrice - stockBasePrice) / stockBasePrice) * 100)
+    : 0
+
+  // 建立大盤日期映射 Map
+  const benchHistory = Array.isArray(bench.history10d) ? bench.history10d : []
+  const benchMap = new Map(benchHistory.map(b => [b.date, b.close]))
+
+  const benchBasePrice = benchMap.get(baseDate) ?? null
+  const benchPrice = (dayOffset === 0 && typeof bench.price === 'number')
+    ? bench.price
+    : (benchMap.get(currentDate) ?? bench.price ?? null)
+
+  const benchChg5d = (benchBasePrice && benchPrice && benchBasePrice > 0)
+    ? round2(((benchPrice - benchBasePrice) / benchBasePrice) * 100)
+    : (bench.chg5d ?? 0)
+
+  const relStrength = round2(stockChg5d - benchChg5d)
+
+  // 建立近 5 個交易日的逐日對照表 (從 T-5 基準日到 T-0 目標日)
+  const days = []
+  for (let i = prior5Index; i <= targetIndex; i++) {
+    const bar = stock.history10d[i]
+    const d = bar.date
+    const isTargetBar = (i === targetIndex)
+    const isBaseBar = (i === prior5Index)
+    const offsetFromTarget = targetIndex - i
+
+    let dayLabel = `T-${offsetFromTarget}`
+    if (isTargetBar) {
+      dayLabel = dayOffset === 0 ? (S.labelToday || '今日 (T-0)') : (S.labelHistoricalToday || '當日 (T-0)')
+    } else if (isBaseBar) {
+      dayLabel = S.labelBase || '基準日 (T-5)'
+    }
+
+    const sPrice = (isTargetBar && dayOffset === 0 && typeof stock.price === 'number')
+      ? stock.price
+      : bar.close
+
+    const bPrice = (isTargetBar && dayOffset === 0 && typeof bench.price === 'number')
+      ? bench.price
+      : (benchMap.get(d) ?? null)
+
+    // 單日漲跌幅
+    const prevBar = i > 0 ? stock.history10d[i - 1] : null
+    const prevClose = bar.prevClose ?? prevBar?.close
+    const stockDailyChg = (prevClose && prevClose > 0)
+      ? round2(((sPrice - prevClose) / prevClose) * 100)
+      : (bar.changePct ?? 0)
+
+    const prevBPrice = prevBar ? benchMap.get(prevBar.date) : null
+    const benchDailyChg = (prevBPrice && prevBPrice > 0 && bPrice)
+      ? round2(((bPrice - prevBPrice) / prevBPrice) * 100)
+      : 0
+
+    // 相較 T-5 基準日的累積漲幅
+    const stockCumChg = stockBasePrice > 0
+      ? round2(((sPrice - stockBasePrice) / stockBasePrice) * 100)
+      : 0
+
+    const benchCumChg = (benchBasePrice && benchBasePrice > 0 && bPrice)
+      ? round2(((bPrice - benchBasePrice) / benchBasePrice) * 100)
+      : 0
+
+    const rsCum = round2(stockCumChg - benchCumChg)
+
+    days.push({
+      date: d,
+      dayLabel,
+      stockPrice: sPrice,
+      stockDailyChg,
+      stockCumChg,
+      benchPrice: bPrice,
+      benchDailyChg,
+      benchCumChg,
+      rsCum,
+    })
+  }
+
+  return {
+    benchmarkName,
+    marketCode,
+    baseDate,
+    currentDate,
+    stockPrice,
+    stockBasePrice,
+    stockChg5d,
+    benchPrice,
+    benchBasePrice,
+    benchChg5d,
+    relStrength,
+    days,
+  }
+}
+
+/**
  * 時光切片：將個股狀態時光倒流至指定天數前（支援近 0 ~ 5 個歷史交易日）
  * @param {Object} stock             - 原始個股物件（包含完整 history10d）
  * @param {number} dayOffset         - 倒流天數（0: 今日/最新, 1: 昨日, 2: 前日...）
  * @param {Date}   [currentTime]     - 當前時間（預設 new Date()）
+ * @param {number} [benchmarkChg5d]  - 歷史大盤 5 日漲跌幅（可選）
+ * @param {Object} [marketData]      - 歷史大盤資料物件（可選，用於動態計算 rsDetails）
  * @returns {Object}                 - 該歷史日之個股快照物件
  */
-export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), benchmarkChg5d = null) {
+export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), benchmarkChg5d = null, marketData = null) {
   if (!stock || !Array.isArray(stock.history10d) || stock.history10d.length === 0 || dayOffset <= 0) {
     return stock
   }
@@ -1612,6 +1757,15 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
     dayOffset,
   }
 
+  // RS 相對大盤 5 日強弱完整明細推算
+  if (marketData) {
+    const rsDetails = calculateRSDetails(stock, marketData, dayOffset, currentTime)
+    if (rsDetails) {
+      slicedObj.rsDetails = rsDetails
+      slicedObj.relStrength5d = rsDetails.relStrength
+    }
+  }
+
   // Phase 4: 歷史倒流時依當時指標計算 rankScore
   const rankRes = calculateRankScore(slicedObj)
   slicedObj.rankScore = rankRes.score
@@ -1625,11 +1779,13 @@ export function sliceStockAt(stock, dayOffset = 0, currentTime = new Date(), ben
  * 批次將全股票池時光倒流至指定天數前
  * @param {Object[]} stocks
  * @param {number}   dayOffset
+ * @param {Date}     [currentTime]
+ * @param {Object}   [marketData]
  * @returns {Object[]}
  */
-export function sliceStockPoolAt(stocks = [], dayOffset = 0, currentTime = new Date()) {
+export function sliceStockPoolAt(stocks = [], dayOffset = 0, currentTime = new Date(), marketData = null) {
   if (!Array.isArray(stocks) || dayOffset <= 0) return stocks
-  return stocks.map(stock => sliceStockAt(stock, dayOffset, currentTime))
+  return stocks.map(stock => sliceStockAt(stock, dayOffset, currentTime, null, marketData))
 }
 
 /**

@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-10-09**（五大模式準確度提升第三階段月營收動能擴充：TWSE / TPEx 官方 OpenAPI 全市場月營收年增率 revenueYoY、月增率 revenueMoM 與資料月份快取架構完成，覆蓋率達 99.6%）
+> **最後更新：2026-10-10**（相對大盤 5 日強弱度 RS 明細架構：完成 calculateRSDetails 純演算法計算與 5 個交易日逐日對照時間序列，支援時光機回溯與盤中實時動態注入，規範 RS Details 前後端合約）
 
 ---
 
@@ -184,6 +184,22 @@ Python 輸出 → `public/data/stock-pool.json`
           { "key": "capital", "label": "股本", "score": 12, "max": 12, "desc": "11.5 億 (極輕型)" },
           { "key": "valuation", "label": "估值", "score": 10, "max": 10, "desc": "便宜 42% (PE 19.3 vs 33.2)" },
           { "key": "chips", "label": "籌碼", "score": 8, "max": 8, "desc": "連 3 日集中" }
+        ]
+      },
+      "rsDetails": {
+        "benchmarkName": "加權指數",
+        "marketCode": "tse",
+        "baseDate": "2026-10-01",
+        "currentDate": "2026-10-08",
+        "stockPrice": 184.0,
+        "stockBasePrice": 160.0,
+        "stockChg5d": 15.0,
+        "benchPrice": 22350.4,
+        "benchBasePrice": 21933.7,
+        "benchChg5d": 1.9,
+        "relStrength": 13.1,
+        "days": [
+          { "date": "2026-10-01", "dayLabel": "基準日 (T-5)", "stockPrice": 160.0, "stockDailyChg": 0.5, "stockCumChg": 0.0, "benchPrice": 21933.7, "benchDailyChg": 0.2, "benchCumChg": 0.0, "rsCum": 0.0 }
         ]
       },
       "kd": {
