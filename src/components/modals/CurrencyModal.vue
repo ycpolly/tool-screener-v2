@@ -40,9 +40,6 @@
     <div class="flex-1 flex flex-col space-y-3 min-h-0">
       <!-- 1. 匯率與台股連動觀念提示卡 (常規高對比，避免淺薄荷綠與琥珀色) -->
       <div class="bg-base-200/60 border border-base-300/80 rounded-xl p-2.5 text-xs space-y-1 shrink-0">
-        <div class="font-bold text-base-content flex items-center gap-1">
-          <span>{{ UI_STRINGS.CURRENCY_MODAL?.impactTitle || '匯率與台股連動觀念' }}</span>
-        </div>
         <div class="text-[11px] text-base-content/80 space-y-0.5 leading-relaxed">
           <p>{{ UI_STRINGS.CURRENCY_MODAL?.impactRises }}</p>
           <p>{{ UI_STRINGS.CURRENCY_MODAL?.impactFalls }}</p>
@@ -51,7 +48,7 @@
 
       <!-- 2. TradingView Symbol Overview 嵌入外層容器 (明確高度以確保圖表 Canvas 正常繪製) -->
       <div
-        class="border border-base-300/70 rounded-xl overflow-hidden bg-base-200/30 w-full h-[460px] sm:h-[500px] min-h-[440px] relative shrink-0"
+        class="border border-base-300/70 rounded-xl overflow-hidden bg-base-200/30 w-full h-[440px] min-h-[440px] relative shrink-0"
       >
         <div
           ref="widgetContainer"
@@ -63,7 +60,7 @@
             style="height: calc(100% - 32px); width: 100%;"
           ></div>
           <div class="tradingview-widget-copyright px-2.5 text-[11px] text-base-content/60 border-t border-base-300/50 flex items-center justify-between h-[32px] font-sans">
-            <a href="https://tw.tradingview.com/symbols/USDTWD/?exchange=FX_IDC" rel="noopener nofollow" target="_blank" class="hover:underline text-base-content/80 font-medium">USDTWD 匯率走勢</a>
+            <a href="https://tw.tradingview.com/symbols/USDTWD/news/?exchange=FX_IDC" rel="noopener nofollow" target="_blank" class="hover:underline text-base-content/80 font-medium">看 USDTWD 匯率走勢報導</a>
             <span class="trademark text-base-content/50">由 TradingView 提供</span>
           </div>
         </div>
@@ -100,14 +97,14 @@ function loadWidget() {
   widgetContainer.value.innerHTML = `
     <div class="tradingview-widget-container__widget" style="height: calc(100% - 32px); width: 100%;"></div>
     <div class="tradingview-widget-copyright px-2.5 text-[11px] text-base-content/60 border-t border-base-300/50 flex items-center justify-between h-[32px] font-sans">
-      <a href="https://tw.tradingview.com/symbols/USDTWD/?exchange=FX_IDC" rel="noopener nofollow" target="_blank" class="hover:underline text-base-content/80 font-medium">USDTWD 匯率走勢</a>
+      <a href="https://tw.tradingview.com/symbols/USDTWD/news/?exchange=FX_IDC" rel="noopener nofollow" target="_blank" class="hover:underline text-base-content/80 font-medium">看 USDTWD 匯率走勢報導</a>
       <span class="trademark text-base-content/50">由 TradingView 提供</span>
     </div>
   `
 
   const config = {
     symbols: [
-      ['FX_IDC:USDTWD|3M'],
+      ['FX_IDC:USDTWD|1M'],
     ],
     chartType: 'area',
     lineWidth: 2,
@@ -125,7 +122,7 @@ function loadWidget() {
     wickUpColor: '#22ab94',
     wickDownColor: '#f7525f',
     colorTheme: props.isDark ? 'dark' : 'light',
-    isTransparent: false,
+    isTransparent: true,
     locale: 'zh_TW',
     chartOnly: false,
     scalePosition: 'right',
@@ -217,5 +214,15 @@ onMounted(() => {
   min-height: 400px !important;
   width: 100% !important;
   display: block !important;
+}
+
+:deep(.tradingview-widget-copyright a) {
+  color: var(--color-base-content, currentColor) !important;
+  font-weight: 600 !important;
+}
+
+:deep(.tradingview-widget-copyright a:hover) {
+  text-decoration: underline !important;
+  opacity: 0.8 !important;
 }
 </style>

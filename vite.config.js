@@ -8,6 +8,12 @@ export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? '/tool-screener-v2/' : '/',
   plugins: [
     tailwindcss(),
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('tv-'),
+        },
+      },
+    }),
   ],
 })

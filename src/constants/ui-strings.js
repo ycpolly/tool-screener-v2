@@ -689,7 +689,7 @@ export const UI_STRINGS = {
 
   CURRENCY_MODAL: {
     btnTitle: '美元兌台幣匯率',
-    title: '美元兌台幣即時匯率',
+    title: '美元兌台幣',
     code: 'USD/TWD',
     titleSuffix: '即時匯率走勢',
     refreshBtn: '重新整理走勢圖',
@@ -698,8 +698,8 @@ export const UI_STRINGS = {
     sourceName: '由 TradingView 提供',
     sourceUrl: 'https://tw.tradingview.com/symbols/USDTWD/?exchange=FX_IDC',
     impactTitle: '匯率與台股連動觀念',
-    impactRises: 'USD/TWD 上升（台幣貶值）：外資資金傾向流出，權值股與指數承壓。',
-    impactFalls: 'USD/TWD 下降（台幣升值）：外資資金傾向匯入，有利推升大型權值股。',
+    impactRises: '上升 = 台幣貶：外資資金傾向流出，權值股與指數承壓',
+    impactFalls: '下降 = 台幣升：外資資金傾向匯入，有利推升大型權值股',
     closeBtn: '關閉',
   },
 }

@@ -171,6 +171,9 @@
         </div>
       </div>
 
+      <!-- TradingView 大盤即時走馬燈 (加權指數 INDEX:TAIEX & 櫃買指數 TPEX:IX0043) -->
+      <MarketBanner :is-dark="isDark" />
+
       <!-- 核心工作區：先聚焦打磨 StockCard -->
       <template v-if="!poolError">
         <!-- 模式選股與微調面板 -->
