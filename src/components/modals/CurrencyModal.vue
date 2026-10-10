@@ -49,11 +49,25 @@
         </div>
       </div>
 
-      <!-- 2. TradingView Symbol Overview 嵌入容器 -->
+      <!-- 2. TradingView Symbol Overview 嵌入外層容器 (明確高度以確保圖表 Canvas 正常繪製) -->
       <div
-        ref="widgetContainer"
-        class="border border-base-300/70 rounded-xl overflow-hidden bg-base-200/30 flex-1 w-full min-h-[380px] h-[430px] sm:h-[480px]"
-      ></div>
+        class="border border-base-300/70 rounded-xl overflow-hidden bg-base-200/30 w-full h-[460px] sm:h-[500px] min-h-[440px] relative shrink-0"
+      >
+        <div
+          ref="widgetContainer"
+          class="tradingview-widget-container w-full h-full"
+          style="height: 100%; width: 100%;"
+        >
+          <div
+            class="tradingview-widget-container__widget"
+            style="height: calc(100% - 32px); width: 100%;"
+          ></div>
+          <div class="tradingview-widget-copyright px-2.5 text-[11px] text-base-content/60 border-t border-base-300/50 flex items-center justify-between h-[32px] font-sans">
+            <a href="https://tw.tradingview.com/symbols/USDTWD/?exchange=FX_IDC" rel="noopener nofollow" target="_blank" class="hover:underline text-base-content/80 font-medium">USDTWD 匯率走勢</a>
+            <span class="trademark text-base-content/50">由 TradingView 提供</span>
+          </div>
+        </div>
+      </div>
     </div>
   </BaseStockModal>
 </template>
@@ -81,27 +95,23 @@ const isRefreshing = ref(false)
 
 function loadWidget() {
   if (!widgetContainer.value) return
-  widgetContainer.value.innerHTML = ''
 
-  const wrapper = document.createElement('div')
-  wrapper.className = 'tradingview-widget-container h-full w-full flex flex-col'
-
-  const widgetDiv = document.createElement('div')
-  widgetDiv.className = 'tradingview-widget-container__widget flex-1 w-full min-h-0'
-  wrapper.appendChild(widgetDiv)
-
-  const copyrightDiv = document.createElement('div')
-  copyrightDiv.className = 'tradingview-widget-copyright px-2.5 py-1 text-[11px] text-base-content/60 border-t border-base-300/50 flex items-center justify-between shrink-0 font-sans'
-  copyrightDiv.innerHTML = `
-    <a href="https://tw.tradingview.com/symbols/USDTWD/?exchange=FX_IDC" rel="noopener nofollow" target="_blank" class="hover:underline text-base-content/80 font-medium">USDTWD 匯率走勢</a>
-    <span class="trademark text-base-content/50">由 TradingView 提供</span>
+  // 重置容器結構為標準 TradingView 階層
+  widgetContainer.value.innerHTML = `
+    <div class="tradingview-widget-container__widget" style="height: calc(100% - 32px); width: 100%;"></div>
+    <div class="tradingview-widget-copyright px-2.5 text-[11px] text-base-content/60 border-t border-base-300/50 flex items-center justify-between h-[32px] font-sans">
+      <a href="https://tw.tradingview.com/symbols/USDTWD/?exchange=FX_IDC" rel="noopener nofollow" target="_blank" class="hover:underline text-base-content/80 font-medium">USDTWD 匯率走勢</a>
+      <span class="trademark text-base-content/50">由 TradingView 提供</span>
+    </div>
   `
-  wrapper.appendChild(copyrightDiv)
 
   const config = {
+    symbols: [
+      ['FX_IDC:USDTWD|3M'],
+    ],
+    chartType: 'area',
     lineWidth: 2,
     lineType: 0,
-    chartType: 'area',
     fontColor: 'rgb(106, 109, 120)',
     gridLineColor: props.isDark ? 'rgba(242, 242, 242, 0.06)' : 'rgba(42, 42, 42, 0.06)',
     volumeUpColor: 'rgba(34, 171, 148, 0.5)',
@@ -123,9 +133,6 @@ function loadWidget() {
     fontFamily: '-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif',
     valuesTracking: '1',
     changeMode: 'price-and-percent',
-    symbols: [
-      ['FX_IDC:USDTWD|3M'],
-    ],
     dateRanges: [
       '1d|1',
       '1m|30',
@@ -150,9 +157,7 @@ function loadWidget() {
   script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js'
   script.async = true
   script.textContent = JSON.stringify(config)
-  wrapper.appendChild(script)
-
-  widgetContainer.value.appendChild(wrapper)
+  widgetContainer.value.appendChild(script)
 }
 
 function refreshWidget() {
@@ -169,7 +174,10 @@ watch(
   (open) => {
     if (open) {
       nextTick(() => {
-        loadWidget()
+        // 延遲 80ms 等待 DaisyUI modal 動畫與 DOM 幾何尺寸就緒，避免高度計算坍塌為 0
+        setTimeout(() => {
+          loadWidget()
+        }, 80)
       })
     }
   },
@@ -190,8 +198,24 @@ watch(
 onMounted(() => {
   if (props.isOpen) {
     nextTick(() => {
-      loadWidget()
+      setTimeout(() => {
+        loadWidget()
+      }, 80)
     })
   }
 })
 </script>
+
+<style scoped>
+:deep(.tradingview-widget-container) {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+:deep(.tradingview-widget-container iframe) {
+  height: calc(100% - 32px) !important;
+  min-height: 400px !important;
+  width: 100% !important;
+  display: block !important;
+}
+</style>
