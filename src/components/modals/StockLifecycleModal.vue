@@ -71,7 +71,7 @@
               <div
                 v-else
                 :ref="el => { if (item.isAnchor) anchorCardRef = el }"
-                class="w-[104px] sm:w-[96px] shrink-0 rounded-xl p-2.5 flex flex-col items-center justify-between text-center space-y-1.5 font-numeric select-none transition-all cursor-pointer"
+                class="w-[132px] shrink-0 rounded-xl p-2.5 flex flex-col items-center justify-between text-center space-y-1.5 font-numeric select-none transition-all cursor-pointer"
                 :class="[
                   selectedDate && isSameDate(selectedDate, item.date)
                     ? 'border-2 border-base-content/50'

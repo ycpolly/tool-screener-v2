@@ -2,7 +2,7 @@
   <div
     class="stock-card relative bg-base-200 border border-base-300 rounded-xl transition-[border-color,box-shadow] duration-150 hover:shadow-md hover:border-base-content/20 [content-visibility:auto]"
     :class="isCompact ? (hasTopLeftBadge ? 'pt-6 p-3 sm:p-3.5' : 'p-3 sm:p-3.5') : 'p-6'"
-    :style="{ containIntrinsicSize: isCompact ? (hasTopLeftBadge ? '88px' : '76px') : '420px' }"
+    :style="{ containIntrinsicSize: isCompact ? (hasTopLeftBadge ? '136px' : '124px') : '420px' }"
   >
     <!-- 左上角絕對定位：新進標籤 (NEW Entry Badge) 與 相對強弱 (RS Badge) -->
     <div
@@ -82,6 +82,9 @@
         :is-unmatched="isUnmatched"
         :filter-evaluation="filterEvaluation"
       />
+
+      <!-- ★ 綜合量化評分與細項拆解 (支援點擊展開 6 大維度得分說明) -->
+      <StockRankScoreSlot :stock="stock" />
     </div>
 
     <!-- ============================================================
