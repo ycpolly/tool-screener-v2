@@ -630,6 +630,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 五大模式準確度提升第三階段月營收動能後端擴充（Phase 3 Monthly Revenue YoY & MoM Backend：實作 `scripts/scrapers/revenue.py`，串接 TWSE 與 TPEx 官方 OpenAPI `t187ap05_L` 與 `mopsfin_t187ap05_O`，兩次請求極速涵蓋全市場 1,978 檔上市櫃公司月營收；建立 `cache/revenue.json` 本地快取（TTL = 7 天），支援快速回退與斷網防護；`scripts/writer.py` 與 `main.py` 注入 `revenueYoY`、`revenueMoM` 與 `revenueLatestMonth`，全市場覆蓋率達 99.6%；於 `src/constants/ui-strings.js` 建立 `REVENUE` 字典；工作流 `update-stock-pool.yml` 納入快取提交）— 完成 2026-10-09
 - [x] 五大模式準確度提升第三階段月營收動能前端視覺實作（Phase 3 Monthly Revenue Frontend UI：於 `StockFundamentalsSection.vue` 實作月營收動能行，呈現資料月份、年增率、高成長徽章與月增率；針對波段催化劑年增率 ≥ 30% 提供微型紅色晶亮邊框 `(高成長)` 標籤；數值依正負採用 `text-rise` 漲紅與 `text-fall` 跌綠，若無資料自動優雅隱藏杜絕留白）— 完成 2026-10-09
 - [x] 五大模式準確度提升第四階段綜合量化評分前端視覺實作（Phase 4 Rank Score Frontend UI：建立獨立子元件 `StockRankScoreSlot.vue`，於個股卡片篩選槽位下方渲染綜合評分摘要行；評分採用純文字加粗呈現，摒棄雜亂色彩；支援就地向下平滑展開 6 大維度【起跳、營收、RS、股本、估值、籌碼】得分比與實測打勾說明；同步整合至手機端與電腦端 3 欄佈局）— 完成 2026-10-09
+- [x] 個股卡片報價觸發行為細緻化（StockCard Price vs Change Click Handlers Split：將點擊大字價格與小字漲跌幅解耦；點擊【大字價格】精確開啟「近日表現」彈窗（LIFECYCLE Modal），點擊【小字漲跌金額與幅度】開啟「價格速算」彈窗（PriceCalc Modal），Tooltip 同步精確對照，涵蓋手機完整、簡約與電腦端佈局）— 完成 2026-10-10
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

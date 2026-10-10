@@ -54,15 +54,21 @@
             [{{ UI_STRINGS.SCREENER.disposed }}]
           </span>
         </div>
-        <div
-          class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
-          :title="UI_STRINGS.QUICK_CALC.openTooltip"
-          @click.stop="$emit('openPriceCalc', stock)"
-        >
-          <span class="text-lg font-bold" :class="priceColorClass">
+        <div class="flex items-baseline gap-1.5 shrink-0 font-numeric select-none touch-manipulation">
+          <span
+            class="text-lg font-bold cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity"
+            :class="priceColorClass"
+            :title="UI_STRINGS.LIFECYCLE.openTooltip"
+            @click.stop="$emit('openLifecycle', stock)"
+          >
             {{ formatNumber(stock.price) }}
           </span>
-          <span class="text-sm font-semibold" :class="changeColorClass">
+          <span
+            class="text-sm font-semibold cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity"
+            :class="changeColorClass"
+            :title="UI_STRINGS.QUICK_CALC.openTooltip"
+            @click.stop="$emit('openPriceCalc', stock)"
+          >
             {{ formatChange(stock.change, stock.changePct) }}
           </span>
         </div>
@@ -105,15 +111,21 @@
               [{{ UI_STRINGS.SCREENER.disposed }}]
             </span>
           </div>
-          <div
-            class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
-            :title="UI_STRINGS.QUICK_CALC.openTooltip"
-            @click.stop="$emit('openPriceCalc', stock)"
-          >
-            <span class="text-lg font-bold" :class="priceColorClass">
+          <div class="flex items-baseline gap-1.5 shrink-0 font-numeric select-none touch-manipulation">
+            <span
+              class="text-lg font-bold cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity"
+              :class="priceColorClass"
+              :title="UI_STRINGS.LIFECYCLE.openTooltip"
+              @click.stop="$emit('openLifecycle', stock)"
+            >
               {{ formatNumber(stock.price) }}
             </span>
-            <span class="text-sm font-semibold" :class="changeColorClass">
+            <span
+              class="text-sm font-semibold cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity"
+              :class="changeColorClass"
+              :title="UI_STRINGS.QUICK_CALC.openTooltip"
+              @click.stop="$emit('openPriceCalc', stock)"
+            >
               {{ formatChange(stock.change, stock.changePct) }}
             </span>
           </div>
@@ -284,13 +296,23 @@
               [{{ UI_STRINGS.SCREENER.disposed }}]
             </span>
           </div>
-          <div
-            class="flex items-baseline gap-1.5 shrink-0 font-numeric cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity select-none touch-manipulation"
-            :title="UI_STRINGS.QUICK_CALC.openTooltip"
-            @click.stop="$emit('openPriceCalc', stock)"
-          >
-            <span class="text-lg font-bold" :class="priceColorClass">{{ formatNumber(stock.price) }}</span>
-            <span class="text-sm font-semibold" :class="changeColorClass">{{ formatChange(stock.change, stock.changePct) }}</span>
+          <div class="flex items-baseline gap-1.5 shrink-0 font-numeric select-none touch-manipulation">
+            <span
+              class="text-lg font-bold cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity"
+              :class="priceColorClass"
+              :title="UI_STRINGS.LIFECYCLE.openTooltip"
+              @click.stop="$emit('openLifecycle', stock)"
+            >
+              {{ formatNumber(stock.price) }}
+            </span>
+            <span
+              class="text-sm font-semibold cursor-pointer hover:opacity-80 active:opacity-70 transition-opacity"
+              :class="changeColorClass"
+              :title="UI_STRINGS.QUICK_CALC.openTooltip"
+              @click.stop="$emit('openPriceCalc', stock)"
+            >
+              {{ formatChange(stock.change, stock.changePct) }}
+            </span>
           </div>
         </div>
 
