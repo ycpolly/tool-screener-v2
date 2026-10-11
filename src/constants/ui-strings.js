@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v1011.03',
+    version: 'v1011.04',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -303,6 +303,11 @@ export const UI_STRINGS = {
     intradayModeDesc: '收盤前下單用 · 略過當日 1D 籌碼（改以前日 3D 趨勢判斷）',
     intradayModeWarning: '當日 1D 籌碼尚未更新，僅供盤後零股下單參考',
     requireAnyBuy: '法人買超確認 (獲外資 / 主力 / 投信買超支撐)',
+    checkRevenueYoY: '月營收年增成長',
+    checkRevenueYoYThreshold: (n) => `月營收年增率 ≥ ${n}%`,
+    checkRelStrength: '相對大盤強勢 (5D RS ≥ 0%)',
+    checkChipsTrend: '排除籌碼連 3 日發散',
+    checkPeDiscount: '同業估值折價保護',
     premiumToggle: '一鍵精選',
     premiumActive: '已啟用一鍵精選',
     premiumActiveText: '精選中',
@@ -337,6 +342,10 @@ export const UI_STRINGS = {
     chipsSell1D: '當日避雷',
     requireAnyBuy: '法人買超',
     disposed: '處置檢驗',
+    revenueYoY: '月營收年增',
+    relStrength: '相對強弱',
+    chipsTrend: '籌碼趨勢',
+    peDiscount: '同業估值',
   },
 
   FILTER_REASONS: {
@@ -370,6 +379,10 @@ export const UI_STRINGS = {
     excludeSell3DFailed: (triggered) => `觸發連續 3 日賣超避雷 (${triggered})`,
     excludeSell1DFailed: (triggered) => `觸發當日賣超避雷 (${triggered})`,
     requireAnyBuyFailed: '無法人買超支撐 (外資 / 主力 / 投信均無買進)',
+    revenueYoYFailed: (min, val) => typeof val === 'number' ? `月營收年增未達門檻 (${val}% < ${min}%)` : `月營收年增無資料 (門檻 ≥ ${min}%)`,
+    relStrengthFailed: (min, val) => typeof val === 'number' ? `相對大盤 5 日強弱未達門檻 (${val}% < ${min}%)` : `相對大盤 5 日強弱無資料 (門檻 ≥ ${min}%)`,
+    chipsTrendFailed: '籌碼連續 3 日發散 (主力可能已出場)',
+    peDiscountFailed: (max, val) => typeof val === 'number' ? `同業估值未達折價門檻 (${val}% > ${max}%)` : '暫無同業估值資料',
   },
 
 

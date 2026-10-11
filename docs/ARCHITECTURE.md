@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-10-10**（個股所屬產業與關聯企業外開架構：完成 batch_fetch_industry 富邦產業爬蟲與 60 天快取架構，全池 516 檔 100% 覆蓋注入 industry 與 industryUrl，規範前後端合約）
+> **最後更新：2026-10-11**（五大模式基本面與籌碼趨勢硬性篩選與跌深反轉法人確認：screener.js 實作 checkRevenueYoY、checkRelStrength、checkChipsTrend、checkPeDiscount 四大硬過濾，跌深反轉預設啟用 requireAnyBuy 防死貓跳，一鍵精選全面配置基本面與籌碼防護，ui-strings.js 補齊診斷標籤並推進版號至 v1011.04）
 
 ---
 
@@ -299,6 +299,7 @@ Python 輸出 → `public/data/stock-pool.json`
 - `pe`（本益比）、`industryPe`（同業平均本益比）與 `peDiscount`（同業折溢價 %，公式: `(pe - industryPe) / industryPe * 100`）：後端依富邦個股基本資料抓取近 4 季 EPS 合計（`trailingEps`），每日依盤後/盤中最新收盤價實時高頻動態計算 `pe = round(price / trailingEps, 2)`；同業 PE 快取更新週期為 7 天；若公司虧損或無 PE（顯示 N/A）則優雅保持 `null`；時光機回溯 `sliceStockAt` 支援歷史倒流動態推算 당시 PE 與折溢價
 - `revenueYoY`（營收年增率 %）、`revenueMoM`（月增率 %）、`revenueLatestMonth`（資料月份）：串接 TWSE / TPEx 官方 OpenAPI，每月 10 日前定時公告更新，全市場快取存於 `cache/revenue.json`（TTL = 7 天），個股池覆蓋率 99.6%
 - `rankScore`（綜合量化評分，0 ~ 100 分，起跳 40 分）與 `rankBreakdown`（細部評分拆解與摘要文字）：基於統一 5 維度（營收催化劑 15 分、RS 強弱 15 分、股本規模 12 分、同業折價 10 分、籌碼集中 8 分）純量化公式計算，切換至策略型態分頁（Mode 1 ~ 5）時預設依 `rankScore` 降冪排序，時光機回溯 `sliceStockAt` 支援歷史倒流重算當時真實評分
+- `checkRevenueYoY` / `checkRelStrength` / `checkChipsTrend` / `checkPeDiscount` 硬性過濾條件：前端 `screener.js`（`evaluateStock` & `diagnoseStock`）新增四大可選硬過濾機制；`screener-modes.js` 在各模式 `defaultParams` 預設為 `false` 維持完全相容，並在「一鍵精選（`premiumParams`）」中啟用（例如底部蓄勢月營收年增需 >= 10%、相對大盤 5D RS 需強於大盤、排除籌碼連續 3 日發散）；跌深反轉模式（Mode 1）在 `defaultParams` 中啟用 `requireAnyBuy: true`，確保逆勢抄底標的獲外資/投信/主力至少任一法人買超支撐，防範純散戶恐慌死貓跳。
 
 ---
 
@@ -658,6 +659,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 五大模式準確度提升第三階段月營收動能前端視覺實作（Phase 3 Monthly Revenue Frontend UI：於 `StockFundamentalsSection.vue` 實作月營收動能行，呈現資料月份、年增率、高成長徽章與月增率；針對波段催化劑年增率 ≥ 30% 提供微型紅色晶亮邊框 `(高成長)` 標籤；數值依正負採用 `text-rise` 漲紅與 `text-fall` 跌綠，若無資料自動優雅隱藏杜絕留白）— 完成 2026-10-09
 - [x] 五大模式準確度提升第四階段綜合量化評分前端視覺實作（Phase 4 Rank Score Frontend UI：建立獨立子元件 `StockRankScoreSlot.vue`，於個股卡片篩選槽位下方渲染綜合評分摘要行；評分採用純文字加粗呈現，摒棄雜亂色彩；支援就地向下平滑展開 6 大維度【起跳、營收、RS、股本、估值、籌碼】得分比與實測打勾說明；同步整合至手機端與電腦端 3 欄佈局）— 完成 2026-10-09
 - [x] 個股卡片報價觸發行為細緻化（StockCard Price vs Change Click Handlers Split：將點擊大字價格與小字漲跌幅解耦；點擊【大字價格】精確開啟「近日表現」彈窗（LIFECYCLE Modal），點擊【小字漲跌金額與幅度】開啟「價格速算」彈窗（PriceCalc Modal），Tooltip 同步精確對照，涵蓋手機完整、簡約與電腦端佈局）— 完成 2026-10-10
+- [x] 五大模式基本面與籌碼趨勢硬性篩選與跌深反轉法人確認（Phase 5 Screener Hard Filters & Reversal Institutional Protection：於 `src/engine/screener.js` 的 `evaluateStock` 與 `diagnoseStock` 實作四大可選硬性過濾條件——月營收年增 `checkRevenueYoY`、相對大盤 5 日強弱 `checkRelStrength`、籌碼趨勢健全 `checkChipsTrend` 與同業估值折價 `checkPeDiscount`；於 `src/constants/screener-modes.js` 為 Mode 1 跌深反轉預設啟用 `requireAnyBuy: true` 防範純散戶接刀死貓跳，並為五大模式一鍵精選 `premiumParams` 配置月營收年增率、正向 RS 與排除籌碼連續 3 日發散；`src/constants/ui-strings.js` 擴充對應之 PANEL 標籤、通關診斷與淘汰原因字典；版號推進至 `v1011.04`）— 完成 2026-10-11（v1011.04）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

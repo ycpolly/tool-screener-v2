@@ -705,6 +705,46 @@ export function evaluateStock(stock, params = {}, activeModeId = '') {
     }
   }
 
+  // 20. 月營收年增過濾 (checkRevenueYoY: 可選)
+  if (params.checkRevenueYoY) {
+    const yoy = stock.revenueYoY
+    const min = typeof params.minRevenueYoY === 'number' ? params.minRevenueYoY : 0
+    if (typeof yoy !== 'number' || yoy < min) {
+      return fail(strings.revenueYoYFailed
+        ? strings.revenueYoYFailed(min, yoy)
+        : (typeof yoy === 'number' ? `月營收年增未達門檻 (${yoy}% < ${min}%)` : `月營收年增無資料 (門檻 ≥ ${min}%)`))
+    }
+  }
+
+  // 21. 相對強弱過濾 (checkRelStrength: 可選，5日 RS 需強於大盤)
+  if (params.checkRelStrength) {
+    const rs = stock.relStrength5d
+    const min = typeof params.minRelStrength === 'number' ? params.minRelStrength : 0
+    if (typeof rs !== 'number' || rs < min) {
+      return fail(strings.relStrengthFailed
+        ? strings.relStrengthFailed(min, rs)
+        : (typeof rs === 'number' ? `相對大盤 5 日強弱未達門檻 (${rs}% < ${min}%)` : `相對大盤 5 日強弱無資料 (門檻 ≥ ${min}%)`))
+    }
+  }
+
+  // 22. 籌碼趨勢過濾 (checkChipsTrend: 可選，排除連續發散)
+  if (params.checkChipsTrend) {
+    if (stock.chipsTrend3d === 'DOWN') {
+      return fail(strings.chipsTrendFailed || '籌碼連續 3 日發散 (主力可能已出場)')
+    }
+  }
+
+  // 23. 同業估值折價過濾 (checkPeDiscount: 可選)
+  if (params.checkPeDiscount) {
+    const peDisc = stock.peDiscount
+    const max = typeof params.maxPeDiscount === 'number' ? params.maxPeDiscount : 0
+    if (typeof peDisc !== 'number' || peDisc > max) {
+      return fail(strings.peDiscountFailed
+        ? strings.peDiscountFailed(max, peDisc)
+        : (typeof peDisc === 'number' ? `同業估值未達折價門檻 (${peDisc}% > ${max}%)` : '暫無同業估值資料'))
+    }
+  }
+
   return {
     isMatch: true,
     reasonText: strings.passed || '符合篩選條件',
@@ -1076,6 +1116,68 @@ export function diagnoseStock(stock, params = {}, activeModeId = 'ALL') {
       label: dLabels.disposed || '處置檢驗',
       pass,
       desc: pass ? '正常交易 (非處置股)' : '處置中 (關禁閉)',
+    })
+  }
+
+  // 17. 月營收年增 (checkRevenueYoY)
+  if (params.checkRevenueYoY) {
+    const yoy = stock.revenueYoY
+    const min = typeof params.minRevenueYoY === 'number' ? params.minRevenueYoY : 0
+    const pass = typeof yoy === 'number' && yoy >= min
+    details.push({
+      label: dLabels.revenueYoY || '月營收年增',
+      pass,
+      desc: typeof yoy === 'number'
+        ? `月營收年增 ${yoy >= 0 ? '+' : ''}${yoy}% (門檻 ≥ ${min}%)`
+        : `月營收無資料 (門檻 ≥ ${min}%)`,
+    })
+  }
+
+  // 18. 相對強弱 (checkRelStrength)
+  if (params.checkRelStrength) {
+    const rs = stock.relStrength5d
+    const min = typeof params.minRelStrength === 'number' ? params.minRelStrength : 0
+    const pass = typeof rs === 'number' && rs >= min
+    details.push({
+      label: dLabels.relStrength || '相對強弱',
+      pass,
+      desc: typeof rs === 'number'
+        ? `5D RS ${rs >= 0 ? '+' : ''}${rs}% (門檻 ≥ ${min}%)`
+        : `5D RS 無資料 (門檻 ≥ ${min}%)`,
+    })
+  }
+
+  // 19. 籌碼趨勢 (checkChipsTrend)
+  if (params.checkChipsTrend) {
+    const trend = stock.chipsTrend3d
+    const pass = trend !== 'DOWN'
+    const trendLabel = {
+      'STREAK_3': '連 3 集中',
+      'STREAK_2': '連 2 集中',
+      'FLAT': '持平',
+      'DOWN': '連續發散',
+      'NEW': '新進追蹤池',
+    }[trend] || (trend || '未知')
+    details.push({
+      label: dLabels.chipsTrend || '籌碼趨勢',
+      pass,
+      desc: pass
+        ? `籌碼趨勢健全 (${trendLabel})`
+        : '籌碼連續 3 日發散 (主力可能已出場)',
+    })
+  }
+
+  // 20. 同業估值折價 (checkPeDiscount)
+  if (params.checkPeDiscount) {
+    const peDisc = stock.peDiscount
+    const max = typeof params.maxPeDiscount === 'number' ? params.maxPeDiscount : 0
+    const pass = typeof peDisc === 'number' && peDisc <= max
+    details.push({
+      label: dLabels.peDiscount || '同業估值',
+      pass,
+      desc: typeof peDisc === 'number'
+        ? (peDisc <= 0 ? `折價 ${Math.abs(peDisc)}% (門檻 ≤ ${max}%)` : `溢價 +${peDisc}% (門檻 ≤ ${max}%)`)
+        : '暫無同業估值資料',
     })
   }
 

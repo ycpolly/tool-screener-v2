@@ -37,6 +37,7 @@ export const SCREENER_MODES = {
       checkVolExpansion: true,        // 低檔爆量攻擊 (當日量 > 5日量均)
       excludeSell3D: true,            // 隱藏外資 / 主力 / 投信賣超 3D (含 0050 豁免)
       excludeSell1D: false,           // 隱藏外資 / 主力賣超 1D
+      requireAnyBuy: true,            // 需屬於 SitcaBuy 或 ForeignBuy 或 MajorBuy 任一分類 (確認法人籌碼方向，防死貓跳)
 
       // K 棒型態排雷
       checkRedCandle: true,           // 實體反轉紅 K (收盤 > 開盤 且 漲幅 >= 2%)
@@ -49,11 +50,23 @@ export const SCREENER_MODES = {
       kdKMax: 40,
       kdRequireCross: true,           // KD 黃金交叉 (K > D)
       intradayMode: false,            // 尾盤快選開關（預設關閉；true = 略過 excludeSell1D 檢查，改用 3D 籌碼趨勢判斷）
+
+      // 基本面與籌碼趨勢可選過濾 (預設關閉保持相容)
+      checkRevenueYoY: false,
+      minRevenueYoY: 0,
+      checkRelStrength: false,
+      minRelStrength: 0,
+      checkChipsTrend: false,
+      checkPeDiscount: false,
+      maxPeDiscount: 0,
     },
     premiumParams: {
       minVolume: 2000,                // 流動性拉高至 2000 張
       minRedCandleChangePct: 3.5,     // 實體紅 K 漲幅拉高至 3.5%
       kdKMax: 25,                     // K 值上限由 40 縮至 25 (極端超賣)
+      checkChipsTrend: true,          // 排除籌碼連續 3 日發散 (主力可能已出場)
+      checkRevenueYoY: true,          // 月營收年增需 >= 0%
+      minRevenueYoY: 0,
     },
   },
 
@@ -96,12 +109,25 @@ export const SCREENER_MODES = {
       kdKMax: 60,
       kdRequireCross: false,          // 蓄勢期免除強制黃金交叉，避免漏掉初期標的
       intradayMode: false,            // 尾盤快選開關（預設關閉；true = 略過 excludeSell1D 檢查，改用 3D 籌碼趨勢判斷）
+
+      // 基本面與籌碼趨勢可選過濾 (預設關閉保持相容)
+      checkRevenueYoY: false,
+      minRevenueYoY: 0,
+      checkRelStrength: false,
+      minRelStrength: 0,
+      checkChipsTrend: false,
+      checkPeDiscount: false,
+      maxPeDiscount: 0,
     },
     premiumParams: {
       convergenceMax: 3.0,            // 三線價差緊縮至 3% 以內
       tightChgMin: -1.0,              // 振幅限制在正負 1% ~ 1.5% 內
       tightChgMax: 1.5,
       bias20Max: 5.0,                 // 月線乖離上限壓低至 5%
+      checkRevenueYoY: true,          // 月營收年增率 >= 10% (避免衰退股潛伏變死水)
+      minRevenueYoY: 10,
+      checkRelStrength: true,         // RS 需為正值 (強於大盤)
+      checkChipsTrend: true,          // 排除籌碼連續發散
     },
   },
 
@@ -141,11 +167,22 @@ export const SCREENER_MODES = {
       kdKMax: 100,
       kdRequireCross: true,         // K > D 黃金交叉
       intradayMode: false,          // 尾盤快選開關（預設關閉；true = 略過 excludeSell1D 檢查，改用 3D 籌碼趨勢判斷）
+
+      // 基本面與籌碼趨勢可選過濾 (預設關閉保持相容)
+      checkRevenueYoY: false,
+      minRevenueYoY: 0,
+      checkRelStrength: false,
+      minRelStrength: 0,
+      checkChipsTrend: false,
+      checkPeDiscount: false,
+      maxPeDiscount: 0,
     },
     premiumParams: {
       minVolume: 2000,              // 門檻拉高至 2000 張
       prevConvergenceMax: 2.0,      // 昨日三線價差緊縮至 2.0%
       minRedCandleChangePct: 3.0,   // 攻擊紅 K 漲幅至少 3.0% 以上
+      checkRelStrength: true,       // RS 需為正值 (強於大盤)
+      checkChipsTrend: true,        // 排除籌碼連續發散
     },
   },
 
@@ -183,11 +220,24 @@ export const SCREENER_MODES = {
       kdKMax: 75,
       kdRequireCross: false,
       intradayMode: false,          // 尾盤快選開關（預設關閉；true = 略過 excludeSell1D 檢查，改用 3D 籌碼趨勢判斷）
+
+      // 基本面與籌碼趨勢可選過濾 (預設關閉保持相容)
+      checkRevenueYoY: false,
+      minRevenueYoY: 0,
+      checkRelStrength: false,
+      minRelStrength: 0,
+      checkChipsTrend: false,
+      checkPeDiscount: false,
+      maxPeDiscount: 0,
     },
     premiumParams: {
       bias5Min: -1.5,               // 緊貼 5MA (-1.5% ~ +1.5%)
       bias5Max: 1.5,
       checkVolPullbackStrict: true, // 嚴格 AND 雙重量縮 (量 < 5MA均量 AND 量 < 昨日量)
+      checkRevenueYoY: true,        // 基本面有守 (年增 >= 0%)
+      minRevenueYoY: 0,
+      checkRelStrength: true,       // RS 需為正值 (強於大盤)
+      checkChipsTrend: true,        // 排除籌碼連續發散
     },
   },
 
@@ -229,11 +279,22 @@ export const SCREENER_MODES = {
       kdKMax: 58,
       kdRequireCross: true,           // KD 多頭排列 (K > D)
       intradayMode: false,            // 尾盤快選開關（預設關閉；true = 略過 excludeSell1D 檢查，改用 3D 籌碼趨勢判斷）
+
+      // 基本面與籌碼趨勢可選過濾 (預設關閉保持相容)
+      checkRevenueYoY: false,
+      minRevenueYoY: 0,
+      checkRelStrength: false,
+      minRelStrength: 0,
+      checkChipsTrend: false,
+      checkPeDiscount: false,
+      maxPeDiscount: 0,
     },
     premiumParams: {
       minVolume: 2000,                // 門檻拉高至 2000 張
       minRedCandleChangePct: 3.5,     // 實體紅 K 漲幅拉高至 3.5%
       kdKMax: 55,                     // K 值上限壓低至 55
+      checkRelStrength: true,         // RS 需為正值 (強於大盤)
+      checkChipsTrend: true,          // 排除籌碼連續發散
     },
   },
 }
