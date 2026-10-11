@@ -7,7 +7,7 @@
 export const UI_STRINGS = {
   APP: {
     title: '豐盛幫手',
-    version: 'v1011.04',
+    version: 'v1011.05',
     prefixIntraday: '盤中 ',
     prefixClosed: '收盤 ',
     prefixPostMarket: '盤後 ',
@@ -499,6 +499,21 @@ export const UI_STRINGS = {
       SELL: '避雷賣超',
       INDEX: '成分股與處置',
     },
+  },
+
+  STOCK_ENTRY_MODAL: {
+    titleSuffix: '入池原因與軌跡',
+    closeBtn: '關閉入池軌跡彈窗',
+    openTooltip: '查看入池原因與軌跡',
+    colDate: '日期',
+    colStatus: '狀態',
+    colReasons: '入選排行榜 (入池原因)',
+    statusInPool: '在池',
+    statusNewEntry: '新進',
+    statusNotInPool: '未在追蹤池',
+    noRecords: '暫無歷史入池紀錄',
+    emptyReasons: '無特定排行紀錄',
+    entrySummary: (totalDays, inPoolDays) => `近 ${totalDays} 個交易日，累計在池 ${inPoolDays} 日`,
   },
 
   SNAPSHOT: {

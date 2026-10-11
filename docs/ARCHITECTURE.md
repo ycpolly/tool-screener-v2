@@ -1,7 +1,7 @@
 # tool-screener-v2 架構設計文件
 
 > 本文件記錄 v2 重構的所有設計決策與架構規範。開工前確認，開工後作為 reference。
-> **最後更新：2026-10-11**（五大模式基本面與籌碼趨勢硬性篩選與跌深反轉法人確認：screener.js 實作 checkRevenueYoY、checkRelStrength、checkChipsTrend、checkPeDiscount 四大硬過濾，跌深反轉預設啟用 requireAnyBuy 防死貓跳，一鍵精選全面配置基本面與籌碼防護，ui-strings.js 補齊診斷標籤並推進版號至 v1011.04）
+> **最後更新：2026-10-11**（個股入池原因與歷史軌跡彈窗：實作 getStockEntryRecords 解析近 10 日逐日在池狀態與官方排行榜原因，建置 StockEntryModal 獨立 Bottom Sheet，點擊個股卡片股票名稱直達，完成前後端合約規範與全站事件聯動，版號推進至 v1011.05）
 
 ---
 
@@ -107,6 +107,7 @@ tool-screener-v2/
 │   │       ├── StockLifecycleModal.vue ← 近日表現 Bottom Sheet（7日價量變化與策略命中歷程，支援時光機回測後續 T+N 跨越時光分界線自由滑動覆盤）
 │   │       ├── StockRSModal.vue   ← 相對大盤 5 日強弱 (RS) 明細 Bottom Sheet（置頂超額 RS 摘要、個股 vs 大盤雙欄走勢與逐日對照表）
 │   │       ├── CurrencyModal.vue  ← 美元兌台幣即時匯率 (USD/TWD) 彈窗（嵌入 TradingView Symbol Overview 多週期走勢圖、獨立局部重新整理與連動台股觀念說明）
+│   │       ├── StockEntryModal.vue ← 入池原因與軌跡 Bottom Sheet（點擊個股卡片股票名稱喚起；近 10 日逐日在池狀態、新進標記與入選官方排行榜原因 Badges 列表）
 │   │       ├── RiskModal.vue   ← 空間與風控全貌（天花板/支撐/風報比）
 │   │       └── AvoidModal.vue  ← 避雷區（法人/主力/投信 賣超）
 │   ├── composables/
@@ -660,6 +661,7 @@ useRealtimeQuotes 合體 → screener.js 重算指標 → Vue 自動更新畫面
 - [x] 五大模式準確度提升第四階段綜合量化評分前端視覺實作（Phase 4 Rank Score Frontend UI：建立獨立子元件 `StockRankScoreSlot.vue`，於個股卡片篩選槽位下方渲染綜合評分摘要行；評分採用純文字加粗呈現，摒棄雜亂色彩；支援就地向下平滑展開 6 大維度【起跳、營收、RS、股本、估值、籌碼】得分比與實測打勾說明；同步整合至手機端與電腦端 3 欄佈局）— 完成 2026-10-09
 - [x] 個股卡片報價觸發行為細緻化（StockCard Price vs Change Click Handlers Split：將點擊大字價格與小字漲跌幅解耦；點擊【大字價格】精確開啟「近日表現」彈窗（LIFECYCLE Modal），點擊【小字漲跌金額與幅度】開啟「價格速算」彈窗（PriceCalc Modal），Tooltip 同步精確對照，涵蓋手機完整、簡約與電腦端佈局）— 完成 2026-10-10
 - [x] 五大模式基本面與籌碼趨勢硬性篩選與跌深反轉法人確認（Phase 5 Screener Hard Filters & Reversal Institutional Protection：於 `src/engine/screener.js` 的 `evaluateStock` 與 `diagnoseStock` 實作四大可選硬性過濾條件——月營收年增 `checkRevenueYoY`、相對大盤 5 日強弱 `checkRelStrength`、籌碼趨勢健全 `checkChipsTrend` 與同業估值折價 `checkPeDiscount`；於 `src/constants/screener-modes.js` 為 Mode 1 跌深反轉預設啟用 `requireAnyBuy: true` 防範純散戶接刀死貓跳，並為五大模式一鍵精選 `premiumParams` 配置月營收年增率、正向 RS 與排除籌碼連續 3 日發散；`src/constants/ui-strings.js` 擴充對應之 PANEL 標籤、通關診斷與淘汰原因字典；版號推進至 `v1011.04`）— 完成 2026-10-11（v1011.04）
+- [x] 個股入池原因與歷史軌跡彈窗（Stock Entry History Modal：在 `src/engine/screener.js` 實作 `getStockEntryRecords` 解析函式，解析近 10 日逐日在池狀態、新進標記與 `categories` 排行榜原因；在 `src/constants/ui-strings.js` 建立 `STOCK_ENTRY_MODAL` 字典；建置 `StockEntryModal.vue` 獨立 Bottom Sheet 元件；在 `StockCard.vue` 簡約、手機完整與電腦端佈局為股票名稱綁定點擊事件直通彈窗；於 `StockTable.vue` 與 `App.vue` 完成狀態組裝與事件聯動；版號推進至 `v1011.05`）— 完成 2026-10-11（v1011.05）
 - [ ] AvoidModal（避雷區，法人賣超）
 - [ ] 個股快捷連結（籌碼/多空/資券/盤後）
 

@@ -74,6 +74,7 @@
             @open-price-calc="onCardOpenPriceCalc"
             @open-lifecycle="onCardOpenLifecycle"
             @open-rs-details="onCardOpenRsDetails"
+            @open-entry-history="onCardOpenEntryHistory"
             @search-code="onCardSearchCode"
           />
 
@@ -109,6 +110,7 @@
             @open-price-calc="onCardOpenPriceCalc"
             @open-lifecycle="onCardOpenLifecycle"
             @open-rs-details="onCardOpenRsDetails"
+            @open-entry-history="onCardOpenEntryHistory"
             @search-code="onCardSearchCode"
           />
 
@@ -153,6 +155,7 @@
           @open-price-calc="onCardOpenPriceCalc"
           @open-lifecycle="onCardOpenLifecycle"
           @open-rs-details="onCardOpenRsDetails"
+          @open-entry-history="onCardOpenEntryHistory"
           @search-code="onCardSearchCode"
         />
 
@@ -207,6 +210,7 @@
             @open-price-calc="onCardOpenPriceCalc"
             @open-lifecycle="onCardOpenLifecycle"
             @open-rs-details="onCardOpenRsDetails"
+            @open-entry-history="onCardOpenEntryHistory"
             @search-code="onCardSearchCode"
           />
 
@@ -269,7 +273,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['select', 'sort', 'openRiskModal', 'openPriceCalc', 'openLifecycle', 'openRsDetails', 'searchCode'])
+const emit = defineEmits(['select', 'sort', 'openRiskModal', 'openPriceCalc', 'openLifecycle', 'openRsDetails', 'openEntryHistory', 'searchCode'])
 
 function onCardSelect(stock) {
   emit('select', stock)
@@ -289,6 +293,10 @@ function onCardOpenLifecycle(stock) {
 
 function onCardOpenRsDetails(stock) {
   emit('openRsDetails', stock)
+}
+
+function onCardOpenEntryHistory(stock) {
+  emit('openEntryHistory', stock)
 }
 
 function onCardSearchCode(code) {

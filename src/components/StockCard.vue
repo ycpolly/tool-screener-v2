@@ -50,7 +50,13 @@
           >
             {{ stock.code }}
           </span>
-          <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
+          <span
+            class="font-bold text-lg text-base-content truncate cursor-pointer hover:underline select-none touch-manipulation"
+            :title="UI_STRINGS.STOCK_ENTRY_MODAL?.openTooltip || '查看入池原因與軌跡'"
+            @click.stop="$emit('openEntryHistory', stock)"
+          >
+            {{ stock.name }}
+          </span>
           <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
             [{{ UI_STRINGS.SCREENER.disposed }}]
           </span>
@@ -110,7 +116,13 @@
             >
               {{ stock.code }}
             </span>
-            <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
+            <span
+              class="font-bold text-lg text-base-content truncate cursor-pointer hover:underline select-none touch-manipulation"
+              :title="UI_STRINGS.STOCK_ENTRY_MODAL?.openTooltip || '查看入池原因與軌跡'"
+              @click.stop="$emit('openEntryHistory', stock)"
+            >
+              {{ stock.name }}
+            </span>
             <span v-if="stock.isDisposed" class="font-bold text-sm text-rise tracking-tight">
               [{{ UI_STRINGS.SCREENER.disposed }}]
             </span>
@@ -295,7 +307,13 @@
             >
               {{ stock.code }}
             </span>
-            <span class="font-bold text-lg text-base-content truncate">{{ stock.name }}</span>
+            <span
+              class="font-bold text-lg text-base-content truncate cursor-pointer hover:underline select-none touch-manipulation"
+              :title="UI_STRINGS.STOCK_ENTRY_MODAL?.openTooltip || '查看入池原因與軌跡'"
+              @click.stop="$emit('openEntryHistory', stock)"
+            >
+              {{ stock.name }}
+            </span>
             <span v-if="stock.isDisposed" class="font-bold text-sm text-rise">
               [{{ UI_STRINGS.SCREENER.disposed }}]
             </span>
@@ -479,7 +497,7 @@ const props = defineProps({
   },
 })
 
-defineEmits(['select', 'openRiskModal', 'openPriceCalc', 'openLifecycle', 'openRsDetails', 'searchCode'])
+defineEmits(['select', 'openRiskModal', 'openPriceCalc', 'openLifecycle', 'openRsDetails', 'openEntryHistory', 'searchCode'])
 
 function formatNumber(num) {
   if (num === null || num === undefined || isNaN(num)) return '--'

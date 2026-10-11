@@ -2417,4 +2417,78 @@ export function calculateRiskReward(stock, feeTaxRate = 0.58) {
   }
 }
 
+/**
+ * 解析個股近 10 日入池歷程與入選排行榜原因
+ * @param {Object} stock - 個股資料物件
+ * @param {number} [maxDays=10] - 最多回溯交易日天數 (預設 10 天，與籌碼歷史快照滾動窗口一致)
+ * @returns {{
+ *   totalDays: number,
+ *   inPoolDays: number,
+ *   records: Array<{
+ *     date: string,
+ *     isInPool: boolean,
+ *     isNew: boolean,
+ *     categories: string[],
+ *     categoryLabels: string[],
+ *   }>
+ * }}
+ */
+export function getStockEntryRecords(stock, maxDays = 10) {
+  if (!stock) return { totalDays: 0, inPoolDays: 0, records: [] }
+  const chipsHistory = stock.chipsHistory || {}
+  const history10d = stock.history10d || []
+
+  // 收集並依日期由新至舊 (降冪) 排序，並限制在最近 maxDays 個交易日窗口
+  const recentHistoryDates = history10d.slice(-maxDays).map(b => b.date).filter(Boolean)
+  const dateSet = new Set([
+    ...recentHistoryDates,
+    ...Object.keys(chipsHistory),
+  ])
+  const sortedDates = Array.from(dateSet).sort().reverse().slice(0, maxDays)
+  if (sortedDates.length === 0) return { totalDays: 0, inPoolDays: 0, records: [] }
+
+  const tagDict = UI_STRINGS.CATEGORY_TAGS || {}
+
+  let inPoolCount = 0
+
+  const records = sortedDates.map((date, idx) => {
+    const entry = chipsHistory[date]
+    const isInPool = Boolean(entry)
+    if (isInPool) inPoolCount++
+
+    const rawCategories = entry?.categories || []
+
+    // 依 CATEGORY_TAGS 轉化為中文友善標籤（去重保留原始順序）
+    const seen = new Set()
+    const categoryLabels = []
+    for (const cat of rawCategories) {
+      const label = tagDict[cat] || cat
+      if (!seen.has(label)) {
+        seen.add(label)
+        categoryLabels.push(label)
+      }
+    }
+
+    // 判斷是否為當日新進 (前一交易日不在池中)
+    // 因 sortedDates 為由新到舊，前一交易日為 idx + 1
+    const prevDate = sortedDates[idx + 1]
+    const wasInPoolPrev = prevDate ? Boolean(chipsHistory[prevDate]) : false
+    const isNew = isInPool && !wasInPoolPrev
+
+    return {
+      date,
+      isInPool,
+      isNew,
+      categories: rawCategories,
+      categoryLabels,
+    }
+  })
+
+  return {
+    totalDays: sortedDates.length,
+    inPoolDays: inPoolCount,
+    records,
+  }
+}
+
 

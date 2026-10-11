@@ -528,6 +528,37 @@ emits: {
 
 ---
 
+#### `StockEntryModal.vue`（入池原因與軌跡 Bottom Sheet）
+
+> 點擊 `StockCard` 的股票名稱（如「台積電」、「致茂」）展開，展示該個股近 10 個交易日的入池在池狀態、首度/重新入池的新進標記，以及當日入選官方排行榜原因標籤（如外資1D、投信3D、量大、值增等）
+
+**Props：**
+```typescript
+props: {
+  isOpen: boolean,
+  stock:  Stock | null,
+}
+```
+
+**Events：**
+```typescript
+emits: {
+  'close': () => void
+  'searchCode': (code: string) => void
+}
+```
+
+**視覺規格：**
+- 基於 `BaseStockModal.vue` 封裝，標題後綴為 `UI_STRINGS.STOCK_ENTRY_MODAL.titleSuffix`（「· 入池原因與軌跡」）
+- 頂部摘要列：`UI_STRINGS.STOCK_ENTRY_MODAL.entrySummary(totalDays, inPoolDays)`（例如「近 10 個交易日，累計在池 8 日」），若今日為新進附帶 `statusNewEntry` 徽章
+- 核心表格（由新到舊排）：
+  - 欄位 1：日期（`MM/DD (W)`，如 `10/8 (四)`）
+  - 欄位 2：狀態（`新進` 醒目徽章、`在池` 正常徽章、`未在追蹤池` 灰色微淡文字）
+  - 欄位 3：入池原因（將 `categories` 代碼透過 `CATEGORY_TAGS` 翻譯為簡潔單色 Badge 清單；若未在池顯示 `-`）
+- 關閉按鈕與背景遮罩點擊關閉
+
+---
+
 ### 【Claude 負責，Gemini 不需要動的】
 
 | 元件 / 模組 | 說明 |
