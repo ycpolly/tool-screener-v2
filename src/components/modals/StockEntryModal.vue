@@ -28,13 +28,13 @@
     <div class="flex-1 overflow-y-auto min-h-0 border border-base-300/70 rounded-xl">
       <!-- 欄位標題 (日期 / 狀態 / 入選排行榜原因) -->
       <div class="grid grid-cols-12 bg-base-200/80 border-b border-base-300/80 text-xs font-semibold text-base-content/80 py-2.5 px-3 sticky top-0 z-10 backdrop-blur-xs">
-        <div class="col-span-4 sm:col-span-3 text-left">
+        <div class="col-span-3 text-left">
           {{ UI_STRINGS.STOCK_ENTRY_MODAL.colDate }}
         </div>
-        <div class="col-span-3 sm:col-span-2 text-center">
+        <div class="col-span-2 text-center">
           {{ UI_STRINGS.STOCK_ENTRY_MODAL.colStatus }}
         </div>
-        <div class="col-span-5 sm:col-span-7 text-left">
+        <div class="col-span-7 text-left">
           {{ UI_STRINGS.STOCK_ENTRY_MODAL.colReasons }}
         </div>
       </div>
@@ -47,16 +47,16 @@
         <div
           v-for="record in entryData.records"
           :key="record.date"
-          class="grid grid-cols-12 py-2.5 px-3 items-center hover:bg-base-200/40 transition-colors"
+          class="grid grid-cols-12 py-2.5 px-3 items-top hover:bg-base-200/40 transition-colors"
           :class="!record.isInPool ? 'opacity-40' : ''"
         >
           <!-- 1. 日期 -->
-          <div class="col-span-4 sm:col-span-3 font-medium text-base-content whitespace-nowrap">
+          <div class="col-span-3 sm:col-span-3 font-medium text-base-content whitespace-nowrap">
             {{ formatTimelineDate(record.date) }}
           </div>
 
           <!-- 2. 狀態 (普通文字，無特殊 UI) -->
-          <div class="col-span-3 sm:col-span-2 text-center whitespace-nowrap font-sans">
+          <div class="col-span-2 sm:col-span-2 text-center whitespace-nowrap font-sans">
             <span
               v-if="record.isNew"
               class="text-xs sm:text-sm font-medium text-base-content"
@@ -78,7 +78,7 @@
           </div>
 
           <!-- 3. 入池原因 (官方排行榜 Badge 清單) -->
-          <div class="col-span-5 sm:col-span-7 font-sans flex flex-wrap gap-1.5 items-center">
+          <div class="col-span-7 sm:col-span-7 font-sans flex flex-wrap gap-1.5 items-center">
             <template v-if="record.isInPool && getRecordCategoryItems(record).length > 0">
               <template v-for="item in getRecordCategoryItems(record)" :key="item.key">
                 <a
