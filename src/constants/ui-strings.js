@@ -440,7 +440,7 @@ export const UI_STRINGS = {
     colDate: '日期',
     colPrice: '收盤 (漲跌)',
     colModes: '符合模式',
-    noMatch: '--',
+    noMatch: '無訊號',
     noData: '暫無歷史日 K 資料',
     closeBtn: '關閉近日表現彈窗',
     btnTitle: '查看 7 日策略軌跡',

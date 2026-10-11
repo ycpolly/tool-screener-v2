@@ -120,7 +120,7 @@
                     >
                       {{ UI_STRINGS.LIFECYCLE.notInPool }}
                     </span>
-                    <span v-else class="text-base-content/35 font-numeric">
+                    <span v-else class="text-base-content/40 font-normal">
                       {{ UI_STRINGS.LIFECYCLE.noMatch }}
                     </span>
                   </template>
@@ -187,7 +187,7 @@
                   <span v-else-if="!row.isInPool" class="text-xs text-base-content/40 font-normal">
                     {{ UI_STRINGS.LIFECYCLE.notInPool }}
                   </span>
-                  <span v-else class="text-xs text-base-content/35 font-numeric">
+                  <span v-else class="text-xs text-base-content/40 font-normal">
                     {{ UI_STRINGS.LIFECYCLE.noMatch }}
                   </span>
                 </template>
