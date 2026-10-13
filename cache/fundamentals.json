@@ -8053,5 +8053,15 @@
     "pe": null,
     "fubonPrice": 32.2,
     "updatedAt": "2026-10-13"
+  },
+  "3413": {
+    "paidInCapital": 11.09,
+    "capitalUpdatedAt": "2026-10-13",
+    "industryPe": 51.95,
+    "industryPeUpdatedAt": "2026-10-13",
+    "pe": 14.12,
+    "fubonPrice": 283.5,
+    "trailingEps": 20.0779,
+    "updatedAt": "2026-10-13"
   }
 }
