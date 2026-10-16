@@ -9906,5 +9906,15 @@
     "fubonPrice": 44.85,
     "trailingEps": 0.12,
     "updatedAt": "2026-10-16"
+  },
+  "6831": {
+    "paidInCapital": 6.75,
+    "capitalUpdatedAt": "2026-10-16",
+    "industryPe": 25.73,
+    "industryPeUpdatedAt": "2026-10-16",
+    "pe": 75.72,
+    "fubonPrice": 419.5,
+    "trailingEps": 5.5401,
+    "updatedAt": "2026-10-16"
   }
 }
