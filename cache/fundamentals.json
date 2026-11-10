@@ -1,13 +1,13 @@
 {
   "4551": {
     "paidInCapital": 11.52,
-    "capitalUpdatedAt": "2026-10-09",
-    "industryPe": 33.19,
-    "industryPeUpdatedAt": "2026-10-09",
-    "pe": 19.31,
-    "fubonPrice": 184.0,
-    "trailingEps": 9.5287,
-    "updatedAt": "2026-10-09"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 27.01,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 13.8,
+    "fubonPrice": 131.5,
+    "trailingEps": 9.529,
+    "updatedAt": "2026-11-10"
   },
   "2330": {
     "paidInCapital": 2593.24,
@@ -366,13 +366,13 @@
   },
   "2006": {
     "paidInCapital": 73.02,
-    "capitalUpdatedAt": "2026-10-09",
-    "industryPe": 25.75,
-    "industryPeUpdatedAt": "2026-10-09",
-    "pe": 11.33,
-    "fubonPrice": 85.3,
-    "trailingEps": 7.5287,
-    "updatedAt": "2026-10-09"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 50.72,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 10.17,
+    "fubonPrice": 85.2,
+    "trailingEps": 8.3776,
+    "updatedAt": "2026-11-10"
   },
   "2027": {
     "paidInCapital": 258.43,
@@ -556,12 +556,12 @@
   },
   "2340": {
     "paidInCapital": 37.86,
-    "capitalUpdatedAt": "2026-10-16",
-    "industryPe": 49.98,
-    "industryPeUpdatedAt": "2026-10-16",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 52.31,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 50.4,
-    "updatedAt": "2026-10-16"
+    "fubonPrice": 40.7,
+    "updatedAt": "2026-11-10"
   },
   "2344": {
     "paidInCapital": 450.0,
@@ -763,13 +763,13 @@
   },
   "2399": {
     "paidInCapital": 17.81,
-    "capitalUpdatedAt": "2026-10-09",
-    "industryPe": 26.21,
-    "industryPeUpdatedAt": "2026-10-09",
-    "pe": 12.39,
-    "fubonPrice": 49.2,
-    "trailingEps": 3.9709,
-    "updatedAt": "2026-10-09"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 20.85,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 10.62,
+    "fubonPrice": 42.15,
+    "trailingEps": 3.9689,
+    "updatedAt": "2026-11-10"
   },
   "2404": {
     "paidInCapital": 19.06,
@@ -873,13 +873,13 @@
   },
   "2466": {
     "paidInCapital": 17.15,
-    "capitalUpdatedAt": "2026-10-30",
-    "industryPe": 122.67,
-    "industryPeUpdatedAt": "2026-10-30",
-    "pe": 225.48,
-    "fubonPrice": 354.0,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 110.46,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 229.94,
+    "fubonPrice": 361.0,
     "trailingEps": 1.57,
-    "updatedAt": "2026-10-30"
+    "updatedAt": "2026-11-10"
   },
   "2467": {
     "paidInCapital": 15.69,
@@ -1292,13 +1292,13 @@
   },
   "2897": {
     "paidInCapital": 280.54,
-    "capitalUpdatedAt": "2026-10-30",
-    "industryPe": 13.69,
-    "industryPeUpdatedAt": "2026-10-30",
-    "pe": 13.63,
-    "fubonPrice": 10.9,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 12.82,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 12.88,
+    "fubonPrice": 10.3,
     "trailingEps": 0.7997,
-    "updatedAt": "2026-10-30"
+    "updatedAt": "2026-11-10"
   },
   "2903": {
     "paidInCapital": 141.69,
@@ -1482,13 +1482,13 @@
   },
   "3094": {
     "paidInCapital": 8.31,
-    "capitalUpdatedAt": "2026-10-28",
-    "industryPe": 50.02,
-    "industryPeUpdatedAt": "2026-10-28",
-    "pe": 89.84,
-    "fubonPrice": 55.7,
-    "trailingEps": 0.62,
-    "updatedAt": "2026-10-28"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 52.31,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 60.27,
+    "fubonPrice": 44.6,
+    "trailingEps": 0.74,
+    "updatedAt": "2026-11-10"
   },
   "3105": {
     "paidInCapital": 42.39,
@@ -2082,23 +2082,23 @@
   },
   "4114": {
     "paidInCapital": 55.04,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 45.87,
-    "industryPeUpdatedAt": "2026-11-03",
-    "pe": 17.62,
-    "fubonPrice": 28.55,
-    "trailingEps": 1.6203,
-    "updatedAt": "2026-11-03"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 42.56,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 17.19,
+    "fubonPrice": 27.85,
+    "trailingEps": 1.6201,
+    "updatedAt": "2026-11-10"
   },
   "4128": {
     "paidInCapital": 58.82,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 45.87,
-    "industryPeUpdatedAt": "2026-11-03",
-    "pe": 16.01,
-    "fubonPrice": 14.25,
-    "trailingEps": 0.8901,
-    "updatedAt": "2026-11-03"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 42.56,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 15.22,
+    "fubonPrice": 13.55,
+    "trailingEps": 0.8903,
+    "updatedAt": "2026-11-10"
   },
   "4147": {
     "paidInCapital": 27.32,
@@ -2160,13 +2160,13 @@
   },
   "4556": {
     "paidInCapital": 4.23,
-    "capitalUpdatedAt": "2026-10-23",
-    "industryPe": 41.13,
-    "industryPeUpdatedAt": "2026-10-23",
-    "pe": 112.15,
-    "fubonPrice": 120.0,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 40.13,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 92.52,
+    "fubonPrice": 99.0,
     "trailingEps": 1.07,
-    "updatedAt": "2026-10-23"
+    "updatedAt": "2026-11-10"
   },
   "4707": {
     "paidInCapital": 41.38,
@@ -2366,13 +2366,13 @@
   },
   "4971": {
     "paidInCapital": 4.72,
-    "capitalUpdatedAt": "2026-10-28",
-    "industryPe": 67.91,
-    "industryPeUpdatedAt": "2026-10-28",
-    "pe": 123.94,
-    "fubonPrice": 497.0,
-    "trailingEps": 4.01,
-    "updatedAt": "2026-10-28"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 53.9,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 97.01,
+    "fubonPrice": 389.0,
+    "trailingEps": 4.0099,
+    "updatedAt": "2026-11-10"
   },
   "4989": {
     "paidInCapital": 17.28,
@@ -2424,13 +2424,13 @@
   },
   "5228": {
     "paidInCapital": 3.81,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 48.25,
-    "industryPeUpdatedAt": "2026-11-03",
-    "pe": 27.11,
-    "fubonPrice": 55.3,
-    "trailingEps": 2.0398,
-    "updatedAt": "2026-11-03"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 46.2,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 15.12,
+    "fubonPrice": 44.75,
+    "trailingEps": 2.9597,
+    "updatedAt": "2026-11-10"
   },
   "5269": {
     "paidInCapital": 7.42,
@@ -2634,13 +2634,13 @@
   },
   "5864": {
     "paidInCapital": 50.45,
-    "capitalUpdatedAt": "2026-10-30",
-    "industryPe": 6.44,
-    "industryPeUpdatedAt": "2026-10-30",
-    "pe": 2.52,
-    "fubonPrice": 34.9,
-    "trailingEps": 13.8492,
-    "updatedAt": "2026-10-30"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 6.55,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 2.22,
+    "fubonPrice": 30.8,
+    "trailingEps": 13.8739,
+    "updatedAt": "2026-11-10"
   },
   "5871": {
     "paidInCapital": 174.56,
@@ -2684,13 +2684,13 @@
   },
   "6005": {
     "paidInCapital": 245.53,
-    "capitalUpdatedAt": "2026-10-26",
-    "industryPe": 13.56,
-    "industryPeUpdatedAt": "2026-10-26",
-    "pe": 5.69,
-    "fubonPrice": 30.6,
-    "trailingEps": 5.3779,
-    "updatedAt": "2026-10-26"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 12.82,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 5.06,
+    "fubonPrice": 27.2,
+    "trailingEps": 5.3755,
+    "updatedAt": "2026-11-10"
   },
   "6015": {
     "paidInCapital": 41.69,
@@ -2981,14 +2981,14 @@
     "updatedAt": "2026-10-09"
   },
   "6207": {
-    "paidInCapital": 9.35,
-    "capitalUpdatedAt": "2026-10-30",
-    "industryPe": 48.25,
-    "industryPeUpdatedAt": "2026-10-30",
-    "pe": 78.29,
-    "fubonPrice": 119.0,
+    "paidInCapital": 9.36,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 46.2,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 69.41,
+    "fubonPrice": 105.5,
     "trailingEps": 1.52,
-    "updatedAt": "2026-10-30"
+    "updatedAt": "2026-11-10"
   },
   "6213": {
     "paidInCapital": 36.36,
@@ -3130,13 +3130,13 @@
   },
   "6284": {
     "paidInCapital": 14.9,
-    "capitalUpdatedAt": "2026-10-30",
-    "industryPe": 48.25,
-    "industryPeUpdatedAt": "2026-10-30",
-    "pe": 18.74,
-    "fubonPrice": 71.4,
-    "trailingEps": 3.81,
-    "updatedAt": "2026-10-30"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 46.2,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 16.77,
+    "fubonPrice": 63.9,
+    "trailingEps": 3.8104,
+    "updatedAt": "2026-11-10"
   },
   "6285": {
     "paidInCapital": 48.34,
@@ -3386,13 +3386,13 @@
   },
   "6658": {
     "paidInCapital": 3.64,
-    "capitalUpdatedAt": "2026-10-16",
-    "industryPe": 88.24,
-    "industryPeUpdatedAt": "2026-10-16",
-    "pe": 48.67,
-    "fubonPrice": 200.5,
-    "trailingEps": 4.1196,
-    "updatedAt": "2026-10-16"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 70.68,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 33.98,
+    "fubonPrice": 174.0,
+    "trailingEps": 5.1207,
+    "updatedAt": "2026-11-10"
   },
   "6664": {
     "paidInCapital": 6.12,
@@ -3624,13 +3624,13 @@
   },
   "7772": {
     "paidInCapital": 2.65,
-    "capitalUpdatedAt": "2026-10-21",
-    "industryPe": 69.55,
-    "industryPeUpdatedAt": "2026-10-21",
-    "pe": 147.47,
-    "fubonPrice": 116.5,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 53.9,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 112.78,
+    "fubonPrice": 89.1,
     "trailingEps": 0.79,
-    "updatedAt": "2026-10-21"
+    "updatedAt": "2026-11-10"
   },
   "7777": {
     "paidInCapital": 20.26,
@@ -3704,13 +3704,13 @@
   },
   "8039": {
     "paidInCapital": 26.38,
-    "capitalUpdatedAt": "2026-10-30",
-    "industryPe": 45.93,
-    "industryPeUpdatedAt": "2026-10-30",
-    "pe": 80.07,
-    "fubonPrice": 245.0,
-    "trailingEps": 3.0598,
-    "updatedAt": "2026-10-30"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 38.41,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 70.1,
+    "fubonPrice": 214.5,
+    "trailingEps": 3.0599,
+    "updatedAt": "2026-11-10"
   },
   "8040": {
     "paidInCapital": 9.64,
@@ -3863,13 +3863,13 @@
   },
   "8261": {
     "paidInCapital": 11.89,
-    "capitalUpdatedAt": "2026-10-09",
-    "industryPe": 54.58,
-    "industryPeUpdatedAt": "2026-10-09",
-    "pe": 27.06,
-    "fubonPrice": 180.5,
-    "trailingEps": 6.6704,
-    "updatedAt": "2026-10-09"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 52.31,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 20.16,
+    "fubonPrice": 126.0,
+    "trailingEps": 6.25,
+    "updatedAt": "2026-11-10"
   },
   "8289": {
     "paidInCapital": 6.83,
@@ -4133,13 +4133,13 @@
   },
   "1440": {
     "paidInCapital": 165.68,
-    "capitalUpdatedAt": "2026-10-09",
-    "industryPe": 34.22,
-    "industryPeUpdatedAt": "2026-10-09",
-    "pe": 478.33,
-    "fubonPrice": 14.35,
-    "trailingEps": 0.03,
-    "updatedAt": "2026-10-09"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 52.38,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 140.56,
+    "fubonPrice": 12.65,
+    "trailingEps": 0.09,
+    "updatedAt": "2026-11-10"
   },
   "1443": {
     "paidInCapital": 13.53,
@@ -4483,13 +4483,13 @@
   },
   "3048": {
     "paidInCapital": 24.48,
-    "capitalUpdatedAt": "2026-10-09",
-    "industryPe": 14.45,
-    "industryPeUpdatedAt": "2026-10-09",
-    "pe": 12.1,
-    "fubonPrice": 57.0,
-    "trailingEps": 4.7107,
-    "updatedAt": "2026-10-09"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 43.62,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 9.09,
+    "fubonPrice": 42.8,
+    "trailingEps": 4.7085,
+    "updatedAt": "2026-11-10"
   },
   "3073": {
     "paidInCapital": 3.95,
@@ -4637,13 +4637,13 @@
   },
   "3416": {
     "paidInCapital": 8.48,
-    "capitalUpdatedAt": "2026-10-09",
-    "industryPe": 26.21,
-    "industryPeUpdatedAt": "2026-10-09",
-    "pe": 21.14,
-    "fubonPrice": 182.0,
-    "trailingEps": 8.6093,
-    "updatedAt": "2026-10-09"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 20.85,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 16.84,
+    "fubonPrice": 146.5,
+    "trailingEps": 8.6995,
+    "updatedAt": "2026-11-10"
   },
   "3447": {
     "paidInCapital": 7.74,
@@ -4819,13 +4819,13 @@
   },
   "3709": {
     "paidInCapital": 14.56,
-    "capitalUpdatedAt": "2026-10-09",
-    "industryPe": 26.23,
-    "industryPeUpdatedAt": "2026-10-09",
-    "pe": 5.86,
-    "fubonPrice": 66.2,
-    "trailingEps": 11.2969,
-    "updatedAt": "2026-10-09"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 22.96,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 5.57,
+    "fubonPrice": 62.9,
+    "trailingEps": 11.2926,
+    "updatedAt": "2026-11-10"
   },
   "3713": {
     "paidInCapital": 8.81,
@@ -5198,13 +5198,13 @@
   },
   "5516": {
     "paidInCapital": 5.15,
-    "capitalUpdatedAt": "2026-10-29",
-    "industryPe": 14.95,
-    "industryPeUpdatedAt": "2026-10-29",
-    "pe": 12.35,
-    "fubonPrice": 12.6,
-    "trailingEps": 1.0202,
-    "updatedAt": "2026-10-29"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 13.84,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 12.55,
+    "fubonPrice": 12.8,
+    "trailingEps": 1.0199,
+    "updatedAt": "2026-11-10"
   },
   "5546": {
     "paidInCapital": 8.24,
@@ -5257,13 +5257,13 @@
   },
   "6143": {
     "paidInCapital": 8.61,
-    "capitalUpdatedAt": "2026-10-30",
-    "industryPe": 51.02,
-    "industryPeUpdatedAt": "2026-10-30",
-    "pe": 9.28,
-    "fubonPrice": 73.0,
-    "trailingEps": 7.8664,
-    "updatedAt": "2026-10-30"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 48.2,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 9.53,
+    "fubonPrice": 68.6,
+    "trailingEps": 7.1983,
+    "updatedAt": "2026-11-10"
   },
   "6146": {
     "paidInCapital": 10.19,
@@ -5336,23 +5336,23 @@
   },
   "6234": {
     "paidInCapital": 10.04,
-    "capitalUpdatedAt": "2026-10-30",
-    "industryPe": 32.72,
-    "industryPeUpdatedAt": "2026-10-30",
-    "pe": 46.54,
-    "fubonPrice": 48.4,
-    "trailingEps": 1.04,
-    "updatedAt": "2026-10-30"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 31.98,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 47.36,
+    "fubonPrice": 49.25,
+    "trailingEps": 1.0399,
+    "updatedAt": "2026-11-10"
   },
   "6271": {
     "paidInCapital": 20.91,
-    "capitalUpdatedAt": "2026-11-02",
-    "industryPe": 45.25,
-    "industryPeUpdatedAt": "2026-11-02",
-    "pe": 21.16,
-    "fubonPrice": 216.5,
-    "trailingEps": 10.2316,
-    "updatedAt": "2026-11-02"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 52.31,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 19.89,
+    "fubonPrice": 203.5,
+    "trailingEps": 10.2313,
+    "updatedAt": "2026-11-10"
   },
   "6277": {
     "paidInCapital": 11.95,
@@ -5396,12 +5396,12 @@
   },
   "6485": {
     "paidInCapital": 4.74,
-    "capitalUpdatedAt": "2026-10-16",
-    "industryPe": 69.97,
-    "industryPeUpdatedAt": "2026-10-16",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 53.9,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 80.5,
-    "updatedAt": "2026-10-16"
+    "fubonPrice": 60.0,
+    "updatedAt": "2026-11-10"
   },
   "6504": {
     "paidInCapital": 7.26,
@@ -5700,13 +5700,13 @@
   },
   "7792": {
     "paidInCapital": 4.67,
-    "capitalUpdatedAt": "2026-10-09",
-    "industryPe": 43.28,
-    "industryPeUpdatedAt": "2026-10-09",
-    "pe": 36.48,
-    "fubonPrice": 403.5,
-    "trailingEps": 11.0609,
-    "updatedAt": "2026-10-09"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 132.92,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 26.04,
+    "fubonPrice": 288.0,
+    "trailingEps": 11.0599,
+    "updatedAt": "2026-11-10"
   },
   "8038": {
     "paidInCapital": 6.23,
@@ -5816,14 +5816,14 @@
     "updatedAt": "2026-10-16"
   },
   "8155": {
-    "paidInCapital": 6.28,
-    "capitalUpdatedAt": "2026-10-27",
-    "industryPe": 50.53,
-    "industryPeUpdatedAt": "2026-10-27",
-    "pe": 24.18,
-    "fubonPrice": 280.5,
-    "trailingEps": 11.6005,
-    "updatedAt": "2026-10-27"
+    "paidInCapital": 6.29,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 46.2,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 21.81,
+    "fubonPrice": 253.0,
+    "trailingEps": 11.6002,
+    "updatedAt": "2026-11-10"
   },
   "8162": {
     "paidInCapital": 6.87,
@@ -6017,13 +6017,13 @@
   },
   "2820": {
     "paidInCapital": 134.3,
-    "capitalUpdatedAt": "2026-11-02",
-    "industryPe": 13.58,
-    "industryPeUpdatedAt": "2026-11-02",
-    "pe": 10.0,
-    "fubonPrice": 16.9,
-    "trailingEps": 1.69,
-    "updatedAt": "2026-11-02"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 12.82,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 9.13,
+    "fubonPrice": 16.25,
+    "trailingEps": 1.7798,
+    "updatedAt": "2026-11-10"
   },
   "4502": {
     "paidInCapital": 5.75,
@@ -6209,13 +6209,13 @@
   },
   "6231": {
     "paidInCapital": 4.57,
-    "capitalUpdatedAt": "2026-10-12",
-    "industryPe": 17.21,
-    "industryPeUpdatedAt": "2026-10-12",
-    "pe": 32.89,
-    "fubonPrice": 248.0,
-    "trailingEps": 7.5403,
-    "updatedAt": "2026-10-12"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 19.72,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 25.26,
+    "fubonPrice": 194.0,
+    "trailingEps": 7.6801,
+    "updatedAt": "2026-11-10"
   },
   "6242": {
     "paidInCapital": 3.18,
@@ -6229,13 +6229,13 @@
   },
   "6425": {
     "paidInCapital": 5.14,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 46.52,
-    "industryPeUpdatedAt": "2026-11-03",
-    "pe": 79.04,
-    "fubonPrice": 82.2,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 43.57,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 67.98,
+    "fubonPrice": 70.7,
     "trailingEps": 1.04,
-    "updatedAt": "2026-11-03"
+    "updatedAt": "2026-11-10"
   },
   "3058": {
     "paidInCapital": 20.17,
@@ -6286,13 +6286,13 @@
   },
   "6924": {
     "paidInCapital": 2.06,
-    "capitalUpdatedAt": "2026-11-02",
-    "industryPe": 39.92,
-    "industryPeUpdatedAt": "2026-11-02",
-    "pe": 15.99,
-    "fubonPrice": 133.0,
-    "trailingEps": 8.3177,
-    "updatedAt": "2026-11-02"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 63.2,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 16.17,
+    "fubonPrice": 134.5,
+    "trailingEps": 8.3179,
+    "updatedAt": "2026-11-10"
   },
   "6148": {
     "paidInCapital": 4.66,
@@ -6373,12 +6373,12 @@
   },
   "4113": {
     "paidInCapital": 23.11,
-    "capitalUpdatedAt": "2026-10-19",
-    "industryPe": 15.52,
-    "industryPeUpdatedAt": "2026-10-19",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 13.84,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 14.35,
-    "updatedAt": "2026-10-19"
+    "fubonPrice": 12.8,
+    "updatedAt": "2026-11-10"
   },
   "4977": {
     "paidInCapital": 9.1,
@@ -6449,14 +6449,14 @@
     "updatedAt": "2026-11-02"
   },
   "4442": {
-    "paidInCapital": 3.29,
-    "capitalUpdatedAt": "2026-10-12",
-    "industryPe": 13.35,
-    "industryPeUpdatedAt": "2026-10-12",
-    "pe": 11.19,
-    "fubonPrice": 54.5,
-    "trailingEps": 4.8704,
-    "updatedAt": "2026-10-12"
+    "paidInCapital": 3.31,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 12.82,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 10.41,
+    "fubonPrice": 50.7,
+    "trailingEps": 4.8703,
+    "updatedAt": "2026-11-10"
   },
   "6782": {
     "paidInCapital": 6.3,
@@ -6578,13 +6578,13 @@
   },
   "4581": {
     "paidInCapital": 3.39,
-    "capitalUpdatedAt": "2026-10-19",
-    "industryPe": 33.23,
-    "industryPeUpdatedAt": "2026-10-19",
-    "pe": 11.81,
-    "fubonPrice": 48.05,
-    "trailingEps": 4.0686,
-    "updatedAt": "2026-10-19"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 27.01,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 11.67,
+    "fubonPrice": 47.5,
+    "trailingEps": 4.0703,
+    "updatedAt": "2026-11-10"
   },
   "6925": {
     "paidInCapital": 2.0,
@@ -6724,13 +6724,13 @@
   },
   "3617": {
     "paidInCapital": 9.48,
-    "capitalUpdatedAt": "2026-10-12",
-    "industryPe": 96.19,
-    "industryPeUpdatedAt": "2026-10-12",
-    "pe": 12.39,
-    "fubonPrice": 258.5,
-    "trailingEps": 20.8636,
-    "updatedAt": "2026-10-12"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 70.68,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 11.73,
+    "fubonPrice": 257.0,
+    "trailingEps": 21.9096,
+    "updatedAt": "2026-11-10"
   },
   "6438": {
     "paidInCapital": 8.22,
@@ -6794,12 +6794,12 @@
   },
   "8089": {
     "paidInCapital": 6.6,
-    "capitalUpdatedAt": "2026-11-02",
-    "industryPe": 51.02,
-    "industryPeUpdatedAt": "2026-11-02",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 48.2,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 28.8,
-    "updatedAt": "2026-11-02"
+    "fubonPrice": 29.95,
+    "updatedAt": "2026-11-10"
   },
   "1583": {
     "paidInCapital": 11.92,
@@ -7180,13 +7180,13 @@
   },
   "3016": {
     "paidInCapital": 29.39,
-    "capitalUpdatedAt": "2026-10-28",
-    "industryPe": 50.02,
-    "industryPeUpdatedAt": "2026-10-28",
-    "pe": 116.25,
-    "fubonPrice": 139.5,
-    "trailingEps": 1.2,
-    "updatedAt": "2026-10-28"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 52.31,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 60.88,
+    "fubonPrice": 117.5,
+    "trailingEps": 1.93,
+    "updatedAt": "2026-11-10"
   },
   "3434": {
     "paidInCapital": 3.58,
@@ -7267,13 +7267,13 @@
   },
   "7820": {
     "paidInCapital": 3.78,
-    "capitalUpdatedAt": "2026-10-29",
-    "industryPe": 23.82,
-    "industryPeUpdatedAt": "2026-10-29",
-    "pe": 45.22,
-    "fubonPrice": 104.0,
-    "trailingEps": 2.2999,
-    "updatedAt": "2026-10-29"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 22.33,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 38.04,
+    "fubonPrice": 87.5,
+    "trailingEps": 2.3002,
+    "updatedAt": "2026-11-10"
   },
   "3531": {
     "paidInCapital": 6.12,
@@ -7432,13 +7432,13 @@
   },
   "6028": {
     "paidInCapital": 2.5,
-    "capitalUpdatedAt": "2026-10-13",
-    "industryPe": 6.78,
-    "industryPeUpdatedAt": "2026-10-13",
-    "pe": 10.95,
-    "fubonPrice": 112.0,
-    "trailingEps": 10.2283,
-    "updatedAt": "2026-10-13"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 6.55,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 11.05,
+    "fubonPrice": 113.0,
+    "trailingEps": 10.2262,
+    "updatedAt": "2026-11-10"
   },
   "5520": {
     "paidInCapital": 6.0,
@@ -7556,13 +7556,13 @@
   },
   "8409": {
     "paidInCapital": 3.2,
-    "capitalUpdatedAt": "2026-10-20",
-    "industryPe": 46.98,
-    "industryPeUpdatedAt": "2026-10-20",
-    "pe": 17.75,
-    "fubonPrice": 18.1,
-    "trailingEps": 1.0197,
-    "updatedAt": "2026-10-20"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 42.56,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 46.71,
+    "fubonPrice": 17.75,
+    "trailingEps": 0.38,
+    "updatedAt": "2026-11-10"
   },
   "6952": {
     "paidInCapital": 6.83,
@@ -7720,13 +7720,13 @@
   },
   "1319": {
     "paidInCapital": 59.15,
-    "capitalUpdatedAt": "2026-10-13",
-    "industryPe": 33.88,
-    "industryPeUpdatedAt": "2026-10-13",
-    "pe": 13.41,
-    "fubonPrice": 82.6,
-    "trailingEps": 6.1596,
-    "updatedAt": "2026-10-13"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 27.01,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 11.3,
+    "fubonPrice": 69.6,
+    "trailingEps": 6.1593,
+    "updatedAt": "2026-11-10"
   },
   "8942": {
     "paidInCapital": 19.88,
@@ -7849,12 +7849,12 @@
   },
   "4192": {
     "paidInCapital": 3.52,
-    "capitalUpdatedAt": "2026-10-30",
-    "industryPe": 45.78,
-    "industryPeUpdatedAt": "2026-10-30",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 42.56,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 16.9,
-    "updatedAt": "2026-10-30"
+    "fubonPrice": 16.45,
+    "updatedAt": "2026-11-10"
   },
   "6821": {
     "paidInCapital": 3.58,
@@ -8398,13 +8398,13 @@
   },
   "6108": {
     "paidInCapital": 15.45,
-    "capitalUpdatedAt": "2026-10-28",
-    "industryPe": 48.02,
-    "industryPeUpdatedAt": "2026-10-28",
-    "pe": 155.0,
-    "fubonPrice": 31.0,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 38.41,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 162.5,
+    "fubonPrice": 32.5,
     "trailingEps": 0.2,
-    "updatedAt": "2026-10-28"
+    "updatedAt": "2026-11-10"
   },
   "5345": {
     "paidInCapital": 3.78,
@@ -8490,13 +8490,13 @@
   },
   "6855": {
     "paidInCapital": 2.33,
-    "capitalUpdatedAt": "2026-10-14",
-    "industryPe": 43.26,
-    "industryPeUpdatedAt": "2026-10-14",
-    "pe": 11.31,
-    "fubonPrice": 112.0,
-    "trailingEps": 9.9027,
-    "updatedAt": "2026-10-14"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 132.92,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 11.11,
+    "fubonPrice": 110.0,
+    "trailingEps": 9.901,
+    "updatedAt": "2026-11-10"
   },
   "8931": {
     "paidInCapital": 12.23,
@@ -8687,22 +8687,22 @@
   },
   "5284": {
     "paidInCapital": 5.51,
-    "capitalUpdatedAt": "2026-10-28",
-    "industryPe": 72.46,
-    "industryPeUpdatedAt": "2026-10-28",
-    "pe": 18.21,
-    "fubonPrice": 287.5,
-    "trailingEps": 15.788,
-    "updatedAt": "2026-10-28"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 62.97,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 14.79,
+    "fubonPrice": 233.5,
+    "trailingEps": 15.7877,
+    "updatedAt": "2026-11-10"
   },
   "4529": {
     "paidInCapital": 8.45,
-    "capitalUpdatedAt": "2026-10-21",
-    "industryPe": 42.0,
-    "industryPeUpdatedAt": "2026-10-21",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 40.13,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 3.43,
-    "updatedAt": "2026-10-21"
+    "fubonPrice": 3.27,
+    "updatedAt": "2026-11-10"
   },
   "8147": {
     "paidInCapital": 4.23,
@@ -8953,13 +8953,13 @@
   },
   "4576": {
     "paidInCapital": 11.98,
-    "capitalUpdatedAt": "2026-10-22",
-    "industryPe": 33.54,
-    "industryPeUpdatedAt": "2026-10-22",
-    "pe": 65.55,
-    "fubonPrice": 215.0,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 40.33,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 56.1,
+    "fubonPrice": 184.0,
     "trailingEps": 3.2799,
-    "updatedAt": "2026-10-22"
+    "updatedAt": "2026-11-10"
   },
   "9918": {
     "paidInCapital": 18.05,
@@ -9002,13 +9002,13 @@
   },
   "5548": {
     "paidInCapital": 6.37,
-    "capitalUpdatedAt": "2026-10-29",
-    "industryPe": 14.95,
-    "industryPeUpdatedAt": "2026-10-29",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 13.84,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": 9.9,
     "fubonPrice": 19.7,
     "trailingEps": 1.9899,
-    "updatedAt": "2026-10-29"
+    "updatedAt": "2026-11-10"
   },
   "6756": {
     "paidInCapital": 7.0,
@@ -9442,12 +9442,12 @@
   },
   "5905": {
     "paidInCapital": 28.16,
-    "capitalUpdatedAt": "2026-10-16",
-    "industryPe": 89.19,
-    "industryPeUpdatedAt": "2026-10-16",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 83.52,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 7.23,
-    "updatedAt": "2026-10-16"
+    "fubonPrice": 6.29,
+    "updatedAt": "2026-11-10"
   },
   "6875": {
     "paidInCapital": 6.46,
@@ -9595,13 +9595,13 @@
   },
   "6465": {
     "paidInCapital": 5.91,
-    "capitalUpdatedAt": "2026-10-16",
-    "industryPe": 60.58,
-    "industryPeUpdatedAt": "2026-10-16",
-    "pe": 13.2,
-    "fubonPrice": 45.15,
-    "trailingEps": 3.4205,
-    "updatedAt": "2026-10-16"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 48.2,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 10.22,
+    "fubonPrice": 37.8,
+    "trailingEps": 3.6986,
+    "updatedAt": "2026-11-10"
   },
   "3055": {
     "paidInCapital": 9.87,
@@ -9682,17 +9682,17 @@
   },
   "9110": {
     "pe": null,
-    "fubonPrice": 2.9,
-    "updatedAt": "2026-11-03"
+    "fubonPrice": 2.7,
+    "updatedAt": "2026-11-10"
   },
   "4131": {
     "paidInCapital": 3.99,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 44.71,
-    "industryPeUpdatedAt": "2026-11-03",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 42.56,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 30.55,
-    "updatedAt": "2026-11-03"
+    "fubonPrice": 30.45,
+    "updatedAt": "2026-11-10"
   },
   "3581": {
     "paidInCapital": 5.1,
@@ -9706,8 +9706,8 @@
   },
   "9136": {
     "pe": null,
-    "fubonPrice": 7.87,
-    "updatedAt": "2026-10-28"
+    "fubonPrice": 9.24,
+    "updatedAt": "2026-11-10"
   },
   "4956": {
     "paidInCapital": 10.04,
@@ -9932,12 +9932,12 @@
   },
   "4526": {
     "paidInCapital": 25.48,
-    "capitalUpdatedAt": "2026-11-02",
-    "industryPe": 32.43,
-    "industryPeUpdatedAt": "2026-11-02",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 40.33,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 56.0,
-    "updatedAt": "2026-11-02"
+    "fubonPrice": 59.6,
+    "updatedAt": "2026-11-10"
   },
   "5906": {
     "paidInCapital": 3.75,
@@ -10400,13 +10400,13 @@
   },
   "6741": {
     "paidInCapital": 6.03,
-    "capitalUpdatedAt": "2026-10-27",
-    "industryPe": 100.07,
-    "industryPeUpdatedAt": "2026-10-27",
-    "pe": 11.31,
-    "fubonPrice": 50.8,
-    "trailingEps": 4.4916,
-    "updatedAt": "2026-10-27"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 84.34,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 9.25,
+    "fubonPrice": 41.55,
+    "trailingEps": 4.4919,
+    "updatedAt": "2026-11-10"
   },
   "2634": {
     "paidInCapital": 94.19,
@@ -10784,22 +10784,22 @@
   },
   "2352": {
     "paidInCapital": 158.05,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 24.01,
-    "industryPeUpdatedAt": "2026-11-03",
-    "pe": 41.49,
-    "fubonPrice": 31.95,
-    "trailingEps": 0.7701,
-    "updatedAt": "2026-11-03"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 20.85,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 31.15,
+    "fubonPrice": 29.9,
+    "trailingEps": 0.9599,
+    "updatedAt": "2026-11-10"
   },
   "4943": {
     "paidInCapital": 8.68,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 42.59,
-    "industryPeUpdatedAt": "2026-11-03",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 38.41,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 6.59,
-    "updatedAt": "2026-11-03"
+    "fubonPrice": 6.19,
+    "updatedAt": "2026-11-10"
   },
   "8917": {
     "paidInCapital": 16.27,
@@ -11090,13 +11090,13 @@
   },
   "5514": {
     "paidInCapital": 23.61,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 14.28,
-    "industryPeUpdatedAt": "2026-11-03",
-    "pe": 46.0,
-    "fubonPrice": 13.8,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 13.84,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 44.17,
+    "fubonPrice": 13.25,
     "trailingEps": 0.3,
-    "updatedAt": "2026-11-03"
+    "updatedAt": "2026-11-10"
   },
   "6829": {
     "paidInCapital": 5.92,
@@ -11110,23 +11110,23 @@
   },
   "6574": {
     "paidInCapital": 2.2,
-    "capitalUpdatedAt": "2026-10-21",
-    "industryPe": 47.03,
-    "industryPeUpdatedAt": "2026-10-21",
-    "pe": 8.84,
-    "fubonPrice": 117.0,
-    "trailingEps": 13.2353,
-    "updatedAt": "2026-10-21"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 42.56,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 8.19,
+    "fubonPrice": 108.5,
+    "trailingEps": 13.2479,
+    "updatedAt": "2026-11-10"
   },
   "7717": {
     "paidInCapital": 2.48,
-    "capitalUpdatedAt": "2026-10-21",
-    "industryPe": 60.24,
-    "industryPeUpdatedAt": "2026-10-21",
-    "pe": 70.65,
-    "fubonPrice": 499.5,
-    "trailingEps": 7.0701,
-    "updatedAt": "2026-10-21"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 48.2,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 55.3,
+    "fubonPrice": 391.0,
+    "trailingEps": 7.0705,
+    "updatedAt": "2026-11-10"
   },
   "8421": {
     "paidInCapital": 6.38,
@@ -11150,12 +11150,12 @@
   },
   "2067": {
     "paidInCapital": 3.39,
-    "capitalUpdatedAt": "2026-11-02",
-    "industryPe": 46.52,
-    "industryPeUpdatedAt": "2026-11-02",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 43.57,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 4.79,
-    "updatedAt": "2026-11-02"
+    "fubonPrice": 4.38,
+    "updatedAt": "2026-11-10"
   },
   "2444": {
     "paidInCapital": 10.16,
@@ -11188,13 +11188,13 @@
   },
   "8478": {
     "paidInCapital": 9.4,
-    "capitalUpdatedAt": "2026-10-28",
-    "industryPe": 20.41,
-    "industryPeUpdatedAt": "2026-10-28",
-    "pe": 9.81,
-    "fubonPrice": 141.0,
-    "trailingEps": 14.3731,
-    "updatedAt": "2026-10-28"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 19.35,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 12.51,
+    "fubonPrice": 121.5,
+    "trailingEps": 9.7122,
+    "updatedAt": "2026-11-10"
   },
   "4911": {
     "paidInCapital": 6.88,
@@ -11313,13 +11313,13 @@
   },
   "7782": {
     "paidInCapital": 2.32,
-    "capitalUpdatedAt": "2026-10-29",
-    "industryPe": 41.74,
-    "industryPeUpdatedAt": "2026-10-29",
-    "pe": 11.21,
-    "fubonPrice": 24.55,
-    "trailingEps": 2.19,
-    "updatedAt": "2026-10-29"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 39.57,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 12.2,
+    "fubonPrice": 24.4,
+    "trailingEps": 2.0,
+    "updatedAt": "2026-11-10"
   },
   "3691": {
     "paidInCapital": 10.19,
@@ -11352,14 +11352,14 @@
     "updatedAt": "2026-10-21"
   },
   "6451": {
-    "paidInCapital": 11.43,
-    "capitalUpdatedAt": "2026-10-21",
-    "industryPe": 50.45,
-    "industryPeUpdatedAt": "2026-10-21",
-    "pe": 342.66,
-    "fubonPrice": 373.5,
-    "trailingEps": 1.09,
-    "updatedAt": "2026-10-21"
+    "paidInCapital": 11.79,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 52.31,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 1440.0,
+    "fubonPrice": 288.0,
+    "trailingEps": 0.2,
+    "updatedAt": "2026-11-10"
   },
   "4535": {
     "paidInCapital": 7.57,
@@ -11764,13 +11764,13 @@
   },
   "3029": {
     "paidInCapital": 15.5,
-    "capitalUpdatedAt": "2026-10-22",
-    "industryPe": 22.37,
-    "industryPeUpdatedAt": "2026-10-22",
-    "pe": 17.48,
-    "fubonPrice": 122.5,
-    "trailingEps": 7.008,
-    "updatedAt": "2026-10-22"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 24.61,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 16.71,
+    "fubonPrice": 125.0,
+    "trailingEps": 7.4806,
+    "updatedAt": "2026-11-10"
   },
   "4737": {
     "paidInCapital": 7.73,
@@ -12290,12 +12290,12 @@
   },
   "5481": {
     "paidInCapital": 7.14,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 40.47,
-    "industryPeUpdatedAt": "2026-11-03",
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 40.13,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 20.45,
-    "updatedAt": "2026-11-03"
+    "fubonPrice": 20.05,
+    "updatedAt": "2026-11-10"
   },
   "5201": {
     "paidInCapital": 3.87,
@@ -12396,14 +12396,14 @@
     "updatedAt": "2026-10-27"
   },
   "3467": {
-    "paidInCapital": 3.11,
-    "capitalUpdatedAt": "2026-10-27",
-    "industryPe": 65.31,
-    "industryPeUpdatedAt": "2026-10-27",
-    "pe": 54.35,
-    "fubonPrice": 62.5,
-    "trailingEps": 1.15,
-    "updatedAt": "2026-10-27"
+    "paidInCapital": 3.16,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 53.9,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 55.83,
+    "fubonPrice": 64.2,
+    "trailingEps": 1.1499,
+    "updatedAt": "2026-11-10"
   },
   "2535": {
     "paidInCapital": 27.08,
@@ -12417,13 +12417,13 @@
   },
   "7728": {
     "paidInCapital": 1.4,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 38.52,
-    "industryPeUpdatedAt": "2026-11-03",
-    "pe": 80.63,
-    "fubonPrice": 508.0,
-    "trailingEps": 6.3004,
-    "updatedAt": "2026-11-03"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 132.92,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 78.73,
+    "fubonPrice": 496.0,
+    "trailingEps": 6.3,
+    "updatedAt": "2026-11-10"
   },
   "3708": {
     "paidInCapital": 8.98,
@@ -12629,13 +12629,13 @@
   },
   "7712": {
     "paidInCapital": 3.26,
-    "capitalUpdatedAt": "2026-10-28",
-    "industryPe": 67.91,
-    "industryPeUpdatedAt": "2026-10-28",
-    "pe": 21.86,
-    "fubonPrice": 151.5,
-    "trailingEps": 6.9305,
-    "updatedAt": "2026-10-28"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 53.9,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 19.34,
+    "fubonPrice": 134.0,
+    "trailingEps": 6.9286,
+    "updatedAt": "2026-11-10"
   },
   "1702": {
     "paidInCapital": 29.41,
@@ -13086,13 +13086,13 @@
     "updatedAt": "2026-10-29"
   },
   "5245": {
-    "paidInCapital": 4.51,
-    "capitalUpdatedAt": "2026-10-29",
-    "industryPe": 33.76,
-    "industryPeUpdatedAt": "2026-10-29",
+    "paidInCapital": 4.43,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 31.98,
+    "industryPeUpdatedAt": "2026-11-10",
     "pe": null,
-    "fubonPrice": 18.7,
-    "updatedAt": "2026-10-29"
+    "fubonPrice": 17.8,
+    "updatedAt": "2026-11-10"
   },
   "3609": {
     "paidInCapital": 3.84,
@@ -13575,23 +13575,23 @@
   },
   "6272": {
     "paidInCapital": 8.18,
-    "capitalUpdatedAt": "2026-11-02",
-    "industryPe": 45.56,
-    "industryPeUpdatedAt": "2026-11-02",
-    "pe": 13.76,
-    "fubonPrice": 24.5,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 38.41,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 10.98,
+    "fubonPrice": 19.55,
     "trailingEps": 1.7805,
-    "updatedAt": "2026-11-02"
+    "updatedAt": "2026-11-10"
   },
   "6757": {
     "paidInCapital": 45.95,
-    "capitalUpdatedAt": "2026-11-02",
-    "industryPe": 22.06,
-    "industryPeUpdatedAt": "2026-11-02",
-    "pe": 9.41,
-    "fubonPrice": 54.2,
-    "trailingEps": 5.7598,
-    "updatedAt": "2026-11-02"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 24.66,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 10.3,
+    "fubonPrice": 59.3,
+    "trailingEps": 5.7573,
+    "updatedAt": "2026-11-10"
   },
   "6721": {
     "paidInCapital": 2.45,
@@ -13702,13 +13702,13 @@
   },
   "6861": {
     "paidInCapital": 4.16,
-    "capitalUpdatedAt": "2026-11-02",
-    "industryPe": 33.18,
-    "industryPeUpdatedAt": "2026-11-02",
-    "pe": 32.79,
-    "fubonPrice": 212.5,
-    "trailingEps": 6.4806,
-    "updatedAt": "2026-11-02"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 49.16,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 22.26,
+    "fubonPrice": 179.0,
+    "trailingEps": 8.0413,
+    "updatedAt": "2026-11-10"
   },
   "6982": {
     "paidInCapital": 4.08,
@@ -13721,13 +13721,13 @@
   },
   "3071": {
     "paidInCapital": 11.0,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 23.25,
-    "industryPeUpdatedAt": "2026-11-03",
-    "pe": 35.78,
-    "fubonPrice": 20.75,
-    "trailingEps": 0.5799,
-    "updatedAt": "2026-11-03"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 22.96,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 32.07,
+    "fubonPrice": 18.6,
+    "trailingEps": 0.58,
+    "updatedAt": "2026-11-10"
   },
   "8403": {
     "paidInCapital": 13.76,
@@ -13781,13 +13781,13 @@
   },
   "6171": {
     "paidInCapital": 10.0,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 14.28,
-    "industryPeUpdatedAt": "2026-11-03",
-    "pe": 18.07,
-    "fubonPrice": 24.75,
-    "trailingEps": 1.3697,
-    "updatedAt": "2026-11-03"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 13.84,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 13.61,
+    "fubonPrice": 24.9,
+    "trailingEps": 1.8295,
+    "updatedAt": "2026-11-10"
   },
   "5706": {
     "paidInCapital": 8.38,
@@ -13860,13 +13860,13 @@
   },
   "6846": {
     "paidInCapital": 2.71,
-    "capitalUpdatedAt": "2026-11-03",
-    "industryPe": 20.74,
-    "industryPeUpdatedAt": "2026-11-03",
-    "pe": 11.68,
-    "fubonPrice": 54.9,
-    "trailingEps": 4.7003,
-    "updatedAt": "2026-11-03"
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 28.19,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 12.56,
+    "fubonPrice": 49.0,
+    "trailingEps": 3.9013,
+    "updatedAt": "2026-11-10"
   },
   "6906": {
     "paidInCapital": 3.35,
@@ -15065,5 +15065,172 @@
     "fubonPrice": 121.0,
     "trailingEps": 6.7787,
     "updatedAt": "2026-11-09"
+  },
+  "6986": {
+    "paidInCapital": 5.21,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 42.56,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 16.73,
+    "fubonPrice": 37.3,
+    "trailingEps": 2.2295,
+    "updatedAt": "2026-11-10"
+  },
+  "3209": {
+    "paidInCapital": 24.72,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 43.62,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 7.81,
+    "fubonPrice": 46.8,
+    "trailingEps": 5.9923,
+    "updatedAt": "2026-11-10"
+  },
+  "3217": {
+    "paidInCapital": 9.01,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 46.2,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 8.44,
+    "fubonPrice": 106.5,
+    "trailingEps": 12.6185,
+    "updatedAt": "2026-11-10"
+  },
+  "3303": {
+    "paidInCapital": 9.48,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 132.92,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 10.16,
+    "fubonPrice": 49.8,
+    "trailingEps": 4.9016,
+    "updatedAt": "2026-11-10"
+  },
+  "3444": {
+    "paidInCapital": 4.5,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 123.67,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 30.17,
+    "fubonPrice": 71.5,
+    "trailingEps": 2.3699,
+    "updatedAt": "2026-11-10"
+  },
+  "5015": {
+    "paidInCapital": 6.06,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 58.38,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 13.9,
+    "fubonPrice": 21.4,
+    "trailingEps": 1.5396,
+    "updatedAt": "2026-11-10"
+  },
+  "3032": {
+    "paidInCapital": 10.33,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 38.41,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": null,
+    "fubonPrice": 66.3,
+    "updatedAt": "2026-11-10"
+  },
+  "8416": {
+    "paidInCapital": 2.82,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 19.72,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 11.56,
+    "fubonPrice": 170.0,
+    "trailingEps": 14.7059,
+    "updatedAt": "2026-11-10"
+  },
+  "7556": {
+    "paidInCapital": 2.92,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 53.9,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 28.36,
+    "fubonPrice": 244.5,
+    "trailingEps": 8.6213,
+    "updatedAt": "2026-11-10"
+  },
+  "2752": {
+    "paidInCapital": 2.67,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 83.52,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 11.04,
+    "fubonPrice": 180.0,
+    "trailingEps": 16.3043,
+    "updatedAt": "2026-11-10"
+  },
+  "1336": {
+    "paidInCapital": 7.76,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 46.2,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 20.27,
+    "fubonPrice": 15.2,
+    "trailingEps": 0.7499,
+    "updatedAt": "2026-11-10"
+  },
+  "7810": {
+    "paidInCapital": 2.03,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 53.9,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 22.51,
+    "fubonPrice": 197.0,
+    "trailingEps": 8.7517,
+    "updatedAt": "2026-11-10"
+  },
+  "4552": {
+    "paidInCapital": 11.6,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 40.33,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 11.36,
+    "fubonPrice": 12.95,
+    "trailingEps": 1.14,
+    "updatedAt": "2026-11-10"
+  },
+  "2374": {
+    "paidInCapital": 33.8,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 110.46,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 15.46,
+    "fubonPrice": 52.4,
+    "trailingEps": 3.3894,
+    "updatedAt": "2026-11-10"
+  },
+  "1295": {
+    "paidInCapital": 3.76,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 28.19,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": 10.15,
+    "fubonPrice": 41.8,
+    "trailingEps": 4.1182,
+    "updatedAt": "2026-11-10"
+  },
+  "6706": {
+    "paidInCapital": 7.85,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 110.46,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": null,
+    "fubonPrice": 121.5,
+    "updatedAt": "2026-11-10"
+  },
+  "3092": {
+    "paidInCapital": 10.66,
+    "capitalUpdatedAt": "2026-11-10",
+    "industryPe": 38.41,
+    "industryPeUpdatedAt": "2026-11-10",
+    "pe": null,
+    "fubonPrice": 18.0,
+    "updatedAt": "2026-11-10"
   }
 }
